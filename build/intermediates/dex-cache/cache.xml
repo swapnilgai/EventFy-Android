@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.8.2/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="7679607a53988c76b23575d3e2bd473951773f29">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.facebook.android-facebook-android-sdk-4.8.2_afdb44d8166a1ba1a25a1944d3eb85cabe0c63dd/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="0194a7409c40de94fb539d4ad9928ec5d47afeb7">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-safetynet-8.4.0_22dfb098ae97352a63be678ff9d22cbc3e7e2fe9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-games-8.4.0_3e50d54a0e3e9099192cc2d8e34980a2c1cf7732/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.7.0/19f42c154ffc689f40a77613bc32caeb17d744e3/jackson-annotations-2.7.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="19f42c154ffc689f40a77613bc32caeb17d744e3">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-annotations-2.7.0_21beec2ba3e710fd53c880b1196cb26261f24de5/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-fitness-8.4.0_4abc54d4228bd886f7a738aedf3b3efc8346ebfc/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/picasso-2.5.2_5ec0f2cb0ccab166611227fb2115ebfc6c1d7334/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.github.markomilos/paginate/0.5.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="239bbc360f222b90822c6f85f6ff203d57763382">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.markomilos-paginate-0.5.1_3d64d8b876645eff73563f04bbe86a03093cce31/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.github.florent37/materialviewpager/1.1.3/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="44659983651a49b0b0691e874bde6475bc067648">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.florent37-materialviewpager-1.1.3_732d6763bf666d86009e512893dad4d32854e463/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-auth/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-auth-8.4.0_4fc4e6591e590a49ace0bd84d81041e9699fb065/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/22.2.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e1fa5e1123997a55e3ed65b44892993ff4b58cfe">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-cardview-v7-22.2.1_02b5e7ed58e3e937b4cebfa363d495c5419f7b97/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-measurement/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-measurement-8.4.0_c81956eca173a62beb3e1f3364f6d1a7d3e23c98/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-analytics-8.4.0_0d4c1f07fa40c1d7ac7c191500abd1901fe6da43/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="59544301d730a8a3add39910e0a4ec5f9448279b">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_9b837839397802d853606be9ee6230d229cae6ec/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.7.3/1499b854ae9f370409792db5af1b552dc7d9682f/jackson-core-2.7.3.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1499b854ae9f370409792db5af1b552dc7d9682f">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-core-2.7.3_2235eed370c66eed27c3a6967e24f0590fb5e1b6/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/android-sdks/extras/android/m2repository/com/android/support/support-annotations/23.3.0/support-annotations-23.3.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="db7791d75a07fef9844d06236c1c59ba7bf6997c">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.3.0_765f48153adf53bcfcf64592a2737cd29c44e845/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-mediarouter-v7-23.0.0_965d0c49f2301e4444d2b262488d6965e2a6077f/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-gcm-8.4.0_aec223d646b424a287e477bef4ebc78b1e31e364/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.2.1/44780c2cf98f6a3cf4e77f1234d644758b329201/bolts-android-1.2.1.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="44780c2cf98f6a3cf4e77f1234d644758b329201">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/bolts-android-1.2.1_95409547d9c0b495a20b0eb8d8bc484f07ea3c79/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b82b8e847173c28efffcd291b2a0b1ae9ad17fa4">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-identity-8.4.0_6dd6605aa345424153f9b6de2a3ebe0ffe2b9e10/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.cloudinary/cloudinary-core/1.4.1/d87143bee9c1a85867674ce65518231283a2d5fa/cloudinary-core-1.4.1.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d87143bee9c1a85867674ce65518231283a2d5fa">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/cloudinary-core-1.4.1_cd2991235b911397c19da9b84334513b0406f316/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/org.florescu.android.rangeseekbar/rangeseekbar-library/0.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b8f19036e690aaf0676a0926db48e3ebaeb12fe4">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/org.florescu.android.rangeseekbar-rangeseekbar-library-0.3.0_94fdba9dc60db87538ea37c054ccf4b9b095e014/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.mcxiaoke.volley/library/1.0.15/9093a362d18c5f81f58e49d86dece57d9b6e1cb7/library-1.0.15.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9093a362d18c5f81f58e49d86dece57d9b6e1cb7">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-1.0.15_af10f3fad960e59fdde6377f79e7c03f15aad37b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/library-2.4.0_d534f2c5b8e44e7805ff248fb9cfacdac08dcd95/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/org.springframework.android/spring-android-core/1.0.1.RELEASE/e68f0e8e4b636ee30c4de58953be38d9b72a5e3b/spring-android-core-1.0.1.RELEASE.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e68f0e8e4b636ee30c4de58953be38d9b72a5e3b">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/spring-android-core-1.0.1.RELEASE_1ca90be2e50e264a886d3eb801d24c44d61269e4/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="debf30ce0a7560396b6235edef77e447006454c2">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-recyclerview-v7-23.3.0_b87f73a4873f58892c15c19e703319e5a8be68bc/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.1.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="611c7708cd3df0d7ae99105d4df5af8eb25c4b32">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.jpardogo.materialtabstrip-library-1.1.0_64d2b5d53a804144484f10f2302acc712d7321fb/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.6.2/f1bc476cc167b18e66c297df599b2377131a8947/gson-2.6.2.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f1bc476cc167b18e66c297df599b2377131a8947">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/gson-2.6.2_551990c932215a8657c13cc5dd2d52c54844e154/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9fe026fb4c7fce21bc5142f6e1bdf844f28061ac">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appinvite-8.4.0_b4a7cbed96c7e7198dc407557b7000d0dd9173d8/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-basement-8.4.0_1a625dce57e3ec07bcf09b6c90b9a8fd8f89b4e1/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.daimajia.slider/library/1.1.5/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="08962e03b6a954c65d4944e092879b7f5ee1208d">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.daimajia.slider-library-1.1.5_efac3cb985f00eba6e77bba2b61ef379df1e91c9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1a78298e7724d5440d210bcb946b3493250d354d">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-plus-8.4.0_20b7a792b94f4f21fe7e8acb71394ffedf51eaa7/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="08d34b2d135c1cc96ab506fd8bf6916d1e2f391a">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-panorama-8.4.0_e2a00d576ffb62ae7ad602ef7e5b725bcb7e2ab2/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.cloudinary/cloudinary-android/1.4.1/9795b0a3cae8c2e9d7ae2da34e777e51aca46ee8/cloudinary-android-1.4.1.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9795b0a3cae8c2e9d7ae2da34e777e51aca46ee8">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/cloudinary-android-1.4.1_dc3fd89f08ed5af93923da29e6a9a14c041cbd2c/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-maps-8.4.0_ef4183e1351e0e80c2b2209b2883e0fd061ad459/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/jp.wasabeef/recyclerview-animators/2.2.3/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="8e325e9ba5c23d635d0cfaa76c349fca83101f8a">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/jp.wasabeef-recyclerview-animators-2.2.3_7972011555b3e9c491bedc0e3477ce1b0d30c8c9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.soundcloud.android/android-crop/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="11a65cf2b30c192b38a881d626fa771a78a2293d">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.soundcloud.android-android-crop-1.0.1_aa1f7c6c6039360fe61a381e5a62094d5504d166/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wearable-8.4.0_eea166d49f63f319c45d92524aa8b5a62da6fb4b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.flaviofaria/kenburnsview/1.0.6/65dcd9c03096b73f4740d63cf93d30a692fe52b5/kenburnsview-1.0.6.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="65dcd9c03096b73f4740d63cf93d30a692fe52b5">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/kenburnsview-1.0.6_ff530cc2227ca1e7dac2bfd91036f1dd1b4f47b4/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/design/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f0001e71cea6ae432a00021c6f727f5ef0f3d27e">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-design-23.3.0_833952924695997bcaf87f37c5cd87517e11b269/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-appindexing-8.4.0_abf6f3aebce2bc560c956cb15d1d9ffb280d652d/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/mediarouter-v7/23.0.0/jars/libs/internal_impl-23.0.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.0.0_840a4584b34b806e0a7687d0fb5544dec94e9164/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9cad249cf62751a323d9af568caf12284b7d6062">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-nearby-8.4.0_1e1f8c53a19a2b88ccb6eab55099898b93e103f8/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.github.flavienlaurent.datetimepicker/library/0.0.2/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="2fc859b7abb78d29169f6a582b45cbe1f3f1a4cc">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.flavienlaurent.datetimepicker-library-0.0.2_af00852b3a7458cf9d16365a0a3505e1f31bf3e6/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.github.siyamed/android-shape-imageview/0.9.3/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ee07783aa59eefdeacc107abf472f45f60272302">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.siyamed-android-shape-imageview-0.9.3_47f070c140834c71afdcd7996005bd3193d6c4d6/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.beardedhen/androidbootstrap/2.1.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b6cc3a468ee2bfe161efdadfa6c99edb02ce8cfa">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.beardedhen-androidbootstrap-2.1.0_d6dcf40aea522cdef088df98c0bebd5dd42aafe2/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-vision/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="dfecc4d835cdabcdecf7e95f0d20a3ef1e9d8ef4">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-vision-8.4.0_e5f860d916aa7ccd757986a767df5652e6be0cc8/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/org.springframework.android/spring-android-rest-template/1.0.1.RELEASE/e132d929bd181941f79b0d63edafb8a86ae6fd33/spring-android-rest-template-1.0.1.RELEASE.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="e132d929bd181941f79b0d63edafb8a86ae6fd33">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/spring-android-rest-template-1.0.1.RELEASE_5bb8083d3be1ed7b80b6ad14a9ab7dcd10b075b9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.github.traex.rippleeffect/library/1.3/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ee17feb34ce104bc17d1a1e64346d7f779ebb066">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.traex.rippleeffect-library-1.3_7552329cab90e4b775826dfa5ad455a9367d9700/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-ads-8.4.0_8e4015831a4e01dc7c2d5d40d6cc1f65d2697458/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/1.2.2/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="803c4c913beac8f7980d680c725a40835d1d7c77">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/de.hdodenhof-circleimageview-1.2.2_58781e52555f66d77798c89e338985363e7f31bf/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.melnykov/floatingactionbutton/1.0.7/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b105aa5409ceb15382344efedf970c1b8257a09a">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.melnykov-floatingactionbutton-1.0.7_9dff71c6676234721e01a6a87c835c1f5953c309/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-base-8.4.0_264ab610680cf213a579f19b88908446f3b9d308/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-wallet-8.4.0_4d94a0a0495674b47c7e6f729a95a174f51b2e8e/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="1b8e03daaa43fb0a4cd57e378167c2fd70454c1e">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-appcompat-v7-23.3.0_0a76dcbfd12b59ae97029124e2c3ef6946bcbb94/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="551e78f21acf69ebfb489c0e79647824c838013e">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-cast-8.4.0_de2a2f54213dbf8e97d884bd98a84c2c6f0afca9/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.github.ksoichiro/android-observablescrollview/1.5.2/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="256c2cf84542c459927ed4aa5f99a9b47855c071">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.github.ksoichiro-android-observablescrollview-1.5.2_52a281b1923eab490fb9b91dfc4a734e55436078/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-multidex-1.0.1_9add3e706213f8f3e98b7901f7ff8644552b109f/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.jakewharton/butterknife/7.0.1/d5d13ea991eab0252e3710e5df3d6a9d4b21d461/butterknife-7.0.1.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d5d13ea991eab0252e3710e5df3d6a9d4b21d461">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/butterknife-7.0.1_5e5df5aafd49abfa4f9640ec407626b6303ca61b/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="8a034dd16c0dfd75fe86c52c2cd581592acc684a">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-v4-23.3.0_151842898ea1f7aa7473a375e5d4f4f54f586814/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.3.0/jars/libs/internal_impl-23.3.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="4da5a4d697d32497c6f85567a5112e62fdfd0676">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.3.0_a4d840557a03560cdbc02be0b33fe8562b52c4cd/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ba731c5f80a15f30a80ed99787f32bd90e0dce35">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_cd494d2ca1d2ecc74d4a1e296ce4129a408c53bb/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="b36f30ac5ee5d5214f4b1e2ac49f11889d58e71a">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-drive-8.4.0_a60811ef7186585db6be275c7694778603981894/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="23be6993826b8fd88bbc8d14928bb3b8960d3d4e">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-animated-vector-drawable-23.3.0_a77acc7ba75b6814425279f6c4925b0beae8f058/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/8.4.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.google.android.gms-play-services-location-8.4.0_72ac1196d29761b35f03a0fe7735003a0107fab7/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/Desktop/EventFy/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/23.3.0/jars/classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="a0b5d60246cd9d4f3f2443611b3b4c25265840b5">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/com.android.support-support-vector-drawable-23.3.0_0673560c92a265f9ab8d18515952fac48075685d/classes.dex" />
+    </item>
+    <item
+        jar="/Users/swapnil/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.7.3/f12e6cd05cbaecd74d16e685d45b627732939e42/jackson-databind-2.7.3.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f12e6cd05cbaecd74d16e685d45b627732939e42">
+        <dex dex="/Users/swapnil/Desktop/EventFy/app/build/intermediates/transforms/dex/debug/folders/1000/10/jackson-databind-2.7.3_111262997ca3b7d38fa6d07346766c5c6ca1e843/classes.dex" />
+    </item>
+
+</items>
