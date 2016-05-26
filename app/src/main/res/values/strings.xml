@@ -1,83 +1,16 @@
 <resources>
-
-
     <string name="app_name">EventFy</string>
-
-    <string name="hello_world">Hello world!</string>
-
-
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_main2">Main2Activity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="evnt_cpcty">Event Capacity</string>
-
-
-    <!-- Toolbar titles -->
-    <string name="toolbar_title_home">Home</string>
-    <string name="toolbar_title_explore">Explore</string>
-    <string name="other_activity">Other Activity</string>
-
-    <!-- Navigation Drawer -->
-    <string name="nav_drawer_item_home">Home</string>
-    <string name="nav_drawer_item_explore">Explore</string>
-    <string name="nav_drawer_help_and_feedback"><![CDATA[Help & feedback]]></string>
-    <string name="nav_drawer_about">About</string>
+    <string name="action_settings">Settings</string>
+    <string name="one">ONE</string>
+    <string name="four">FOUR</string>
+    <string name="three">THREE</string>
+    <string name="two">TWO</string>
+    <string name="title_activity_custom_view_icon_text_tabs">Home</string>
     <string name="navigation_drawer_opened">The navigation drawer is opened</string>
     <string name="navigation_drawer_closed">The navigation drawer is closed</string>
-    <string name="tag_nav_drawer_main_entry">nav_drawer_main_entry</string>
-    <string name="tag_nav_drawer_special_entry">nav_drawer_special_entry</string>
-    <string name="tools_text_account_information_username">Username</string>
-    <string name="tools_text_account_information_email">user@mail.com</string>
-
-    <!-- Typeface names -->
-    <string name="typeface_roboto_regular">Roboto-Regular</string>
-    <string name="typeface_roboto_medium">Roboto-Medium</string>
-    <string name="title_activity_event_info">EventInfoActivity</string>
-    <string name="title_activity_create_event">CreateEvent</string>
-    <string name="pick_image_intent_text">Please pick image</string>
-
-    <string name="action_select">Pick</string>
-
-    <string name="title_activity_create_public_event">CreatePublicEvent</string>
-
-
-    <string name="facebook_app_id">250414581969875</string>
-    <string name="profile_start_url">https://graph.facebook.com/</string>
-    <string name="profile_end_url">/picture?type=large</string>
-    <string name="title_activity_verify_account">VerifyAccount</string>
-
-    <!-- Web servises url -->
-
-    <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">http://192.168.0.17:8080/EventFy</string>
-    <string name="login">/webapi/login</string>
-    <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
-
-    <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
-
-
-    <string name="signup_adduser">/webapi/signup/adduser</string>
-
-    <string name="verification_get">/webapi/signup/getverificationcode</string>
-
-    <string name="verification_check">/webapi/signup/checkverificationcode</string>
-    <string name="title_activity_maps">Map</string>
-
-    <string name="add_event">/webapi/events/add</string>
-
-    <string name="get_nearby_event">/webapi/events/getnearbyevents</string>
-
-    <string name="reg_gcm_userid">/webapi/notifications/registeruser</string>
-
-    <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
-
-    <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
-    <string name="add_comment_in_event">/webapi/comments/addcomment</string>
 
 </resources>
