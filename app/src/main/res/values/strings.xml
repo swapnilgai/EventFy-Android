@@ -3,7 +3,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="action_settings">Settings</string>
     <string name="one">ONE</string>
     <string name="four">FOUR</string>
@@ -13,4 +12,29 @@
     <string name="navigation_drawer_opened">The navigation drawer is opened</string>
     <string name="navigation_drawer_closed">The navigation drawer is closed</string>
 
+
+    <!-- Web servises url -->
+
+    <string name="ip_local">https://eventfy.herokuapp.com</string>
+    <string name="ip_localhost">http://192.168.0.17:8080/EventFy</string>
+    <string name="login">/webapi/login</string>
+    <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
+    <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
+    <string name="signup_adduser">/webapi/signup/adduser</string>
+    <string name="verification_get">/webapi/signup/getverificationcode</string>
+    <string name="verification_check">/webapi/signup/checkverificationcode</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="add_event">/webapi/events/add</string>
+    <string name="get_nearby_event">/webapi/events/getnearbyevents</string>
+    <string name="reg_gcm_userid">/webapi/notifications/registeruser</string>
+    <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
+    <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
+    <string name="add_comment_in_event">/webapi/comments/addcomment</string>
+
+    <!-- Golbal values for veriables-->
+
+    <string name="LOCATION_LATITUDE">LATITUDE</string>
+    <string name="LOCATION_LONGITUDE">LONGITUDE</string>
+    <string name="USER_CURRENT_LOCATION_SERVICE">USER_CURRENT_LOCATION_SERVICE</string>
+    <string name="USER_ID">USER_ID</string>
 </resources>

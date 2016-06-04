@@ -1,5 +1,9 @@
 package com.java.eventfy;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -11,15 +15,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.asyncCalls.GetNearbyEvent;
+import com.java.eventfy.entity.Location;
+import com.java.eventfy.service.UserCurrentLocation;
 import com.java.eventfy.fragments.Nearby;
 import com.java.eventfy.fragments.Nearby_Map;
 import com.java.eventfy.fragments.Remot;
 import com.java.eventfy.fragments.Remot_Map;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +38,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    NavigationView navigationView;
+    private NavigationView navigationView;
+    private EventBus eventBus;
+    private  String LOCATION_LATITUDE;
+    private  String LOCATION_LONGITUDE;
+    private  String USER_ID;
+    private  String url;
+    private GetNearbyEvent getNearbyEvent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +68,55 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
 
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
         toggle.syncState();
 
         setupTabIcons();
+
+        initServices();
+
+        initEventBus();
+
+        getNearbEventServerCall();
+
+
     }
+
+    public void initEventBus()
+    {
+         eventBus = EventBusService.getInstance();
+    }
+
+    private void initServices() {
+        // GET USER CURRENT LOCATION ON APPLICATION STARTUP
+        startService(new Intent(this, UserCurrentLocation.class));
+    }
+
+    // GET USER LOCATION
+    private void getServiceDataForLocationObj()
+    {
+        SharedPreferences prefs = getSharedPreferences(getResources().getString(R.string.USER_CURRENT_LOCATION_SERVICE), Context.MODE_PRIVATE);
+        LOCATION_LATITUDE = prefs.getString(getResources().getString(R.string.LOCATION_LONGITUDE), null);
+        LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.LOCATION_LONGITUDE), null);
+        USER_ID = prefs.getString(getResources().getString(R.string.USER_ID), null);
+
+    }
+
+    private void getNearbEventServerCall(){
+
+        getServiceDataForLocationObj();
+        Location location = new Location();
+        location.setLatitude(Double.parseDouble(LOCATION_LATITUDE));
+        location.setLongitude(Double.parseDouble(LOCATION_LONGITUDE));
+        location.setUserId(USER_ID);
+
+        //setting url
+        url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
+
+        getNearbyEvent = new GetNearbyEvent(url, location);
+        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
 
     /**
      * Adding custom view to tab
@@ -137,7 +194,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
-        Log.e("item clicked : ",""+item);
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
