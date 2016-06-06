@@ -7,6 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.java.eventfy.R;
+import com.java.eventfy.entity.Events;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 
 public class Nearby_Map extends Fragment{
@@ -27,4 +32,9 @@ public class Nearby_Map extends Fragment{
         return inflater.inflate(R.layout.fragment_nearby_map, container, false);
     }
 
+    @Subscribe
+    public void receiveEvents(List<Events> eventsList)
+    {
+        //TODO implement map
+    }
 }

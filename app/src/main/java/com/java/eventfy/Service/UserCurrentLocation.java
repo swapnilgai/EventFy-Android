@@ -67,6 +67,8 @@ public class UserCurrentLocation extends Service {
             editor.putString(getResources().getString(R.string.LOCATION_LATITUDE), String.valueOf(mLastLocation.getLatitude()));
             editor.putString(getResources().getString(R.string.LOCATION_LONGITUDE), String.valueOf(mLastLocation.getLatitude()));
             editor.commit();
+
+            Log.e(TAG, "Current lat :  "+mLastLocation.getLatitude());
         }
 
     }
@@ -115,6 +117,7 @@ public class UserCurrentLocation extends Service {
         }
 
         mLocationListeners[0].storeCurrentLocation(getApplicationContext());
+
     }
 
     @Override

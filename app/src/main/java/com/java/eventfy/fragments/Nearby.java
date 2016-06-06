@@ -8,17 +8,25 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
+import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.customLibraries.DividerItemDecoration;
+import com.java.eventfy.entity.Events;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import butterknife.Bind;
 
-public class Nearby extends Fragment{
+public class Nearby extends Fragment {
     MainRecyclerAdapter adapter;
 
     @Bind(R.id.swipe_container_nearby)
@@ -43,6 +51,12 @@ public class Nearby extends Fragment{
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
 
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
+
+        adapter = new MainRecyclerAdapter();
+        Log.e("recycle: ", ""+recyclerView);
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
@@ -51,7 +65,7 @@ public class Nearby extends Fragment{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                GetNearbyEventForTab1 getNearbyEventForTab1 = new GetNearbyEventForTab1();
+                GetNearbyEvent getNearbyEventForTab1 = new GetNearbyEvent();
                 getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
@@ -59,8 +73,32 @@ public class Nearby extends Fragment{
     }
 
 
+    @Subscribe
+    public void receiveEvents(List<Events> eventsList)
+    {
+        Log.e("in receiver : ", ""+eventsList.size());
+        bindAdapter(adapter, eventsList);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBusService.getInstance().register(this);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBusService.getInstance().unregister(this);
+    }
 
+    private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
+        swipeRefreshLayout.setRefreshing(false);
+        if (adapter != null){
+            adapter.clear();
+            adapter.addAll(eventsList);
+            adapter.notifyDataSetChanged();
+        }
+    }
 
 }

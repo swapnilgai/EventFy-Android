@@ -99,6 +99,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.LOCATION_LONGITUDE), null);
         USER_ID = prefs.getString(getResources().getString(R.string.USER_ID), null);
 
+
+        LOCATION_LONGITUDE = "-117.8831091";
+        LOCATION_LATITUDE = "33.8748963";
+        USER_ID = "xyz";
+
     }
 
     private void getNearbEventServerCall(){
