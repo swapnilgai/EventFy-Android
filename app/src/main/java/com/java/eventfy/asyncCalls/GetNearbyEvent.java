@@ -65,6 +65,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
             }
         //initView();
         Log.e("data len : ", ""+eventLst.size());
+        EventBusService.getInstance().post("nearby");
         EventBusService.getInstance().post(eventLst);
     }
 }

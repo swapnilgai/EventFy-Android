@@ -80,6 +80,12 @@ public class Nearby extends Fragment {
         bindAdapter(adapter, eventsList);
     }
 
+    @Subscribe
+    public void setFlag(String flag)
+    {
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();

@@ -21,7 +21,7 @@ public class UserCurrentLocation extends Service {
 
     private static final String TAG = "BOOMBOOMTESTGPS";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL = 100000000;
+    private static final int LOCATION_INTERVAL = 100;
     private static final float LOCATION_DISTANCE = 10f;
 
 
