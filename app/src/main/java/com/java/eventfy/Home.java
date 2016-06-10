@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.entity.Location;
-import com.java.eventfy.service.UserCurrentLocation;
 import com.java.eventfy.fragments.Nearby;
 import com.java.eventfy.fragments.Nearby_Map;
 import com.java.eventfy.fragments.Remot;
@@ -88,7 +87,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-        startService(new Intent(this, UserCurrentLocation.class));
+        startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
     }
 
     // GET USER LOCATION
