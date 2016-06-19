@@ -3,7 +3,11 @@ package com.java.eventfy.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.java.eventfy.EventBus.EventBusService;
@@ -24,25 +29,26 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
-import butterknife.Bind;
-
 public class Nearby extends Fragment {
-    MainRecyclerAdapter adapter;
+    private MainRecyclerAdapter adapter;
 
-    @Bind(R.id.swipe_container_nearby)
-    SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    @Bind(R.id.recycler_nearby)
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
 
+    private FloatingActionButton fragment_switch_button;
+    private FragmentTransaction transaction;
+    private FragmentManager manager;
+    private Fragment nearby_map;
+    private static final String context_id = "11";
 
     public Nearby() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -55,7 +61,6 @@ public class Nearby extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
         adapter = new MainRecyclerAdapter();
-        Log.e("recycle: ", ""+recyclerView);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -69,7 +74,40 @@ public class Nearby extends Fragment {
                 getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
-      return view;
+
+        fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
+        fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
+        manager = getActivity().getSupportFragmentManager();
+        Log.e("frag manager:  ",""+manager);
+        transaction = manager.beginTransaction();
+        view.setId(Integer.parseInt(context_id));
+
+        nearby_map = new Nearby_Map();
+        transaction.add(Integer.parseInt(context_id), nearby_map, "nearby_map");
+        transaction.hide(nearby_map);
+        transaction.commit();
+
+        fragment_switch_button.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(nearby_map.isHidden()) {
+                    transaction = manager.beginTransaction();
+                    transaction.show(nearby_map);
+                    transaction.commit();
+                    fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
+                }
+                else{
+                    transaction = manager.beginTransaction();
+                    transaction.hide(nearby_map);
+                    transaction.commit();
+                    fragment_switch_button.setImageResource(R.drawable.ic_map_white_24dp);
+                }
+            }
+        });
+
+        return view;
     }
 
 

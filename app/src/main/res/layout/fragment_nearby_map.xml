@@ -2,16 +2,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/commentLayout"
+                android:id="@+id/neatby_map"
                 android:layout_alignParentBottom="true">
 
-
         <com.google.android.gms.maps.MapView
-            android:id="@+id/map_tab"
+            android:id="@+id/map_tab_nearby"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
-
-
 
 </RelativeLayout>

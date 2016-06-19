@@ -15,15 +15,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.entity.Location;
 import com.java.eventfy.fragments.Nearby;
-import com.java.eventfy.fragments.Nearby_Map;
 import com.java.eventfy.fragments.Remot;
 import com.java.eventfy.fragments.Remot_Map;
 
@@ -44,6 +45,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private  String USER_ID;
     private  String url;
     private GetNearbyEvent getNearbyEvent;
+    View decorView;
 
 
     @Override
@@ -61,21 +63,25 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        decorView = getWindow().getDecorView();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
 
+        initServices();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         toggle.syncState();
 
         setupTabIcons();
 
-        initServices();
-
         initEventBus();
 
-        getNearbEventServerCall();
+     //   getNearbEventServerCall();
 
 
     }
@@ -87,15 +93,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
+
         startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
+
+        Log.e("service started : ", " **** ");
     }
 
     // GET USER LOCATION
     private void getServiceDataForLocationObj()
     {
         SharedPreferences prefs = getSharedPreferences(getResources().getString(R.string.USER_CURRENT_LOCATION_SERVICE), Context.MODE_PRIVATE);
-        LOCATION_LATITUDE = prefs.getString(getResources().getString(R.string.LOCATION_LONGITUDE), null);
-        LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.LOCATION_LONGITUDE), null);
+        LOCATION_LATITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LATITUDE), null);
+        LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LONGITUDE), null);
         USER_ID = prefs.getString(getResources().getString(R.string.USER_ID), null);
 
 
@@ -104,6 +113,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         USER_ID = "xyz";
 
     }
+
 
     private void getNearbEventServerCall(){
 
@@ -132,21 +142,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_navigation_white_24dp, 0, 0);
         tabLayout.getTabAt(0).setCustomView(tabOne);
 
-        TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabTwo.setText("Map");
-        tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_map_white_24dp, 0, 0);
-        tabLayout.getTabAt(1).setCustomView(tabTwo);
-
         TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabThree.setText("Remote");
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_near_me_white_24dp, 0, 0);
-        tabLayout.getTabAt(2).setCustomView(tabThree);
+        tabLayout.getTabAt(1).setCustomView(tabThree);
 
 
         TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        tabFour.setText("Map");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_map_white_24dp, 0, 0);
-        tabLayout.getTabAt(3).setCustomView(tabFour);
+        tabFour.setText("Notification");
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.cast_ic_notification_0, 0, 0);
+        tabLayout.getTabAt(2).setCustomView(tabFour);
 
     }
 
@@ -158,9 +163,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Nearby(), "Nearby");
-        adapter.addFrag(new Nearby_Map(), "Map");
+      //  adapter.addFrag(new Nearby_Map(), "Map");
         adapter.addFrag(new Remot(), "Remot");
-        adapter.addFrag(new Remot_Map(), "Map");
+        adapter.addFrag(new Remot_Map(), "Notification");
         viewPager.setAdapter(adapter);
     }
 
@@ -227,5 +232,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         return true;
     }
+
+
 
 }

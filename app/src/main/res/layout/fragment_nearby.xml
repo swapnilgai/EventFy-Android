@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container_nearby"
@@ -13,8 +15,16 @@
             android:id="@+id/recycler_nearby"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
-
     </android.support.v4.widget.SwipeRefreshLayout>
-</RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="25dp"
+        app:layout_anchorGravity="bottom|right|end"
+        android:id="@+id/fragment_switch_button_nearby"
+        android:background="@drawable/abc_action_bar_item_background_material"/>
+
+</FrameLayout>
 
