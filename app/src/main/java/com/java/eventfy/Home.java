@@ -21,12 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.java.eventfy.Entity.Location;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.Fragments.Nearby;
+import com.java.eventfy.Fragments.Notification;
+import com.java.eventfy.Fragments.Remot;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
-import com.java.eventfy.entity.Location;
-import com.java.eventfy.fragments.Nearby;
-import com.java.eventfy.fragments.Remot;
-import com.java.eventfy.fragments.Remot_Map;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -53,6 +53,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        Log.e("in create  :: ", "");
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,9 +73,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
 
-        initServices();
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        initServices();
 
         toggle.syncState();
 
@@ -96,7 +100,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
 
-        Log.e("service started : ", " **** ");
     }
 
     // GET USER LOCATION
@@ -107,9 +110,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LONGITUDE), null);
         USER_ID = prefs.getString(getResources().getString(R.string.USER_ID), null);
 
-
-        LOCATION_LONGITUDE = "-117.8831091";
-        LOCATION_LATITUDE = "33.8748963";
         USER_ID = "xyz";
 
     }
@@ -150,7 +150,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabFour.setText("Notification");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.cast_ic_notification_0, 0, 0);
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_favourite, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabFour);
 
     }
@@ -163,9 +163,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new Nearby(), "Nearby");
-      //  adapter.addFrag(new Nearby_Map(), "Map");
         adapter.addFrag(new Remot(), "Remot");
-        adapter.addFrag(new Remot_Map(), "Notification");
+        adapter.addFrag(new Notification(), "Notification");
         viewPager.setAdapter(adapter);
     }
 
@@ -229,10 +228,28 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             // Handle the MyAccount action
 
         }
-
         return true;
     }
 
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initServices();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initServices();
+
+    }
 
 }

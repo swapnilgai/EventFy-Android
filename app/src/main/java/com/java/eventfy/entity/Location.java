@@ -1,4 +1,4 @@
-package com.java.eventfy.entity;
+package com.java.eventfy.Entity;
 
 /**
  * Created by swapnil on 5/29/16.

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 
 import com.java.eventfy.R;
-import com.java.eventfy.entity.Events;
+import com.java.eventfy.Entity.Events;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;

@@ -1,4 +1,4 @@
-package com.java.eventfy.entity;
+package com.java.eventfy.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;

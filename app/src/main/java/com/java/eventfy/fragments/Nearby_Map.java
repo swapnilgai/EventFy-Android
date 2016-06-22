@@ -1,8 +1,6 @@
-package com.java.eventfy.fragments;
+package com.java.eventfy.Fragments;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,20 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
-import com.java.eventfy.entity.Events;
+import com.java.eventfy.Entity.Events;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -33,7 +29,6 @@ import java.util.List;
 public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
-    private MapView mapView;
     private boolean mapsSupported = true;
     private List<Events> eventLst;
     private Button filter;
@@ -41,6 +36,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private LatLng myLaLn;
     private Circle mapCircle;
     private View view;
+    SupportMapFragment supportMapFragment;
 
     private android.location.Location cLocation;
 
@@ -49,51 +45,69 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getActivity());
 
-        if (mapView != null) {
-            mapView.onCreate(savedInstanceState);
-        }
+        supportMapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.nearby_map));
+
+           googleMap = supportMapFragment.getMap();
+
+        supportMapFragment.getMapAsync(this);
     }
 
     private void initializeMap() {
-        if (googleMap == null && mapsSupported) {
-            mapView = (MapView) view.findViewById(R.id.map_tab_nearby);
 
-            googleMap = mapView.getMap();
 
-            Log.e("google map view : ", "" + googleMap);
+        if(googleMap==null)
+        {
+            googleMap = supportMapFragment.getMap();
+
+//            if(myLaLn==null)
+//            {
+//                SharedPreferences prefs = getActivity().getSharedPreferences(getResources().getString(R.string.USER_CURRENT_LOCATION_SERVICE), Context.MODE_PRIVATE);
+//                String LOCATION_LATITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LATITUDE), null);
+//                String LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LONGITUDE), null);
+//                myLaLn = new LatLng(Double.parseDouble(LOCATION_LATITUDE), Double.parseDouble(LOCATION_LONGITUDE));
+//            }
+
+        }
+
+        setUpMarker();
+    }
+
+
+    public void setUpMarker()
+    {
+        {
+
+            Log.e("add marker called ", ""+googleMap);
+
 
             int zoomVal = 10;
 
-            //setup markers etc...
-            if (googleMap != null) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(myLaLn);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            googleMap.addMarker(markerOptions);
 
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-// then you use
-//    String MY_LATITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LATITUDE), null);
-//    String MY_LONGITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LONGITUDE), null);
-                Log.e("in map lat", " : " + myLaLn);
 
-                CameraPosition camPos = new CameraPosition.Builder().target(myLaLn)
-                        .zoom(zoomVal)
-                        .bearing(15)
-                        .tilt(0)
-                        .build();
+            //googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            googleMap.getUiSettings().setMapToolbarEnabled(true);
 
-                CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
-                googleMap.animateCamera(camUpd3);
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(myLaLn);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                googleMap.addMarker(markerOptions);
-            }
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
+            // Zoom in, animating the camera.
+            googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_nearby_map, container, false);
-        mapView = (MapView) view.findViewById(R.id.map_tab_nearby);
         EventBusService.getInstance().register(this);
         //initializeMap();
 
@@ -104,34 +118,33 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        mapView.onSaveInstanceState(outState);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
+        googleMap.clear();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mapView.onResume();
-        Log.e("in map init ", "");
-     //   initializeMap();
+       googleMap.clear();
+        //mapView.onResume();
+        //initializeMap();
     }
 
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        googleMap.clear();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView.onLowMemory();
+       // mapView.onLowMemory();
     }
 
 
@@ -148,5 +161,4 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
       this.myLaLn = myLaLn;
         initializeMap();
     }
-
 }

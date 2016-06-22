@@ -1,4 +1,4 @@
-package com.java.eventfy.fragments;
+package com.java.eventfy.Fragments;
 
 
 import android.os.AsyncTask;
@@ -23,7 +23,7 @@ import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.customLibraries.DividerItemDecoration;
-import com.java.eventfy.entity.Events;
+import com.java.eventfy.Entity.Events;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -78,7 +78,6 @@ public class Nearby extends Fragment {
         fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
         fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
         manager = getActivity().getSupportFragmentManager();
-        Log.e("frag manager:  ",""+manager);
         transaction = manager.beginTransaction();
         view.setId(Integer.parseInt(context_id));
 
@@ -107,6 +106,7 @@ public class Nearby extends Fragment {
             }
         });
 
+        super.onSaveInstanceState(savedInstanceState);
         return view;
     }
 
@@ -134,6 +134,7 @@ public class Nearby extends Fragment {
     public void onPause() {
         super.onPause();
         EventBusService.getInstance().unregister(this);
+
     }
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){

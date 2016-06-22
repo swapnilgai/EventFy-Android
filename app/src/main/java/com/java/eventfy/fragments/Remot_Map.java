@@ -1,4 +1,4 @@
-package com.java.eventfy.fragments;
+package com.java.eventfy.Fragments;
 
 
 import android.os.Bundle;
@@ -20,9 +20,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
-import com.java.eventfy.entity.Events;
+import com.java.eventfy.Entity.Events;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -41,6 +44,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     private LatLng myLaLn_remot;
     private Circle mapCircle_remot;
     private View view_remot;
+    LatLng myLaLn;
 
     private android.location.Location cLocation;
 
@@ -48,6 +52,8 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getActivity());
+
+
 
         if (mapView_remot != null) {
             mapView_remot.onCreate(savedInstanceState);
@@ -58,10 +64,14 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
     private void initializeMap() {
         if (googleMap_remot == null && mapsSupported_remot) {
-            mapView_remot = (MapView) view_remot.findViewById(R.id.map_tab_remot);
+            if(mapView_remot==null)
+                mapView_remot = (MapView) view_remot.findViewById(R.id.map_tab_remot);
 
             googleMap_remot = mapView_remot.getMap();
-            Log.e("map view remot : ", ""+googleMap_remot);
+        }
+        if(googleMap_remot!=null) {
+            Log.e("map view : ", "" + mapView_remot);
+            Log.e("google map view : ", "" + googleMap_remot);
 
 
             int zoomVal = 10;
@@ -86,8 +96,8 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 //            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
 //            googleMap_remot.addMarker(markerOptions);
 
-            if(googleMap_remot!=null) {
-                LatLng myLaLn = new LatLng(-34, 151);
+            if (googleMap_remot != null) {
+
 
                 CameraPosition camPos = new CameraPosition.Builder().target(myLaLn)
                         .zoom(zoomVal)
@@ -114,7 +124,8 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
         MapsInitializer.initialize(getActivity());
         mapView_remot = (MapView) view_remot.findViewById(R.id.map_tab_remot);
-        initializeMap();
+       // if(!EventBusService.getInstance().isRegistered(this))
+            EventBusService.getInstance().register(this);
         return view_remot;
     }
 
@@ -135,7 +146,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
         mapView_remot.onResume();
-        initializeMap();
     }
 
 
@@ -153,6 +163,15 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+    }
+
+    @Subscribe
+    public void getMyLatLang(LatLng myLaLn)
+    {
+        this.myLaLn = myLaLn;
+
+        initializeMap();
 
     }
 }

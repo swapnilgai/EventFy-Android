@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.java.eventfy.EventBus.EventBusService;
-import com.java.eventfy.entity.Events;
-import com.java.eventfy.entity.Location;
+import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
