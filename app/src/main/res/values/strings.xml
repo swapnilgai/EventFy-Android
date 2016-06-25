@@ -38,6 +38,10 @@
     <string name="USER_CURRENT_LOCATION_SERVICE">USER_CURRENT_LOCATION_SERVICE</string>
     <string name="USER_ID">USER_ID</string>
 
+    <string name="nearby_flag">nearby_flag</string>
+    <string name="remot_flag">remot_flag</string>
+
+
     <!-- Search place autocomplete button -->
        <string name="place_details">
     <![CDATA[
@@ -51,6 +55,20 @@
         <br/>
         Website: %5$s
     ]]>
+    </string>
+
+    <string name="selected_place">Last Selected Place:</string>
+
+     <string name="intro_message">
+        <![CDATA[
+
+
+            This sample uses the PlaceAutocompleteFragment from the Places API for Android within a
+            CardView to provide an autocomplete powered search experience. Once a place is selected,
+            its details are displayed.
+
+
+        ]]>
     </string>
 
 </resources>

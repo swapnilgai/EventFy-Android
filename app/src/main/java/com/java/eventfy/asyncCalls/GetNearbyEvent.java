@@ -1,11 +1,10 @@
 package com.java.eventfy.asyncCalls;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
+import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -24,13 +23,14 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     private String url;
     private Location locationObj;
     private List<Events> eventLst;
+    private String flag;
     public GetNearbyEvent()
     {}
 
-    public GetNearbyEvent(String url, Location locationObj){
+    public GetNearbyEvent(String url, Location locationObj, String flag){
         this.url = url;
         this.locationObj = locationObj;
-
+        this.flag= flag;
     }
 
     @Override
@@ -56,16 +56,13 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-
-
         if(eventLst!=null)
             for(Events obj : eventLst) {
                 if(obj.getEventImageUrl().equals("default"))
                     obj.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
             }
-        //initView();
-        Log.e("data len : ", ""+eventLst.size());
-        EventBusService.getInstance().post("nearby");
+
+        EventBusService.getInstance().post(flag);
         EventBusService.getInstance().post(eventLst);
     }
 }

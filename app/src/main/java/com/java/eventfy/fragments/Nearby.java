@@ -1,7 +1,6 @@
 package com.java.eventfy.Fragments;
 
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -12,18 +11,19 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.customLibraries.DividerItemDecoration;
-import com.java.eventfy.Entity.Events;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -31,16 +31,17 @@ import java.util.List;
 
 public class Nearby extends Fragment {
     private MainRecyclerAdapter adapter;
-
     private SwipeRefreshLayout swipeRefreshLayout;
-
     private RecyclerView recyclerView;
-
     private FloatingActionButton fragment_switch_button;
     private FragmentTransaction transaction;
     private FragmentManager manager;
     private Fragment nearby_map;
     private static final String context_id = "11";
+    private String flag;
+    private LatLng latLng;
+    private GetNearbyEvent getNearbyEvent;
+
 
     public Nearby() {
         // Required empty public constructor
@@ -70,8 +71,7 @@ public class Nearby extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                GetNearbyEvent getNearbyEventForTab1 = new GetNearbyEvent();
-                getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                getNearbEventServerCall();
             }
         });
 
@@ -110,18 +110,38 @@ public class Nearby extends Fragment {
         return view;
     }
 
-
+    // ***** event bus call
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        Log.e("in receiver : ", ""+eventsList.size());
-        bindAdapter(adapter, eventsList);
+        if(flag.equals(getResources().getString(R.string.nearby_flag)))
+            bindAdapter(adapter, eventsList);
     }
 
     @Subscribe
     public void setFlag(String flag)
     {
+        this.flag = flag;
+    }
 
+    @Subscribe
+    public void geetLocation(LatLng latLag)
+    {
+        this.latLng = latLag;
+        getNearbEventServerCall();
+
+    }
+
+    // ****** ASYNC CALL
+    private void getNearbEventServerCall(){
+
+        Location location = new Location();
+        location.setLatitude(latLng.latitude);
+        location.setLongitude(latLng.longitude);
+        location.setUserId("temp");
+        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
+      //  getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.nearby_flag));
+      //  getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.java.eventfy.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
-import com.java.eventfy.Entity.Events;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -36,39 +35,27 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private LatLng myLaLn;
     private Circle mapCircle;
     private View view;
-    SupportMapFragment supportMapFragment;
-
-    private android.location.Location cLocation;
+    private String flag;
+    SupportMapFragment supportMapFragmentNearby;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getActivity());
 
-        supportMapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.nearby_map));
+        supportMapFragmentNearby = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.nearby_map);
 
-           googleMap = supportMapFragment.getMap();
+           googleMap = supportMapFragmentNearby.getMap();
 
-        supportMapFragment.getMapAsync(this);
+        supportMapFragmentNearby.getMapAsync(this);
     }
 
     private void initializeMap() {
 
-
         if(googleMap==null)
         {
-            googleMap = supportMapFragment.getMap();
-
-//            if(myLaLn==null)
-//            {
-//                SharedPreferences prefs = getActivity().getSharedPreferences(getResources().getString(R.string.USER_CURRENT_LOCATION_SERVICE), Context.MODE_PRIVATE);
-//                String LOCATION_LATITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LATITUDE), null);
-//                String LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LONGITUDE), null);
-//                myLaLn = new LatLng(Double.parseDouble(LOCATION_LATITUDE), Double.parseDouble(LOCATION_LONGITUDE));
-//            }
-
+            googleMap = supportMapFragmentNearby.getMap();
         }
-
         setUpMarker();
     }
 
@@ -77,16 +64,12 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     {
         {
 
-            Log.e("add marker called ", ""+googleMap);
-
-
             int zoomVal = 10;
 
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLaLn);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             googleMap.addMarker(markerOptions);
-
 
             //googleMap.setMyLocationEnabled(true);
             googleMap.getUiSettings().setCompassEnabled(true);
@@ -130,8 +113,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void onResume() {
         super.onResume();
        googleMap.clear();
-        //mapView.onResume();
-        //initializeMap();
     }
 
 
@@ -153,7 +134,20 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     }
 
+    // ***** event bus call
+    @Subscribe
+    public void receiveEvents(List<Events> eventsList)
+    {
+        if(flag.equals(getResources().getString(R.string.nearby_flag)))
+            initializeMap();
 
+    }
+
+    @Subscribe
+    public void setFlag(String flag)
+    {
+        this.flag = flag;
+    }
     // event bus subscribtion
     @Subscribe
     public void getMyLatLang(LatLng myLaLn)

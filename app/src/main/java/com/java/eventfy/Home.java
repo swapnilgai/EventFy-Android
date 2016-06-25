@@ -1,9 +1,6 @@
 package com.java.eventfy;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -21,12 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.java.eventfy.Entity.Location;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.Fragments.Notification;
 import com.java.eventfy.Fragments.Remot;
-import com.java.eventfy.asyncCalls.GetNearbyEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -38,14 +33,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private NavigationView navigationView;
     private EventBus eventBus;
-    private  String LOCATION_LATITUDE;
-    private  String LOCATION_LONGITUDE;
-    private  String USER_ID;
-    private  String url;
-    private GetNearbyEvent getNearbyEvent;
     View decorView;
+
 
 
     @Override
@@ -73,7 +63,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
 
-
+        initEventBus();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -83,11 +73,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         setupTabIcons();
 
-        initEventBus();
-
      //   getNearbEventServerCall();
-
-
     }
 
     public void initEventBus()
@@ -101,36 +87,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
 
     }
-
-    // GET USER LOCATION
-    private void getServiceDataForLocationObj()
-    {
-        SharedPreferences prefs = getSharedPreferences(getResources().getString(R.string.USER_CURRENT_LOCATION_SERVICE), Context.MODE_PRIVATE);
-        LOCATION_LATITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LATITUDE), null);
-        LOCATION_LONGITUDE = prefs.getString(getResources().getString(R.string.MY_LOCATION_LONGITUDE), null);
-        USER_ID = prefs.getString(getResources().getString(R.string.USER_ID), null);
-
-        USER_ID = "xyz";
-
-    }
-
-
-    private void getNearbEventServerCall(){
-
-        getServiceDataForLocationObj();
-        Location location = new Location();
-        location.setLatitude(Double.parseDouble(LOCATION_LATITUDE));
-        location.setLongitude(Double.parseDouble(LOCATION_LONGITUDE));
-        location.setUserId(USER_ID);
-
-        //setting url
-        url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-
-        getNearbyEvent = new GetNearbyEvent(url, location);
-        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-    }
-
 
     /**
      * Adding custom view to tab
@@ -231,8 +187,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return true;
     }
 
-
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -251,5 +205,4 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         initServices();
 
     }
-
 }

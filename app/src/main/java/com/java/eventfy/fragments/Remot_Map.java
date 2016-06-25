@@ -7,23 +7,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
-import com.java.eventfy.asyncCalls.GetNearbyEvent;
-import com.java.eventfy.Entity.Events;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -34,131 +32,98 @@ import java.util.List;
  */
 public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
-    private GoogleMap googleMap_remot;
+    private GoogleMap googleMapRemot;
     private MapView mapView_remot;
     private boolean mapsSupported_remot = true;
     private List<Events> eventLst;
-    private GetNearbyEvent getNearbyEvent_remot;
-    private Button filter_remot;
     private double radious_remot;
     private LatLng myLaLn_remot;
     private Circle mapCircle_remot;
-    private View view_remot;
+    private View viewRemot;
     LatLng myLaLn;
-
-    private android.location.Location cLocation;
+    SupportMapFragment supportMapFragmentRemot;
+    private String flag;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         MapsInitializer.initialize(getActivity());
 
+        supportMapFragmentRemot = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.remot_map));
 
+        googleMapRemot = supportMapFragmentRemot.getMap();
 
-        if (mapView_remot != null) {
-            mapView_remot.onCreate(savedInstanceState);
-        }
-
-//            cLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        supportMapFragmentRemot.getMapAsync(this);
     }
 
     private void initializeMap() {
-        if (googleMap_remot == null && mapsSupported_remot) {
-            if(mapView_remot==null)
-                mapView_remot = (MapView) view_remot.findViewById(R.id.map_tab_remot);
+        Log.e("in init map", ""+myLaLn);
 
-            googleMap_remot = mapView_remot.getMap();
+        if(googleMapRemot==null)
+        {
+            googleMapRemot = supportMapFragmentRemot.getMap();
         }
-        if(googleMap_remot!=null) {
-            Log.e("map view : ", "" + mapView_remot);
-            Log.e("google map view : ", "" + googleMap_remot);
+        setUpMarker();
+    }
 
-
+    public void setUpMarker()
+    {
+        {
+            Log.e("set marker in ", ""+myLaLn);
             int zoomVal = 10;
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(myLaLn);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            googleMapRemot.addMarker(markerOptions);
 
-//            myLaLn = new LatLng(cLocation.getLatitude(), cLocation.getLongitude());
-//
-//            Log.e("lat : "," "+myLaLn);
-//
+            //googleMap.setMyLocationEnabled(true);
+            googleMapRemot.getUiSettings().setCompassEnabled(true);
+            googleMapRemot.getUiSettings().setZoomControlsEnabled(true);
 
-//            LatLng myLaLn = new LatLng(-34, 151);
-//
-//            CameraPosition camPos = new CameraPosition.Builder().target(myLaLn)
-//                    .zoom(zoomVal)
-//                    .bearing(20)
-//                    .tilt(0)
-//                    .build();
-//
-//            CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
-//            googleMap_remot.animateCamera(camUpd3);
-//            MarkerOptions markerOptions = new MarkerOptions();
-//            markerOptions.position(myLaLn);
-//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-//            googleMap_remot.addMarker(markerOptions);
-
-            if (googleMap_remot != null) {
-
-
-                CameraPosition camPos = new CameraPosition.Builder().target(myLaLn)
-                        .zoom(zoomVal)
-                        .bearing(20)
-                        .tilt(0)
-                        .build();
-
-                CameraUpdate camUpd3 = CameraUpdateFactory.newCameraPosition(camPos);
-                googleMap_remot.animateCamera(camUpd3);
-                MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(myLaLn);
-                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                googleMap_remot.addMarker(markerOptions);
-            }
-
-
+            googleMapRemot.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
+            // Zoom in, animating the camera.
+            googleMapRemot.animateCamera(CameraUpdateFactory.zoomIn());
+            // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            googleMapRemot.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
+            Log.e("set marker out ", ""+myLaLn);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view_remot = inflater.inflate(R.layout.fragment_remot__map, container, false);
-
-        MapsInitializer.initialize(getActivity());
-        mapView_remot = (MapView) view_remot.findViewById(R.id.map_tab_remot);
-       // if(!EventBusService.getInstance().isRegistered(this))
-            EventBusService.getInstance().register(this);
-        return view_remot;
+        viewRemot = inflater.inflate(R.layout.fragment_remot__map, container, false);
+        EventBusService.getInstance().register(this);
+        return viewRemot;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        mapView_remot.onSaveInstanceState(outState);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-
+        googleMapRemot.clear();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mapView_remot.onResume();
     }
-
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView_remot.onDestroy();
+        googleMapRemot.clear();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        mapView_remot.onLowMemory();
+        // mapView.onLowMemory();
     }
 
     @Override
@@ -166,12 +131,23 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
     }
 
+    // ***** event bus call
     @Subscribe
-    public void getMyLatLang(LatLng myLaLn)
+    public void receiveEvents(List<Events> eventsList)
     {
-        this.myLaLn = myLaLn;
+        if(flag.equals(getResources().getString(R.string.remot_flag)))
+            initializeMap();
+    }
 
+    @Subscribe
+    public void setFlag(String flag)
+    {
+        this.flag = flag;
+    }
+    @Subscribe
+    public void getRemotPlaceLatLang(Place place)
+    {
+        this.myLaLn = place.getLatLng();
         initializeMap();
-
     }
 }
