@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,7 +42,6 @@ public class Remot extends Fragment {
 
     private FloatingActionButton fragment_switch_button_remot;
     private FloatingActionButton fragment_search_place_button;
-    private FloatingActionButton search_place_button_remot;
     private FragmentTransaction transaction_remot;
     private FragmentManager manager_remot;
     private Fragment remot_map;
@@ -91,8 +89,7 @@ public class Remot extends Fragment {
         fragment_switch_button_remot.setImageResource(R.drawable.ic_near_me_white_24dp);
 
         fragment_search_place_button = (FloatingActionButton) view.findViewById(R.id.search_place_button_remot);
-
-        search_place_button_remot= (FloatingActionButton) view.findViewById(R.id.search_place_button_remot);
+        fragment_search_place_button.setImageResource(R.drawable.ic_mode_edit_white_24dp);
 
         manager_remot = getActivity().getSupportFragmentManager();
         transaction_remot = manager_remot.beginTransaction();
@@ -105,12 +102,44 @@ public class Remot extends Fragment {
         transaction_remot.hide(remot_map);
 
         transaction_remot.add(Integer.parseInt(context_id), search_place, "seearch_place");
-        transaction_remot.hide(search_place);
+
+        swipeRefreshLayout.setVisibility(View.INVISIBLE);
+        transaction_remot.show(search_place);
 
         transaction_remot.commit();
 
         EventBusService.getInstance().register(this);
 
+        setOnClickListnerForFloatingButton();
+
+        if(latLng==null)
+            setDisableFloatingButton();
+        else
+            getRemotEventsServerCall();
+
+        return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(latLng==null)
+            setDisableFloatingButton();
+        else
+            getRemotEventsServerCall();
+    }
+
+    private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
+        swipeRefreshLayout.setRefreshing(false);
+        if (adapter != null){
+            adapter.clear();
+            adapter.addAll(eventsList);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public void setOnClickListnerForFloatingButton()
+    {
         fragment_switch_button_remot.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -135,47 +164,30 @@ public class Remot extends Fragment {
             }
         });
 
-
         fragment_search_place_button.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
-                    transaction_remot = manager_remot.beginTransaction();
-                    transaction_remot.hide(remot_map);
-                    swipeRefreshLayout.setVisibility(View.INVISIBLE);
-                    transaction_remot.show(search_place);
-                    transaction_remot.commit();
+                transaction_remot = manager_remot.beginTransaction();
+                transaction_remot.hide(remot_map);
+                swipeRefreshLayout.setVisibility(View.INVISIBLE);
+                transaction_remot.show(search_place);
+                transaction_remot.commit();
             }
         });
-
-
-        return view;
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
+    public void setDisableFloatingButton()
+    {
+        fragment_switch_button_remot.setVisibility(View.INVISIBLE);
+        fragment_search_place_button.setVisibility(View.INVISIBLE);
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-      //  EventBusService.getInstance().unregister(this);
+    public void setEnableFloatingButton()
+    {
+        fragment_switch_button_remot.setVisibility(View.VISIBLE);
+        fragment_search_place_button.setVisibility(View.VISIBLE);
     }
-
-    private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
-        swipeRefreshLayout.setRefreshing(false);
-        if (adapter != null){
-            adapter.clear();
-            adapter.addAll(eventsList);
-            adapter.notifyDataSetChanged();
-        }
-    }
-
-
     // ****** ASYNC CALL
     private void getRemotEventsServerCall(){
 
@@ -206,7 +218,7 @@ public class Remot extends Fragment {
     public void getRemotPlaceLatLang(Place place)
     {
         this.latLng = place.getLatLng();
-        Log.e("lat lan updated: ", ""+latLng);
+        setEnableFloatingButton();
     }
 }
 

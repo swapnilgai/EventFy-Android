@@ -3,35 +3,35 @@ package com.java.eventfy.Fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.java.eventfy.R;
-import com.java.eventfy.adapters.MainRecyclerAdapter;
+import com.java.eventfy.adapters.NotificationRecyclerAdapter;
+import com.java.eventfy.customLibraries.DividerItemDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class Notification extends Fragment {
 
-    private MainRecyclerAdapter adapter;
+    private NotificationRecyclerAdapter adapterNotification;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayoutNotification;
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewNotification;
 
-    private FloatingActionButton fragment_switch_button;
-    private FragmentTransaction transaction;
-    private FragmentManager manager;
-    private Fragment nearby_map;
-    private static final String context_id = "11";
+    List<com.java.eventfy.Entity.Notification> notificationList;
 
     public Notification() {
         // Required empty public constructor
@@ -48,57 +48,56 @@ public class Notification extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_notification, container, false);
 
-//        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
-//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
-//
-//        adapter = new MainRecyclerAdapter();
-//
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-//        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
-//
-//        // Initialize SwipeRefreshLayout
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                GetNearbyEvent getNearbyEventForTab1 = new GetNearbyEvent();
-//                getNearbyEventForTab1.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            }
-//        });
-//
-//        fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
-//        fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
-//        manager = getActivity().getSupportFragmentManager();
-//        transaction = manager.beginTransaction();
-//        view.setId(Integer.parseInt(context_id));
-//
-//        nearby_map = new Nearby_Map();
-//        transaction.add(Integer.parseInt(context_id), nearby_map, "nearby_map");
-//        transaction.hide(nearby_map);
-//        transaction.commit();
-//
-//        fragment_switch_button.setOnClickListener(new OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                if(nearby_map.isHidden()) {
-//                    transaction = manager.beginTransaction();
-//                    transaction.show(nearby_map);
-//                    transaction.commit();
-//                    fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
-//                }
-//                else{
-//                    transaction = manager.beginTransaction();
-//                    transaction.hide(nearby_map);
-//                    transaction.commit();
-//                    fragment_switch_button.setImageResource(R.drawable.ic_map_white_24dp);
-//                }
-//            }
-//        });
+        recyclerViewNotification = (RecyclerView) view.findViewById(R.id.recycler_notification);
+        swipeRefreshLayoutNotification = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_notification);
 
+        adapterNotification = new NotificationRecyclerAdapter();
+
+        recyclerViewNotification.setAdapter(adapterNotification);
+        recyclerViewNotification.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerViewNotification.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
+        notificationList = new ArrayList<com.java.eventfy.Entity.Notification>();
+
+        for(int i=0; i<2;i++)
+        {
+            com.java.eventfy.Entity.Notification notification = new com.java.eventfy.Entity.Notification();
+            notification.setNotificationTime("11:"+""+i);
+            notification.setNotificationTitle("hello notification");
+            notification.setNotifierImageUrl("https://res.cloudinary.com/eventfy/image/upload/v1462640701/uhif1dta9ykkbvbqoutv.png");
+            notificationList.add(notification);
+            Log.e("notification: ", ""+notification.getNotificationTime());
+        }
+
+        bindAdapter(adapterNotification, notificationList);
+        // Initialize SwipeRefreshLayout
+        swipeRefreshLayoutNotification.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+              //TODO add notification async call
+
+
+                for(int i=0; i<2;i++)
+                {
+                    com.java.eventfy.Entity.Notification notification = new com.java.eventfy.Entity.Notification();
+                    notification.setNotificationTime("12:"+""+i);
+                    notification.setNotificationTitle("hello notification");
+                    notification.setNotifierImageUrl("https://res.cloudinary.com/eventfy/image/upload/v1462640701/uhif1dta9ykkbvbqoutv.png");
+                    notificationList.add(notification);
+                    Log.e("notification: ", ""+notification.getNotificationTime());
+                }
+                bindAdapter(adapterNotification, notificationList);
+            }
+        });
         super.onSaveInstanceState(savedInstanceState);
         return view;
     }
 
+    private void bindAdapter(NotificationRecyclerAdapter adapter, List<com.java.eventfy.Entity.Notification> notificationList){
+        swipeRefreshLayoutNotification.setRefreshing(false);
+        if (adapter != null){
+            adapter.clear();
+            adapter.addAll(notificationList);
+            adapter.notifyDataSetChanged();
+        }
+    }
 }

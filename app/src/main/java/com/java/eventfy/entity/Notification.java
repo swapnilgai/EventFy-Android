@@ -6,9 +6,21 @@ package com.java.eventfy.Entity;
 
 public class Notification {
 
-    String regId;
-
     String userId;
+
+    String notificationTitle;
+
+    String notificationTime;
+
+    String notifierImageUrl;
+
+    public String getNotifierImageUrl() {
+        return notifierImageUrl;
+    }
+
+    public void setNotifierImageUrl(String notifierImageUrl) {
+        this.notifierImageUrl = notifierImageUrl;
+    }
 
     public String getUserId() {
         return userId;
@@ -18,12 +30,20 @@ public class Notification {
         this.userId = userId;
     }
 
-    public String getRegId() {
-        return regId;
+    public String getNotificationTime() {
+        return notificationTime;
     }
 
-    public void setRegId(String regId) {
-        this.regId = regId;
+    public void setNotificationTime(String notificationTime) {
+        this.notificationTime = notificationTime;
+    }
+
+    public String getNotificationTitle() {
+        return notificationTitle;
+    }
+
+    public void setNotificationTitle(String notificationTitle) {
+        this.notificationTitle = notificationTitle;
     }
 
 }

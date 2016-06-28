@@ -45,7 +45,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         supportMapFragmentNearby = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.nearby_map);
 
-           googleMap = supportMapFragmentNearby.getMap();
+        googleMap = supportMapFragmentNearby.getMap();
 
         supportMapFragmentNearby.getMapAsync(this);
     }
@@ -63,7 +63,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void setUpMarker()
     {
         {
-
             int zoomVal = 10;
 
             MarkerOptions markerOptions = new MarkerOptions();
@@ -106,13 +105,13 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
-        googleMap.clear();
+       // googleMap.clear();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-       googleMap.clear();
+       //googleMap.clear();
     }
 
 
@@ -140,7 +139,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     {
         if(flag.equals(getResources().getString(R.string.nearby_flag)))
             initializeMap();
-
     }
 
     @Subscribe

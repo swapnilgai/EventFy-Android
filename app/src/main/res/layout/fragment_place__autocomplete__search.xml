@@ -24,19 +24,27 @@
         android:paddingRight="@dimen/horizontal_page_margin"
         android:paddingTop="@dimen/vertical_page_margin">
 
-        <TextView
-            android:text="@string/intro_message"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:id="@+id/fly"
+                android:src="@drawable/airplane_earth"
+                />
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginBottom="@dimen/margin_medium"
+            card_view:cardPreventCornerOverlap="true"
+            >
 
-
-            <fragment
+        <fragment
                 android:id="@+id/autocomplete_fragment"
                 android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+</android.support.v7.widget.CardView>
 
         <TextView
             android:text="@string/selected_place"

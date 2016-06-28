@@ -106,7 +106,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabFour.setText("Notification");
-        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_favourite, 0, 0);
+        tabFour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_notifications_white_24dp, 0, 0);
         tabLayout.getTabAt(2).setCustomView(tabFour);
 
     }

@@ -106,7 +106,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
-        googleMapRemot.clear();
     }
 
     @Override
@@ -117,13 +116,11 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        googleMapRemot.clear();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        // mapView.onLowMemory();
     }
 
     @Override

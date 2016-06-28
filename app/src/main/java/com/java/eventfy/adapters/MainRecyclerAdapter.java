@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 
                 Picasso.with(holder.itemView.getContext())
                         .load(event.getEventImageUrl())
-                        .resize(250, 200)
+                        .resize(100, 150)
                         .placeholder(R.drawable.img_placeholder)
                         .into(((ResultHolder)holder).eventImage);
 
