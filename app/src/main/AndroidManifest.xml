@@ -46,7 +46,8 @@
 
         <activity android:name=".MainActivity"/>
 
-        <activity android:name=".Home">
+        <activity android:name=".Home"
+                  android:uiOptions="splitActionBarWhenNarrow">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

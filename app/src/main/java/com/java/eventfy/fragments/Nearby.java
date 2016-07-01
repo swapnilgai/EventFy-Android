@@ -1,6 +1,8 @@
 package com.java.eventfy.Fragments;
 
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,7 +45,6 @@ public class Nearby extends Fragment {
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
 
-
     public Nearby() {
         // Required empty public constructor
     }
@@ -50,6 +52,7 @@ public class Nearby extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
     }
 
     @Override
@@ -58,6 +61,9 @@ public class Nearby extends Fragment {
 
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
+
+       if(!EventBusService.getInstance().isRegistered(this))
+        EventBusService.getInstance().register(this);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
@@ -106,7 +112,6 @@ public class Nearby extends Fragment {
                 }
             }
         });
-
         super.onSaveInstanceState(savedInstanceState);
         return view;
     }
@@ -141,21 +146,24 @@ public class Nearby extends Fragment {
         location.setLongitude(latLng.longitude);
         location.setUserId("temp");
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-      //  getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.nearby_flag));
-      //  getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.nearby_flag));
+        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        EventBusService.getInstance().register(this);
+        Log.e("in resume "," *** ");
+        getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        EventBusService.getInstance().unregister(this);
-
+        Log.e("in pause "," *** ");
+       getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.UserCurrentLocation.class));
+     //   EventBusService.getInstance().unregister(this);
     }
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
@@ -167,3 +175,4 @@ public class Nearby extends Fragment {
         }
     }
 }
+

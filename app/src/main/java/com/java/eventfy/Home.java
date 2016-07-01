@@ -1,6 +1,7 @@
 package com.java.eventfy;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -12,7 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.Fragments.Notification;
 import com.java.eventfy.Fragments.Remot;
+import com.java.eventfy.utils.DeviceDimensions;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -43,8 +45,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Log.e("in create  :: ", "");
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,7 +55,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        decorView = getWindow().getDecorView();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -65,7 +64,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         initEventBus();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        deviceDimensions();
 
         initServices();
 
@@ -73,7 +74,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         setupTabIcons();
 
-     //   getNearbEventServerCall();
     }
 
     public void initEventBus()
@@ -122,6 +122,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         adapter.addFrag(new Remot(), "Remot");
         adapter.addFrag(new Notification(), "Notification");
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -203,6 +204,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onResume() {
         super.onResume();
         initServices();
+    }
+
+    public void deviceDimensions() {
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+            DeviceDimensions.deviceHeight = size.y;
+            DeviceDimensions.deviceWeidth = size.x;
 
     }
 }

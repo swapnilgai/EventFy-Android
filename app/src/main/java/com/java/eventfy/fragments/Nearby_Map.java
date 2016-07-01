@@ -90,8 +90,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_nearby_map, container, false);
-        EventBusService.getInstance().register(this);
-        //initializeMap();
+        if(!EventBusService.getInstance().isRegistered(this))
+            EventBusService.getInstance().register(this);
 
         return view;
     }
@@ -105,7 +105,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
-       // googleMap.clear();
+        // googleMap.clear();
     }
 
     @Override
@@ -118,7 +118,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        googleMap.clear();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.java.eventfy.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
-import com.java.eventfy.R;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.R;
+import com.java.eventfy.utils.DeviceDimensions;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -39,20 +40,32 @@ import butterknife.ButterKnife;
                     }
                 });
 
+                   LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(Math.abs(DeviceDimensions.deviceWeidth-90),Math.abs(DeviceDimensions.deviceHeight/3));
+                 parms.setMargins(45, 16, 0 , 16);
+
+                ((ResultHolder) holder).eventImage.setLayoutParams(parms);
+
+
+                  Picasso.with(holder.itemView.getContext())
+                          .load(event.getEventImageUrl())
+                          .placeholder(R.drawable.img_placeholder)
+                          .resize(DeviceDimensions.deviceWeidth-100, Math.abs(DeviceDimensions.deviceHeight/3))
+                          .into(((ResultHolder) holder).eventImage);
+
                 Picasso.with(holder.itemView.getContext())
                         .load(event.getEventImageUrl())
-                        .resize(100, 150)
-                        .placeholder(R.drawable.img_placeholder)
-                        .into(((ResultHolder)holder).eventImage);
+                        .into(((ResultHolder)holder).eventAdminImage);
 
                 ((ResultHolder)holder).eventName.setText(event.getEventName());
-                ((ResultHolder)holder).eventType.setText(event.getEventType());
                 ((ResultHolder)holder).eventLocation.setText(event.getEventLocation());
 
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());
                 if(milesDistance<4)  // to check if it is walkable distance
                 ((ResultHolder)holder).eventMileAway.setText(String.valueOf(milesDistance));
+
+                Log.e("height : ", ""+ Math.abs(DeviceDimensions.deviceHeight/3));
+                Log.e("weidth : ", ""+DeviceDimensions.deviceWeidth);
 
                 break;
         }
@@ -63,10 +76,10 @@ import butterknife.ButterKnife;
         LinearLayout linearLayout;
         @Bind(R.id.event_image)
         ImageView eventImage;
+        @Bind(R.id.event_admin_profile_pic)
+        ImageView eventAdminImage;
         @Bind(R.id.event_name)
         TextView eventName;
-        @Bind(R.id.event_type)
-        TextView eventType;
         @Bind(R.id.event_location)
         TextView  eventLocation;
         @Bind(R.id.event_mile_away)

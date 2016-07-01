@@ -1,6 +1,7 @@
 package com.java.eventfy.Fragments;
 
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -196,8 +197,8 @@ public class Remot extends Fragment {
         location.setLongitude(latLng.longitude);
         location.setUserId("temp");
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-        //  getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.remot_flag));
-        //  getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+          getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.remot_flag));
+          getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     // ***** event bus call

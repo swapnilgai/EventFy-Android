@@ -7,8 +7,9 @@
         android:radius="3dp" />
 
     <size
-        android:height="100dp"
-        android:width="130dp" />
+    android:height="100dp"
+
+    />
 
     <padding
         android:left="16dp"
