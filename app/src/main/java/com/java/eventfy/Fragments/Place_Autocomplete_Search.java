@@ -9,6 +9,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class Place_Autocomplete_Search extends Fragment implements PlaceSelectio
     public String TAG = "Search Fragment";
     private PlaceAutocompleteFragment autocompleteFragment;
     private GetNearbyEvent getNearbyEvent;
+    private View view;
 
     public Place_Autocomplete_Search() {
         // Required empty public constructor
@@ -43,20 +45,31 @@ public class Place_Autocomplete_Search extends Fragment implements PlaceSelectio
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_place__autocomplete__search, container, false);
 
-        // Retrieve the PlaceAutocompleteFragment.
-        autocompleteFragment = (PlaceAutocompleteFragment)
-                getActivity().getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try {
+        /* map is already there, just return view as it is */
 
-        // Register a listener to receive callbacks when a place has been selected or an error has
-        // occurred.
-        autocompleteFragment.setOnPlaceSelectedListener(this);
+            // Inflate the layout for this fragment
+            view = inflater.inflate(R.layout.fragment_place__autocomplete__search, container, false);
 
-        // Retrieve the TextViews that will display details about the selected place.
-        mPlaceDetailsText = (TextView) view.findViewById(R.id.place_details);
-        mPlaceAttribution = (TextView) view.findViewById(R.id.place_attribution);
+            // Retrieve the PlaceAutocompleteFragment.
+            autocompleteFragment = (PlaceAutocompleteFragment)
+                    getActivity().getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+            // Register a listener to receive callbacks when a place has been selected or an error has
+            // occurred.
+            autocompleteFragment.setOnPlaceSelectedListener(this);
+
+            // Retrieve the TextViews that will display details about the selected place.
+            mPlaceDetailsText = (TextView) view.findViewById(R.id.place_details);
+            mPlaceAttribution = (TextView) view.findViewById(R.id.place_attribution);
+        }
+        catch (InflateException e) {}
         return view;
     }
 
