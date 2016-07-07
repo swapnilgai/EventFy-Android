@@ -213,6 +213,5 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         display.getSize(size);
             DeviceDimensions.deviceHeight = size.y;
             DeviceDimensions.deviceWeidth = size.x;
-
     }
 }
