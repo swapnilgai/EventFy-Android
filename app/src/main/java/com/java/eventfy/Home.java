@@ -8,15 +8,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.java.eventfy.EventBus.EventBusService;
@@ -36,9 +38,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private EventBus eventBus;
-    View decorView;
-
-
+    private  DrawerLayout drawer;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +58,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         initEventBus();
 
@@ -83,9 +87,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-
         startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
-
     }
 
     /**
@@ -154,6 +156,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -161,12 +179,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        
         if (id == R.id.nav_item_home)
         {
             // Handle the home action
         } else if (id == R.id.nav_item_create_event_public)
         {
+            Intent intent = new Intent(this, CreatePublicEvent.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_item_create_event_private)
         {
@@ -185,6 +205,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             // Handle the MyAccount action
 
         }
+
+        drawer.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
