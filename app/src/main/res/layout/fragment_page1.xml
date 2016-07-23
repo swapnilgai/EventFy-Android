@@ -5,9 +5,22 @@
              tools:context="com.java.eventfy.Fragments.CreatePublicEvent.Page1">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText android:id="@+id/input_email"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:inputType="textEmailAddress"
+                  android:hint="Email"
+                  android:textColor="@color/cardview_shadow_end_color"
+
+            />
+    </android.support.design.widget.TextInputLayout>
+
 
 </FrameLayout>

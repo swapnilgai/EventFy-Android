@@ -6,39 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground">
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-
-        >
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/event_admin_profile_pic"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_above="@id/navigation_drawer_account_information"
-            android:src="@drawable/common_google_signin_btn_icon_light_focused"/>
-            <TextView
-                android:id="@+id/event_admin_name"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Swapnil G"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                />
-    </LinearLayout>
     <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="16dp"-->
-        <!--&gt;-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_margin="16dp"-->
+    <!--&gt;-->
 
     <ImageView
         android:id="@+id/event_image"
