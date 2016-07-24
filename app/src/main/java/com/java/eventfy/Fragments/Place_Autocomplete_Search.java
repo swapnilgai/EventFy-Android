@@ -74,9 +74,9 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         view = inflater.inflate(R.layout.fragment_place__autocomplete__search, container, false);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity(), 0 /* clientId */, this)
                 .addApi(Places.GEO_DATA_API)
                 .build();
+
 
 
         // Retrieve the AutoCompleteTextView that will display Place suggestions.
@@ -99,6 +99,20 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
+    }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener
             = new AdapterView.OnItemClickListener() {
@@ -212,5 +226,6 @@ Log.e("lat ", ""+place.getLatLng().latitude);
       //  getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.remot_flag));
       //  getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 
 }
