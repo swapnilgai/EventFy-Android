@@ -9,9 +9,9 @@ import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
@@ -28,6 +28,7 @@ import java.util.List;
 public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
+    private MapView mapView;
     private boolean mapsSupported = true;
     private List<Events> eventLst;
     private Button filter;
@@ -36,26 +37,14 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private Circle mapCircle;
     private View view;
     private String flag;
-    SupportMapFragment supportMapFragmentNearby;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MapsInitializer.initialize(getActivity());
-
-        supportMapFragmentNearby = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.nearby_map);
-
-        googleMap = supportMapFragmentNearby.getMap();
-
-        supportMapFragmentNearby.getMapAsync(this);
-    }
 
     private void initializeMap() {
-
-        if(googleMap==null)
-        {
-            googleMap = supportMapFragmentNearby.getMap();
-        }
+//
+//        if(googleMap==null)
+//        {
+//            googleMap = getActivity().getMapAsync(th);
+//        }
         setUpMarker();
     }
 
@@ -93,6 +82,13 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
+
+        MapsInitializer.initialize(getActivity());
+
+        mapView = (MapView) view.findViewById(R.id.nearby_map);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();
+        mapView.getMapAsync(this);
         return view;
     }
 
@@ -129,6 +125,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        this.googleMap = googleMap;
 
     }
 

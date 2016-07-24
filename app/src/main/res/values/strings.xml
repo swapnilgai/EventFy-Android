@@ -59,16 +59,7 @@
 
     <string name="selected_place">Last Selected Place:</string>
 
-     <string name="intro_message">
-        <![CDATA[
 
 
-            This sample uses the PlaceAutocompleteFragment from the Places API for Android within a
-            CardView to provide an autocomplete powered search experience. Once a place is selected,
-            its details are displayed.
-
-
-        ]]>
-    </string>
-
+    <string name="autocomplete_hint">Enter place name or address</string>
 </resources>

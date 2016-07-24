@@ -12,7 +12,6 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -44,26 +43,16 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     SupportMapFragment supportMapFragmentRemot;
     private String flag;
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MapsInitializer.initialize(getActivity());
 
-        supportMapFragmentRemot = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.remot_map));
-
-        googleMapRemot = supportMapFragmentRemot.getMap();
-
-        supportMapFragmentRemot.getMapAsync(this);
-    }
 
     private void initializeMap() {
         Log.e("in init map", ""+myLaLn);
 
-        if(googleMapRemot==null)
-        {
-            googleMapRemot = supportMapFragmentRemot.getMap();
-        }
-        setUpMarker();
+//        if(googleMapRemot==null)
+//        {
+//            googleMapRemot = supportMapFragmentRemot.getMap();
+//        }
+       setUpMarker();
     }
 
     public void setUpMarker()
@@ -94,6 +83,11 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         viewRemot = inflater.inflate(R.layout.fragment_remot__map, container, false);
         EventBusService.getInstance().register(this);
+
+        mapView_remot = (MapView) viewRemot.findViewById(R.id.remot_map);
+        mapView_remot.onCreate(savedInstanceState);
+        mapView_remot.onResume();
+        mapView_remot.getMapAsync(this);
         return viewRemot;
     }
 
@@ -125,7 +119,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
+        googleMapRemot = googleMap;
     }
 
     // ***** event bus call
