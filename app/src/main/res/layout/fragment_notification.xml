@@ -1,9 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="com.java.eventfy.Fragments.Notification">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.java.eventfy.Fragments.Notification">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container_notification"
@@ -13,7 +12,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_notification"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.java.eventfy.Entity.Notification;
 import com.java.eventfy.R;
 import com.squareup.picasso.Picasso;
@@ -40,7 +41,6 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
 
                 Picasso.with(holder.itemView.getContext())
                         .load(notification.getNotifierImageUrl())
-                        .resize(250, 200)
                         .placeholder(R.drawable.img_placeholder)
                         .into(((ResultHolder)holder).notificationImage);
 
@@ -62,9 +62,9 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
         @Bind(R.id.notification_image)
         ImageView notificationImage;
         @Bind(R.id.notification_title)
-        TextView notificationTitle;
+        RobotoTextView notificationTitle;
         @Bind(R.id.notification_time)
-        TextView notificationTime;
+        RobotoTextView notificationTime;
 
         public ResultHolder(View itemView) {
             super(itemView);

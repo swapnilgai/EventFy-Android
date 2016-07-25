@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         android:src="@drawable/img_placeholder" />
 
     <LinearLayout
@@ -26,7 +27,7 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <TextView
+        <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/event_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,7 +36,7 @@
             android:textSize="20sp" />
 
 
-        <TextView
+        <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/event_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +44,7 @@
             android:textColor="#6c7880"
             android:textSize="14sp" />
 
-        <TextView
+        <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/event_mile_away"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

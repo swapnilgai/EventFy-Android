@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.R;
 import com.java.eventfy.utils.DeviceDimensions;
@@ -80,11 +81,11 @@ import butterknife.ButterKnife;
         @Bind(R.id.event_image)
         ImageView eventImage;
         @Bind(R.id.event_name)
-        TextView eventName;
+        RobotoTextView eventName;
         @Bind(R.id.event_location)
-        TextView  eventLocation;
+        RobotoTextView  eventLocation;
         @Bind(R.id.event_mile_away)
-        TextView eventMileAway;
+        RobotoTextView eventMileAway;
 
         public ResultHolder(View itemView) {
             super(itemView);

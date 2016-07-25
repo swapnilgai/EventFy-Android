@@ -1,148 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:fitsSystemWindows="true">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="30dp"
+        android:layout_marginTop="8dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        >
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="20dp">
-            <EditText android:id="@+id/event_name"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="text"
-                      android:hint="Event Name"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="8dp">
 
-                      android:textColor="@color/cardview_shadow_end_color"  />
+            <com.devspark.robototextview.widget.RobotoEditText
+                android:id="@+id/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Event Name"
+                android:inputType="text"
+                android:textColor="@color/cardview_shadow_end_color" />
         </android.support.design.widget.TextInputLayout>
 
         <Spinner
-
             android:id="@+id/public_event_type"
+            style="@style/spinner_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"
-            android:color="@color/cardview_shadow_end_color"
-            style="@style/spinner_style"
             android:layout_marginBottom="16dp"
-            />
+            android:background="@android:drawable/btn_dropdown"
+            android:color="@color/cardview_shadow_end_color"
+            android:spinnerMode="dropdown" />
 
         <!--Date of event-->
-        <TextView
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/public_event_date_lable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Event Date"
-            android:id="@+id/public_event_date_lable"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
             android:clickable="true"
+            android:focusable="false"
             android:paddingLeft="50dp"
-            android:paddingRight="16dp"
-            >
-            <EditText android:id="@+id/public_event_date_from"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textCapWords|date"
-                      android:hint="From"
-                      android:textColor="@color/cardview_shadow_end_color"
-                      android:focusable="false"
-                      android:clickable="true"/>
+            android:paddingRight="16dp">
+
+            <com.devspark.robototextview.widget.RobotoEditText
+                android:id="@+id/public_event_date_from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="From"
+                android:inputType="textCapWords|date"
+                android:textColor="@color/cardview_shadow_end_color" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:clickable="true"
-            android:paddingLeft="50dp"
-            android:paddingRight="20dp"
             android:layout_marginBottom="16dp"
-            >
-            <EditText android:id="@+id/public_event_date_to"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textCapWords|date"
-                      android:hint="To"
-                      android:textColor="@color/cardview_shadow_end_color"
-                      android:focusable="false"
-                      android:clickable="true"
-                />
-        </android.support.design.widget.TextInputLayout>
+            android:clickable="true"
+            android:focusable="false"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp">
 
+            <com.devspark.robototextview.widget.RobotoEditText
+                android:id="@+id/public_event_date_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="To"
+                android:inputType="textCapWords|date"
+                android:textColor="@color/cardview_shadow_end_color" />
+        </android.support.design.widget.TextInputLayout>
 
         <!--Time of event-->
-
-        <TextView
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/public_event_time_lable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Event Time"
-            android:id="@+id/public_event_time_lable"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
             android:clickable="true"
+            android:focusable="false"
             android:paddingLeft="50dp"
-            android:paddingRight="20dp"
-            >
-            <EditText android:id="@+id/public_event_time_from"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textCapWords|date"
-                      android:hint="From"
-                      android:textColor="@color/cardview_shadow_end_color"
-                      android:focusable="false"
-                      android:clickable="true"/>
+            android:paddingRight="20dp">
+
+            <com.devspark.robototextview.widget.RobotoEditText
+                android:id="@+id/public_event_time_from"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="From"
+                android:inputType="textCapWords|date"
+                android:textColor="@color/cardview_shadow_end_color" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:focusable="false"
-            android:clickable="true"
-            android:paddingLeft="50dp"
-            android:paddingRight="20dp"
             android:layout_marginBottom="16dp"
-            >
-            <EditText android:id="@+id/public_event_time_to"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textCapWords|date"
-                      android:hint="To"
-                      android:textColor="@color/cardview_shadow_end_color"
-                      android:focusable="false"
-                      android:clickable="true"/>
+            android:clickable="true"
+            android:focusable="false"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp">
+
+            <com.devspark.robototextview.widget.RobotoEditText
+                android:id="@+id/public_event_time_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="To"
+                android:inputType="textCapWords|date"
+                android:textColor="@color/cardview_shadow_end_color" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/public_public_event_page1_next"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:layout_marginBottom="50dp"
-            android:padding="12dp"
+            android:layout_marginTop="24dp"
             android:background="@color/colorPrimary"
-            android:text="Next"/>
+            android:padding="12dp"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:text="Next" />
 
     </LinearLayout>
 </ScrollView>

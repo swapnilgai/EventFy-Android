@@ -48,36 +48,27 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
         initEventBus();
-
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
         deviceDimensions();
-
         initServices();
-
         toggle.syncState();
-
         setupTabIcons();
-
     }
 
     public void initEventBus()
@@ -125,6 +116,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         adapter.addFrag(new Notification(), "Notification");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(
+                new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -230,7 +224,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void deviceDimensions() {
-
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
