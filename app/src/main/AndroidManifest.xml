@@ -48,11 +48,7 @@
             android:name=".Home"
             android:uiOptions="splitActionBarWhenNarrow">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <!-- Services init -->
@@ -62,7 +58,11 @@
         </service>
 
         <activity android:name=".CreatePublicEvent">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 

@@ -131,9 +131,10 @@ public class Nearby extends Fragment {
     }
 
     @Subscribe
-    public void geetLocation(LatLng latLag)
+    public void getLocation(LatLng latLag)
     {
         this.latLng = latLag;
+        Log.e("location : ", ""+latLag);
         getNearbEventServerCall();
 
     }
