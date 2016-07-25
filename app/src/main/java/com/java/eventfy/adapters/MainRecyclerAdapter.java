@@ -47,16 +47,15 @@ import butterknife.ButterKnife;
                     }
                 });
 
-                LayoutParams parms = new LayoutParams(Math.abs(DeviceDimensions.deviceWeidth-90),Math.abs(DeviceDimensions.deviceHeight/3));
+                /*LayoutParams parms = new LayoutParams(Math.abs(DeviceDimensions.deviceWeidth-90),Math.abs(DeviceDimensions.deviceHeight/3));
                  parms.setMargins(45, 16, 0 , 16);
 
-                ((ResultHolder) holder).eventImage.setLayoutParams(parms);
+                ((ResultHolder) holder).eventImage.setLayoutParams(parms);*/
 
 
                   Picasso.with(holder.itemView.getContext())
                           .load(event.getEventImageUrl())
                           .placeholder(R.drawable.img_placeholder)
-                          .resize(DeviceDimensions.deviceWeidth-100, Math.abs(DeviceDimensions.deviceHeight/3))
                           .into(((ResultHolder) holder).eventImage);
 
                 ((ResultHolder)holder).eventName.setText(event.getEventName());

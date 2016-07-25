@@ -55,7 +55,7 @@ public class Notification extends Fragment {
 
         recyclerViewNotification.setAdapter(adapterNotification);
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerViewNotification.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
+        //recyclerViewNotification.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
         notificationList = new ArrayList<com.java.eventfy.Entity.Notification>();
 
         for(int i=0; i<2;i++)
@@ -75,7 +75,7 @@ public class Notification extends Fragment {
             public void onRefresh() {
               //TODO add notification async call
 
-
+                notificationList.clear();
                 for(int i=0; i<2;i++)
                 {
                     com.java.eventfy.Entity.Notification notification = new com.java.eventfy.Entity.Notification();

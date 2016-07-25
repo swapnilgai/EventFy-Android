@@ -2,9 +2,11 @@ package com.java.eventfy.Fragments;
 
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -44,6 +46,7 @@ public class Nearby extends Fragment {
     private String flag;
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
+    private List<Events> eventsList;
 
     public Nearby() {
         // Required empty public constructor
@@ -72,7 +75,7 @@ public class Nearby extends Fragment {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -120,8 +123,11 @@ public class Nearby extends Fragment {
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        if(flag.equals(getResources().getString(R.string.nearby_flag)))
+        if(flag.equals(getResources().getString(R.string.nearby_flag))){
+            this.eventsList = eventsList;
             bindAdapter(adapter, eventsList);
+        }
+
     }
 
     @Subscribe
@@ -168,11 +174,24 @@ public class Nearby extends Fragment {
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
         swipeRefreshLayout.setRefreshing(false);
+        refreshData(eventsList);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        recyclerView.setAdapter(adapter);
+        recyclerView.invalidate();
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @UiThread
+    private void refreshData(List<Events> eventsList){
         if (adapter != null){
             adapter.clear();
             adapter.addAll(eventsList);
             adapter.notifyDataSetChanged();
         }
     }
+
 }
 

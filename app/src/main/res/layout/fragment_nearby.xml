@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#d3d3d3"
     android:fitsSystemWindows="true">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -16,9 +17,7 @@
             android:id="@+id/recycler_nearby"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-
-            />
+            android:fitsSystemWindows="true" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 
