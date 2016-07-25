@@ -11,6 +11,8 @@
         android:padding="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="30dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         >
 
         <android.support.design.widget.TextInputLayout
@@ -21,8 +23,9 @@
             <EditText android:id="@+id/event_name"
                       android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:inputType="textEmailAddress"
+                      android:inputType="text"
                       android:hint="Event Name"
+
                       android:textColor="@color/cardview_shadow_end_color"  />
         </android.support.design.widget.TextInputLayout>
 

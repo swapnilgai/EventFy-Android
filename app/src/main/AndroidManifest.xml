@@ -43,17 +43,13 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
 
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
+
         <activity
             android:name=".Home"
             android:configChanges="orientation|screenSize"
             android:uiOptions="splitActionBarWhenNarrow">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <!-- Services init -->
@@ -64,7 +60,12 @@
 
         <activity
             android:name=".CreatePublicEvent"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
     </application>
 

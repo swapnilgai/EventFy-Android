@@ -32,16 +32,17 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventVisiblityMile;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventDate;
+    private String eventDateFrom;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventTime;
+    private String eventTimeFrom;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventVisiblityTenure;
+    private String eventDateTo;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String eventTimeTo;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventIsVerified;
     // once capacity full event will invisible or if admin want to make it invisible on he feel response is enough
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventIsVisible;
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventAdmin;
 
@@ -156,29 +157,6 @@ public class Events implements Serializable {
         this.eventVisiblityMile = eventVisiblityMile;
     }
 
-    public String getEventDate() {
-        return eventDate;
-    }
-
-    public void setEventDate(String eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public String getEventTime() {
-        return eventTime;
-    }
-
-    public void setEventTime(String eventTime) {
-        this.eventTime = eventTime;
-    }
-
-    public String getEventVisiblityTenure() {
-        return eventVisiblityTenure;
-    }
-
-    public void setEventVisiblityTenure(String eventVisiblityTenure) {
-        this.eventVisiblityTenure = eventVisiblityTenure;
-    }
 
     public String getEventIsVerified() {
         return eventIsVerified;
@@ -186,14 +164,6 @@ public class Events implements Serializable {
 
     public void setEventIsVerified(String eventIsVerified) {
         this.eventIsVerified = eventIsVerified;
-    }
-
-    public String getEventIsVisible() {
-        return eventIsVisible;
-    }
-
-    public void setEventIsVisible(String eventIsVisible) {
-        this.eventIsVisible = eventIsVisible;
     }
 
     public String getEventAdmin(String string) {

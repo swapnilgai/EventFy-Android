@@ -54,8 +54,8 @@ public class CreatePublicEvent extends AppCompatActivity {
         adapter.addFrag(new Page2(), "Media");
         adapter.addFrag(new Page3(), "Location");
         adapter.addFrag(new Page4(), "Summery");
-        
         viewPager.setAdapter(adapter);
+        viewPager.setOffscreenPageLimit(2);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
