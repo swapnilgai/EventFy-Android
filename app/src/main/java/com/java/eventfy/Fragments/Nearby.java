@@ -11,7 +11,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,7 +27,6 @@ import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
-import com.java.eventfy.customLibraries.DividerItemDecoration;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -127,7 +125,6 @@ public class Nearby extends Fragment {
             this.eventsList = eventsList;
             bindAdapter(adapter, eventsList);
         }
-
     }
 
     @Subscribe

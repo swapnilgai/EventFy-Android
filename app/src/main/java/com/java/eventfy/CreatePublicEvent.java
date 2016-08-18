@@ -55,7 +55,7 @@ public class CreatePublicEvent extends AppCompatActivity {
         adapter.addFrag(new Page3(), "Location");
         adapter.addFrag(new Page4(), "Summery");
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(3);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -91,4 +91,5 @@ public class CreatePublicEvent extends AppCompatActivity {
     public void onBackPressed() {
             super.onBackPressed();
         }
+
 }

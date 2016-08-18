@@ -22,8 +22,6 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventType;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventLocation;
-    @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventCapacity;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventDescription;
@@ -42,11 +40,20 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventIsVerified;
     // once capacity full event will invisible or if admin want to make it invisible on he feel response is enough
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String eventIsVisible;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventAdmin;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private double eventLocationLongitude;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private double eventLocationLatitude;
 
+    public String getEventIsVisible() {return eventIsVisible;}
+
+    public void setEventIsVisible(String eventIsVisible) {this.eventIsVisible = eventIsVisible;}
     public String getEventAdmin() {
         return eventAdmin;
     }
@@ -74,11 +81,6 @@ public class Events implements Serializable {
     public void setEventLocationLongitude(double eventLocationLongitude) {
         this.eventLocationLongitude = eventLocationLongitude;
     }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private double eventLocationLongitude;
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private double eventLocationLatitude;
 
     // mapping for signUp - Events (users in events and  events by user)
     @JsonView(SignUp.class)
@@ -117,17 +119,7 @@ public class Events implements Serializable {
         this.eventType = eventType;
     }
 
-    public String getEventLocation() {
-        return eventLocation;
-    }
-
-    public void setEventLocation(String eventLocation) {
-        this.eventLocation = eventLocation;
-    }
-
-    public String getEventCapacity() {
-        return eventCapacity;
-    }
+    public String getEventCapacity() {return eventCapacity;}
 
     public void setEventCapacity(String eventCapacity) {
         this.eventCapacity = eventCapacity;
@@ -180,6 +172,39 @@ public class Events implements Serializable {
 
     public void setUserDetail(List<SignUp> userDetail) {
         this.userDetail = userDetail;
+    }
+
+
+    public String getEventDateTo() {
+        return eventDateTo;
+    }
+
+    public void setEventDateTo(String eventDateTo) {
+        this.eventDateTo = eventDateTo;
+    }
+
+    public String getEventDateFrom() {
+        return eventDateFrom;
+    }
+
+    public void setEventDateFrom(String eventDateFrom) {
+        this.eventDateFrom = eventDateFrom;
+    }
+
+    public String getEventTimeFrom() {
+        return eventTimeFrom;
+    }
+
+    public void setEventTimeFrom(String eventTimeFrom) {
+        this.eventTimeFrom = eventTimeFrom;
+    }
+
+    public String getEventTimeTo() {
+        return eventTimeTo;
+    }
+
+    public void setEventTimeTo(String eventTimeTo) {
+        this.eventTimeTo = eventTimeTo;
     }
 
 }

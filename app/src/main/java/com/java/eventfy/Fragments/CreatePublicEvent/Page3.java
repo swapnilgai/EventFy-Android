@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -30,9 +31,9 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.java.eventfy.Entity.createEvent.page3;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
-import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.utils.PlaceAutocompleteAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -47,7 +48,6 @@ import java.util.Locale;
 public class Page3 extends Fragment implements GoogleApiClient.OnConnectionFailedListener{
     public String TAG = "Search Fragment";
 
-    private GetNearbyEvent getNearbyEvent;
     private View view;
 
     protected GoogleApiClient mGoogleApiClient;
@@ -62,15 +62,25 @@ public class Page3 extends Fragment implements GoogleApiClient.OnConnectionFaile
 
     private LatLng latLng;
 
+    private Button next;
+
+    private page3 page3;
+
+    private Spinner eventType;
+
+    private Spinner eventVisiblity;
+
+    private AutoCompleteTextView location;
+
+
 
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
             new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
 
-
     public Page3() {
         // Required empty public constructor
+        page3 = new page3();
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,6 +125,26 @@ public class Page3 extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
         });
 
+        location = (AutoCompleteTextView) view.findViewById(R.id.create_public_event_autocomplete_places);
+        eventType = (Spinner) view.findViewById(R.id.public_event_type);
+        eventVisiblity = (Spinner) view.findViewById(R.id.public_event_visiblity_miles);
+
+        next = (Button) view.findViewById(R.id.public_public_event_page3_next);
+
+        next.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+               // page3.setEventVisiblity(eventVisiblity.getSelectedItem().toString());
+
+//                page3.setEventType(eventType.getSelectedItem().toString());
+
+                page3.setLocation(location.getText().toString());
+
+                EventBusService.getInstance().post(page3);
+            }
+        });
 
         return view;
     }
@@ -163,9 +193,6 @@ public class Page3 extends Fragment implements GoogleApiClient.OnConnectionFaile
         }
     };
 
-
-
-
     /**
      * Callback for results from a Places Geo Data API query that shows the first place result in
      * the details view on screen.
@@ -182,10 +209,8 @@ public class Page3 extends Fragment implements GoogleApiClient.OnConnectionFaile
             }
             // Get the Place object from the buffer.
             final Place place = places.get(0);
-            Log.e("lat ", ""+place.getLatLng().latitude);
-            Log.e("long ", ""+place.getLatLng().longitude);
-            EventBusService.getInstance().post(place);
-
+            page3.setLatitude(place.getLatLng().latitude);
+            page3.setLongitude(place.getLatLng().longitude);
             Log.i(TAG, "Place details received: " + place.getName());
 
             places.release();
@@ -220,12 +245,11 @@ public class Page3 extends Fragment implements GoogleApiClient.OnConnectionFaile
                 Toast.LENGTH_SHORT).show();
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
         getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.UserCurrentLocation.class));
-        EventBusService.getInstance().unregister(this);
+       // EventBusService.getInstance().unregister(this);
     }
 
     @Subscribe
@@ -237,11 +261,16 @@ public class Page3 extends Fragment implements GoogleApiClient.OnConnectionFaile
     @Subscribe
     public void getLocation(LatLng latLag) throws IOException {
         this.latLng = latLag;
+
+        Log.e("page3 late lang : ", ""+this.latLng);
         getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.UserCurrentLocation.class));
         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
         List<Address> addresses = gcd.getFromLocation(latLag.latitude, latLag.longitude, 1);
         if (addresses.size() > 0)
            mAutocompleteView.setText(addresses.get(0).getLocality());
+
+        page3.setLatitude(this.latLng.latitude);
+        page3.setLongitude(this.latLng.longitude);
     }
 
 }

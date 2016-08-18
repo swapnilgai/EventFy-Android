@@ -44,5 +44,41 @@
             app:cb_color="@color/colorPrimary"
             app:cb_pressedRingWidth="10dip" />
 
+        <Spinner
+            android:id="@+id/public_event_type"
+            style="@style/spinner_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:color="@color/cardview_shadow_end_color"
+            android:spinnerMode="dropdown" />
+
+        <Spinner
+            android:id="@+id/public_event_visiblity_miles"
+            style="@style/spinner_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@android:drawable/btn_dropdown"
+            android:color="@color/cardview_shadow_end_color"
+            android:spinnerMode="dropdown"
+            android:prompt="@string/selected_place"
+            android:entries="@array/EventVisiblityMiles"
+            />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/public_public_event_page3_next"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/colorPrimary"
+            android:padding="12dp"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+
+            android:text="Next" />
+
     </LinearLayout>
 </ScrollView>

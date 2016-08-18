@@ -36,7 +36,7 @@
                 android:layout_marginTop="16dp">
 
                 <com.devspark.robototextview.widget.RobotoEditText
-                    android:id="@+id/event_name"
+                    android:id="@+id/public_event_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event Name"
@@ -44,18 +44,14 @@
                     android:textColor="@color/cardview_shadow_end_color" />
             </android.support.design.widget.TextInputLayout>
 
-            <Spinner
-                android:id="@+id/public_event_type"
-                style="@style/spinner_style"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:background="@android:drawable/btn_dropdown"
-                android:color="@color/cardview_shadow_end_color"
-                android:spinnerMode="dropdown" />
+            <CheckBox android:id="@+id/public_events_volatile"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="@string/volatile_event"
+                      android:onClick="onCheckboxClicked"/>
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/public_public_event_page1_next"
+                android:id="@+id/public_public_event_page2_next"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="50dp"
@@ -64,19 +60,17 @@
                 android:padding="12dp"
                 android:textSize="18sp"
                 android:textColor="@android:color/white"
-
                 android:text="Next" />
         </LinearLayout>
 
     </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/get_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_camera_enhance_black_24dp"
         app:layout_anchor="@id/overlay"
         app:layout_anchorGravity="bottom|right|end" />
-
-</android.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>

@@ -9,8 +9,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.java.eventfy.Entity.Events;
@@ -56,11 +54,12 @@ import butterknife.ButterKnife;
 
                   Picasso.with(holder.itemView.getContext())
                           .load(event.getEventImageUrl())
+                          .resize((DeviceDimensions.deviceWeidth+100), DeviceDimensions.deviceHeight/3)
                           .placeholder(R.drawable.img_placeholder)
                           .into(((ResultHolder) holder).eventImage);
 
                 ((ResultHolder)holder).eventName.setText(event.getEventName());
-                ((ResultHolder)holder).eventLocation.setText(event.getEventLocation());
+               // ((ResultHolder)holder).eventLocation.setText(event.getEventLocation());
 
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());

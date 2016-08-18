@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--  Event Type -->
+    <string-array name="EventType">
+        <item>Get Together</item>
+        <item>Food</item>
+        <item>Give Away</item>
+        <item>Need Help</item>
+        <item>Other</item>
+    </string-array>
+
+    <!--  Event Type -->
+    <string-array name="EventVisiblityMiles">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+    </string-array>
+
+</resources>

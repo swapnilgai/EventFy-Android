@@ -58,8 +58,9 @@
     </string>
 
     <string name="selected_place">Last Selected Place:</string>
-
-
-
+    <string name="pick_image_intent_text">Please pick image</string>
     <string name="autocomplete_hint">Enter place name or address</string>
+    <string name="volatile_event">Volatile</string>
+
+
 </resources>
