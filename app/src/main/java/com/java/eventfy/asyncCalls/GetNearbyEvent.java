@@ -1,6 +1,7 @@
 package com.java.eventfy.asyncCalls;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
@@ -39,7 +40,9 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        locationObj.setDistance(10);
+        Log.e("inside event aysnc call", " %%%%%: ");
+
+        locationObj.setDistance(1000);
 
         HttpEntity<Location> request = new HttpEntity<>(locationObj);
 
@@ -61,7 +64,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
                 if(obj.getEventImageUrl().equals("default"))
                     obj.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
             }
-
+        Log.e("events count", "**** : "+eventLst.size());
         EventBusService.getInstance().post(flag);
         EventBusService.getInstance().post(eventLst);
     }

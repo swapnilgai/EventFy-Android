@@ -50,21 +50,25 @@
             android:name=".Home"
             android:configChanges="orientation|screenSize"
             android:uiOptions="splitActionBarWhenNarrow">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".EventInfo" >
+
         </activity>
 
         <!-- Services init -->
-        <service
-            android:name=".Services.UserCurrentLocation"
-            android:exported="false">
+        <service android:name=".Services.UserCurrentLocation" android:exported="false">
         </service>
 
         <activity
             android:name=".CreatePublicEvent"
             android:configChanges="orientation|screenSize" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
 
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />

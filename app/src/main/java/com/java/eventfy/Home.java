@@ -14,7 +14,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -45,6 +44,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        initEventBus();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -64,22 +64,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
-        initEventBus();
         deviceDimensions();
-        initServices();
+        //initServices();
         toggle.syncState();
         setupTabIcons();
     }
 
     public void initEventBus()
-    {
-         eventBus = EventBusService.getInstance();
+    {    eventBus = EventBusService.getInstance();
     }
 
-    private void initServices() {
-        // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-        startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
-    }
+
+//    private void initServices() {
+//        // GET USER CURRENT LOCATION ON APPLICATION STARTUP
+//
+//        this.startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
+//    }
 
     /**
      * Adding custom view to tab
@@ -118,7 +118,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         viewPager.setOffscreenPageLimit(2);
         viewPager.addOnPageChangeListener(
                 new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -214,13 +213,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onRestart() {
         super.onRestart();
-        initServices();
+      //  initServices();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        initServices();
+      //  initServices();
     }
 
     public void deviceDimensions() {
@@ -230,4 +229,5 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             DeviceDimensions.deviceHeight = size.y;
             DeviceDimensions.deviceWeidth = size.x;
     }
+
 }

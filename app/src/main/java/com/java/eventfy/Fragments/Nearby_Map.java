@@ -79,9 +79,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_nearby_map, container, false);
-        if(!EventBusService.getInstance().isRegistered(this))
+       // if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
-
 
         MapsInitializer.initialize(getActivity());
 
@@ -133,8 +132,9 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        if(flag.equals(getResources().getString(R.string.nearby_flag)))
-            initializeMap();
+        if(eventsList.get(0) instanceof Events)
+             if(flag.equals(getResources().getString(R.string.nearby_flag)))
+                 initializeMap();
     }
 
     @Subscribe
@@ -146,7 +146,10 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void getMyLatLang(LatLng myLaLn)
     {
-      this.myLaLn = myLaLn;
-        initializeMap();
+        if(myLaLn!=null)
+        {
+            this.myLaLn = myLaLn;
+            initializeMap();
+        }
     }
 }

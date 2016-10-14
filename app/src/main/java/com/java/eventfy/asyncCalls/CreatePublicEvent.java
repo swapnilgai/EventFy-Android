@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
 
     private String url;
-    private Location locationObj;
     private Events event;
    // private String flag;
 

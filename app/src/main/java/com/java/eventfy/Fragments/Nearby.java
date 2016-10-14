@@ -46,6 +46,7 @@ public class Nearby extends Fragment {
     private GetNearbyEvent getNearbyEvent;
     private List<Events> eventsList;
 
+
     public Nearby() {
         // Required empty public constructor
     }
@@ -63,8 +64,10 @@ public class Nearby extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
 
-       if(!EventBusService.getInstance().isRegistered(this))
+       //if(!EventBusService.getInstance().isRegistered(this))
         EventBusService.getInstance().register(this);
+
+        initServices();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
@@ -113,18 +116,27 @@ public class Nearby extends Fragment {
                 }
             }
         });
+
         super.onSaveInstanceState(savedInstanceState);
         return view;
+    }
+
+    private void initServices() {
+        // GET USER CURRENT LOCATION ON APPLICATION STARTUP
+
+        getActivity().startService(new Intent(getContext(), com.java.eventfy.Services.UserCurrentLocation.class));
     }
 
     // ***** event bus call
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        if(flag.equals(getResources().getString(R.string.nearby_flag))){
-            this.eventsList = eventsList;
-            bindAdapter(adapter, eventsList);
-        }
+        Log.e("data received : ", "::  "+eventsList.size());
+        if(eventsList.get(0) instanceof Events)
+            if(flag.equals(getResources().getString(R.string.nearby_flag))){
+                this.eventsList = eventsList;
+                bindAdapter(adapter, eventsList);
+            }
     }
 
     @Subscribe
@@ -144,6 +156,7 @@ public class Nearby extends Fragment {
 
     // ****** ASYNC CALL
     private void getNearbEventServerCall(){
+
 
         Location location = new Location();
         location.setLatitude(latLng.latitude);
@@ -190,6 +203,5 @@ public class Nearby extends Fragment {
             adapter.notifyDataSetChanged();
         }
     }
-
 }
 

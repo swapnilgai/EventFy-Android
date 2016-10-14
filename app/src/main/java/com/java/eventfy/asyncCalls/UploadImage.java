@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.cloudinary.Cloudinary;
+import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -19,9 +20,19 @@ import java.util.Map;
  */
 public class UploadImage  extends AsyncTask<Void, Void, Void> {
 
-    Bitmap bm;
-    Events event;
-    String Url;
+    private Events event = null;
+    private String Url;
+    private Bitmap bm;
+    private Comments comments = null;
+    private String urlForComment;
+
+
+    public UploadImage(Comments comments, Bitmap bm, String urlForComment) {
+        this.comments = comments;
+        this.bm = bm;
+        this.urlForComment = urlForComment;
+    }
+
     public UploadImage(Events event, Bitmap bm) {
         this.event = event;
         this.bm = bm;
@@ -60,7 +71,16 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        event.setEventImageUrl(Url);
-        EventBusService.getInstance().post("CreateEvent");
+        if(comments!=null)
+        {
+            comments.setIsImage("true");
+            comments.setCommentText(Url);
+            PostUsersComment postUsersComment = new PostUsersComment(urlForComment, comments);
+            postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else if(event!=null) {
+            event.setEventImageUrl(Url);
+            EventBusService.getInstance().post("CreateEvent");
+        }
     }
 }

@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import java.util.Date;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Comments {
 
@@ -26,14 +28,35 @@ public class Comments {
     private String voteDown;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private int eventId;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String userImage; // ref to signup entity
     // mapping for events - comments (users in events and  events by user)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private Date date;
     @JsonBackReference
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(Events.class)
     private Events events;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private boolean isDateText;
 
+
+    public boolean getIsDateText() {
+        return isDateText;
+    }
+
+    public void setIsDateText(boolean isDateText) {
+        this.isDateText = isDateText;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
     public Events getEvents() {
         return events;
     }
@@ -104,6 +127,14 @@ public class Comments {
 
     public void setVoteDown(String voteDown) {
         this.voteDown = voteDown;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
     }
 
 }

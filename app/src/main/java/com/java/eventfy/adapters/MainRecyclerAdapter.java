@@ -1,5 +1,6 @@
 package com.java.eventfy.adapters;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.EventInfo;
 import com.java.eventfy.R;
 import com.java.eventfy.utils.DeviceDimensions;
 import com.squareup.picasso.Picasso;
@@ -26,7 +28,8 @@ import butterknife.ButterKnife;
     public View view;
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ResultHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_recycleview, parent, false));
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_recycleview, parent, false);
+        return new ResultHolder(view);
     }
 
 
@@ -35,14 +38,16 @@ import butterknife.ButterKnife;
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         switch(holder.getItemViewType()){
             case 0:
-                Events event = getItem(position);
+                final Events event = getItem(position);
 
-                Log.e("inside click : ", "");
                 ((ResultHolder)holder).linearLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Doesn't do anything, but need Click Listener to get that sweet Ripple
-                        Log.e("in on click listner:  ",""+position);
+                        Intent intent = new Intent(view.getContext(), EventInfo.class);
+                        intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
+                        view.getContext().startActivity(intent);
+
                     }
                 });
 

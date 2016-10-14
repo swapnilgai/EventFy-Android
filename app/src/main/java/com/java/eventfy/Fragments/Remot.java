@@ -206,8 +206,9 @@ public class Remot extends Fragment {
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        if(flag.equals(getResources().getString(R.string.remot_flag)))
-            bindAdapter(adapter, eventsList);
+        if(eventsList.get(0) instanceof Events)
+            if(flag.equals(getResources().getString(R.string.remot_flag)))
+                bindAdapter(adapter, eventsList);
     }
 
     @Subscribe
