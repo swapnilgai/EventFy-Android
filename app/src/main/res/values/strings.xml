@@ -62,6 +62,9 @@
     <string name="autocomplete_hint">Enter place name or address</string>
     <string name="volatile_event">Volatile</string>
     <string name="event_for_eventinfo">Event_Object</string>
+    <string name="create_event_category">Event_Category</string>
+    <string name="create_event_category_public">Event_Category_Public</string>
+    <string name="create_event_category_private">Event_Category_Private</string>
 
 
 </resources>

@@ -1,13 +1,10 @@
-package com.java.eventfy.Fragments;
+package com.java.eventfy.Fragments.MyEvents;
 
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -17,9 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.model.LatLng;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
@@ -32,11 +30,14 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
-public class Nearby extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class Private extends Fragment {
+
     private MainRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private FloatingActionButton fragment_switch_button;
     private FragmentTransaction transaction;
     private FragmentManager manager;
     private Fragment nearby_map;
@@ -45,32 +46,31 @@ public class Nearby extends Fragment {
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
     private List<Events> eventsList;
+    FloatingActionMenu materialDesignFAM;
+    com.github.clans.fab.FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
 
 
-    public Nearby() {
+    public Private() {
         // Required empty public constructor
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
-
-       //if(!EventBusService.getInstance().isRegistered(this))
+        final View view = inflater.inflate(R.layout.fragment_public, container, false);
+        getNearbEventServerCall();
+        //if(!EventBusService.getInstance().isRegistered(this))
         EventBusService.getInstance().register(this);
-
-        initServices();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
+
+        materialDesignFAM = (FloatingActionMenu) view.findViewById(R.id.material_design_android_floating_action_menu);
+        floatingActionButton1 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item1);
+        floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item2);
+        floatingActionButton3 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item3);
 
         adapter = new MainRecyclerAdapter();
 
@@ -82,52 +82,31 @@ public class Nearby extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getNearbEventServerCall();
             }
         });
 
-        fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
-        fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
-        manager = getActivity().getSupportFragmentManager();
-        transaction = manager.beginTransaction();
-        view.setId(Integer.parseInt(context_id));
-
-        nearby_map = new Nearby_Map();
-        transaction.add(Integer.parseInt(context_id), nearby_map, "nearby_map");
-        transaction.hide(nearby_map);
-        transaction.commit();
-
-        fragment_switch_button.setOnClickListener(new OnClickListener() {
-
-            @Override
+        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                if(nearby_map.isHidden()) {
-                    transaction = manager.beginTransaction();
-                    transaction.show(nearby_map);
-                    transaction.commit();
-                    fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
-                }
-                else{
-                    transaction = manager.beginTransaction();
-                    transaction.hide(nearby_map);
-                    transaction.commit();
-                    fragment_switch_button.setImageResource(R.drawable.ic_map_white_24dp);
-                }
+                //TODO something when floating action menu first item clicked
+                Log.e("button 1 clicked", "Private");
+            }
+        });
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu second item clicked
+                Log.e("button 2 clicked", "Private");
+            }
+        });
+        floatingActionButton3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //TODO something when floating action menu third item clicked
+                Log.e("button 3 clicked", "Private");
             }
         });
 
-        super.onSaveInstanceState(savedInstanceState);
         return view;
     }
 
-    private void initServices() {
-        // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-
-        getActivity().startService(new Intent(getContext(), com.java.eventfy.Services.UserCurrentLocation.class));
-    }
-
-    // ***** event bus call
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
@@ -144,42 +123,18 @@ public class Nearby extends Fragment {
         this.flag = flag;
     }
 
-    @Subscribe
-    public void getLocation(LatLng latLag)
-    {
-        this.latLng = latLag;
-        Log.e("location : ", ""+latLag);
-        getNearbEventServerCall();
 
-    }
-
-    // ****** ASYNC CALL
     private void getNearbEventServerCall(){
 
-
         Location location = new Location();
+        LatLng latLng = new LatLng(33.875501, -117.883372);
+
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
         location.setUserId("temp");
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
         getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.nearby_flag));
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.e("in resume "," *** ");
-        getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.e("in pause "," *** ");
-       getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.UserCurrentLocation.class));
-     //   EventBusService.getInstance().unregister(this);
     }
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
@@ -202,5 +157,9 @@ public class Nearby extends Fragment {
             adapter.notifyDataSetChanged();
         }
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBusService.getInstance().unregister(this);
+    }
 }
-

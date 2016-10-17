@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Created by swapnil on 10/11/16.
  */
-public class EventInfo extends AppCompatActivity {
+public class EventInfoPublic extends AppCompatActivity {
 
     private Toolbar toolbar;
     private Events event;
@@ -34,7 +34,7 @@ public class EventInfo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_info);
+        setContentView(R.layout.activity_event_info_public);
 
         Intent intent = getIntent();
         event = (Events) intent.getSerializableExtra(getResources().getString(R.string.event_for_eventinfo));
@@ -80,7 +80,7 @@ public class EventInfo extends AppCompatActivity {
     private void setupToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("TabbedCoordinatorLayout");
+        getSupportActionBar().setTitle("PublicInfo");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

@@ -55,9 +55,6 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
                             totalItemCount = getItemCount();
                             lastVisibleItem = recyclerView.getChildCount();
 
-                           Log.e("totalItemCount:  ",""+totalItemCount);
-                            Log.e("combin : ",""+(lastVisibleItem + visibleThreshold));
-
                             if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                                 // End has been reached
                                 // Do something

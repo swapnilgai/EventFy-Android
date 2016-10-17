@@ -42,36 +42,39 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
-        <activity android:name=".MainActivity" >
 
+        <activity android:name=".MainActivity">
         </activity>
-
         <activity
             android:name=".Home"
             android:configChanges="orientation|screenSize"
             android:uiOptions="splitActionBarWhenNarrow">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".EventInfo" >
-
-        </activity>
+        <activity android:name=".EventInfoPublic"></activity>
 
         <!-- Services init -->
-        <service android:name=".Services.UserCurrentLocation" android:exported="false">
+        <service
+            android:name=".Services.UserCurrentLocation"
+            android:exported="false">
         </service>
 
         <activity
             android:name=".CreatePublicEvent"
-            android:configChanges="orientation|screenSize" >
-
+            android:configChanges="orientation|screenSize">
         </activity>
 
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+        <activity android:name=".MyEvents"></activity>
+
+        <activity android:name=".EventInfoPrivate"></activity>
+
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
 
     </application>
+
 </manifest>

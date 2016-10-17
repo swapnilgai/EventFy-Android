@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,9 +55,6 @@ public class Attendance_adapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
 
                     totalItemCount = getItemCount();
                     lastVisibleItem = recyclerView.getChildCount();
-
-                    Log.e("totalItemCount:  ",""+totalItemCount);
-                    Log.e("combin : ",""+(lastVisibleItem + visibleThreshold));
 
                     if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                         // End has been reached
