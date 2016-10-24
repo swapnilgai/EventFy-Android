@@ -66,5 +66,8 @@
     <string name="create_event_category_public">Event_Category_Public</string>
     <string name="create_event_category_private">Event_Category_Private</string>
 
+    <string name="facebook_app_id">250414581969875</string>
+    <string name="facebook_profile_start_url">https://graph.facebook.com/</string>
+    <string name="facebook_profile_end_url">/picture?type=large</string>
 
 </resources>

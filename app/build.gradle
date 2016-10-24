@@ -50,6 +50,8 @@ dependencies {
     compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'
     compile 'com.cloudinary:cloudinary-android:1.4.1'
     compile 'com.github.clans:fab:1.6.2'
+    compile 'com.facebook.android:facebook-android-sdk:4.8.+'
+
 }
 
 
