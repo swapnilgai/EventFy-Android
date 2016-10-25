@@ -95,6 +95,8 @@
 
         <!-- Service data block end-->
 
+        <uses-library android:name="com.google.android.maps" />
+
     </application>
 
 </manifest>

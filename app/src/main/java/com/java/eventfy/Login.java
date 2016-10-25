@@ -1,6 +1,8 @@
 package com.java.eventfy;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,11 +19,14 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 public class Login extends AppCompatActivity {
 
@@ -68,13 +73,28 @@ public class Login extends AppCompatActivity {
                                                                 // Insert your code here
                                                                 // Application code
                                                                 try {
+
+                                                                    String jsonresult = String.valueOf(object);
+                                                                    System.out.println("JSON Result" + jsonresult);
+
                                                                     String email = object.getString("email");
                                                                     String birthday = object.getString("birthday");
                                                                     String name = object.getString("name");
+                                                                    String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
+                                                                    String id = object.getString("id");
+                                                                    String Address = object.getJSONObject("location").getString("name");
+
+                                                                    LatLng latLng = getLocationFromAddress(Address);
 
                                                                     Log.e("facebook data : ", email);
                                                                     Log.e("facebook data : ", birthday);
                                                                     Log.e("facebook data : ", name);
+                                                                    Log.e("facebook data : ", profilePicUrl);
+                                                                    Log.e("facebook data : ", id);
+                                                                    Log.e("facebook data : ", ""+latLng.latitude);
+                                                                    Log.e("facebook data : ", ""+latLng.longitude);
+
+
 
                                                                 } catch (JSONException e) {
                                                                     e.printStackTrace();
@@ -105,6 +125,31 @@ public class Login extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public LatLng getLocationFromAddress(String strAddress) {
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return p1;
     }
 
 }
