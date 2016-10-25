@@ -131,7 +131,6 @@ public class Private extends Fragment {
 
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
-        location.setUserId("temp");
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
         getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.nearby_flag));
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

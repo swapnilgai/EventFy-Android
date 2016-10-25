@@ -5,17 +5,11 @@ package com.java.eventfy.Entity;
  */
 public class Location {
 
-    private String userId; // email or phone number
+    private int locationId;
     private double longitude;
     private double latitude;
     private double distance;
 
-    public String getUserId() {
-        return userId;
-    }
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
     public double getLongitude() {
         return longitude;
     }

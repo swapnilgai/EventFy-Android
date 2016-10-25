@@ -29,13 +29,10 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        Log.e("Comment date : ", ""+comment.getDate());
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
         HttpEntity<Comments> request = new HttpEntity<Comments>(comment);
-
-        Log.e("Comment body : ", ""+request.getBody());
 
         ResponseEntity<Comments> response = restTemplate.exchange(url, HttpMethod.POST, request, Comments.class);
 

@@ -3,11 +3,13 @@ package com.java.eventfy;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 
 import com.facebook.CallbackManager;
 import com.facebook.CallbackManager.Factory;
@@ -20,6 +22,9 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.maps.model.LatLng;
+import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.asyncCalls.LoginAction;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +37,11 @@ public class Login extends AppCompatActivity {
 
     private LoginButton fbLoginBt;
     private CallbackManager callbackManager;
+    private SignUp signUp;
+    private EditText emailText;
+    private  EditText passwordText;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,26 +85,30 @@ public class Login extends AppCompatActivity {
                                                                 try {
 
                                                                     String jsonresult = String.valueOf(object);
-                                                                    System.out.println("JSON Result" + jsonresult);
 
-                                                                    String email = object.getString("email");
-                                                                    String birthday = object.getString("birthday");
-                                                                    String name = object.getString("name");
                                                                     String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
-                                                                    String id = object.getString("id");
                                                                     String Address = object.getJSONObject("location").getString("name");
 
                                                                     LatLng latLng = getLocationFromAddress(Address);
 
-                                                                    Log.e("facebook data : ", email);
-                                                                    Log.e("facebook data : ", birthday);
-                                                                    Log.e("facebook data : ", name);
-                                                                    Log.e("facebook data : ", profilePicUrl);
-                                                                    Log.e("facebook data : ", id);
-                                                                    Log.e("facebook data : ", ""+latLng.latitude);
-                                                                    Log.e("facebook data : ", ""+latLng.longitude);
+                                                                    signUp = new SignUp();
+                                                                    signUp.setUserName(object.getString("name"));
+                                                                    signUp.setDob(object.getString("birthday"));
+                                                                    signUp.setImageUrl(profilePicUrl);
+                                                                    signUp.setIsFacebook(true);
+                                                                    signUp.setUserId(object.getString("email"));
 
 
+                                                                    if(latLng!=null) {
+                                                                        Location location = new Location();
+                                                                        location.setLatitude(latLng.latitude);
+                                                                        location.setLongitude(latLng.longitude);
+                                                                        location.setDistance(10);
+                                                                        signUp.setLocation(location);
+
+                                                                    }
+
+                                                                    serverCall(signUp);
 
                                                                 } catch (JSONException e) {
                                                                     e.printStackTrace();
@@ -107,7 +121,6 @@ public class Login extends AppCompatActivity {
                                                 request.setParameters(parameters);
                                                 request.executeAsync();
                     }
-
 
                     @Override
                     public void onCancel() {
@@ -152,4 +165,35 @@ public class Login extends AppCompatActivity {
         return p1;
     }
 
+
+    public boolean validate() {
+        boolean valid = true;
+
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
+
+        if (email.isEmpty()) {
+            emailText.setError("enter a valid email address");
+            valid = false;
+        } else {
+            emailText.setError(null);
+        }
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            passwordText.setError("between 4 and 10 alphanumeric characters");
+            valid = false;
+        } else {
+            passwordText.setError(null);
+        }
+
+        return valid;
+    }
+
+    private void serverCall(SignUp signUp) {
+
+        String url = getResources().getString(R.string.ip_localhost)+getResources().getString(R.string.login_action);
+        LoginAction loginAction = new LoginAction(signUp,url);
+        loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
 }

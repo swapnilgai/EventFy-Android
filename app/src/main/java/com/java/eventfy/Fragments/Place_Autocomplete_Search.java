@@ -220,7 +220,6 @@ Log.e("lat ", ""+place.getLatLng().latitude);
         Location location = new Location();
         location.setLatitude(place.getLatLng().latitude);
         location.setLongitude(place.getLatLng().longitude);
-        location.setUserId("temp");
         //setting url
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
       //  getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.remot_flag));

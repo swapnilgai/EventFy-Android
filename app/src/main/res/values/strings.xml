@@ -16,7 +16,7 @@
     <!-- Web servises url -->
 
     <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">http://192.168.0.17:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>
     <string name="login">/webapi/login</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
     <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
@@ -30,6 +30,7 @@
     <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
     <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
     <string name="add_comment_in_event">/webapi/comments/addcomment</string>
+    <string name="login_action">/webapi/signup/adduser</string>
 
     <!-- Golbal values for veriables-->
 

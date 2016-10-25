@@ -40,8 +40,6 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        Log.e("inside event aysnc call", " %%%%%: ");
-
         locationObj.setDistance(1000);
 
         HttpEntity<Location> request = new HttpEntity<>(locationObj);
