@@ -1,20 +1,12 @@
 package com.java.eventfy.Entity;
 
+import java.io.Serializable;
+
 /**
  * Created by swapnil on 6/28/16.
  */
-public class GcmRegister {
-    String regId;
-
-    String userId;
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+public class NotificationDetail implements Serializable {
+    private String regId;
 
     public String getRegId() {
         return regId;

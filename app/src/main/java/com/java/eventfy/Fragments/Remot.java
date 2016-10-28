@@ -1,6 +1,8 @@
 package com.java.eventfy.Fragments;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,8 +21,10 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
@@ -53,6 +57,8 @@ public class Remot extends Fragment {
     private String flag;
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
+    private SignUp signUp;
+
 
     public Remot() {
         // Required empty public constructor
@@ -195,8 +201,14 @@ public class Remot extends Fragment {
         Location location = new Location();
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
+
+        SignUp tempSignUp = new SignUp();
+        tempSignUp.setToken(signUp.getToken());
+        tempSignUp.setLocation(location);
+
+
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-          getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.remot_flag));
+          getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.remot_flag));
           getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -220,6 +232,14 @@ public class Remot extends Fragment {
     {
         this.latLng = place.getLatLng();
         setEnableFloatingButton();
+    }
+    public void getUserObject()
+    {
+        SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
     }
 }
 

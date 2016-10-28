@@ -2,7 +2,6 @@
 <manifest package="com.java.eventfy"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
@@ -14,6 +13,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
     <meta-data
         android:name="CLOUDINARY_URL"
@@ -36,7 +37,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
         </receiver>
 
-        <!-- Meta data block start-->
+        <!-- Meta data block start -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
@@ -45,58 +46,57 @@
             android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
 
-        <!-- Meta data block end-->
+        <!-- Meta data block end -->
 
-        <!-- Activity data block start-->
 
-        <activity android:name=".MainActivity">
-        </activity>
+        <!-- Activity data block start -->
+
         <activity
             android:name=".Home"
             android:configChanges="orientation|screenSize"
             android:uiOptions="splitActionBarWhenNarrow">
         </activity>
-
         <activity android:name=".EventInfoPublic"/>
-
         <activity
             android:name=".CreatePublicEvent"
             android:configChanges="orientation|screenSize">
         </activity>
-
         <activity android:name=".MyEvents"/>
-
         <activity android:name=".EventInfoPrivate"/>
-
         <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
-
         <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name="com.facebook.FacebookActivity"
+        <activity
+            android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity android:name=".SignUpActivity">
+        </activity>
 
-        <!-- Meta data block end-->
+        <!-- Meta data block end -->
 
-        <!-- Service data block start-->
+
+        <!-- Service data block start -->
 
         <service
             android:name=".Services.UserCurrentLocation"
             android:exported="false">
         </service>
 
-        <!-- Service data block end-->
+        <!-- Service data block end -->
 
-        <uses-library android:name="com.google.android.maps" />
+        <uses-library android:name="com.google.android.maps"/>
 
+        <activity android:name=".VerifySignUp">
+        </activity>
     </application>
 
 </manifest>

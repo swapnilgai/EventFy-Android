@@ -1,9 +1,11 @@
 package com.java.eventfy.Entity;
 
+import java.io.Serializable;
+
 /**
  * Created by swapnil on 5/29/16.
  */
-public class Location {
+public class Location implements Serializable {
 
     private int locationId;
     private double longitude;

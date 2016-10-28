@@ -1,10 +1,6 @@
 package com.java.eventfy.Entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.java.eventfy.Fragments.EventInfo.Comment;
 
@@ -16,7 +12,7 @@ import java.util.List;
  * Created by swapnil on 5/29/16.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_EMPTY)
+
 public class SignUp implements Serializable {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -37,35 +33,35 @@ public class SignUp implements Serializable {
 
     @JsonView(Events.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonBackReference
+  //  @JsonManagedReference("Events")
     private List<Events> events = new ArrayList<Events>();
 
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String token;
 
-    @JsonView(Notification.class)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonBackReference
-    private Notification notification;
+    @JsonIgnoreProperties(ignoreUnknown = false)
+    @JsonView(NotificationDetail.class)
+    //@JsonBackReference
+    private NotificationDetail notificationDetail;
 
 //	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
 //	private Token token;
 
-    @JsonView(VerificationCode.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonBackReference
+    @JsonView(VerificationCode.class)
+   // @JsonManagedReference("VerificationCode")
     private VerificationCode verificationCode;
 
 
-    @JsonBackReference
-    @JsonIgnoreProperties(ignoreUnknown = false)
+//    @JsonBackReference
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(Location.class)
-    @JsonManagedReference("Location")
+  //  @JsonManagedReference("Location")
     private Location location;
 
     @JsonView(Comment.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonBackReference
+   // @JsonManagedReference("Comments")
     private List<Comments> comments;
 
 
@@ -129,28 +125,12 @@ public class SignUp implements Serializable {
         this.comments = comments;
     }
 
-    public boolean isFacebook() {
-        return isFacebook;
-    }
-
-    public void setFacebook(boolean facebook) {
-        isFacebook = facebook;
-    }
-
     public Location getLocation() {
         return location;
     }
 
     public void setLocation(Location location) {
         this.location = location;
-    }
-
-    public Notification getNotification() {
-        return notification;
-    }
-
-    public void setNotification(Notification notification) {
-        this.notification = notification;
     }
 
     public String getToken() {
@@ -167,6 +147,14 @@ public class SignUp implements Serializable {
 
     public void setVerificationCode(VerificationCode verificationCode) {
         this.verificationCode = verificationCode;
+    }
+
+    public NotificationDetail getNotificationDetail() {
+        return notificationDetail;
+    }
+
+    public void setNotificationDetail(NotificationDetail notificationDetail) {
+        this.notificationDetail = notificationDetail;
     }
 
 }

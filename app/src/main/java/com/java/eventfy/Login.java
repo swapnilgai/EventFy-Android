@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.CallbackManager.Factory;
@@ -24,8 +27,13 @@ import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.maps.model.LatLng;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.User;
+import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.LoginAction;
+import com.java.eventfy.asyncCalls.SignUpAction;
+import com.java.eventfy.utils.SecurityOperations;
 
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,9 +47,11 @@ public class Login extends AppCompatActivity {
     private CallbackManager callbackManager;
     private SignUp signUp;
     private EditText emailText;
-    private  EditText passwordText;
-
-
+    private EditText passwordText;
+    private TextView signupLink;
+    private Button loginButton;
+    private User user;
+    private SecurityOperations securityOperations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +71,43 @@ public class Login extends AppCompatActivity {
 
             }
         });
+
+        signupLink = (TextView) findViewById(R.id.link_signup);
+        emailText = (EditText) findViewById(R.id.input_email);
+        loginButton = (Button) findViewById(R.id.btn_login);
+        passwordText = (EditText) findViewById(R.id.input_password);
+
+
+        signupLink.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Start the Signup activity
+                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        loginButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                loginAction();
+            }
+        });
+    }
+
+    private void loginAction() {
+        //TODO write action for login button
+
+        if(validate())
+        {
+            user = new User();
+            user.setUsername(emailText.getText().toString());
+            user.setPassword(passwordText.getText().toString());
+            serverCallLogin(user);
+        }
+
     }
 
     // Private method to handle Facebook login and callback
@@ -108,7 +155,7 @@ public class Login extends AppCompatActivity {
 
                                                                     }
 
-                                                                    serverCall(signUp);
+                                                                    serverCallFbLogin(signUp);
 
                                                                 } catch (JSONException e) {
                                                                     e.printStackTrace();
@@ -189,11 +236,48 @@ public class Login extends AppCompatActivity {
         return valid;
     }
 
-    private void serverCall(SignUp signUp) {
+    private void serverCallFbLogin(SignUp signUp) {
 
         String url = getResources().getString(R.string.ip_localhost)+getResources().getString(R.string.login_action);
-        LoginAction loginAction = new LoginAction(signUp,url);
+        SignUpAction loginAction = new SignUpAction(signUp,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+    private void serverCallLogin(User user) {
 
+        securityOperations = new SecurityOperations();
+        user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
+        Log.e("ecrypted password : ", ""+user.getPassword());
+        String url = getResources().getString(R.string.ip_localhost)+getResources().getString(R.string.login);
+        LoginAction loginAction = new LoginAction(user,url);
+        loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Subscribe
+    public void getUserobject(SignUp signUp)
+    {
+        if(signUp!=null && signUp.getToken()!=null)
+        {
+            Log.e("in login activity ", "**** "+signUp);
+            Intent intent = new Intent(this, Home.class);
+            intent.putExtra("user", signUp);
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "Inavlid Username/ Password", Toast.LENGTH_LONG);
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        EventBusService.getInstance().register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBusService.getInstance().unregister(this);
     }
 }
+

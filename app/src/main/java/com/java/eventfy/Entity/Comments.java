@@ -7,10 +7,11 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Comments {
+public class Comments  implements Serializable {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private int commentId;

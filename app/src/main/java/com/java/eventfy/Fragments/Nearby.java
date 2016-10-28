@@ -1,7 +1,9 @@
 package com.java.eventfy.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,8 +23,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
@@ -45,6 +49,7 @@ public class Nearby extends Fragment {
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
     private List<Events> eventsList;
+    private SignUp signUp;
 
 
     public Nearby() {
@@ -64,7 +69,9 @@ public class Nearby extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
 
-       //if(!EventBusService.getInstance().isRegistered(this))
+        getUserObject();
+
+       if(!EventBusService.getInstance().isRegistered(this))
         EventBusService.getInstance().register(this);
 
         initServices();
@@ -156,12 +163,15 @@ public class Nearby extends Fragment {
     // ****** ASYNC CALL
     private void getNearbEventServerCall(){
 
-
         Location location = new Location();
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
+        SignUp tempSignUp = new SignUp();
+        tempSignUp.setLocation(location);
+        tempSignUp.setToken(signUp.getToken());
+
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-        getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.nearby_flag));
+        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag));
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -200,6 +210,16 @@ public class Nearby extends Fragment {
             adapter.addAll(eventsList);
             adapter.notifyDataSetChanged();
         }
+    }
+
+
+    public void getUserObject()
+    {
+        SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
     }
 }
 

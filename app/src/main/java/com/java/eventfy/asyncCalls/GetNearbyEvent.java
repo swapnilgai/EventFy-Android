@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.java.eventfy.Entity.Events;
-import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
@@ -22,15 +22,15 @@ import java.util.List;
 public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
 
     private String url;
-    private Location locationObj;
+    private SignUp signUp;
     private List<Events> eventLst;
     private String flag;
     public GetNearbyEvent()
     {}
 
-    public GetNearbyEvent(String url, Location locationObj, String flag){
+    public GetNearbyEvent(String url, SignUp signUp, String flag){
         this.url = url;
-        this.locationObj = locationObj;
+        this.signUp = signUp;
         this.flag= flag;
     }
 
@@ -40,9 +40,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        locationObj.setDistance(1000);
-
-        HttpEntity<Location> request = new HttpEntity<>(locationObj);
+        HttpEntity<SignUp> request = new HttpEntity<>(signUp);
 
         ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
 

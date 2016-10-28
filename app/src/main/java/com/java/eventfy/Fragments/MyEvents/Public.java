@@ -1,6 +1,8 @@
 package com.java.eventfy.Fragments.MyEvents;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,8 +21,10 @@ import android.view.ViewGroup;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
@@ -48,6 +52,7 @@ public class Public extends Fragment {
     private List<Events> eventsList;
     FloatingActionMenu materialDesignFAM;
     FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3;
+    private SignUp signUp;
 
 
     public Public() {
@@ -131,8 +136,13 @@ public class Public extends Fragment {
 
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
+        SignUp tempSignUp = new SignUp();
+        tempSignUp.setToken(signUp.getToken());
+        tempSignUp.setLocation(location);
+
+
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-        getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.nearby_flag));
+        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag));
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -161,5 +171,14 @@ public class Public extends Fragment {
     public void onPause() {
         super.onPause();
         EventBusService.getInstance().unregister(this);
+    }
+
+    public void getUserObject()
+    {
+        SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
     }
 }

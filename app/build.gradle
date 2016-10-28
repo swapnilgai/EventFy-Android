@@ -43,7 +43,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.8.4'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.github.johnkil.android-robototextview:robototextview:2.5.0'
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
@@ -51,6 +51,8 @@ dependencies {
     compile 'com.cloudinary:cloudinary-android:1.4.1'
     compile 'com.github.clans:fab:1.6.2'
     compile 'com.facebook.android:facebook-android-sdk:4.8.+'
+    compile 'com.google.code.gson:gson:2.7'
+    compile group: 'org.jasypt', name: 'jasypt', version: '1.9.0'
 
 }
 

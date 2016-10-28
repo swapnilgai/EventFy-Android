@@ -17,7 +17,7 @@
 
     <string name="ip_local">https://eventfy.herokuapp.com</string>
     <string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>
-    <string name="login">/webapi/login</string>
+    <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
     <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
     <string name="signup_adduser">/webapi/signup/adduser</string>
@@ -31,6 +31,10 @@
     <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
     <string name="add_comment_in_event">/webapi/comments/addcomment</string>
     <string name="login_action">/webapi/signup/adduser</string>
+    <string name="verify_vcode">/webapi/signup/checkverificationcode</string>
+    <string name="register_notification_detail">/webapi/notifications/registeruser</string>
+
+
 
     <!-- Golbal values for veriables-->
 
@@ -42,6 +46,17 @@
     <string name="nearby_flag">nearby_flag</string>
     <string name="remot_flag">remot_flag</string>
 
+    <!--  User SharedPreferences data  -->
+    <string name="userObject">userObject</string>
+
+    <string name="userName">userName</string>
+    <string name="token">token</string>
+    <string name="profilePicUrl">profilePicUrl</string>
+    <string name="dob">dob</string>
+    <string name="userId">userId</string>
+    <string name="isFacebook">isFacebook</string>
+    <string name="isVerified">isVerified</string>
+    <!--  End  -->
 
     <!-- Search place autocomplete button -->
        <string name="place_details">

@@ -1,7 +1,10 @@
 package com.java.eventfy;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -21,13 +24,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.gson.Gson;
+import com.java.eventfy.Entity.NotificationDetail;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.Fragments.Notification;
 import com.java.eventfy.Fragments.Remot;
+import com.java.eventfy.asyncCalls.RegisterToGCM;
+import com.java.eventfy.asyncCalls.UpdateNotificationDetail;
 import com.java.eventfy.utils.DeviceDimensions;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +50,27 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private EventBus eventBus;
     private  DrawerLayout drawer;
     private NavigationView navigationView;
-
+    private SignUp signUp;
+    private  GoogleCloudMessaging gcm;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        initEventBus();
+
+        EventBusService.getInstance().register(this);
+
+        Intent in = getIntent();
+        signUp = (SignUp) in.getSerializableExtra("user");
+
+        Log.e("signUp ", "****** "+signUp);
+
+        getUserObject(signUp);
+
+        //if(signUp!=null && signUp.getNotificationDetail()!=null)
+        {
+            registerDeviceForNotification();
+        }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,6 +94,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //initServices();
         toggle.syncState();
         setupTabIcons();
+    }
+
+    private void registerDeviceForNotification() {
+        gcm = GoogleCloudMessaging.getInstance(this);
+        RegisterToGCM registerToGCM = new RegisterToGCM(gcm, getApplicationContext());
+        registerToGCM.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void initEventBus()
@@ -233,12 +264,55 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
       //  initServices();
     }
 
+    @Subscribe
+    public void getNotificationDetail(NotificationDetail notificationDetail)
+    {
+        signUp.setNotificationDetail(notificationDetail);
+        String url = getResources().getString(R.string.ip_localhost)+getResources().getString(R.string.register_notification_detail);
+        UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url);
+        updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
     public void deviceDimensions() {
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
             DeviceDimensions.deviceHeight = size.y;
             DeviceDimensions.deviceWeidth = size.x;
+    }
+
+    private void getUserObject(SignUp signUp) {
+        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        if(json==null)
+        {
+             storeUserObject(signUp, editor);
+        }
+        else {
+           // this.signUp = gson.fromJson(json, SignUp.class);
+        }
+    }
+
+
+
+
+    public void storeUserObject(SignUp signUp, SharedPreferences.Editor editor)
+    {
+//        editor.putString(getResources().getString(R.string.userName), signUp.getUserName());
+//        editor.putString(getResources().getString(R.string.userId), signUp.getUserId());
+//        editor.putString(getResources().getString(R.string.profilePicUrl), signUp.getImageUrl());
+//        editor.putString(getResources().getString(R.string.dob), signUp.getDob());
+//        editor.putString(getResources().getString(R.string.token), signUp.getToken());
+//        editor.putBoolean(getResources().getString(R.string.isFacebook), signUp.getIsFacebook());
+//        editor.putString(getResources().getString(R.string.isVerified), signUp.getIsVerified());
+
+        Gson gson = new Gson();
+        String json = gson.toJson(signUp);
+        editor.putString(getResources().getString(R.string.userObject), json);
+
+        editor.commit();
     }
 
 }

@@ -1,10 +1,12 @@
 package com.java.eventfy.Entity;
 
+import java.io.Serializable;
+
 /**
  * Created by swapnil on 5/29/16.
  */
 
-public class VerificationCode {
+public class VerificationCode implements Serializable {
 
     private String vCode;
 
