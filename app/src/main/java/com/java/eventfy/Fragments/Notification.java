@@ -4,7 +4,6 @@ package com.java.eventfy.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.java.eventfy.Entity.NotificationDetail;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.NotificationRecyclerAdapter;
-import com.java.eventfy.customLibraries.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class Notification extends Fragment {
 
     private RecyclerView recyclerViewNotification;
 
-    List<com.java.eventfy.Entity.Notification> notificationList;
+    List<NotificationDetail> notificationList;
 
     public Notification() {
         // Required empty public constructor
@@ -56,11 +55,11 @@ public class Notification extends Fragment {
         recyclerViewNotification.setAdapter(adapterNotification);
         recyclerViewNotification.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //recyclerViewNotification.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
-        notificationList = new ArrayList<com.java.eventfy.Entity.Notification>();
+        notificationList = new ArrayList<com.java.eventfy.Entity.NotificationDetail>();
 
         for(int i=0; i<2;i++)
         {
-            com.java.eventfy.Entity.Notification notification = new com.java.eventfy.Entity.Notification();
+            NotificationDetail notification = new NotificationDetail();
             notification.setNotificationTime("11:"+""+i);
             notification.setNotificationTitle("hello notification");
             notification.setNotifierImageUrl("https://res.cloudinary.com/eventfy/image/upload/v1462640701/uhif1dta9ykkbvbqoutv.png");
@@ -78,7 +77,7 @@ public class Notification extends Fragment {
                 notificationList.clear();
                 for(int i=0; i<2;i++)
                 {
-                    com.java.eventfy.Entity.Notification notification = new com.java.eventfy.Entity.Notification();
+                    NotificationDetail notification = new NotificationDetail();
                     notification.setNotificationTime("12:"+""+i);
                     notification.setNotificationTitle("hello notification");
                     notification.setNotifierImageUrl("https://res.cloudinary.com/eventfy/image/upload/v1462640701/uhif1dta9ykkbvbqoutv.png");
@@ -92,7 +91,7 @@ public class Notification extends Fragment {
         return view;
     }
 
-    private void bindAdapter(NotificationRecyclerAdapter adapter, List<com.java.eventfy.Entity.Notification> notificationList){
+    private void bindAdapter(NotificationRecyclerAdapter adapter, List<com.java.eventfy.Entity.NotificationDetail> notificationList){
         swipeRefreshLayoutNotification.setRefreshing(false);
         if (adapter != null){
             adapter.clear();

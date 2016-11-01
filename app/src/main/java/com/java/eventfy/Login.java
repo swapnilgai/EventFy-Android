@@ -238,7 +238,7 @@ public class Login extends AppCompatActivity {
 
     private void serverCallFbLogin(SignUp signUp) {
 
-        String url = getResources().getString(R.string.ip_localhost)+getResources().getString(R.string.login_action);
+        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login_action);
         SignUpAction loginAction = new SignUpAction(signUp,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -247,7 +247,7 @@ public class Login extends AppCompatActivity {
         securityOperations = new SecurityOperations();
         user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
         Log.e("ecrypted password : ", ""+user.getPassword());
-        String url = getResources().getString(R.string.ip_localhost)+getResources().getString(R.string.login);
+        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login);
         LoginAction loginAction = new LoginAction(user,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

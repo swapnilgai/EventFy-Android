@@ -98,7 +98,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void registerDeviceForNotification() {
         gcm = GoogleCloudMessaging.getInstance(this);
-        RegisterToGCM registerToGCM = new RegisterToGCM(gcm, getApplicationContext());
+        String senderId = getResources().getString(R.string.GCM_sender_id);
+        RegisterToGCM registerToGCM = new RegisterToGCM(gcm, getApplicationContext(), senderId);
         registerToGCM.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -261,6 +262,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onResume() {
         super.onResume();
+
       //  initServices();
     }
 
@@ -268,7 +270,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void getNotificationDetail(NotificationDetail notificationDetail)
     {
         signUp.setNotificationDetail(notificationDetail);
-        String url = getResources().getString(R.string.ip_localhost)+getResources().getString(R.string.register_notification_detail);
+        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.register_notification_detail);
         UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url);
         updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

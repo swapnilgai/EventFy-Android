@@ -5,8 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.java.eventfy.Entity.NotificationDetail;
-import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.Entity.NotificationId;
 
 import java.io.IOException;
 
@@ -15,15 +14,16 @@ import java.io.IOException;
  */
 public class RegisterToGCM  extends AsyncTask<Void, Void, Void> {
 
-    GoogleCloudMessaging gcm;
-    Context context;
-    String SENDER_ID = "1070420205452";
-    String regid;
-    NotificationDetail notificationDetail;
+    private GoogleCloudMessaging gcm;
+    private Context context;
+    private String SENDER_ID = "1070420205452";
+    private String regid;
+    private NotificationId notificationId;
 
-    public RegisterToGCM(GoogleCloudMessaging gcm, Context context){
+    public RegisterToGCM(GoogleCloudMessaging gcm, Context context, String senderId){
         this.gcm = gcm;
         this.context = context;
+        SENDER_ID = senderId;
     }
 
 
@@ -36,16 +36,6 @@ public class RegisterToGCM  extends AsyncTask<Void, Void, Void> {
             }
             regid = gcm.register(SENDER_ID);
 
-            // You should send the registration ID to your server over HTTP,
-            // so it can use GCM/HTTP or CCS to send messages to your app.
-            // The request to your server should be authenticated if your app
-            // is using accounts.
-
-            // For this demo: we don't need to send it because the device
-            // will send upstream messages to a server that echo back the
-            // message using the 'from' address in the message.
-
-            // Persist the registration ID - no need to register again.
         } catch (IOException ex) {
             msg = "Error :" + ex.getMessage();
             // If there is an error, don't just keep trying to register.
@@ -62,9 +52,10 @@ public class RegisterToGCM  extends AsyncTask<Void, Void, Void> {
         Log.e("reg id is ", "###### : "+regid);
         if(regid!=null)
         {
-            notificationDetail = new NotificationDetail();
-            notificationDetail.setRegId(regid);
-            EventBusService.getInstance().post(notificationDetail);
+            notificationId = new NotificationId();
+            notificationId.setRegId(regid);
+            // send to Home activity
+        //    EventBusService.getInstance().post(notificationDetail);
         }
 
     }

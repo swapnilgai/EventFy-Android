@@ -174,7 +174,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     private void serverCall(SignUp signUp) {
 
         if(validate()) {
-            String url = getResources().getString(R.string.ip_localhost) + getResources().getString(R.string.login_action);
+            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.login_action);
             SignUpAction loginAction = new SignUpAction(signUp, url);
             loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

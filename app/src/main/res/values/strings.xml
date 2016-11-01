@@ -33,7 +33,7 @@
     <string name="login_action">/webapi/signup/adduser</string>
     <string name="verify_vcode">/webapi/signup/checkverificationcode</string>
     <string name="register_notification_detail">/webapi/notifications/registeruser</string>
-
+    <string name="GCM_sender_id">1070420205452</string>
 
 
     <!-- Golbal values for veriables-->

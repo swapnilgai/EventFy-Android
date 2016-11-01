@@ -6,10 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
-import com.java.eventfy.Entity.Notification;
+import com.java.eventfy.Entity.NotificationDetail;
 import com.java.eventfy.R;
 import com.squareup.picasso.Picasso;
 
@@ -19,7 +18,7 @@ import butterknife.ButterKnife;
 /**
  * Created by swapnil on 6/25/16.
  */
-public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notification, RecyclerView.ViewHolder>{
+public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<NotificationDetail, RecyclerView.ViewHolder>{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -30,7 +29,7 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch(holder.getItemViewType()){
             case 0:
-                Notification notification = getItem(position);
+                NotificationDetail notification = getItem(position);
 
                 ((ResultHolder)holder).notificationLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -44,7 +43,7 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
                         .placeholder(R.drawable.img_placeholder)
                         .into(((ResultHolder)holder).notificationImage);
 
-                ((ResultHolder)holder).notificationTitle.setText(notification.getUserId()+"  "+notification.getNotificationTitle());
+                ((ResultHolder)holder).notificationTitle.setText("  "+notification.getNotificationTitle());
                 ((ResultHolder)holder).notificationTime.setText(notification.getNotificationTime());
 
                 // calculate distance from current location
