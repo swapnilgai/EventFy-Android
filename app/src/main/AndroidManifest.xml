@@ -90,7 +90,9 @@
 
         <activity android:name=".SignUpActivity"></activity>
 
-        <activity android:name=".VerifySignUp"></activity>
+        <activity android:name=".VerifySignUp">
+
+        </activity>
         <!-- Meta data block end -->
 
         <!-- Service data block start -->

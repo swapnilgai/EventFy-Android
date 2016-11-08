@@ -36,18 +36,21 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            HttpEntity<SignUp> request = new HttpEntity<>(signUp);
 
-        HttpEntity<SignUp> request = new HttpEntity<>(signUp);
+            ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
 
-        ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
+            Events[] event = response.getBody();
 
-        Events[] event = response.getBody();
+            eventLst = Arrays.asList(event);
 
-        eventLst = Arrays.asList(event);
-
+        }catch (Exception e){
+            Log.e("in error", "for nearby events");
+        }
         return null;
     }
 

@@ -21,7 +21,7 @@
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
     <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
     <string name="signup_adduser">/webapi/signup/adduser</string>
-    <string name="verification_get">/webapi/signup/getverificationcode</string>
+    <string name="verification_code_get">/webapi/signup/getverificationcode</string>
     <string name="verification_check">/webapi/signup/checkverificationcode</string>
     <string name="title_activity_maps">Map</string>
     <string name="add_event">/webapi/events/add</string>
@@ -30,10 +30,12 @@
     <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
     <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
     <string name="add_comment_in_event">/webapi/comments/addcomment</string>
-    <string name="login_action">/webapi/signup/adduser</string>
+    <string name="login_action">/webapi/login/checkuser</string>
+    <string name="login_action_facebook">/webapi/login/checkuserfacebookuser</string>
     <string name="verify_vcode">/webapi/signup/checkverificationcode</string>
     <string name="register_notification_detail">/webapi/notifications/registeruser</string>
     <string name="GCM_sender_id">1070420205452</string>
+
 
 
     <!-- Golbal values for veriables-->

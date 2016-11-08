@@ -1,5 +1,6 @@
 package com.java.eventfy;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -52,6 +53,7 @@ public class Login extends AppCompatActivity {
     private Button loginButton;
     private User user;
     private SecurityOperations securityOperations;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,12 +104,27 @@ public class Login extends AppCompatActivity {
 
         if(validate())
         {
+            setProgressDialog();
             user = new User();
             user.setUsername(emailText.getText().toString());
             user.setPassword(passwordText.getText().toString());
             serverCallLogin(user);
         }
 
+    }
+
+    public void setProgressDialog()
+    {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public void dismissProgressDialog()
+    {
+        progressDialog.dismiss();
     }
 
     // Private method to handle Facebook login and callback
@@ -238,7 +255,7 @@ public class Login extends AppCompatActivity {
 
     private void serverCallFbLogin(SignUp signUp) {
 
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login_action);
+        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login_action_facebook);
         SignUpAction loginAction = new SignUpAction(signUp,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -255,16 +272,17 @@ public class Login extends AppCompatActivity {
     @Subscribe
     public void getUserobject(SignUp signUp)
     {
+        Log.e("in loginact string ", "&&&&&&&");
+
+        dismissProgressDialog();
         if(signUp!=null && signUp.getToken()!=null)
         {
-            Log.e("in login activity ", "**** "+signUp);
             Intent intent = new Intent(this, Home.class);
             intent.putExtra("user", signUp);
             startActivity(intent);
         }
-        else{
-            Toast.makeText(getApplicationContext(), "Inavlid Username/ Password", Toast.LENGTH_LONG);
-
+        else {
+            Toast.makeText(Login.this, "Inavlid Username/ Password", Toast.LENGTH_LONG).show();
         }
     }
 

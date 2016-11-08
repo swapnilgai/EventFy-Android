@@ -12,7 +12,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
@@ -54,7 +53,6 @@ public class GCMNotificationIntentService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        Log.e("message is ", "%%%%%%  "+message);
         sendNotification(message);
         // [END_EXCLUDE]
     }
@@ -183,8 +181,6 @@ public class GCMNotificationIntentService extends GcmListenerService {
         if(notificationDetailsList.size()>10) {
             notificationDetailsList = notificationDetailsList.subList(notificationDetailsList.size()-10, notificationDetailsList.size());
         }
-
-        notificationDetailsList.add(notificationDetail);
 
         SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationList", MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = mPrefs.edit();

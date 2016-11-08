@@ -1,5 +1,6 @@
 package com.java.eventfy;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
@@ -30,7 +32,9 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     private TextView dobtext;
     private Button signupButton;
     private TextView loginLink;
+    private SignUp signUp;
     public static final String DATEPICKER_TAG = "datepicker";
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +53,26 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signupButton =(Button) findViewById(R.id.btn_signup);
         loginLink = (TextView) findViewById(R.id.link_login);
 
-        Log.e("in create date time ; ", " *** "+dobtext);
 
+        if(signUp!=null)
+            signupButton.setText("Update");
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signupAction();
+                SignUp signUpTemp = createSignUpObjectFromFormDetail();
+
+                if(signUp!=null
+                        && signUpTemp.getUserName().equals(signUp.getUserName())
+                        && signUpTemp.getDob().equals(signUp.getDob())
+                        && signUpTemp.getUserId().equals(signUp.getUserId())
+                        && signUpTemp.getPassword().equals(signUp.getPassword()))
+                {
+                    EventBusService.getInstance().post(signUp);
+                }
+                else {
+                    signupAction();
+                }
             }
         });
 
@@ -79,6 +96,16 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
 
     private void signupAction() {
 
+        if(validate())
+        {
+            signUp = createSignUpObjectFromFormDetail();
+            serverCall(signUp);
+            setProgressDialog();
+        }
+    }
+
+
+    public SignUp createSignUpObjectFromFormDetail(){
         SignUp signUp = new SignUp();
         signUp.setUserId(emailText.getText().toString());
         signUp.setPassword(passwordText.getText().toString());
@@ -87,7 +114,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signUp.setImageUrl("default");
         signUp.setDob(dobtext.getText().toString());
         signUp.setUserName(nameText.getText().toString());
-        serverCall(signUp);
+        return signUp;
     }
 
     private boolean isVibrate() {
@@ -126,9 +153,19 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     @Subscribe
     public void getUserobject(SignUp signUp)
     {
+        Log.e("in signupact string ", "&&&&&&&");
+        dismissProgressDialog();
+        if(signUp!=null && signUp.getToken()!=null) {
+            this.signUp = signUp;
+            EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, VerifySignUp.class);
             intent.putExtra("user", signUp);
             startActivity(intent);
+        }
+        else {
+            Toast.makeText(SignUpActivity.this, "Email already present", Toast.LENGTH_LONG).show();
+        }
+        this.signUp = signUp;
     }
 
     public boolean validate() {
@@ -174,10 +211,25 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     private void serverCall(SignUp signUp) {
 
         if(validate()) {
-            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.login_action);
+            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.signup_adduser);
             SignUpAction loginAction = new SignUpAction(signUp, url);
             loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+    }
+
+
+    public void setProgressDialog()
+    {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Creating Account...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
+
+    public void dismissProgressDialog()
+    {
+        progressDialog.dismiss();
     }
 
 

@@ -29,19 +29,24 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... strings) {
 
-        RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        try {
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        ObjectMapper mapper = new ObjectMapper();
+            ObjectMapper mapper = new ObjectMapper();
 
-        HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
+            HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
 
-        ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
-        result = rateResponse.getBody();
+            ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
+            result = rateResponse.getBody();
 
+        }catch (Exception e)
+        {
+
+        }
         return null;
 
     }
@@ -51,7 +56,7 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if(!(result!=null && result.equals(signUp.getToken())))
             signUp.setVerificationCode(null);
-
+            // send to signup activity
             EventBusService.getInstance().post(signUp);
     }
 }

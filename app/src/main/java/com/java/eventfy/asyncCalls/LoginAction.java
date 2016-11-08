@@ -31,30 +31,27 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
     @Override
     protected Void doInBackground(Void... strings) {
 
-        Log.e("url ", ""+url);
-        Log.e("url ", ""+login.getUsername());
-        Log.e("url ", ""+login.getPassword());
+        try {
+            //ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
 
-
-
-        //ClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-
-        RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
 //        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
 //        mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM));
 //        restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
 
-        HttpEntity<User> request = new HttpEntity<>(login);
+            HttpEntity<User> request = new HttpEntity<>(login);
 
-        ResponseEntity<SignUp> rateResponse = restTemplate.postForEntity(url, request, SignUp.class);
+            ResponseEntity<SignUp> rateResponse = restTemplate.postForEntity(url, request, SignUp.class);
 
-        signUp = rateResponse.getBody();
+            signUp = rateResponse.getBody();
 
-        Log.e("object is ", ""+signUp.getToken());
+            Log.e("object is ", "" + signUp.getToken());
+        }catch (Exception e){
+                Log.e("in exception", "****");
+        }
         return null;
-
     }
 
     @Override
