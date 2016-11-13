@@ -51,6 +51,17 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private double eventLocationLatitude;
 
+    public String getViewMessage() {
+        return viewMessage;
+    }
+
+    public void setViewMessage(String viewMessage) {
+        this.viewMessage = viewMessage;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String viewMessage;
+
     public String getEventIsVisible() {return eventIsVisible;}
 
     public void setEventIsVisible(String eventIsVisible) {this.eventIsVisible = eventIsVisible;}
@@ -206,5 +217,6 @@ public class Events implements Serializable {
     public void setEventTimeTo(String eventTimeTo) {
         this.eventTimeTo = eventTimeTo;
     }
+
 
 }

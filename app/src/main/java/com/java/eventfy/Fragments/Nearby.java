@@ -34,6 +34,7 @@ import com.java.eventfy.asyncCalls.GetNearbyEvent;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Nearby extends Fragment {
@@ -50,6 +51,7 @@ public class Nearby extends Fragment {
     private GetNearbyEvent getNearbyEvent;
     private List<Events> eventsList;
     private SignUp signUp;
+    private Location location;
 
 
     public Nearby() {
@@ -69,21 +71,33 @@ public class Nearby extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
 
+        eventsList = new ArrayList<Events>();
+        Events events = new Events();
+        events.setViewMessage(getResources().getString(R.string.home_loading));
+        eventsList.add(events);
+
+
+
         getUserObject();
 
        if(!EventBusService.getInstance().isRegistered(this))
         EventBusService.getInstance().register(this);
 
-        initServices();
-
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
-        adapter = new MainRecyclerAdapter();
+
+        adapter = new MainRecyclerAdapter(recyclerView, getContext());
+
+
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
+
+        initServices();
+
+        bindAdapter(adapter, eventsList);
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -138,7 +152,7 @@ public class Nearby extends Fragment {
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        if(eventsList.get(0) instanceof Events)
+        if(eventsList!= null && eventsList.get(0) instanceof Events)
             if(flag.equals(getResources().getString(R.string.nearby_flag))){
                 this.eventsList = eventsList;
                 bindAdapter(adapter, eventsList);
@@ -155,9 +169,25 @@ public class Nearby extends Fragment {
     public void getLocation(LatLng latLag)
     {
         this.latLng = latLag;
-        Log.e("location : ", ""+latLag);
-        getNearbEventServerCall();
+        Log.e("lat ", "Lat : in "+adapter);
+        if(this.latLng.latitude == 0.0 && this.latLng.longitude == 0.0)
+        {
+            Log.e("lat ", "Lat : in1 "+adapter);
+            if(eventsList == null)
+                eventsList = new ArrayList<Events>();
+            else
+                eventsList.remove(eventsList.size()-1);
 
+            Events events = new Events();
+            events.setViewMessage(getContext().getResources().getString(R.string.home_no_location));
+            eventsList.add(events);
+
+
+            bindAdapter(adapter, eventsList);
+        }
+        else {
+            getNearbEventServerCall();
+        }
     }
 
     // ****** ASYNC CALL
@@ -171,7 +201,7 @@ public class Nearby extends Fragment {
         tempSignUp.setToken(signUp.getToken());
 
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag));
+        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag), getContext());
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -220,6 +250,8 @@ public class Nearby extends Fragment {
         Gson gson = new Gson();
         String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
+        Log.e("json is ", "***** : "+json);
+
     }
 }
 

@@ -26,7 +26,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.NotificationDetail;
+import com.java.eventfy.Entity.NotificationId;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.Nearby;
@@ -58,14 +58,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        EventBusService.getInstance().register(this);
-
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("user");
 
-        Log.e("signUp ", "****** "+signUp);
+        Gson g = new Gson();
+        Log.e("object is : ", "????? : "+g.toJson(signUp));
+        registerEventBusInstance();
 
         getUserObject(signUp);
+
 
         //if(signUp!=null && signUp.getNotificationDetail()!=null)
         {
@@ -105,6 +106,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     public void initEventBus()
     {    eventBus = EventBusService.getInstance();
+    }
+
+    public void registerEventBusInstance()
+    {
+        if(!EventBusService.getInstance().isRegistered(this))
+            EventBusService.getInstance().register(this);
     }
 
 
@@ -251,6 +258,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onPause() {
         super.onPause();
         stopService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
+        EventBusService.getInstance().unregister(this);
     }
 
     @Override
@@ -263,16 +271,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onResume() {
         super.onResume();
 
+        registerEventBusInstance();
       //  initServices();
     }
 
     @Subscribe
-    public void getNotificationDetail(NotificationDetail notificationDetail)
+    public void getNotificationDetail(NotificationId notificationId)
     {
-        signUp.setNotificationDetail(notificationDetail);
+        signUp.setNotificationId(notificationId);
         String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.register_notification_detail);
         UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url);
         updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EventBusService.getInstance().unregister(this);
     }
 
     public void deviceDimensions() {
@@ -288,6 +298,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+
+        if(json!=null && json.length()<100)
+            json = null;
+
+        Log.e("string is ", "((((: "+json);
+
         if(json==null)
         {
              storeUserObject(signUp, editor);
@@ -312,6 +328,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
+        Log.e("string is ", "((((: "+json);
         editor.putString(getResources().getString(R.string.userObject), json);
 
         editor.commit();

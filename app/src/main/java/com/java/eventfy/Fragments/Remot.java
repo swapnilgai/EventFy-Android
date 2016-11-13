@@ -78,7 +78,7 @@ public class Remot extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_remot);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_remot);
 
-        adapter = new MainRecyclerAdapter();
+        adapter = new MainRecyclerAdapter(recyclerView, getContext());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));

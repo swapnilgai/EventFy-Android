@@ -36,6 +36,13 @@
     <string name="register_notification_detail">/webapi/notifications/registeruser</string>
     <string name="GCM_sender_id">1070420205452</string>
 
+    <!--Home page view strings-->
+    <string name="home_no_location">noLocation</string>
+    <string name="home_no_data">noData</string>
+    <string name="home_loading">Loading</string>
+    <string name="home_data">data</string>
+
+    <!--Home page view strings end-->
 
 
     <!-- Golbal values for veriables-->

@@ -30,6 +30,14 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... strings) {
 
+        signUp.setPassword(null);
+        signUp.setVerificationCode(null);
+        signUp.setUserId(null);
+        signUp.setComments(null);
+        signUp.setEvents(null);
+        signUp.setNotificationDetails(null);
+        signUp.setLocation(null);
+
 
         ObjectMapper mapper = new ObjectMapper();
         try {

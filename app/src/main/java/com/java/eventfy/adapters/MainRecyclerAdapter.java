@@ -1,5 +1,8 @@
 package com.java.eventfy.adapters;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -8,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.java.eventfy.Entity.Events;
@@ -26,18 +31,65 @@ import butterknife.ButterKnife;
  * Created by swapnil on 5/29/16.
  */public class MainRecyclerAdapter extends ArrayRecyclerAdapter<Events, RecyclerView.ViewHolder>{
     public View view;
+    private final int VIEW_NOLOCATION = 99;
+    private final int VIEW_DATA= 1;
+    private final int VIEW_LOADING= 0;
+    private final int VIEW_NODATA= -1;
+    private RecyclerView recyclerView;
+    private Context context;
+
+    public MainRecyclerAdapter(RecyclerView recyclerView, Context context)
+    {
+        this.recyclerView =recyclerView;
+        this.context = context;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_recycleview, parent, false);
-        return new ResultHolder(view);
+        ViewHolder v;
+        Log.e("", "view type : "+viewType);
+        if(viewType == VIEW_DATA)
+            v = new ResultHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_recycleview,
+                    parent, false));
+        else if(viewType == VIEW_NODATA)
+            //TODO Create new no data activity
+            v = new NoDataHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_nodata,
+                    parent, false));
+        else if(viewType == VIEW_LOADING)
+            v = new ProgressBarHolder(LayoutInflater.from(parent.getContext()).
+                    inflate(R.layout.loading_list_items, parent, false));
+        else // TODO add no location
+            v =new NoLocationHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_nolocation,
+                    parent, false));
+
+
+        return v;
     }
 
 
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        switch(holder.getItemViewType()){
-            case 0:
+        if(holder instanceof ProgressBarHolder)
+        {
+            ProgressBarHolder loadingViewHolder = (ProgressBarHolder) holder;
+            ObjectAnimator animator = ObjectAnimator.ofFloat(loadingViewHolder.progressBar, "rotation", 0, 360);
+            animator.setRepeatCount(ValueAnimator.INFINITE);
+            animator.setInterpolator(new LinearInterpolator());
+            animator.setDuration(1000);
+            animator.start();
+            return;
+        }
+        else if(holder instanceof NoDataHolder)
+        {
+
+        }
+        else if(holder instanceof NoLocationHolder)
+        {
+            Log.e("in no", "in no location");
+        }
+        else {
+
                 final Events event = getItem(position);
 
                 ((ResultHolder)holder).linearLayout.setOnClickListener(new OnClickListener() {
@@ -74,7 +126,6 @@ import butterknife.ButterKnife;
                 Log.e("height : ", ""+ Math.abs(DeviceDimensions.deviceHeight/3));
                 Log.e("weidth : ", ""+DeviceDimensions.deviceWeidth);
 
-                break;
         }
     }
 
@@ -97,6 +148,39 @@ import butterknife.ButterKnife;
         }
     }
 
+    public class ProgressBarHolder extends RecyclerView.ViewHolder {
+
+        ImageView progressBar;
+        public ProgressBarHolder(View itemView) {
+            super(itemView);
+
+            progressBar = (ImageView) itemView.findViewById(R.id.loadingImage);
+
+        }
+    }
+
+
+    public class NoDataHolder extends RecyclerView.ViewHolder {
+
+        TextView textView;
+        public NoDataHolder(View itemView) {
+            super(itemView);
+
+            textView = (TextView) itemView.findViewById(R.id.nodata);
+
+        }
+    }
+
+    public class NoLocationHolder extends RecyclerView.ViewHolder {
+
+        TextView textView;
+        public NoLocationHolder(View itemView) {
+            super(itemView);
+
+            textView = (TextView) itemView.findViewById(R.id.nodata);
+
+        }
+    }
 
     public double getDistanvce(double lat, double log) {
 
@@ -105,5 +189,21 @@ import butterknife.ButterKnife;
 
     }
 
+    @Override
+    public int getItemViewType(int position) {
+       Events eventTemp =  getItem(position);
+        if(eventTemp!=null)
+        {
+            if(eventTemp.getViewMessage() == null )
+                return VIEW_DATA;
+            else if(eventTemp.getViewMessage().equals(context.getResources().getString(R.string.home_no_location)))
+                return VIEW_NOLOCATION;
+            else if(eventTemp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
+                return VIEW_NODATA;
+            else if(eventTemp.getViewMessage().equals(context.getResources().getString(R.string.home_loading)))
+                return VIEW_LOADING;
+        }
+        return VIEW_LOADING;
+    }
 
 }

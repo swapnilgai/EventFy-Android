@@ -139,8 +139,17 @@ public class UserCurrentLocation extends Service implements ConnectionCallbacks,
     }
 
     private void storeCurrentLocation(Context context) {
-       // LatLng temp =  new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-        LatLng temp = new LatLng(33.875501, -117.883372);
+        LatLng temp = null;
+        try {
+            temp = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+       }catch (NullPointerException n)
+       {
+           Log.e("location ", "loc* "+temp);
+
+           temp = new LatLng(0, 0);
+       }
+
+
         Log.e(TAG, " ****** : "+temp);
 
         EventBusService.getInstance().post(temp);

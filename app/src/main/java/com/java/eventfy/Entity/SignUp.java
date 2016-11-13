@@ -39,10 +39,12 @@ public class SignUp implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String token;
 
-    @JsonIgnoreProperties(ignoreUnknown = false)
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(NotificationDetail.class)
     //@JsonBackReference
-    private NotificationDetail notificationDetail;
+    private List<NotificationDetail> notificationDetails  = new ArrayList<NotificationDetail>();
+
 
 //	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
 //	private Token token;
@@ -64,6 +66,9 @@ public class SignUp implements Serializable {
    // @JsonManagedReference("Comments")
     private List<Comments> comments;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(NotificationId.class)
+    private NotificationId notificationId;
 
 
 
@@ -149,12 +154,21 @@ public class SignUp implements Serializable {
         this.verificationCode = verificationCode;
     }
 
-    public NotificationDetail getNotificationDetail() {
-        return notificationDetail;
+
+    public NotificationId getNotificationId() {
+        return notificationId;
     }
 
-    public void setNotificationDetail(NotificationDetail notificationDetail) {
-        this.notificationDetail = notificationDetail;
+    public void setNotificationId(NotificationId notificationId) {
+        this.notificationId = notificationId;
     }
+    public List<NotificationDetail> getNotificationDetails() {
+        return notificationDetails;
+    }
+
+    public void setNotificationDetails(List<NotificationDetail> notificationDetails) {
+        this.notificationDetails = notificationDetails;
+    }
+
 
 }
