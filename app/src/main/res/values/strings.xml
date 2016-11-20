@@ -82,6 +82,17 @@
     ]]>
     </string>
 
+    <string-array name="country_arrays">
+        <item>Malaysia</item>
+        <item>United States</item>
+        <item>Indonesia</item>
+        <item>France</item>
+        <item>Italy</item>
+        <item>Singapore</item>
+        <item>New Zealand</item>
+        <item>India</item>
+    </string-array>
+
     <string name="selected_place">Last Selected Place:</string>
     <string name="pick_image_intent_text">Please pick image</string>
     <string name="autocomplete_hint">Enter place name or address</string>
@@ -94,5 +105,10 @@
     <string name="facebook_app_id">250414581969875</string>
     <string name="facebook_profile_start_url">https://graph.facebook.com/</string>
     <string name="facebook_profile_end_url">/picture?type=large</string>
+
+
+    <string name="event_type_value">Event Type Value</string>
+    <string name="event_private">Event Private</string>
+
 
 </resources>

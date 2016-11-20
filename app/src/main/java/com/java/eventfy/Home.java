@@ -219,7 +219,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_item_create_event_public)
         {
             Intent intent = new Intent(this, CreatePublicEvent.class);
-            intent.putExtra(getResources().getString(R.string.create_event_category), getResources().getString(R.string.create_event_category_public));
+            intent.putExtra("public", getResources().getString(R.string.create_event_category_public));
             startActivity(intent);
 
         } else if (id == R.id.nav_item_create_event_private)

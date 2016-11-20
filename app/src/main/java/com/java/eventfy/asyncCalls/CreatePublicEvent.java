@@ -3,8 +3,10 @@ package com.java.eventfy.asyncCalls;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.eventfy.Entity.Events;
-import com.java.eventfy.Entity.Location;
+import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -35,20 +37,34 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                String str = mapper.writeValueAsString(event);
+                Log.e("event object ","&&&&&& :: "+str);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
 
-        HttpEntity<Events> request = new HttpEntity<>(event);
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        ResponseEntity<Events> rateResponse =
-                restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
-        event = rateResponse.getBody();
+            HttpEntity<Events> request = new HttpEntity<>(event);
+
+            ResponseEntity<Events> rateResponse =
+                    restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
+            event = rateResponse.getBody();
+        }catch (Exception e)
+        {
+            Log.e(" &&& ", "eventis "+event);
+        }
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Log.e("event : ", ""+event.getEventID() );
+        Log.e(" &&& ", "eventis "+event);
+        EventBusService.getInstance().post(event);
     }
 }

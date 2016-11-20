@@ -2,21 +2,17 @@ package com.java.eventfy.Services;
 
 import android.Manifest.permission;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -28,54 +24,40 @@ import com.java.eventfy.EventBus.EventBusService;
  *
  * http://stackoverflow.com/questions/28535703/best-way-to-get-user-gps-location-in-background-in-android
  */
-public class UserCurrentLocation extends Service implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
+public class UserCurrentLocation extends Service implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
 
-    protected static final String TAG = "location-updates-sample";
-    protected GoogleApiClient mGoogleApiClient;
-    protected LocationRequest mLocationRequest;
-    protected Location mCurrentLocation;
-    protected Boolean mRequestingLocationUpdates;
+    /**
+     * Provides the entry point to Google Play services.
+     */
+    protected GoogleApiClient mClient;
+    private LocationRequest mLocationRequest;
+
+    /**
+     * Builds a GoogleApiClient. Uses the addApi() method to request the
+     * Fitness API.
+     */
+    protected synchronized void buildGoogleApiClient() {
+        mClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    public void onCreate() {
+        super.onCreate();
+        Log.e("in ccreated", "******");
+        if (mClient == null) {
+            getLocationRequest();
+            buildGoogleApiClient();
 
-        if (mCurrentLocation == null) {
-
-            if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-            if (mCurrentLocation != null) {
-            }
         }
-        startLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        stopLocationUpdates();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        stopLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-    }
-
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
+        mClient.connect();
+        Log.e("connect : ", " " + mClient);
     }
 
     @Override
@@ -84,74 +66,58 @@ public class UserCurrentLocation extends Service implements ConnectionCallbacks,
         return START_STICKY;
     }
 
+    @Nullable
     @Override
-    public void onCreate() {
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
-        Log.e("on create location", "****");
-        mRequestingLocationUpdates = false;
-        buildGoogleApiClient();
-        mGoogleApiClient.connect();
+    public void getLocationRequest() {
+        mLocationRequest = LocationRequest.create()
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setFastestInterval(1 * 1000); // 1 second, in milliseconds
+        Log.e("in location request ", "" + mLocationRequest);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.e("connect : ", " ::::: " + mClient);
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mClient);
+        Log.e("location obj : ", location.toString());
 
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-        createLocationRequest();
-    }
+        if (location == null) {
 
-    protected void startLocationUpdates() {
-
-        if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+            LocationServices.FusedLocationApi.requestLocationUpdates(mClient, mLocationRequest, this);
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mGoogleApiClient, mLocationRequest, this);
-        Log.e("location start *** ", "   "+mLocationRequest);
-
-        storeCurrentLocation(getApplicationContext());
+        else {
+            handleNewLocation(location);
+        }
     }
 
-    protected void stopLocationUpdates() {
-        // (http://developer.android.com/reference/com/google/android/gms/location/LocationListener.html).
-        Log.e("location stop *** ", "   "+mLocationRequest);
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    @Override
+    public void onLocationChanged(Location location) {
+        handleNewLocation(location);
     }
 
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        storeCurrentLocation(getApplicationContext());
+    private void handleNewLocation(Location location) {
+        if (location != null) {
+            Log.e("in else : ", location.toString());
+            mClient.disconnect();
+            LatLng myLatLan = new LatLng(location.getLatitude(), location.getLongitude());
+            EventBusService.getInstance().post(myLatLan);
+        }
+    }
+    @Override
+    public void onConnectionSuspended(int cause) {
+        mClient.connect();
     }
 
-    private void storeCurrentLocation(Context context) {
-        LatLng temp = null;
-        try {
-            temp = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
-       }catch (NullPointerException n)
-       {
-           Log.e("location ", "loc* "+temp);
-
-           temp = new LatLng(0, 0);
-       }
-
-
-        Log.e(TAG, " ****** : "+temp);
-
-        EventBusService.getInstance().post(temp);
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        // Called called when there was an error connecting the client to the
+        // service.
+        Log.e(" ",
+                "onConnectionFailed: " + connectionResult.getErrorCode() + "," + connectionResult.getErrorMessage());
     }
 }

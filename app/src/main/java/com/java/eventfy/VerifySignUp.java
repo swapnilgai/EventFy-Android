@@ -157,13 +157,11 @@ public void resendVcodeStatus(String result)
 
     public void setProgressDialog()
     {
-        Log.e("in create view ", "**********");
         progressDialog.show();
     }
 
     public void dismissProgressDialog()
     {
-        Log.e("in dismiss view ", "++++++++");
         progressDialog.dismiss();
     }
 

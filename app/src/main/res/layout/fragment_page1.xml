@@ -31,40 +31,31 @@
 
 
         <!--Date of event-->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/public_event_date_lable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Event Date"
+            android:textSize="15dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="false"
-            android:paddingLeft="50dp"
-            android:paddingRight="16dp">
+
 
             <com.devspark.robototextview.widget.RobotoEditText
                 android:id="@+id/public_event_date_from"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="false"
                 android:hint="From"
                 android:inputType="textCapWords|date"
-                android:textColor="@color/cardview_shadow_start_color" />
-        </android.support.design.widget.TextInputLayout>
+                android:textColor="@color/cardview_shadow_start_color"
+                android:layout_marginLeft="20dp"/>
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="false"
-            android:paddingLeft="50dp"
-            android:paddingRight="20dp">
 
             <com.devspark.robototextview.widget.RobotoEditText
                 android:id="@+id/public_event_date_to"
@@ -75,9 +66,14 @@
                 android:hint="To"
                 android:inputType="textCapWords|date"
                 android:textColor="@color/cardview_shadow_start_color" />
-        </android.support.design.widget.TextInputLayout>
 
+  </LinearLayout>
         <!--Time of event-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/public_event_time_lable"
             android:layout_width="wrap_content"
@@ -90,7 +86,6 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="false"
-            android:paddingLeft="50dp"
             android:paddingRight="20dp">
 
             <com.devspark.robototextview.widget.RobotoEditText
@@ -123,6 +118,7 @@
                 android:inputType="textCapWords|date"
                 android:textColor="@color/cardview_shadow_start_color" />
         </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/public_public_event_page1_next"

@@ -1,6 +1,14 @@
 package com.java.eventfy;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,12 +17,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-import com.java.eventfy.Fragments.CreatePublicEvent.Page1;
-import com.java.eventfy.Fragments.CreatePublicEvent.Page2;
-import com.java.eventfy.Fragments.CreatePublicEvent.Page3;
-import com.java.eventfy.Fragments.CreatePublicEvent.Page4;
+import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1;
+import com.java.eventfy.utils.ImagePicker;
+import com.soundcloud.android.crop.Crop;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,49 +36,69 @@ public class CreatePublicEvent extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private FloatingActionButton addImage;
     private String category;
-
-
+    private View view;
+    private static final int PICK_IMAGE_ID = 234;
+    private Bitmap eventImageBM;
+    private ImageView eventImageIV;
+    private Uri dest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_public_event);
-        category = getIntent().getExtras().getString(getResources().getString(R.string.create_event_category));
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+   //     category = getIntent().getExtras().getString(getResources().getString(R.string.create_event_category));
+
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
+        eventImageIV = (ImageView) findViewById(R.id.event_image);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
+        addImage = (FloatingActionButton) findViewById(R.id.add_image);
+
         tabLayout.setupWithViewPager(viewPager);
+
+
+
+        addImage.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent chooseImageIntent = ImagePicker.getPickImageIntent(getApplicationContext());
+                startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+            }
+        });
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //What to do on back clicked
-                    onBackPressed();
+                onBackPressed();
             }
         });
-
 
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new Page1(), "Info");
-        adapter.addFrag(new Page2(), "Media");
-        adapter.addFrag(new Page3(), "Location");
-        if(category.equals(getResources().getString(R.string.create_event_category_private)))
-        {
-                //TODO add fragment design to invite people in contact list ir nearby
-            adapter.addFrag(new Page3(), "Invite");
-        }
-        adapter.addFrag(new Page4(), "Summery");
+        adapter.addFrag(new CreateEventFragment1(), "Information");
+//        if(category.equals(getResources().getString(R.string.create_event_category_private))) {
+//            adapter.addFrag(new CreateEventFragment2(), "Invite");
+//
+//        }
+
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(1);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -99,7 +132,71 @@ public class CreatePublicEvent extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-            super.onBackPressed();
+        super.onBackPressed();
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PICK_IMAGE_ID) {
+            Uri selectedImage = ImagePicker.getImageFromResult(this, resultCode, data);
+            dest = beginCrop(selectedImage);
+        } else if (requestCode == Crop.REQUEST_CROP) {
+            handleCrop(resultCode, data, dest);
         }
 
+    }
+
+    private Uri beginCrop(Uri source) {
+        Uri destination = Uri.fromFile(new File(this.getCacheDir(), "cropped"));
+        Crop.of(source, destination).withAspect(150, 100).start(this, Crop.REQUEST_CROP);
+        return  destination;
+    }
+
+    private void handleCrop(int resultCode, Intent result, Uri destination) {
+
+
+        if (resultCode == RESULT_OK) {
+
+            eventImageBM = decodeBitmap(this, destination, 3);
+            eventImageIV.setImageBitmap(eventImageBM);
+            EventBusService.getInstance().post(eventImageBM);
+            //   mImageView.setImageURI(Crop.getOutput(result));
+        } else if (resultCode == Crop.RESULT_ERROR) {
+            Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
+        Options options = new Options();
+        options.inSampleSize = sampleSize;
+
+        AssetFileDescriptor fileDescriptor = null;
+        try {
+            fileDescriptor = context.getContentResolver().openAssetFileDescriptor(theUri, "r");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
+                fileDescriptor.getFileDescriptor(), null, options);
+
+
+        return actuallyUsableBitmap;
+    }
+    // Crop image end
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }
+
+

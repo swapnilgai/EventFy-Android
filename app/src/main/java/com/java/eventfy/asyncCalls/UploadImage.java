@@ -79,8 +79,8 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
             postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else if(event!=null) {
-            event.setEventImageUrl(Url);
-            EventBusService.getInstance().post("CreateEvent");
+            // send url to CreateEventFragment1
+            EventBusService.getInstance().post(Url);
         }
     }
 }

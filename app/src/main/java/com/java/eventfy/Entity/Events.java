@@ -42,14 +42,32 @@ public class Events implements Serializable {
     // once capacity full event will invisible or if admin want to make it invisible on he feel response is enough
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventIsVisible;
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventAdmin;
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     private double eventLocationLongitude;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private double eventLocationLatitude;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String eventCategory;
+
+    // mapping for signUp - Events (users in events and  events by user)
+    @JsonView(SignUp.class)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonBackReference
+    private List<SignUp> userDetail = new ArrayList<SignUp>();
+
+    @JsonView(Comments.class)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    // mapping for events - comments (users in events and  events by user)
+    @JsonBackReference
+    private List<Comments> comments = new ArrayList<Comments>();
+
+    @JsonView(NotificationDetail.class)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    // mapping for events - comments (users in event
+    @JsonBackReference
+    private List<NotificationDetail> notificationDetail = new ArrayList<NotificationDetail>();
 
     public String getViewMessage() {
         return viewMessage;
@@ -93,18 +111,6 @@ public class Events implements Serializable {
         this.eventLocationLongitude = eventLocationLongitude;
     }
 
-    // mapping for signUp - Events (users in events and  events by user)
-    @JsonView(SignUp.class)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonBackReference
-    private List<SignUp> userDetail = new ArrayList<SignUp>();
-
-//	@JsonView(Comments.class)
-//	@JsonIgnoreProperties(ignoreUnknown = true)
-//	// mapping for events - comments (users in events and  events by user)
-//	@JsonBackReference
-//     private List<Comments> comments = new ArrayList<Comments>();
-//
 
     public int getEventID() {
         return eventId;
@@ -218,5 +224,28 @@ public class Events implements Serializable {
         this.eventTimeTo = eventTimeTo;
     }
 
+    public String getEventCategory() {
+        return eventCategory;
+    }
+
+    public void setEventCategory(String eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+
+    public List<Comments> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comments> comments) {
+        this.comments = comments;
+    }
+
+    public List<NotificationDetail> getNotificationDetail() {
+        return notificationDetail;
+    }
+
+    public void setNotificationDetail(List<NotificationDetail> notificationDetail) {
+        this.notificationDetail = notificationDetail;
+    }
 
 }

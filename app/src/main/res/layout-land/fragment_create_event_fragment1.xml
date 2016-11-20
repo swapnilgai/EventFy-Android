@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="fill_parent"
+                                            android:fitsSystemWindows="true"
+                                            android:paddingLeft="10dp"
+                                            android:paddingRight="10dp"
+                                            android:paddingTop="20dp"
+                                            android:paddingBottom="20dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
+
+                <com.devspark.robototextview.widget.RobotoEditText
+                    android:id="@+id/event_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Event Name"
+                    android:paddingLeft="10dp"
+                    android:inputType="text"
+                    android:textColor="@color/colorPrimaryDark" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+        <!--Date of event-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingTop="7dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
+
+                <com.devspark.robototextview.widget.RobotoEditText
+                    android:id="@+id/public_event_start_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:hint="Start Date and Time"
+                    android:paddingLeft="10dp"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:singleLine="true"
+                    android:inputType="textCapWords|date"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:paddingTop="7dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
+                <com.devspark.robototextview.widget.RobotoEditText
+                    android:id="@+id/public_event_end_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:hint="End Date and Time"
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true"
+                    android:inputType="textCapWords|date"
+                    android:textColor="@color/colorPrimaryDark"
+                    />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+        <!--</LinearLayout>-->
+        <!--<android.support.v7.widget.CardView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:cardUseCompatPadding="true"-->
+        <!--android:layout_marginBottom="25dp"-->
+        <!--android:paddingLeft="10dp">-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="7dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
+
+                <com.devspark.robototextview.widget.RobotoEditText
+                    android:id="@+id/public_event_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Event Description"
+                    android:paddingLeft="10dp"
+                    android:inputType="text"
+                    android:textColor="@color/colorPrimaryDark" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="center">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_height="wrap_content"
+                android:layout_width="0dip"
+                android:layout_weight="1.0"
+                android:layout_marginRight="15dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
+                <com.devspark.robototextview.widget.RobotoEditText
+                    android:id="@+id/public_event_capacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingLeft="10dp"
+                    android:hint="Capacity"
+                    android:singleLine="true"
+                    android:inputType="number"
+                    android:textColor="@color/colorPrimaryDark"/>
+            </android.support.design.widget.TextInputLayout>
+
+            <CheckBox android:id="@+id/public_events_volatile"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:text="volatile"
+                      android:textSize="20dp"
+                      android:paddingRight="12dp"
+                      android:layout_gravity="bottom"
+                      android:onClick="onCheckboxClicked"/>
+        </LinearLayout>
+
+        <!--</android.support.v7.widget.CardView>-->
+
+        <!-- http://stackoverflow.com/questions/11188398/how-to-change-the-spinner-background-design-and-color-for-android -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/public_event_type"
+                android:layout_weight=".28"
+                android:layout_marginBottom="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:background="@drawable/spinner_border"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/public_event_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:entries="@array/country_arrays"
+                    android:layout_marginLeft="5dp"
+                    android:spinnerMode="dropdown" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_drop_down_black_18dp" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_weight=".28"
+                android:layout_marginBottom="18dp"
+                android:background="@drawable/spinner_border"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/public_event_visiblity_miles"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:entries="@array/country_arrays"
+                    android:spinnerMode="dropdown" />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_drop_down_black_18dp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+        <!--Time of event-->
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="5dp"
+            app:cardUseCompatPadding="true"
+            android:background="@color/place_autocomplete_search_hint">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/place_autocomplete_search_hint">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp">
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/location_map_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="170dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/white"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginBottom="8dp"
+                        >
+
+                        <AutoCompleteTextView
+                            android:id="@+id/create_public_event_autocomplete_places"
+                            android:layout_width="0dip"
+                            android:layout_weight="1.0"
+                            android:paddingLeft="10dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="8dp"
+                            android:hint="Enter Address"
+                            android:singleLine="true" />
+
+
+                        <at.markushi.ui.CircleButton
+                            android:id="@+id/create_public_event_current_location"
+                            android:layout_width="45dip"
+                            android:layout_height="45dip"
+                            android:layout_gravity="bottom"
+                            android:gravity="bottom"
+                            android:padding="10dp"
+                            android:layout_marginBottom="6dp"
+                            android:layout_marginRight="5dp"
+                            android:src="@drawable/ic_location_on_black_18dp"
+                            app:cb_color="@color/colorPrimary"
+                            app:cb_pressedRingWidth="5dip" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/public_create_event"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/content_main2_button_color"
+            android:padding="12dp"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"
+            android:text="Next" />
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
