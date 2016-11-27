@@ -1,81 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="fill_parent"
+                                            android:fitsSystemWindows="true">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
               android:padding="16dp">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/date_from"
-        android:text="@string/hello_blank_fragment"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/event_name"
+        android:text="Even Name"
+        android:textSize="25dp"
+        android:layout_marginLeft="15dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_marginBottom="10dp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/date_to"
-        android:text="@string/hello_blank_fragment"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/cardview_light_background">
+
+        <ImageButton
+            android:id="@+id/admin_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="fitXY"
+            android:padding="5dp"
+            android:src="@drawable/ic_person_white_24dp"
+            android:background="@color/colorPrimaryDark"/>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1.0"
+            android:paddingLeft="10dp"
+            android:background="@color/cardview_light_background">
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/admin_name"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1.0"
+                android:paddingLeft="8dp"
+                android:layout_gravity="top"
+                android:textStyle="bold"
+                android:paddingRight="6dp"/>
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/admin_status"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1.0"
+                android:paddingLeft="8dp"
+                android:paddingRight="6dp"
+                android:layout_gravity="center"
+                android:inputType="textMultiLine"/>
+
+</LinearLayout>
+        <View
+            android:layout_width="3dp"
+            android:layout_height="fill_parent"
+            android:paddingTop="2dp"
+            android:layout_margin="5dp"
+            android:background="@color/place_autocomplete_search_hint" />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/navigate_admin_profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_navigate_next_white_24dp"
+            android:background="@color/colorPrimaryDark"/>
+    </LinearLayout>
+
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="250dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
+        app:cardUseCompatPadding="true"
+        android:background="@color/place_autocomplete_search_hint">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            >
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/about_map"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"/>
+            android:background="@color/place_autocomplete_search_hint">
 
             <LinearLayout
+                android:id="@+id/location_map_view_linear_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_menu_send"
-                    android:padding="10dp"/>
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp">
 
-                <LinearLayout
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/location_map_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp"
-                    >
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:text="@string/hello_blank_fragment"
-                        android:textStyle="bold"
-                        android:id="@+id/event_name"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:text="@string/hello_blank_fragment"
-                        android:id="@+id/event_description"
-                        />
-                </LinearLayout>
+                    android:layout_height="170dp"/>
             </LinearLayout>
-        </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/location_info_linear_layout"
+                android:layout_width="fill_parent"
+                android:paddingTop="4dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@color/cardview_light_background">
+
+                <at.markushi.ui.CircleButton
+                    android:id="@+id/btnSelectImageFromDevice"
+                    android:layout_width="45dip"
+                    android:layout_height="45dip"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:padding="10dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/ic_location_on_black_18dp"
+                    app:cb_color="@color/colorPrimary"
+                    app:cb_pressedRingWidth="5dip" />
+
+                <View
+                    android:layout_width="3dp"
+                    android:layout_height="fill_parent"
+                    android:paddingTop="5dp"
+                    android:layout_margin="10dp"
+                    android:background="@color/place_autocomplete_search_hint" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/event_location_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:textSize="15dp"
+        android:inputType="textMultiLine"
+        android:background="@color/white"
+        android:text="location"
+        android:paddingLeft="15dp"
+        android:paddingRight="4dp"/>
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/event_visiblirt_miles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textStyle="italic"
+        android:background="@color/white"
+        android:text="3 mile visile"
+        android:paddingLeft="15dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="4dp"/>
+</LinearLayout>
+            </LinearLayout>
+
+            </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <TextView
-        android:id="@+id/address1"
-        android:gravity="left"
-        android:layout_height="fill_parent"
-        android:layout_width="wrap_content"
-        android:maxLines="4"
-        android:lines="4"
-        android:text="Event Information"
-        android:layout_marginTop="20dp"></TextView>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:background="@color/cardview_light_background">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/colorPrimaryTransparent">
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/time_from"
+            android:gravity="left"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:textSize="40dp"
+            android:text="8:30"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"/>
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:gravity="bottom"
+            android:id="@+id/time_from_am_pm"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/transparent_black"
+            android:layout_gravity="bottom"
+            android:text="AM"/>
 
+        <View
+            android:layout_width="3dp"
+            android:layout_height="32dp"
+            android:paddingTop="5dp"
+            android:layout_margin="10dp"
+            android:background="@color/circle_background" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/date_from"
+            android:gravity="bottom"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:text="10-Non-2016"
+            android:paddingBottom="10dp"
+            android:textSize="20dp"/>
+    </LinearLayout>
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:gravity="bottom"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/transparent_black"
+        android:layout_gravity="center"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:text="TO"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/colorPrimaryTransparent">
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/time_to"
+            android:gravity="left"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:textSize="40dp"
+            android:text="8:30"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"/>
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/time_to_am_pm"
+            android:gravity="bottom"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:textColor="@color/transparent_black"
+            android:layout_gravity="bottom"
+            android:text="AM"/>
+
+        <View
+            android:layout_width="3dp"
+            android:layout_height="32dp"
+            android:paddingTop="5dp"
+            android:layout_margin="10dp"
+            android:background="@color/circle_background" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/date_to"
+            android:gravity="bottom"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:text="10-Non-2016"
+            android:paddingBottom="10dp"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+
+        </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:background="@color/colorPrimaryTransparent">
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:gravity="bottom"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:textColor="@color/transparent_black"
+            android:layout_gravity="bottom"
+            android:text="Event capacity : "/>
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/event_capacity"
+            android:gravity="bottom"
+            android:layout_height="fill_parent"
+            android:layout_width="wrap_content"
+            android:paddingLeft="2dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="10dp"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:textColor="@color/transparent_black"
+            android:layout_gravity="bottom"
+            android:text="38"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:background="@drawable/content_main2_button_color"
+        android:text="Edit"/>
 </LinearLayout>
 
+</android.support.v4.widget.NestedScrollView>

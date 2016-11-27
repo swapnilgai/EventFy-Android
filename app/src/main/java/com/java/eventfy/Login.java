@@ -7,7 +7,6 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -159,7 +158,7 @@ public class Login extends AppCompatActivity {
                                                                     signUp.setUserName(object.getString("name"));
                                                                     signUp.setDob(object.getString("birthday"));
                                                                     signUp.setImageUrl(profilePicUrl);
-                                                                    signUp.setIsFacebook(true);
+                                                                    signUp.setIsFacebook("true");
                                                                     signUp.setUserId(object.getString("email"));
 
 
@@ -263,7 +262,6 @@ public class Login extends AppCompatActivity {
 
         securityOperations = new SecurityOperations();
         user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
-        Log.e("ecrypted password : ", ""+user.getPassword());
         String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login);
         LoginAction loginAction = new LoginAction(user,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -272,8 +270,6 @@ public class Login extends AppCompatActivity {
     @Subscribe
     public void getUserobject(SignUp signUp)
     {
-        Log.e("in loginact string ", "&&&&&&&");
-
         dismissProgressDialog();
         if(signUp!=null && signUp.getToken()!=null)
         {

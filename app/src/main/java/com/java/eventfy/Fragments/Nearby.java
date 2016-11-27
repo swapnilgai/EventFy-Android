@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
@@ -103,7 +105,7 @@ public class Nearby extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getNearbEventServerCall();
+                initServices();
             }
         });
 
@@ -169,7 +171,6 @@ public class Nearby extends Fragment {
     public void getLocation(LatLng latLag)
     {
         this.latLng = latLag;
-        Log.e("lat ", "Lat : in "+adapter);
         if(this.latLng.latitude == 0.0 && this.latLng.longitude == 0.0)
         {
             Log.e("lat ", "Lat : in1 "+adapter);
@@ -196,9 +197,22 @@ public class Nearby extends Fragment {
         Location location = new Location();
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
+        location.setDistance(5);
         SignUp tempSignUp = new SignUp();
         tempSignUp.setLocation(location);
         tempSignUp.setToken(signUp.getToken());
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String str = mapper.writeValueAsString(tempSignUp);
+            Log.e("signup temp","&&&&&& :: "+str);
+
+            // signUp.getEvents().get(0).setEventId(-1);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
         getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag), getContext());

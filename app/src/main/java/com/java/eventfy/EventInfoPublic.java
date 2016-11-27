@@ -43,10 +43,15 @@ public class EventInfoPublic extends AppCompatActivity {
 
         eventImage = (ImageView) findViewById(R.id.event_image);
 
-        Picasso.with(this)
+        if(event.getEventImageUrl().equals("default"))
+            Picasso.with(this)
                 .load(event.getEventImageUrl())
-                .placeholder(R.drawable.ic_menu_manage)
+                .placeholder(R.drawable.logo)
                 .into(eventImage);
+        else
+            Picasso.with(this)
+                    .load(event.getEventImageUrl())
+                    .into(eventImage);
 
         setupToolbar();
 

@@ -70,7 +70,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         //if(signUp!=null && signUp.getNotificationDetail()!=null)
         {
-            registerDeviceForNotification();
+            //registerDeviceForNotification();
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -294,10 +294,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void getUserObject(SignUp signUp) {
-        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences mPrefs = getSharedPreferences(getResources().getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = null;
+        //TODO uncomment
+        //String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
 
         if(json!=null && json.length()<100)
             json = null;
@@ -309,8 +311,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
              storeUserObject(signUp, editor);
         }
         else {
-           // this.signUp = gson.fromJson(json, SignUp.class);
+            this.signUp = gson.fromJson(json, SignUp.class);
         }
+
+        Log.e("storded object is : ", "((((:"+mPrefs.getString(getResources().getString(R.string.userObject), ""));
     }
 
 
@@ -318,14 +322,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     public void storeUserObject(SignUp signUp, SharedPreferences.Editor editor)
     {
-//        editor.putString(getResources().getString(R.string.userName), signUp.getUserName());
-//        editor.putString(getResources().getString(R.string.userId), signUp.getUserId());
-//        editor.putString(getResources().getString(R.string.profilePicUrl), signUp.getImageUrl());
-//        editor.putString(getResources().getString(R.string.dob), signUp.getDob());
-//        editor.putString(getResources().getString(R.string.token), signUp.getToken());
-//        editor.putBoolean(getResources().getString(R.string.isFacebook), signUp.getIsFacebook());
-//        editor.putString(getResources().getString(R.string.isVerified), signUp.getIsVerified());
-
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
         Log.e("string is ", "((((: "+json);

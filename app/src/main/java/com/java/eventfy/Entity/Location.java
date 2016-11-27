@@ -11,7 +11,17 @@ public class Location implements Serializable {
     private double longitude;
     private double latitude;
     private double distance;
+    private String name;
 
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     public double getLongitude() {
         return longitude;
     }

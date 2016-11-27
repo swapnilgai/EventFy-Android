@@ -2,7 +2,6 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
@@ -12,7 +11,7 @@ import com.java.eventfy.R;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -48,9 +47,9 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        try {
+
             RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
             HttpEntity<SignUp> request = new HttpEntity<>(signUp);
 
@@ -60,9 +59,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
 
             eventLst = Arrays.asList(event);
 
-        }catch (Exception e){
-            Log.e("in error", "for nearby events");
-        }
+
         return null;
     }
 

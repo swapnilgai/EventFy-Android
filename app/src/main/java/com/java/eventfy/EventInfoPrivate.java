@@ -40,6 +40,8 @@ public class EventInfoPrivate extends AppCompatActivity {
         Intent intent = getIntent();
         event = (Events) intent.getSerializableExtra(getResources().getString(R.string.event_for_eventinfo));
 
+        Log.e(" in evenifo  ", "00000000 "+event.getEventId());
+
         eventImage = (ImageView) findViewById(R.id.event_image);
 
         Picasso.with(this)
@@ -49,7 +51,7 @@ public class EventInfoPrivate extends AppCompatActivity {
 
         setupToolbar();
 
-        setupViewPager();
+      //  setupViewPager();
 
         setupCollapsingToolbar();
 

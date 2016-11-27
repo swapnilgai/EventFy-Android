@@ -84,7 +84,7 @@ public class UserCurrentLocation extends Service implements
     public void onConnected(@Nullable Bundle bundle) {
         Log.e("connect : ", " ::::: " + mClient);
         Location location = LocationServices.FusedLocationApi.getLastLocation(mClient);
-        Log.e("location obj : ", location.toString());
+        Log.e("location obj : ", ""+location);
 
         if (location == null) {
 

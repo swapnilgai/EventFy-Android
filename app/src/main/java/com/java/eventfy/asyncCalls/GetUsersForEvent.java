@@ -37,27 +37,30 @@ public class GetUsersForEvent  extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        try {
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 
-        headers.add("Content-Type", "text/plain");
+            headers.add("Content-Type", "text/plain");
 
-        RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        HttpEntity<String> request = new HttpEntity<>(eventId, headers);
+            HttpEntity<String> request = new HttpEntity<>(eventId, headers);
 
-        ResponseEntity<SignUp []> response = restTemplate.exchange(url, HttpMethod.POST, request, SignUp[].class);
+            ResponseEntity<SignUp[]> response = restTemplate.exchange(url, HttpMethod.POST, request, SignUp[].class);
 
-        SignUp [] userListArray = response.getBody();
+            SignUp[] userListArray = response.getBody();
 
-        userList = Arrays.asList(userListArray);
-        return null;
+            userList = Arrays.asList(userListArray);
+        }catch (Exception e) {
+
+        }
+            return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Log.e(" user data received: ", ""+userList.size());
         EventBusService.getInstance().post(userList);
     }
 }

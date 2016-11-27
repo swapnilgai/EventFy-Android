@@ -38,27 +38,30 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
+        try {
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
 
-        headers.add("Content-Type", "text/plain");
+            headers.add("Content-Type", "text/plain");
 
-        RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
-        HttpEntity<String> request = new HttpEntity<>(eventId, headers);
+            HttpEntity<String> request = new HttpEntity<>(eventId, headers);
 
-        ResponseEntity<Comments []> response = restTemplate.exchange(url, HttpMethod.POST, request, Comments[].class);
+            ResponseEntity<Comments[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Comments[].class);
 
-        Comments [] comments = response.getBody();
+            Comments[] comments = response.getBody();
 
-        commentList = Arrays.asList(comments);
+            commentList = Arrays.asList(comments);
+        }catch (Exception e){
+
+        }
     return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Log.e("comment data received: ", ""+commentList.size());
         EventBusService.getInstance().post(commentList);
     }
 }

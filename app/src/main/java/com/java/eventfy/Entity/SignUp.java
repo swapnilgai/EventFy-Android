@@ -26,8 +26,10 @@ public class SignUp implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String imageUrl;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private boolean isFacebook;
+    @JsonView(Boolean.class)
+    private String isFacebook;
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(Boolean.class)
     private String isVerified;
 
 
@@ -70,7 +72,18 @@ public class SignUp implements Serializable {
     @JsonView(NotificationId.class)
     private NotificationId notificationId;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(Events.class)
+    private Events eventAdmin;
 
+
+    public Events getEventAdmin() {
+        return eventAdmin;
+    }
+
+    public void setEventAdmin(Events eventAdmin) {
+        this.eventAdmin = eventAdmin;
+    }
 
     public String getUserId() {
         return userId;
@@ -102,10 +115,10 @@ public class SignUp implements Serializable {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    public boolean getIsFacebook() {
+    public String getIsFacebook() {
         return isFacebook;
     }
-    public void setIsFacebook(boolean isFacebook) {
+    public void setIsFacebook(String isFacebook) {
         this.isFacebook = isFacebook;
     }
     public String getIsVerified() {

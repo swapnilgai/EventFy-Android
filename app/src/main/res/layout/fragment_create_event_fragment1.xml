@@ -39,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event Name"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:inputType="text"
                     android:textColor="@color/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:hint="Start Date and Time"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:clickable="true"
                     android:focusable="false"
                     android:singleLine="true"
@@ -101,7 +101,7 @@
                     android:hint="End Date and Time"
                     android:clickable="true"
                     android:focusable="false"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:singleLine="true"
                     android:inputType="textCapWords|date"
                     android:textColor="@color/colorPrimaryDark"
@@ -136,7 +136,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event Description"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:inputType="text"
                     android:textColor="@color/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
@@ -165,7 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:paddingLeft="10dp"
+                    android:paddingLeft="5dp"
                     android:hint="Capacity"
                     android:singleLine="true"
                     android:inputType="number"
@@ -178,8 +178,7 @@
                       android:text="volatile"
                       android:textSize="20dp"
                       android:paddingRight="12dp"
-                      android:layout_gravity="bottom"
-                      android:onClick="onCheckboxClicked"/>
+                      android:layout_gravity="bottom"/>
         </LinearLayout>
 
         <!--</android.support.v7.widget.CardView>-->
@@ -216,7 +215,7 @@
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:entries="@array/country_arrays"
+                    android:entries="@array/category_arrays"
                     android:layout_marginLeft="5dp"
                     android:spinnerMode="dropdown" />
 
@@ -251,7 +250,7 @@
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:entries="@array/country_arrays"
+                    android:entries="@array/visiblity_miles_arrays"
                     android:spinnerMode="dropdown" />
 
 
@@ -270,9 +269,9 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
             app:cardUseCompatPadding="true"
             android:background="@color/place_autocomplete_search_hint">
 
@@ -287,10 +286,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp">
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp">
 
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/location_map_view"
@@ -299,6 +297,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/location_edit_text_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -309,23 +308,30 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:background="@android:color/white"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        >
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginTop="2dp">
 
                         <AutoCompleteTextView
                             android:id="@+id/create_public_event_autocomplete_places"
                             android:layout_width="0dip"
                             android:layout_weight="1.0"
-                            android:paddingLeft="10dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginLeft="5dp"
+                            android:paddingLeft="5dp"
+                            android:layout_marginRight="10dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="8dp"
+                            android:paddingTop="20dp"
+                            android:inputType="textMultiLine"
                             android:hint="Enter Address"
                             android:singleLine="true" />
-
+                        <View
+                            android:layout_width="3dp"
+                            android:layout_height="fill_parent"
+                            android:paddingTop="2dp"
+                            android:layout_margin="5dp"
+                            android:background="@color/place_autocomplete_search_hint" />
 
                         <at.markushi.ui.CircleButton
                             android:id="@+id/create_event_current_location"
@@ -340,6 +346,65 @@
                             app:cb_color="@color/colorPrimary"
                             app:cb_pressedRingWidth="5dip" />
                     </LinearLayout>
+                    </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/location_info_linear_layout"
+                    android:layout_width="fill_parent"
+                    android:paddingTop="4dp"
+                    android:layout_height="60dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:layout_marginTop="2dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:background="@color/cardview_light_background">
+
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/btnSelectImageFromDevice"
+                        android:layout_width="45dip"
+                        android:layout_height="45dip"
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:padding="10dp"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_location_on_black_18dp"
+                        app:cb_color="@color/colorPrimary"
+                        app:cb_pressedRingWidth="5dip" />
+
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:id="@+id/event_location_text_view"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:lines="@android:integer/config_longAnimTime"
+                        android:layout_weight="1.0"
+                        android:paddingTop="10dp"
+                        android:textSize="15dp"
+                        android:textStyle="bold"
+                        android:text="location xyz"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="4dp"/>
+                    <View
+                        android:layout_width="3dp"
+                        android:layout_height="fill_parent"
+                        android:paddingTop="2dp"
+                        android:layout_margin="5dp"
+                        android:background="@color/place_autocomplete_search_hint" />
+
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/edit_location_btn"
+                        android:layout_width="45dip"
+                        android:layout_height="45dip"
+                        android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:padding="10dp"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/ic_create_black_24dp"
+                        app:cb_color="@color/colorPrimary"
+                        app:cb_pressedRingWidth="5dip" />
+
                 </LinearLayout>
             </LinearLayout>
         </android.support.v7.widget.CardView>

@@ -11,7 +11,7 @@ import com.java.eventfy.EventBus.EventBusService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -25,46 +25,43 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
    // private String flag;
 
 
-    public CreatePublicEvent(Events event) {
-        this.event = event;
-    }
     public CreatePublicEvent(String url, Events event){
         this.url = url;
-       // this.flag= flag;
         this.event = event;
     }
-
     @Override
     protected Void doInBackground(Void... params) {
 
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
-                String str = mapper.writeValueAsString(event);
-                Log.e("event object ","&&&&&& :: "+str);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
 
+            Log.e(" url ", url);
             RestTemplate restTemplate = new RestTemplate(true);
-            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+            restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
             HttpEntity<Events> request = new HttpEntity<>(event);
 
             ResponseEntity<Events> rateResponse =
                     restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
             event = rateResponse.getBody();
-        }catch (Exception e)
-        {
-            Log.e(" &&& ", "eventis "+event);
-        }
+
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Log.e(" &&& ", "eventis "+event);
+        Log.e(" &&& ", "eventis "+event.getEventId());
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String str = mapper.writeValueAsString(event);
+            Log.e("event object post ","&&&&&& :: "+str);
+
+            // signUp.getEvents().get(0).setEventId(-1);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         EventBusService.getInstance().post(event);
     }
 }

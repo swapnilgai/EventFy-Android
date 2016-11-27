@@ -14,8 +14,10 @@
 
 
     <!-- Web servises url -->
+    <string name="ip_local">http://192.168.0.7:8080/EventFy</string>
 
-    <string name="ip_local">https://eventfy.herokuapp.com</string>
+    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
+    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
     <string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -54,7 +56,7 @@
 
     <string name="nearby_flag">nearby_flag</string>
     <string name="remot_flag">remot_flag</string>
-
+    <string name="create_event_flag">nearby_flag</string>
     <!--  User SharedPreferences data  -->
     <string name="userObject">userObject</string>
 
@@ -82,16 +84,29 @@
     ]]>
     </string>
 
-    <string-array name="country_arrays">
-        <item>Malaysia</item>
-        <item>United States</item>
-        <item>Indonesia</item>
-        <item>France</item>
-        <item>Italy</item>
-        <item>Singapore</item>
-        <item>New Zealand</item>
-        <item>India</item>
+    <string-array name="visiblity_miles_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>50</item>
     </string-array>
+
+
+    <string-array name="category_arrays">
+        <item>Birthday</item>
+        <item>Team Building Events</item>
+        <item>Trade Shows</item>
+        <item>Golf Events</item>
+        <item>Networking Events</item>
+        <item>Incentive Travel</item>
+        <item>Theme Parties</item>
+        <item>Family Events</item>
+    </string-array>
+
 
     <string name="selected_place">Last Selected Place:</string>
     <string name="pick_image_intent_text">Please pick image</string>
@@ -109,6 +124,7 @@
 
     <string name="event_type_value">Event Type Value</string>
     <string name="event_private">Event Private</string>
+    <string name="title_activity_profile_page">ProfilePage</string>
 
 
 </resources>

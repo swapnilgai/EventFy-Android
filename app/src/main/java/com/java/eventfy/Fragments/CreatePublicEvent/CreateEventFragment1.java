@@ -2,8 +2,11 @@ package com.java.eventfy.Fragments.CreatePublicEvent;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -22,8 +25,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -39,10 +45,15 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.R;
@@ -56,7 +67,11 @@ import com.sleepbot.datetimepicker.time.TimePickerDialog.OnTimeSetListener;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -96,9 +111,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private PlaceAutocompleteAdapter mAdapter;
     private ProgressDialog progressDialog;
     private LinearLayout locationMapViewLinearLayout;
+    private LinearLayout locationInfoLinearLayout;
+    private LinearLayout locationEditTextLinearLayout;
+    private CircleButton editLocationBtn;
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
             new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
     private CircleButton currentLocationBtn;
+    private SignUp signUp;
+    private TextView eventLocationTv;
+    private  String flag;
+    private Location eventLocation = new Location();
+
 
     public CreateEventFragment1() {
         // Required empty public constructor
@@ -113,7 +136,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_create_event_fragment1, container, false);
         EventBusService.getInstance().register(this);
-
+        getUserObject();
         //  eventType = getArguments().getString(getResources().getString(R.string.event_type_value));
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
@@ -130,6 +153,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         currentLocationBtn = (CircleButton) view.findViewById(R.id.create_event_current_location);
         // Retrieve the AutoCompleteTextView that will display Place suggestions.
         mAutocompleteView = (AutoCompleteTextView) view.findViewById(R.id.create_public_event_autocomplete_places);
+
+        eventsVolatile = (CheckBox) view.findViewById(R.id.public_events_volatile);
+        locationInfoLinearLayout = (LinearLayout) view.findViewById(R.id.location_info_linear_layout);
+
+        locationEditTextLinearLayout = (LinearLayout) view.findViewById(R.id.location_edit_text_linear_layout);
+
+        locationInfoLinearLayout.setVisibility(View.GONE);
+
+        editLocationBtn = (CircleButton) view.findViewById(R.id.edit_location_btn);
+
+        eventLocationTv  = (TextView) view.findViewById(R.id.event_location_text_view);
 
         createProgressDialog();
 
@@ -183,7 +217,11 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 // datePickerDialog.setVibrate(isVibrate());
                 setProgressDialog();
                 createEentObject();
-                uploadImage();
+                if(eventImageBm != null && signUp!=null)
+                    uploadImage();
+                else if (signUp!=null){
+                    createEventServerCall("default");
+                }
 
             }
 
@@ -194,6 +232,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 // datePickerDialog.setVibrate(isVibrate());
                 getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
               //  currentLocationBtn.setEnabled(false);
+                // setting flag to avoid nearby and remote server call
+                EventBusService.getInstance().post(getResources().getString(R.string.create_event_flag));
+            }
+        });
+
+        editLocationBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                locationInfoLinearLayout.setVisibility(View.GONE);
+                locationEditTextLinearLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -272,8 +319,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 }
                 // Get the Place object from the buffer.
                 final Place place = places.get(0);
-                   eventObj.setEventLocationLatitude(place.getLatLng().latitude);
-                    eventObj.setEventLocationLongitude(place.getLatLng().longitude);
+                getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
+
                 setUpMarker();
                 places.release();
             }
@@ -282,24 +329,30 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public Events createEentObject() {
 
-        eventObj.setEventName(eventName.getText().toString());
-        eventObj.setEventDescription(eventDescription.getText().toString());
-        //TODO find alternate way to collect date and time
-        startDate = (EditText) view.findViewById(R.id.public_event_start_date);
-        endDate = (EditText) view.findViewById(R.id.public_event_end_date);
-        eventObj.setEventCapacity(eventCapacity.getText().toString());
-        eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
-        eventObj.setEventVisiblityMile(eventVisibilityMiles.getSelectedItem().toString());
-        eventObj.setEventIsVisible("true");
-        eventObj.setEventType(eventType);
 
-        eventObj.setComments(null);
-        eventObj.setUserDetail(null);
-        eventObj.setNotificationDetail(null);
 
-        createBtn = (Button) view.findViewById(R.id.public_create_event);
-
-        return eventObj;
+        if(signUp!=null) {
+            eventObj.setEventName(eventName.getText().toString());
+            eventObj.setEventDescription(eventDescription.getText().toString());
+            //TODO find alternate way to collect date and time
+            startDate = (EditText) view.findViewById(R.id.public_event_start_date);
+            endDate = (EditText) view.findViewById(R.id.public_event_end_date);
+            eventObj.setEventCapacity(eventCapacity.getText().toString());
+            eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
+            eventObj.setEventVisiblityMile(eventVisibilityMiles.getSelectedItem().toString());
+            eventObj.setEventIsVisible(true);
+            eventObj.setEventType(eventType);
+            eventObj.setComments(null);
+            eventObj.setUserDetail(null);
+            eventObj.setNotificationDetail(null);
+            eventObj.setEventVolatile(eventsVolatile.isChecked());
+            createBtn = (Button) view.findViewById(R.id.public_create_event);
+            return eventObj;
+        }
+        else{
+            Toast.makeText(getActivity(),"Please login before create event",Toast.LENGTH_SHORT).show();
+            return  null;
+        }
     }
 
     
@@ -307,13 +360,20 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
 
+        if (month<12)
+            month+=1;
+
         if(datePickerDialog.equals(datePickerDialogStart)) {
             startDate.setText(year + "-" + month + "-" + day);
+            eventObj.setEventDateFrom(year + "-" + month + "-" + day);
+            Log.e("date obj from "," *** "+eventObj.getEventDateFrom());
             timePickerDialogStart.setCloseOnSingleTapMinute(isCloseOnSingleTapDay());
             timePickerDialogStart.show(getFragmentManager(), TIMEPICKER_TAG);
         }
         else {
             endDate.setText(year + "-" + month + "-" + day);
+            eventObj.setEventDateTo(year + "-" + month + "-" + day);
+            Log.e("date obj to  "," *** "+eventObj.getEventDateTo());
             timePickerDialogEnd.setCloseOnSingleTapMinute(isCloseOnSingleTapDay());
             timePickerDialogEnd.show(getFragmentManager(), TIMEPICKER_TAG);
         }
@@ -324,13 +384,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
         String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
         String minuteString = minute < 10 ? "0" + minute : "" + minute;
-        String time = "  At " + hourString + ":" + minuteString + "";
+        String time = " At " + hourString + ":" + minuteString;
 
-        if(viewToIdentifyTimePicker.getId() == R.id.public_event_start_date)
+        if(viewToIdentifyTimePicker.getId() == R.id.public_event_start_date) {
             startDate.append(time);
-        else
+            eventObj.setEventTimeFrom(hourString+""+minuteString);        }
+        else {
             endDate.append(time);
-
+            eventObj.setEventTimeTo(hourString+""+minuteString);
+        }
     }
 
     private boolean isCloseOnSingleTapDay() {
@@ -351,25 +413,53 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Subscribe
     public void createEventToServer(String eventImageurl)
     {
-        //  Log.e("event url", event.getEventImageUrl());
-        if(eventImageurl != null) {
-            eventObj.setEventImageUrl(eventImageurl);
-            String url = getResources().getString(R.string.ip_localhost) + getResources().getString(R.string.add_event);
-            CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
-            createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(eventImageurl != null && !eventImageurl.equals(getResources().getString(R.string.create_event_flag))){
+
+            createEventServerCall(eventImageurl);
         }
+    }
+
+
+    public void createEventServerCall(String eventImageurl) {
+        eventObj.setEventImageUrl(eventImageurl);
+
+
+        eventObj.setAdmin(signUp);
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String str = mapper.writeValueAsString(eventObj);
+            Log.e("event object ","&&&&&& :: "+str);
+
+            // signUp.getEvents().get(0).setEventId(-1);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+          String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_event);
+          CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
+          createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Subscribe
     public void getCreatedEventFromServer(Events event)
     {
-        //  Log.e("event url", event.getEventImageUrl());
-        Log.e(" &&& ", "eventis "+event);
+        Log.e(" in create  ", "eventis "+event);
         dismissProgressDialog();
-        Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
-        intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
-        view.getContext().startActivity(intent);
+        if(event.getEventId()!=-1) {
 
+            EventBusService.getInstance().unregister(this);
+            Toast.makeText(getActivity(),"Event created",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
+            intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            view.getContext().startActivity(intent);
+        }
+        else{
+            Toast.makeText(getActivity(),"Enable create event, please Try again",Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -377,11 +467,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     public void getUserCurrentLocation(LatLng myLatLan){
 
         getActivity().stopService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
+        getAddressFromLatLang(myLatLan.latitude, myLatLan.longitude);
+        setUpMarker();
 
+    }
+
+
+    public void getAddressFromLatLang(double latitude, double longitude) {
         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = gcd.getFromLocation(myLatLan.latitude, myLatLan.longitude, 1);
+            addresses = gcd.getFromLocation(latitude, longitude, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -395,12 +491,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 }
             }
 
-            eventObj.setEventLocationLatitude(myLatLan.latitude);
-            eventObj.setEventLocationLongitude(myLatLan.longitude);
-            setUpMarker();
+            eventLocation.setLatitude(latitude);
+            eventLocation.setLongitude(longitude);
+            eventLocation.setName(outputAddress);
+            eventObj.setLocation(eventLocation);
             locationMapViewLinearLayout.setVisibility(View.VISIBLE);
-
+            locationInfoLinearLayout.setVisibility(View.VISIBLE);
+            locationEditTextLinearLayout.setVisibility(View.GONE);
+            eventLocationTv.setText(outputAddress);
             mAutocompleteView.setText(outputAddress);
+            eventLocationTv.setText(outputAddress);
+
         }
         else
             Toast.makeText(getActivity(),"Enable to get you address, please Re-enter",Toast.LENGTH_SHORT).show();
@@ -450,10 +551,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
     public void setUpMarker()
     {
-        int zoomVal = 10;
+        int radius = getZoonValue(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
         mapView.setVisibility(View.VISIBLE);
 
-        LatLng myLaLn = new LatLng(eventObj.getEventLocationLatitude(), eventObj.getEventLocationLongitude());
+        LatLng myLaLn = new LatLng(eventObj.getLocation().getLatitude(), eventObj.getLocation().getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
@@ -465,6 +566,13 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         googleMap.getUiSettings().setZoomControlsEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         googleMap.getUiSettings().setMapToolbarEnabled(true);
+
+
+        Circle circle = googleMap.addCircle(new CircleOptions()
+                .center(myLaLn)
+                .radius(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString())*100)
+                .strokeColor(Color.BLUE)
+                .fillColor(getResources().getColor(R.color.colorPrimaryTransparent)));
 
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
@@ -486,4 +594,56 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     }
 
+    public Date stringToDate(String dateStr) {
+        String DATE_FORMAT_NOW = "yyyy-MM-dd";
+        Date date;
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        try {
+            date = sdf.parse(dateStr);
+            Log.e("date is Str "," *** "+dateStr);
+            Log.e("date is "," *** "+date);
+            return date;
+        } catch(ParseException e){
+            //Exception handling
+        } catch(Exception e){
+            //handle exception
+        }
+        return null;
+    }
+
+    public Date stringToTime(String timeStr) {
+        DateFormat sdf = new SimpleDateFormat("HHmm");
+        Date time;
+        try {
+             time = sdf.parse(timeStr);
+            Log.e("time is "," *** "+time);
+            return time;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void getUserObject()
+    {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+        Log.e("user in create is ", "(((( "+json);
+    }
+
+    public int getZoonValue(int zoomVal) {
+
+        if(zoomVal<20)
+            return 15;
+        else if(zoomVal >20 && zoomVal<30)
+            return 12;
+        else if(zoomVal >30 && zoomVal<40)
+            return 10;
+        else if(zoomVal >40 && zoomVal<50)
+            return 0;
+        else return 15;
+    }
 }

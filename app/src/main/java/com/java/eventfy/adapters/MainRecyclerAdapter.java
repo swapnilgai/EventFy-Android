@@ -96,9 +96,9 @@ import butterknife.ButterKnife;
                     @Override
                     public void onClick(View v) {
                         // Doesn't do anything, but need Click Listener to get that sweet Ripple
-                        Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
-                        intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
-                        view.getContext().startActivity(intent);
+                        Intent intent = new Intent(context, EventInfoPublic.class);
+                        intent.putExtra(context.getString(R.string.event_for_eventinfo), event);
+                        context.startActivity(intent);
 
                     }
                 });

@@ -2,7 +2,6 @@ package com.java.eventfy.Fragments.EventInfo;
 
 
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.UiThread;
@@ -20,7 +19,6 @@ import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.Attendance_adapter;
-import com.java.eventfy.asyncCalls.GetUsersForEvent;
 import com.java.eventfy.utils.OnLoadMoreListener;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -118,8 +116,8 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
         String url = "https://eventfy.herokuapp.com/webapi/comments/getuserforevent";
         Log.e("event id for get user: ", ""+event.getEventId());
-        GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()));
-        getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       // GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()));
+        //getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 

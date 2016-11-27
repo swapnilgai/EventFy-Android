@@ -110,7 +110,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signUp.setUserId(emailText.getText().toString());
         signUp.setPassword(passwordText.getText().toString());
         signUp.setIsVerified("false");
-        signUp.setIsFacebook(false);
+        signUp.setIsFacebook("false");
         signUp.setImageUrl("default");
         signUp.setDob(dobtext.getText().toString());
         signUp.setUserName(nameText.getText().toString());

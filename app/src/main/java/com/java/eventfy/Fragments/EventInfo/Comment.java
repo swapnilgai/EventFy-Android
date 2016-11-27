@@ -33,7 +33,6 @@ import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.CommentAdapter;
-import com.java.eventfy.asyncCalls.GetCommentsForEvent;
 import com.java.eventfy.asyncCalls.PostUsersComment;
 import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.ImagePicker;
@@ -254,8 +253,8 @@ public class Comment extends Fragment {
 
         String url = "https://eventfy.herokuapp.com/webapi/comments/geteventcomment";
 
-        GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, String.valueOf(event.getEventId()));
-        getCommentsForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+     //   GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, String.valueOf(event.getEventId()));
+     //   getCommentsForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 

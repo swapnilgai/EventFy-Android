@@ -1,7 +1,6 @@
 package com.java.eventfy.Entity;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -38,10 +37,10 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventTimeTo;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventIsVerified;
+    private boolean eventIsVerified;
     // once capacity full event will invisible or if admin want to make it invisible on he feel response is enough
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventIsVisible;
+    private boolean eventIsVisible;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventAdmin;
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -50,24 +49,54 @@ public class Events implements Serializable {
     private double eventLocationLatitude;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventCategory;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private boolean eventVolatile;
 
     // mapping for signUp - Events (users in events and  events by user)
     @JsonView(SignUp.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
-    @JsonBackReference
     private List<SignUp> userDetail = new ArrayList<SignUp>();
 
     @JsonView(Comments.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
     // mapping for events - comments (users in events and  events by user)
-    @JsonBackReference
     private List<Comments> comments = new ArrayList<Comments>();
 
     @JsonView(NotificationDetail.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
     // mapping for events - comments (users in event
-    @JsonBackReference
     private List<NotificationDetail> notificationDetail = new ArrayList<NotificationDetail>();
+
+
+    @JsonView(SignUp.class)
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private SignUp admin;
+
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(Location.class)
+    private Location location;
+
+
+    public SignUp getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(SignUp admin) {
+        this.admin = admin;
+    }
+
+    public boolean isEventIsVerified() {
+        return eventIsVerified;
+    }
+
+    public boolean isEventIsVisible() {
+        return eventIsVisible;
+    }
+
+    public boolean isEventVolatile() {
+        return eventVolatile;
+    }
 
     public String getViewMessage() {
         return viewMessage;
@@ -80,9 +109,9 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;
 
-    public String getEventIsVisible() {return eventIsVisible;}
+    public boolean getEventIsVisible() {return eventIsVisible;}
 
-    public void setEventIsVisible(String eventIsVisible) {this.eventIsVisible = eventIsVisible;}
+    public void setEventIsVisible(boolean eventIsVisible) {this.eventIsVisible = eventIsVisible;}
     public String getEventAdmin() {
         return eventAdmin;
     }
@@ -111,7 +140,7 @@ public class Events implements Serializable {
         this.eventLocationLongitude = eventLocationLongitude;
     }
 
-
+    
     public int getEventID() {
         return eventId;
     }
@@ -166,12 +195,11 @@ public class Events implements Serializable {
         this.eventVisiblityMile = eventVisiblityMile;
     }
 
-
-    public String getEventIsVerified() {
+    public boolean getEventIsVerified() {
         return eventIsVerified;
     }
 
-    public void setEventIsVerified(String eventIsVerified) {
+    public void setEventIsVerified(boolean eventIsVerified) {
         this.eventIsVerified = eventIsVerified;
     }
 
@@ -246,6 +274,21 @@ public class Events implements Serializable {
 
     public void setNotificationDetail(List<NotificationDetail> notificationDetail) {
         this.notificationDetail = notificationDetail;
+    }
+    public boolean getEventVolatile() {
+        return eventVolatile;
+    }
+
+    public void setEventVolatile(boolean eventVolatile) {
+        this.eventVolatile = eventVolatile;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
 }
