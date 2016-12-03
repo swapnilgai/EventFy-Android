@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:layout_gravity="center">
+
+    <ImageView
+        android:id="@+id/network_error_image_view"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/ic_perm_data_setting_black_48dp"
+        android:fitsSystemWindows="true"
+        android:scaleType="centerCrop"
+        android:gravity="center"/>
+
+    <com.devspark.robototextview.widget.RobotoTextView
+
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:lines="@android:integer/config_longAnimTime"
+        android:paddingTop="10dp"
+        android:textSize="20dp"
+        android:text="Be the first one to comment"
+        android:paddingLeft="2dp"
+        android:paddingRight="4dp"
+        android:gravity="center"
+        />
+
+</LinearLayout>

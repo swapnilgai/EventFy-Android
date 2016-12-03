@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:id="@+id/linear_layout_comment"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_margin="16dp"
-    >
+              android:background="@color/cardview_light_background"    >
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardUseCompatPadding="true"
+        android:background="@color/place_autocomplete_search_hint">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
 
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:id="@+id/autherImage"
-            android:src="@drawable/ic_menu_share"/>
+            android:src="@drawable/ic_perm_identity_white_24dp"
+            android:background="@color/colorPrimary"/>
 
         <LinearLayout
             android:orientation="vertical"
@@ -28,27 +37,46 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Medium Text"
+                android:text="User Name"
                 android:id="@+id/autherName"
+                android:padding="3dp"
                 android:textStyle="bold"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:id="@+id/commentImage"
-                android:scaleType="fitXY"
-                android:layout_marginTop="10dp"
-                />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/autherCommentText"
-                android:layout_gravity="center_horizontal|bottom"
-                android:text="Comment Text"
-                android:layout_marginTop="4dp"/>
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="8dp"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:padding="3dp"
+                android:text="12:03 am on 12/03/2015"
+                android:id="@+id/comment_time"
+                android:textStyle="italic"/>
+
 
         </LinearLayout>
 
     </LinearLayout>
+
+        <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/autherCommentText"
+        android:layout_gravity="center_horizontal|bottom"
+        android:text="Comment Text"
+        android:inputType="textMultiLine"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/commentImage"
+            android:scaleType="fitXY"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/img_placeholder"
+            android:padding="5dp"/>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

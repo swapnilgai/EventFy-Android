@@ -33,6 +33,10 @@ public class SignUp implements Serializable {
     private String isVerified;
 
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String viewMessage;
+
+
     @JsonView(Events.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
   //  @JsonManagedReference("Events")
@@ -80,6 +84,15 @@ public class SignUp implements Serializable {
     public Events getEventAdmin() {
         return eventAdmin;
     }
+
+    public String getViewMessage() {
+        return viewMessage;
+}
+
+    public void setViewMessage(String viewMessage) {
+        this.viewMessage = viewMessage;
+    }
+
 
     public void setEventAdmin(Events eventAdmin) {
         this.eventAdmin = eventAdmin;

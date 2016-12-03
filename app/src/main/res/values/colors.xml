@@ -7,4 +7,10 @@
     <color name="windowBackground">#FFFFFF</color>
     <color name="navigationBarColor">#000000</color>
     <color name="colorAccent">#c8e8ff</color>
+    <color name="colorActiveGreen">#00db28</color>
+    <color name="colorDoNotDisturbYellow">#ffaa00</color>
+    <color name="colorSkyBlue">#e2f6ff</color>
+
+
+
 </resources>

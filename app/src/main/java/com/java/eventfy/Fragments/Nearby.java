@@ -197,7 +197,7 @@ public class Nearby extends Fragment {
         Location location = new Location();
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
-        location.setDistance(5);
+        location.setDistance(50);
         SignUp tempSignUp = new SignUp();
         tempSignUp.setLocation(location);
         tempSignUp.setToken(signUp.getToken());

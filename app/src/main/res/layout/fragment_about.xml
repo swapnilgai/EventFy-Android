@@ -85,6 +85,8 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_navigate_next_white_24dp"
             android:background="@color/colorPrimaryDark"/>
+
+
     </LinearLayout>
 
 

@@ -2,6 +2,7 @@ package com.java.eventfy.adapters;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -17,9 +18,6 @@ import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -28,19 +26,19 @@ import butterknife.ButterKnife;
 public class Attendance_adapter extends ArrayRecyclerAdapter<SignUp, RecyclerView.ViewHolder>{
 
     public View view;
-    private final int VIEW_ITEM = 5;
-    private final int VIEW_PROG = 0;
-    private final int VIEW_DATE = 1;
+    private final int VIEW_DATA= 1;
+    private final int VIEW_LOADING= 0;
+    private final int VIEW_NODATA= -1;
+    private final int VIEW_NETWORK_ERROR= -1;
     private int visibleThreshold = 50;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
-    ArrayList<SignUp> userList;
+    private Context context;
 
-    public Attendance_adapter(RecyclerView recyclerView, ArrayList<SignUp> userList)
+    public Attendance_adapter(RecyclerView recyclerView, Context context)
     {
-        this.userList = userList;
-
+        this.context = context;
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
 
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
@@ -76,14 +74,23 @@ public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType
 
     ViewHolder v;
 
-    if (viewType == VIEW_ITEM) {
+
+    if(viewType == VIEW_DATA)
         v = new ResultHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.attendance_adapter, parent, false));
 
-    } else
-
+    else if(viewType == VIEW_LOADING)
         v = new ProgressBarHolder(LayoutInflater.from(parent.getContext()).
-                inflate(R.layout.loading_list_items, parent, false));
+            inflate(R.layout.loading_list_items, parent, false));
+
+    else if(viewType == VIEW_NODATA)
+        v = new NoDataHolder(LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.attendance_no_data, parent, false));
+    else
+        v = new NetworkErrorHolder(LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.network_error, parent, false));
+
+
 
     return v;
 }
@@ -110,7 +117,8 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         .placeholder(R.drawable.img_placeholder)
         .into(((ResultHolder)holder).picture);
 
-        ((ResultHolder)holder).name.setText(r.getUserName());
+        ((ResultHolder)holder).userName.setText(r.getUserName());
+        ((ResultHolder)holder).userStatus.setText(r.getUserName());
 
         }
     else{
@@ -129,28 +137,31 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
     @Override
     public int getItemViewType(int position) {
+        SignUp signUp = getItem(position);
 
-       if(userList.get(position)!=null)
-            return  VIEW_ITEM;
+        if(signUp.getViewMessage() == null )
+            return VIEW_DATA;
+        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
+            return VIEW_NODATA;
+        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_loading)))
+            return VIEW_LOADING;
 
-        return VIEW_PROG;
+        return VIEW_NETWORK_ERROR;
+
     }
 
-    @Override
-    public int getItemCount() {
-        //Log.e("item count: ", "**** : "+commentList.size());
-        return userList.size();
-    }
 
 
  class ResultHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.linear_layout)
-    LinearLayout linearLayout;
-    @Bind(R.id.picture)
-    ImageView picture;
-    @Bind(R.id.name)
-    TextView name;
-    @Bind(R.id.email) TextView email;
+   // @Bind(R.id.linear_layout)
+    private LinearLayout linearLayout;
+ //   @Bind(R.id.eventinfo_user_image)
+    private ImageView picture;
+ //   @Bind(R.id.eventinfo_user_status)
+    private TextView userStatus;
+ //    @Bind(R.id.eventinfo_user_name)
+     private TextView userName;
+
 
     public ResultHolder(View itemView) {
         super(itemView);
@@ -169,5 +180,31 @@ class ProgressBarHolder extends RecyclerView.ViewHolder {
         progressBar = (ImageView) itemView.findViewById(R.id.loadingImage);
 
     }
-}
+    }
+
+    public class NoDataHolder extends RecyclerView.ViewHolder {
+
+        private ImageView noDataIv;
+
+        public NoDataHolder(View itemView) {
+            super(itemView);
+
+            noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
+            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            setLoaded();
+        }
+    }
+
+    public class NetworkErrorHolder extends RecyclerView.ViewHolder {
+
+        private ImageView networErrorIv;
+        public NetworkErrorHolder(View itemView) {
+            super(itemView);
+
+            networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
+            networErrorIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            setLoaded();
+        }
+    }
 }

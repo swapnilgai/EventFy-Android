@@ -3,13 +3,14 @@ package com.java.eventfy.asyncCalls;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -29,15 +30,25 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        try{
+            Gson g = new Gson();
 
-        HttpEntity<Comments> request = new HttpEntity<Comments>(comment);
+            Log.e("comment object is : ", "obj : "+g.toJson(comment));
 
-        ResponseEntity<Comments> response = restTemplate.exchange(url, HttpMethod.POST, request, Comments.class);
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-        comment = response.getBody();
+            HttpEntity<Comments> request = new HttpEntity<Comments>(comment);
 
+            ResponseEntity<Comments> response = restTemplate.exchange(url, HttpMethod.POST, request, Comments.class);
+
+            comment = response.getBody();
+
+
+        } catch (Exception e)
+        {
+
+        }
         return null;
     }
 

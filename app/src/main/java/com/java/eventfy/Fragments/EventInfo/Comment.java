@@ -3,6 +3,7 @@ package com.java.eventfy.Fragments.EventInfo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -28,11 +29,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.CommentAdapter;
+import com.java.eventfy.asyncCalls.GetCommentsForEvent;
 import com.java.eventfy.asyncCalls.PostUsersComment;
 import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.ImagePicker;
@@ -43,10 +47,10 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import static com.java.eventfy.R.id.commentText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,6 +79,9 @@ public class Comment extends Fragment {
     private PostUsersComment postUsersComment;
     private String urlForComment;
     private Events event;
+    private SignUp signUp;
+    private LinearLayoutManager linearLayoutManager;
+
     public Comment() {
         // Required empty public constructor
     }
@@ -86,15 +93,15 @@ public class Comment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_comments, container, false);
 
-        if(!EventBusService.getInstance().isRegistered(this))
+        if (!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
         event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
 
-        commentsList.add(null);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_comment);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
-        commentTextEditText = (EditText) view.findViewById(R.id.commentText);
+
+        commentTextEditText = (EditText) view.findViewById(commentText);
         btnCommentSend = (ImageButton) view.findViewById(R.id.btnCommentSend);
         selectImageFromDevice = (ImageButton) view.findViewById(R.id.btnSelectImageFromDevice);
         CommentPostImageLayout = (LinearLayout) view.findViewById(R.id.CommentPostImageLayout);
@@ -105,10 +112,10 @@ public class Comment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager l = new LinearLayoutManager(view.getContext());
-        recyclerView.setLayoutManager(l);
+        linearLayoutManager = new LinearLayoutManager(view.getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new CommentAdapter(recyclerView, (ArrayList<Comments>) commentsList);
+        adapter = new CommentAdapter(recyclerView, view.getContext());
 
         handler = new Handler();
 
@@ -117,13 +124,13 @@ public class Comment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
 
+       addLoadingAtStrat();
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getNearbEventServerCall();
                 bindAdapter(commentsList);
-
             }
         });
 
@@ -134,22 +141,35 @@ public class Comment extends Fragment {
 
                 Comments commentTemp = new Comments();
 
-                urlForComment = "https://eventfy.herokuapp.com/webapi/comments/addcomment";
+                urlForComment = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_comment_in_event);;
 
+                commentTemp.setUser(signUp);
 
-                commentTemp.setUserName("Current User");
+                Events eventTemp = new Events();
+                SignUp signUpTemp = new SignUp();
 
+                eventTemp.setEventId(event.getEventId());
+                eventTemp.setEventID(event.getEventID());
+
+                signUpTemp.setUserName(signUp.getUserName());
+                signUpTemp.setUserId(signUp.getUserId());
+                signUpTemp.setToken(signUp.getToken());
+
+                commentTemp.setEvents(eventTemp);
+                commentTemp.setUser(signUpTemp);
+
+                addLoadingAtStrat();
+                linearLayoutManager.scrollToPosition(0);
                 String commentText = commentTextEditText.getText().toString();
 
-                if(bm!=null) {
+                if (bm != null) {
                     commentTemp.setCommentText(dest.toString());
                     commentTemp.setIsImage("true");
                     commentTemp.setEventId(event.getEventId());
 
                     uploadImage = new UploadImage(commentTemp, bm, urlForComment);
                     uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-                else{
+                } else {
                     commentTemp.setCommentText(commentText);
                     commentTemp.setEventId(event.getEventId());
                     commentTemp.setIsImage("false");
@@ -160,8 +180,6 @@ public class Comment extends Fragment {
                 // bindAdapter(commentsList);
             }
         });
-
-
         selectImageFromDevice.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -193,7 +211,7 @@ public class Comment extends Fragment {
             @Override
             public void onLoadMore() {
 
-                if(!commentsList.isEmpty())
+                if (!commentsList.isEmpty())
                     commentsList.remove(commentsList.size() - 1);
                 adapter.notifyItemRemoved(commentsList.size());
 
@@ -208,7 +226,29 @@ public class Comment extends Fragment {
         return view;
     }
 
+    public void removeALl() {
+        commentsList.removeAll(commentsList);
+        addLoading();
+    }
 
+    public void addLoading(){
+        comments = new Comments();
+        comments.setViewMessage(getResources().getString(R.string.home_loading));
+        commentsList.add(comments);
+        bindAdapter(commentsList);
+    }
+
+    public void addLoadingAtStrat(){
+        comments = new Comments();
+        comments.setViewMessage(getResources().getString(R.string.home_loading));
+        for(int i = commentsList.size()-1; i > 0; i--)
+        {
+            //set the last element to the value of the 2nd to last element
+            commentsList.set(i,commentsList.get(i-1));
+        }
+        commentsList.add(0,comments);
+        bindAdapter(commentsList);
+    }
     public void setLoaded() {
         loading = false;
     }
@@ -226,7 +266,7 @@ public class Comment extends Fragment {
     }
 
 
-    private void bindAdapter(List<Comments> commentList){
+    private void bindAdapter(List<Comments> commentList) {
         swipeRefreshLayout.setRefreshing(false);
         refreshData(commentList);
     }
@@ -239,8 +279,8 @@ public class Comment extends Fragment {
     }
 
     @UiThread
-    private void refreshData(List<Comments> commentList){
-        if (adapter != null){
+    private void refreshData(List<Comments> commentList) {
+        if (adapter != null) {
             adapter.clear();
             adapter.addAll(commentList);
             adapter.notifyDataSetChanged();
@@ -248,22 +288,31 @@ public class Comment extends Fragment {
     }
 
 
-    public void getNearbEventServerCall()
-    {
+    public void getNearbEventServerCall() {
 
-        String url = "https://eventfy.herokuapp.com/webapi/comments/geteventcomment";
 
-     //   GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, String.valueOf(event.getEventId()));
-     //   getCommentsForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_comment_for_event);
+
+        getUserObject();
+
+        Log.e("sign up : ", " comment : " + signUp);
+
+//        List<Events> eventLst = new ArrayList<Events>();
+//        eventLst.add(event);
+//        signUp.setEvents();
+
+        signUp.setEventAdmin(event);
+
+        GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, signUp, view.getContext());
+        getCommentsForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
     @Subscribe
-    public void getCommentForEvent(List<Comments> commentsList)
-    {
-        Log.e("in get comment user: ", ""+commentsList.size());
+    public void getCommentForEvent(List<Comments> commentsList) {
+        Log.e("in get comment user: ", "" + commentsList.size());
 
-        if(commentsList.get(0) instanceof Comments) {
+        if (commentsList.get(0) instanceof Comments) {
             this.commentsListTemp.addAll(commentsList);
 
             displayComments();
@@ -271,41 +320,36 @@ public class Comment extends Fragment {
     }
 
     @Subscribe
-    public void getPostedComment(Comments comments)
-    {
-        Log.e("posted comment: ", ""+comments.getCommentId());
+    public void getPostedComment(Comments comments) {
+        Log.e("posted comment: ", "" + comments.getCommentId());
 
 
-        if(comments!=null) {
-            commentsList.removeAll(commentsList);
+        if (comments != null) {
+           // commentsList.removeAll(commentsList);
 
-            // commentsList.add(comments);
-            commentsList.add(null);
-            adapter.notifyItemInserted(commentsList.size() - 1);
-            adapter.notifyDataSetChanged();
-
+          //  commentsList.add(comments);
+          //  adapter.notifyItemInserted(commentsList.size() - 1);
+          //  adapter.notifyDataSetChanged();
             CommentPostImageLayout.setVisibility(View.INVISIBLE);
             bm = null;
             commentTextEditText.setText("");
 
-            getNearbEventServerCall();
+            commentsList.add(0, comments);
+            bindAdapter(commentsList);
+            //getNearbEventServerCall();
             Toast.makeText(getContext(), "You'r comment has been posted", Toast.LENGTH_LONG).show();
-        }
-
-        else{
+        } else {
             Toast.makeText(getContext(), "Unable to post you'r comment", Toast.LENGTH_LONG).show();
         }
 
     }
 
-    public void setCommentSectionVisible()
-    {
+    public void setCommentSectionVisible() {
         CommentPostImageLayout.setVisibility(View.VISIBLE);
         slectedImageViewFromDevice.setImageBitmap(bm);
     }
 
-    public void displayComments()
-    {
+    public void displayComments() {
 
         //add null , so the adapter will check view_type and show progress bar at bottom
 
@@ -313,51 +357,17 @@ public class Comment extends Fragment {
             @Override
             public void run() {
 
-                commentsList.remove(commentsList.size() - 1);
-                adapter.notifyItemRemoved(commentsList.size());
-                Date date1 = null;
-                Date date2 = null;
-                //  commentsList.addAll(commentsListTemp);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                int yearDate1 = 0;
-                int yearDate2 =0;
-
-                for(int i=0; i <commentsListTemp.size()-1;i++)
-                {
-
-                    date1 = commentsListTemp.get(i).getDate();
-                    date2 = commentsListTemp.get(i+1).getDate();
-
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy");
-                if(date1!=null || date2!=null) {
-                     yearDate1 = Integer.parseInt(df.format(date1));
-                     yearDate2 = Integer.parseInt(df.format(date2));
+                if(commentsList.size()>0) {
+                    commentsList.remove(commentsList.size() - 1);
+                    adapter.notifyItemRemoved(commentsList.size());
                 }
-                    commentsList.add(commentsListTemp.get(i));
+                commentsList.addAll(commentsListTemp);
 
-                  //  TODO Current data have date as null;
-
-//                    if (yearDate2 > yearDate1 || date2.getMonth() > date1.getMonth() || date2.getDay() > date2.getDay()) {
-//                        Comments commentsTemp = new Comments();
-//                        commentsTemp.setIsDateText(true);
-//                        commentsList.add(commentsTemp);
-//                    }
-                }
-
-                commentsList.add(commentsListTemp.get(commentsListTemp.size()-1));
-
-                adapter.clear();
-                adapter.addAll(commentsList);
-                adapter.notifyDataSetChanged();
-                adapter.setLoaded();
-
+               bindAdapter(commentsList);
             }
         }, 5000);
 
-
-
     }
-
 
     public void processComment() throws ParseException {
 
@@ -372,7 +382,6 @@ public class Comment extends Fragment {
 //                }
 //            } );
     }
-
 
 
     // Crop Image
@@ -391,7 +400,7 @@ public class Comment extends Fragment {
     private Uri beginCrop(Uri source) {
         Uri destination = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
         Crop.of(source, destination).withAspect(300, 180).start(getContext(), Comment.this, Crop.REQUEST_CROP);
-        return  destination;
+        return destination;
     }
 
     private void handleCrop(int resultCode, Intent result, Uri destination) {
@@ -428,5 +437,15 @@ public class Comment extends Fragment {
 
         return actuallyUsableBitmap;
     }
+
     // Crop image end
+    public void getUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
+
+
 }

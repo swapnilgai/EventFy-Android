@@ -2,6 +2,7 @@ package com.java.eventfy.Fragments.EventInfo;
 
 
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.UiThread;
@@ -19,6 +20,7 @@ import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.Attendance_adapter;
+import com.java.eventfy.asyncCalls.GetUsersForEvent;
 import com.java.eventfy.utils.OnLoadMoreListener;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +41,7 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
     private Events event;
+    private SignUp signUp;
 
     public Attending() {
         // Required empty public constructor
@@ -68,7 +71,7 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(l);
 
-        adapter = new Attendance_adapter(recyclerView,(ArrayList<SignUp>) userList);
+        adapter = new Attendance_adapter(recyclerView, view.getContext());
 
         handler = new Handler();
 
@@ -76,6 +79,7 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         //  bindAdapter(commentsList);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
+        addLoadingAtStrat();
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -114,10 +118,9 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     public void getUsersForEvent()
     {
 
-        String url = "https://eventfy.herokuapp.com/webapi/comments/getuserforevent";
-        Log.e("event id for get user: ", ""+event.getEventId());
-       // GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()));
-        //getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.get_user_for_event);
+        GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()));
+        getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -132,14 +135,25 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
             this.userList.addAll(userListTemp);
             this.userList.add(null);
-            Log.e("item received : ", "" + this.userList.size());
 
-            displayComments();
+            displayUsers();
+        }
+    }
+
+    @Subscribe
+    public void getEnrolledUserForEvent(SignUp signUp)
+    {
+
+        if(signUp != null) {
+
+            this.userList.add(signUp);
+
+            displayUsers();
         }
     }
 
 
-    public void displayComments()
+    public void displayUsers()
     {
 
         //add null , so the adapter will check view_type and show progress bar at bottom
@@ -148,14 +162,16 @@ public class Attending extends Fragment implements OnLoadMoreListener {
             @Override
             public void run() {
 
-                userList.remove(userList.size() - 1);
-                adapter.notifyItemRemoved(userList.size());
+//                userList.remove(userList.size() - 1);
+//                adapter.notifyItemRemoved(userList.size());
 
-                adapter.clear();
-                adapter.addAll(userList);
-                adapter.notifyDataSetChanged();
-                adapter.setLoaded();
+                if(userList.size()>0) {
+                    userList.remove(userList.size() - 1);
+                    adapter.notifyItemRemoved(userList.size());
+                }
+                userList.addAll(userList);
 
+                bindAdapter(userList);
             }
         }, 5000);
 
@@ -181,6 +197,31 @@ public class Attending extends Fragment implements OnLoadMoreListener {
             adapter.addAll(userList);
             adapter.notifyDataSetChanged();
         }
+    }
+
+
+    public void removeALl() {
+        userList.removeAll(userList);
+        addLoading();
+    }
+
+    public void addLoading(){
+        signUp = new SignUp();
+        signUp.setViewMessage(getResources().getString(R.string.home_loading));
+        userList.add(signUp);
+        bindAdapter(userList);
+    }
+
+    public void addLoadingAtStrat(){
+        signUp = new SignUp();
+        signUp.setViewMessage(getResources().getString(R.string.home_loading));
+        for(int i = userList.size()-1; i > 0; i--)
+        {
+            //set the last element to the value of the 2nd to last element
+            userList.set(i,userList.get(i-1));
+        }
+        userList.add(0,signUp);
+        bindAdapter(userList);
     }
 
 }

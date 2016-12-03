@@ -39,6 +39,8 @@ public class Attendance extends Fragment implements OnLoadMoreListener {
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
     private Events event;
+    private ArrayList<SignUp> signUpArrayList;
+    private SignUp signUp;
 
     public Attendance() {
         // Required empty public constructor
@@ -68,7 +70,7 @@ public class Attendance extends Fragment implements OnLoadMoreListener {
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(l);
 
-        adapter = new Attendance_adapter(recyclerView,(ArrayList<SignUp>) userList);
+        adapter = new Attendance_adapter(recyclerView, view.getContext());
 
         handler = new Handler();
 
@@ -126,7 +128,7 @@ public class Attendance extends Fragment implements OnLoadMoreListener {
     {
         Log.e("item received out : ", "" + userListTemp.size());
 
-        if(userListTemp.get(0) instanceof SignUp) {
+        if(userListTemp !=null && userListTemp.get(0) instanceof SignUp) {
             if( userList!=null && userList.size()>0 && userList.get(0) == null)
                 userList.remove(0);
 
@@ -182,5 +184,6 @@ public class Attendance extends Fragment implements OnLoadMoreListener {
             adapter.notifyDataSetChanged();
         }
     }
+
 
 }

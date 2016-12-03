@@ -51,6 +51,8 @@ public class Events implements Serializable {
     private String eventCategory;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private boolean eventVolatile;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String viewMessage;
 
     // mapping for signUp - Events (users in events and  events by user)
     @JsonView(SignUp.class)
@@ -105,9 +107,6 @@ public class Events implements Serializable {
     public void setViewMessage(String viewMessage) {
         this.viewMessage = viewMessage;
     }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String viewMessage;
 
     public boolean getEventIsVisible() {return eventIsVisible;}
 

@@ -70,7 +70,7 @@ public class Invited extends Fragment implements OnLoadMoreListener {
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(l);
 
-        adapter = new Attendance_adapter(recyclerView,(ArrayList<SignUp>) userList);
+        adapter = new Attendance_adapter(recyclerView, view.getContext());
 
         handler = new Handler();
 

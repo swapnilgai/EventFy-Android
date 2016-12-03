@@ -17,6 +17,7 @@
         android:scaleType="fitXY"
         android:src="@drawable/img_placeholder"
         android:padding="5dp"
+        android:layout_margin="1dp"
         />
 
     <LinearLayout

@@ -14,11 +14,11 @@
 
 
     <!-- Web servises url -->
-    <string name="ip_local">http://192.168.0.7:8080/EventFy</string>
+    <!--<string name="ip_local">http://192.168.0.7:8080/EventFy</string>-->
 
-    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
-    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
-    <string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>
+    <string name="ip_local">https://eventfy.herokuapp.com</string>
+    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
+    <!--<string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>-->
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
     <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
@@ -37,12 +37,14 @@
     <string name="verify_vcode">/webapi/signup/checkverificationcode</string>
     <string name="register_notification_detail">/webapi/notifications/registeruser</string>
     <string name="GCM_sender_id">1070420205452</string>
-
+    <string name="get_nearby_users">/webapi/events/getnearbyusers</string>
     <!--Home page view strings-->
     <string name="home_no_location">noLocation</string>
     <string name="home_no_data">noData</string>
     <string name="home_loading">Loading</string>
     <string name="home_data">data</string>
+    <string name="home_connection_error">data</string>
+    <string name="invite_add_user">inviteAddUser</string>
 
     <!--Home page view strings end-->
 

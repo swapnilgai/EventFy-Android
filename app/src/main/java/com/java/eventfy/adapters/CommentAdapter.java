@@ -2,10 +2,10 @@ package com.java.eventfy.adapters;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,25 +20,24 @@ import com.java.eventfy.utils.RoundedCornersTransform;
 import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 /**
  * Created by @vitovalov on 30/9/15.
  */
 public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.ViewHolder> {
     public View view;
-    private final int VIEW_ITEM = 5;
-    private final int VIEW_PROG = 0;
-    private final int VIEW_DATE = 1;
+    private final int VIEW_DATA= 1;
+    private final int VIEW_LOADING= 0;
+    private final int VIEW_NODATA= -1;
+    private final int VIEW_NETWORK_ERROR= -1;
     private int visibleThreshold = 50;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
-    ArrayList<Comments> commentList;
+    private Context context;
 
-    public CommentAdapter(RecyclerView recyclerView, ArrayList<Comments> commentList)
+    public CommentAdapter(RecyclerView recyclerView, Context context)
     {
-        this.commentList = commentList;
+        this.context = context;
 
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
 
@@ -55,14 +54,13 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
                             totalItemCount = getItemCount();
                             lastVisibleItem = recyclerView.getChildCount();
 
-                            if (!loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                            if (loading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                                 // End has been reached
                                 // Do something
 
                                 if (onLoadMoreListener != null) {
                                     onLoadMoreListener.onLoadMore();
                                 }
-                                loading = true;
                             }
                         }
                     });
@@ -73,20 +71,23 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder v;
 
-        if (viewType == VIEW_ITEM) {
+        if(viewType == VIEW_DATA)
             v = new ResultHolder(LayoutInflater.from(parent.getContext()).
-                            inflate(R.layout.eventinfo_comment_text, parent, false));
+                    inflate(R.layout.eventinfo_comment_text, parent, false));
 
-        } else if(viewType == VIEW_PROG){
-
+        else if(viewType == VIEW_LOADING)
             v = new ProgressBarHolder(LayoutInflater.from(parent.getContext()).
-                            inflate(R.layout.loading_list_items, parent, false));
-        }
+                    inflate(R.layout.loading_list_items, parent, false));
+
+        else if(viewType == VIEW_NODATA)
+            v = new NoDataHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_no_data,
+                    parent, false));
+
         else
-        {
-            v = new DateHolder(LayoutInflater.from(parent.getContext()).
-                    inflate(R.layout.comment_date_tag, parent, false));
-        }
+            v = new NetworkErrorHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.network_error,
+                    parent, false));
+
+
 
         return v;
     }
@@ -95,15 +96,15 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         if(holder instanceof ResultHolder) {
-            Comments comment = commentList.get(position);
+            Comments comment = getItem(position);
             Picasso.with(holder.itemView.getContext())
                     .load(comment.getUserImage())
                     .resize(50, 50)
                     .transform(new RoundedCornersTransformCommentAuthor())
-                    .placeholder(R.drawable.ic_menu_manage)
+                    .placeholder(R.drawable.ic_perm_identity_white_24dp)
                     .into(((ResultHolder) holder).autherImage);
 
-            if (comment.getIsImage()==null) {
+            if (comment.getIsImage().equals("false")) {
                 ((ResultHolder) holder).commentImage.setVisibility(View.GONE);
                 ((ResultHolder) holder).autherCommentText.setText(comment.getCommentText());
             } else {
@@ -116,9 +117,8 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
                         .into(((ResultHolder) holder).commentImage);
             }
 
-            ((ResultHolder) holder).autherName.setText(comment.getUserName());
-
-
+            ((ResultHolder) holder).autherName.setText(comment.getUser().getUserName());
+            ((ResultHolder) holder).commentTime.setText(comment.getDate().toString());
         }
         else if(holder instanceof ProgressBarHolder)
         {
@@ -131,29 +131,21 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
             return;
 
         }
-        else if(holder instanceof DateHolder) {
-            Log.e("in holder view : ", ""+holder);
-
-            ((DateHolder) holder).commentDateText.setText("-------"+commentList.get(position+1).getDate()+"-------");
-        }
     }
 
 
     @Override
     public int getItemViewType(int position) {
+       Comments comment = getItem(position);
 
-        if(commentList.get(position)!=null && commentList.get(position).getIsDateText()) {
-            return VIEW_DATE;
-        }
-            else if(commentList.get(position)!=null)
-             return  VIEW_ITEM;
+        if(comment.getViewMessage() == null )
+            return VIEW_DATA;
+        else if(comment.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
+            return VIEW_NODATA;
+        else if(comment.getViewMessage().equals(context.getResources().getString(R.string.home_loading)))
+            return VIEW_LOADING;
 
-        return VIEW_PROG;
-    }
-
-    @Override
-    public int getItemCount() {
-        return commentList.size();
+        return VIEW_NETWORK_ERROR;
     }
 
 
@@ -176,6 +168,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
         ImageView autherImage;
         TextView autherCommentText;
         ImageView commentImage;
+        TextView commentTime;
         LinearLayout linearLayout;
 
         public ResultHolder(View itemView) {
@@ -184,6 +177,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
             autherImage = (ImageView) itemView.findViewById(R.id.autherImage);
             autherCommentText = (TextView) itemView.findViewById(R.id.autherCommentText);
             commentImage = (ImageView) itemView.findViewById(R.id.commentImage);
+            commentTime = (TextView) itemView.findViewById(R.id.comment_time);
           //  linearLayout = (ImageView) itemView.findViewById(R.id.commentImage);
         }
     }
@@ -208,6 +202,33 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
 
             commentDateText = (TextView) itemView.findViewById(R.id.commentDateText);
 
+        }
+    }
+
+
+    public class NoDataHolder extends RecyclerView.ViewHolder {
+
+        private ImageView noDataIv;
+        public NoDataHolder(View itemView) {
+            super(itemView);
+
+            noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
+            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            setLoaded();
+        }
+    }
+
+
+    public class NetworkErrorHolder extends RecyclerView.ViewHolder {
+
+        private ImageView networErrorIv;
+        public NetworkErrorHolder(View itemView) {
+            super(itemView);
+
+            networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
+            networErrorIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            setLoaded();
         }
     }
 }
