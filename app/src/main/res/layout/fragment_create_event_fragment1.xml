@@ -137,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Event Description"
                     android:paddingLeft="5dp"
-                    android:inputType="text"
+                    android:inputType="textMultiLine"
                     android:textColor="@color/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

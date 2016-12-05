@@ -187,7 +187,7 @@ public class Nearby extends Fragment {
             bindAdapter(adapter, eventsList);
         }
         else {
-            getNearbEventServerCall();
+          //  getNearbEventServerCall();
         }
     }
 

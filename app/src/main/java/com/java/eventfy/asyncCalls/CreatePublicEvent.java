@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -34,7 +35,8 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
 
 
             Log.e(" url ", url);
-            RestTemplate restTemplate = new RestTemplate(true);
+        Log.e(" user ", new Gson().toJson(event));
+        RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
             HttpEntity<Events> request = new HttpEntity<>(event);

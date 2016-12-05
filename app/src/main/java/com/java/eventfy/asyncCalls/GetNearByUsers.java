@@ -2,6 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -28,8 +29,9 @@ public class GetNearByUsers   extends AsyncTask<Void, Void, Void> {
     private List<SignUp> userList;
     private String flag;
     private Context context;
-    public GetNearByUsers()
-    {}
+    public GetNearByUsers() {
+
+    }
 
 
     public GetNearByUsers(String url, SignUp signUp, Context context){
@@ -66,6 +68,10 @@ public class GetNearByUsers   extends AsyncTask<Void, Void, Void> {
             signUp.setViewMessage(context.getResources().getString(R.string.home_no_data));
             userList.add(signUp);
         }
+
+        Log.e("data received : ", " ***** "+userList.size());
+
+
         EventBusService.getInstance().post(userList);
     }
 }

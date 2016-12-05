@@ -1,31 +1,50 @@
 package com.java.eventfy.Fragments.CreatePublicEvent;
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.Fragments.EventInfo.Invited;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.InviteAddedAdapter;
 import com.java.eventfy.adapters.InviteNearbyAdapter;
+import com.java.eventfy.asyncCalls.CreatePublicEvent;
+import com.java.eventfy.asyncCalls.GetNearByUsers;
+import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.OnLoadMoreListener;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.java.eventfy.R.id.recycle_view_added_users;
 
 
 /**
@@ -35,10 +54,11 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
     private InviteAddedAdapter inviteAddedAdapter;
     private InviteNearbyAdapter inviteNearbyAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
+  //  private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView inviteAddedRecyclerView;
     private RecyclerView inviteNearbyRecyclerView;
     private View view;
+    private SignUp signUp;
     protected Handler handler;
     private List<SignUp> userListNearBy = new ArrayList<SignUp>();
     private List<SignUp> userListInvited = new ArrayList<SignUp>();
@@ -47,6 +67,12 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
     private boolean loading;
     private Invited.OnLoadMoreListener onLoadMoreListener;
     private Events event;
+    private ViewPager viewPager;
+    private Button createBtn;
+    private Button previousBtn;
+    private ProgressDialog progressDialog;
+    private Bitmap eventImageBm;
+    private Events eventObj = new Events();
 
 
     @Override
@@ -59,22 +85,26 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
+        eventObj.setViewMessage("temp");
+        getUserObject();
+        createProgressDialog();
 
-        inviteAddedRecyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_added_users);
-        inviteNearbyRecyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_added_users);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby_users);
 
-        addNoDataView();
-        getNearByUsers();
+        inviteAddedRecyclerView = (RecyclerView) view.findViewById(recycle_view_added_users);
+        inviteNearbyRecyclerView = (RecyclerView) view.findViewById(R.id.recycle_view_nearby_users);
+        // swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby_users);
+        createBtn = (Button) view.findViewById(R.id.private_create_event);
+        previousBtn = (Button) view.findViewById(R.id.private_previous);
 
         inviteAddedRecyclerView.setHasFixedSize(true);
         inviteNearbyRecyclerView.setHasFixedSize(true);
 
 
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());
-        inviteAddedRecyclerView.setLayoutManager(l);
+        LinearLayoutManager l1 = new LinearLayoutManager(view.getContext());
 
-        inviteNearbyRecyclerView.setLayoutManager(l);
+        inviteAddedRecyclerView.setLayoutManager(l);
+        inviteNearbyRecyclerView.setLayoutManager(l1);
 
         inviteAddedAdapter = new InviteAddedAdapter(view.getContext());
 
@@ -89,12 +119,38 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
         //  bindAdapter(commentsList);
         inviteNearbyRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
+        addNoDataView();
+
+        viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
         // Initialize SwipeRefreshLayout
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getNearByUsers();
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                getNearByUsersServerCall();
+//            }
+//        });
+
+        createBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                setProgressDialog();
+                if (eventImageBm != null && signUp != null)
+                    uploadImage();
+                else if (signUp != null) {
+                    createEventServerCall("default");
+                }
             }
+
+        });
+
+        previousBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                if(eventObj!=null)
+                    eventObj.setViewMessage(null);
+                viewPager.setCurrentItem(0, true);
+            }
+
         });
 
         return view;
@@ -105,8 +161,8 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
         signUpNearBy.setViewMessage(getContext().getString(R.string.home_loading));
         userListInvited.add(signUpInvited);
         userListNearBy.add(signUpNearBy);
-        bindAdapterForInviteAddedAdapter(userListInvited);
         bindAdapterForInviteNearbyAdapter(userListNearBy);
+        bindAdapterForInviteAddedAdapter(userListInvited);
     }
 
     public void setLoaded() {
@@ -118,17 +174,54 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
         this.onLoadMoreListener = onLoadMoreListener;
     }
 
-    public void getNearByUsers(){
-        String url = getContext().getString(R.string.ip_local)+getContext().getString(R.string.get_nearby_users);
 
-
-    }
 
     @Override
     public void onLoadMore() {
 
     }
 
+
+    public void uploadImage()
+    {
+        UploadImage uploadImage = new UploadImage(eventObj, eventImageBm);
+        uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    @Subscribe
+    public void getLocation(LatLng latLag)
+    {
+
+        if(eventObj.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2)) &&
+                (latLag.latitude == 0.0 && latLag.longitude == 0.0))
+        {
+            if(userListInvited == null)
+                userListInvited = new ArrayList<SignUp>();
+            else
+                userListInvited.remove(userListInvited.size()-1);
+
+            SignUp signUp = new SignUp();
+            signUp.setViewMessage(getContext().getResources().getString(R.string.home_no_location));
+            userListInvited.add(signUp);
+
+            bindAdapterForInviteNearbyAdapter(userListInvited);
+        }
+        else if(eventObj!=null && event.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2))) {
+            Location location = new Location();
+            location.setLatitude(latLag.latitude);
+            location.setLongitude(latLag.longitude);
+            location.setDistance(50);
+            signUp.setLocation(location);
+            getNearByUsersServerCall();
+        }
+    }
+
+    public void getNearByUsersServerCall(){
+        String url = getContext().getString(R.string.ip_local)+getContext().getString(R.string.get_nearby_users);
+        GetNearByUsers getNearByUsers = new GetNearByUsers(url, signUp, getContext());
+        getNearByUsers.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     public interface OnLoadMoreListener {
         void onLoadMore();
@@ -137,13 +230,27 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
     @Subscribe
     public void addUserToInviteList(SignUp signUp) {
-        if(userListInvited.get(userListInvited.size()-1).getViewMessage().
+
+        Log.e("user in frag2 ", ""+signUp.getViewMessage());
+        if(userListInvited!= null && userListInvited.size()>0 && userListInvited.get(userListInvited.size()-1).getViewMessage().
                 equals(getContext().getResources().getString(R.string.home_no_data))) {
             userListInvited.remove(userListInvited.size() - 1);
         }
-       this.userListInvited.add(signUp);
+        if(signUp.getViewMessage().equals(getContext().getResources().getString(R.string.invite_add_user))) {
+            userListInvited.add(signUp);
+            userListNearBy.remove(signUp);
+        }
+        else if(signUp.getViewMessage().equals(getContext().getResources().getString(R.string.invite_remove_user))) {
+            userListInvited.remove(signUp);
+            userListNearBy.add(signUp);
+        }
+
+        bindAdapterForInviteNearbyAdapter(userListNearBy);
         bindAdapterForInviteAddedAdapter(userListInvited);
 
+        setHeightRecycleView(inviteAddedRecyclerView ,getRecycleViewSizeForinviteAddedAdapter());
+
+        setHeightRecycleView(inviteNearbyRecyclerView ,getRecycleViewSizeForinviteNearbyAdapter());
     }
 
 
@@ -152,10 +259,14 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
        SignUp signUp  = this.userListNearBy.get(this.userListNearBy.size()-1);
         if(signUp.getViewMessage().equals(getContext().getResources().getString(R.string.home_no_data))
                 || signUp.getViewMessage().equals(getContext().getResources().getString(R.string.home_connection_error))
-                || signUp.getViewMessage().equals(getContext().getResources().getString(R.string.home_no_data))) {
-            userListInvited.remove(userListInvited.size() - 1);
+                || signUp.getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))) {
+            this.userListNearBy.remove(this.userListNearBy.size() - 1);
         }
-        this.userListNearBy = userListNearBy;
+        this.userListNearBy.addAll(userListNearBy);
+
+        bindAdapterForInviteNearbyAdapter(this.userListNearBy);
+
+        setHeightRecycleView(inviteNearbyRecyclerView ,getRecycleViewSizeForinviteNearbyAdapter());
     }
 //    public void displayComments()
 //    {
@@ -179,12 +290,12 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
 
     private void bindAdapterForInviteAddedAdapter(List<SignUp> userList){
-        swipeRefreshLayout.setRefreshing(false);
+
         refreshDataForInviteAddedAdapter(userList);
     }
 
     private void bindAdapterForInviteNearbyAdapter(List<SignUp> userList){
-        swipeRefreshLayout.setRefreshing(false);
+      //  swipeRefreshLayout.setRefreshing(false);
         refreshDataForInviteNearbyAdapter(userList);
     }
 
@@ -201,9 +312,11 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
     @UiThread
     private void refreshDataForInviteAddedAdapter(List<SignUp> userList){
+
         if (inviteAddedAdapter != null){
             inviteAddedAdapter.clear();
             inviteAddedAdapter.addAll(userList);
+
             inviteAddedAdapter.notifyDataSetChanged();
         }
     }
@@ -216,4 +329,137 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
             inviteNearbyAdapter.notifyDataSetChanged();
         }
     }
+
+    public void getUserObject()
+    {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+        Log.e("user in create is ", "(((( "+json);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!EventBusService.getInstance().isRegistered(this))
+            EventBusService.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBusService.getInstance().unregister(this);
+    }
+
+    public int getRecycleViewSizeForinviteNearbyAdapter() {
+
+
+        if(inviteNearbyAdapter.getItemCount()>2)
+            return 900;
+        else  if(inviteNearbyAdapter.getItemCount()>1)
+            return 650;
+        else  if(inviteNearbyAdapter.getItemCount()>0)
+            return 220;
+
+        return 350;
+
+    }
+
+    public int getRecycleViewSizeForinviteAddedAdapter() {
+
+        if(inviteAddedAdapter.getItemCount()>2)
+            return 900;
+        else  if(inviteAddedAdapter.getItemCount()>1)
+            return 650;
+        else  if(inviteAddedAdapter.getItemCount()>0)
+            return 220;
+
+        return 350;
+
+    }
+
+    public void setHeightRecycleView(RecyclerView recycleView, int height) {
+        ViewGroup.LayoutParams params=recycleView.getLayoutParams();
+        params.height=height;
+        recycleView.setLayoutParams(params);
+    }
+
+
+    public void createProgressDialog()
+    {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Creating Event...");
+        progressDialog.setCancelable(false);
+    }
+
+    public void setProgressDialog() {
+        progressDialog.show();
+    }
+
+
+    public void createEventServerCall(String eventImageurl) {
+        eventObj.setEventImageUrl(eventImageurl);
+
+        eventObj.setAdmin(signUp);
+        eventObj.setViewMessage(null);
+
+        // remove unnecessery element
+        if(userListInvited.get(userListInvited.size()-1).getViewMessage().equals(
+                getResources().getString(R.string.home_no_data))
+        || userListInvited.get(userListInvited.size()-1).getViewMessage().equals(
+                getResources().getString(R.string.home_connection_error))
+         || userListInvited.get(userListInvited.size()-1).getViewMessage().equals(
+                getResources().getString(R.string.home_loading)))
+            userListInvited.remove(userListInvited.size()-1);
+
+        eventObj.setUserDetail(userListInvited);
+
+
+        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_event);
+        CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
+        createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    @Subscribe
+    public void getCreatedEventFromServer(Events event)
+    {
+        if(event.getEventId()!=-1 && event.getViewMessage() == null) {
+            dismissProgressDialog();
+            EventBusService.getInstance().unregister(this);
+            Toast.makeText(getActivity(),"Event created",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
+            intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            view.getContext().startActivity(intent);
+        }
+        else if(!event.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2))){
+            Toast.makeText(getActivity(),"Enable create event, please Try again",Toast.LENGTH_SHORT).show();
+        }
+        else if (event.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2))){
+            eventObj = event;
+            Log.e("view message is ; ", "*** "+new Gson().toJson(eventObj));
+            getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
+        }
+    }
+
+    public void dismissProgressDialog()
+    {
+        progressDialog.dismiss();
+    }
+
+
+    @Subscribe
+    public void createEventToServer(String eventImageurl)
+    {
+        if(eventImageurl != null && !eventImageurl.equals(getResources().getString(R.string.create_event_flag))){
+
+            createEventServerCall(eventImageurl);
+        }
+    }
+
+
+
 }

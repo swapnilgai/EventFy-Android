@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,8 +22,6 @@ import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
 import at.markushi.ui.CircleButton;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by swapnil on 10/7/16.
@@ -115,13 +114,16 @@ public class InviteNearbyAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVi
                 @Override
                 public void onClick(View v) {
                     // Doesn't do anything, but need Click Listener to get that sweet Ripple
+
+                    Log.e("in nearby adapter: ", ""+signUp.getUserName());
+
                     signUp.setViewMessage(context.getResources().getString(R.string.invite_add_user));
                     EventBusService.getInstance().post(signUp);
 
                 }
             });
         }
-        else{
+        else if(holder instanceof ProgressBarHolder){
             ProgressBarHolder loadingViewHolder = (ProgressBarHolder) holder;
             ObjectAnimator animator = ObjectAnimator.ofFloat(loadingViewHolder.progressBar, "rotation", 0, 360);
             animator.setRepeatCount(ValueAnimator.INFINITE);
@@ -139,7 +141,9 @@ public class InviteNearbyAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVi
     public int getItemViewType(int position) {
         SignUp signUp = getItem(position);
 
-        if(signUp.getViewMessage() == null )
+        if(signUp.getViewMessage() == null ||
+                signUp.getViewMessage().equals(context.getResources().getString(R.string.invite_add_user))
+                || signUp.getViewMessage().equals(context.getResources().getString(R.string.invite_remove_user)))
             return VIEW_DATA;
         else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
             return VIEW_NODATA;
@@ -154,19 +158,23 @@ public class InviteNearbyAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVi
 
     class ResultHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.eventinfo_user_image)
+        private  ImageView userImage;
+
         private TextView eventinfo_user_name;
-        @Bind(R.id.eventinfo_user_status)
+
         private TextView eventinfo_user_status;
-        @Bind(R.id.user_status_mode)
+
         private CircleButton user_status_mode;
-        @Bind(R.id.invite_add_or_remove_user_btn)
+
         private CircleButton addOrRemoveUser;
 
         public ResultHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
+            userImage = (ImageView) itemView.findViewById(R.id.eventinfo_user_image);
+            eventinfo_user_name = (TextView) itemView.findViewById(R.id.eventinfo_user_name);
+            eventinfo_user_status = (TextView) itemView.findViewById(R.id.eventinfo_user_status);
+            user_status_mode = (CircleButton) itemView.findViewById(R.id.user_status_mode);
+            addOrRemoveUser = (CircleButton) itemView.findViewById(R.id.invite_add_or_remove_user_btn);        }
     }
 
 

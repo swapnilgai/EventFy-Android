@@ -5,19 +5,20 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
-import com.squareup.picasso.Picasso;
 
-import butterknife.ButterKnife;
+import at.markushi.ui.CircleButton;
 
 /**
  * Created by swapnil on 10/7/16.
@@ -37,10 +38,7 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
 
     public InviteAddedAdapter(Context context)
     {
-
         this.context = context;
-
-
     }
 
 
@@ -54,10 +52,11 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
             v = new ResultHolder(LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.attendance_adapter, parent, false));
 
-        else
+        else {
             v = new NoDataHolder(LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.create_event_invite_no_user_added, parent, false));
-
+            Log.e("in no data holder", "create private ^^^^ "+v);
+        }
 
         return v;
     }
@@ -72,23 +71,33 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
         if(holder instanceof ResultHolder){
             SignUp r = getItem(position);
 
-            ((ResultHolder)holder).linearLayout.setOnClickListener(new View.OnClickListener() {
+//            ((ResultHolder)holder).linearLayout.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    // Doesn't do anything, but need Click Listener to get that sweet Ripple
+//                }
+//            });
+
+            final SignUp signUp = getItem(position);
+
+            ((ResultHolder)holder).eventinfo_user_name.setText(signUp.getUserName());
+            //TODO add status table in RDB
+            ((ResultHolder)holder).eventinfo_user_status.setText(signUp.getUserId());
+
+            ((ResultHolder)holder).addOrRemoveUser.setImageResource(R.drawable.ic_clear_white_24dp);
+            ((ResultHolder)holder).addOrRemoveUser.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Doesn't do anything, but need Click Listener to get that sweet Ripple
+                    Log.e("in added adapter: ", ""+signUp.getUserName());
+                    signUp.setViewMessage(context.getResources().getString(R.string.invite_remove_user));
+                    EventBusService.getInstance().post(signUp);
+
                 }
             });
 
-            Picasso.with(holder.itemView.getContext())
-                    .load(r.getImageUrl())
-                    .placeholder(R.drawable.img_placeholder)
-                    .into(((ResultHolder)holder).picture);
-
-            ((ResultHolder)holder).userName.setText(r.getUserName());
-            ((ResultHolder)holder).userStatus.setText(r.getUserName());
-
         }
-        else{
+        else if(holder instanceof ProgressBarHolder){
             ProgressBarHolder loadingViewHolder = (ProgressBarHolder) holder;
             ObjectAnimator animator = ObjectAnimator.ofFloat(loadingViewHolder.progressBar, "rotation", 0, 360);
             animator.setRepeatCount(ValueAnimator.INFINITE);
@@ -105,8 +114,11 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
     @Override
     public int getItemViewType(int position) {
         SignUp signUp = getItem(position);
+        Log.e("data add adapter ", ""+signUp.getViewMessage());
 
-        if(signUp.getViewMessage() == null )
+        if(signUp.getViewMessage() == null ||
+                signUp.getViewMessage().equals(context.getResources().getString(R.string.invite_add_user))
+                || signUp.getViewMessage().equals(context.getResources().getString(R.string.invite_remove_user)))
             return VIEW_DATA;
         else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
             return VIEW_NODATA;
@@ -119,23 +131,26 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
 
 
 
-    class ResultHolder extends RecyclerView.ViewHolder {
-        // @Bind(R.id.linear_layout)
-        private LinearLayout linearLayout;
-        //   @Bind(R.id.eventinfo_user_image)
-        private ImageView picture;
-        //   @Bind(R.id.eventinfo_user_status)
-        private TextView userStatus;
-        //    @Bind(R.id.eventinfo_user_name)
-        private TextView userName;
+    public class ResultHolder extends RecyclerView.ViewHolder {
 
+        private  ImageView userImage;
+
+        private TextView eventinfo_user_name;
+
+        private TextView eventinfo_user_status;
+
+        private CircleButton user_status_mode;
+
+        private CircleButton addOrRemoveUser;
 
         public ResultHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
+            userImage = (ImageView) itemView.findViewById(R.id.eventinfo_user_image);
+            eventinfo_user_name = (TextView) itemView.findViewById(R.id.eventinfo_user_name);
+            eventinfo_user_status = (TextView) itemView.findViewById(R.id.eventinfo_user_status);
+            user_status_mode = (CircleButton) itemView.findViewById(R.id.user_status_mode);
+            addOrRemoveUser = (CircleButton) itemView.findViewById(R.id.invite_add_or_remove_user_btn);        }
     }
-
 
 
     class ProgressBarHolder extends RecyclerView.ViewHolder {
@@ -151,14 +166,13 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
 
     public class NoDataHolder extends RecyclerView.ViewHolder {
 
-        private ImageView noDataIv;
 
         public NoDataHolder(View itemView) {
             super(itemView);
 
-            noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
-            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
-            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+//            noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
+//            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+//            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
             setLoaded();
         }
     }

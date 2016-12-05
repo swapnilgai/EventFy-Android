@@ -45,6 +45,7 @@
     <string name="home_data">data</string>
     <string name="home_connection_error">data</string>
     <string name="invite_add_user">inviteAddUser</string>
+    <string name="invite_remove_user">inviteRemoveUser</string>
 
     <!--Home page view strings end-->
 
@@ -128,5 +129,7 @@
     <string name="event_private">Event Private</string>
     <string name="title_activity_profile_page">ProfilePage</string>
 
+    <string name="create_event_event_view_pager">Event View Pager</string>
+    <string name="event_object_pass_to_createeventfragment2">event object pass to createeventfragment2</string>
 
 </resources>

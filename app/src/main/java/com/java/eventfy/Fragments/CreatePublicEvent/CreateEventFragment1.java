@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,13 +122,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private TextView eventLocationTv;
     private  String flag;
     private Location eventLocation = new Location();
+    private ViewPager viewPager;
 
-
-    public CreateEventFragment1() {
-        // Required empty public constructor
-
-
-    }
 
 
     @Override
@@ -135,9 +131,14 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_create_event_fragment1, container, false);
-        EventBusService.getInstance().register(this);
         getUserObject();
-        //  eventType = getArguments().getString(getResources().getString(R.string.event_type_value));
+        eventType = getArguments().getString(getResources().getString(R.string.event_type_value));
+            EventBusService.getInstance().register(this);
+        viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
+        eventObj.setViewMessage("temp");
+        Log.e("event type ", "%%%%%%%  "+eventType);
+
+        eventObj.setEventCategory(eventType);
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
        // imageView.setVisibility(View.GONE);
@@ -215,14 +216,25 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         createBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
-                setProgressDialog();
                 createEentObject();
-                if(eventImageBm != null && signUp!=null)
-                    uploadImage();
-                else if (signUp!=null){
-                    createEventServerCall("default");
-                }
 
+                if(eventType.equals(getResources().getString(R.string.create_event_category_private)))
+                {
+                    if(validate()) {
+                        eventObj.setViewMessage(getResources().getString(R.string.event_object_pass_to_createeventfragment2));
+                        EventBusService.getInstance().post(eventObj);
+                        viewPager.setCurrentItem(1, true);
+                    }
+                }
+                else {
+                        setProgressDialog();
+
+                        if (eventImageBm != null && signUp != null)
+                             uploadImage();
+                        else if (signUp != null) {
+                            createEventServerCall("default");
+                    }
+                }
             }
 
         });
@@ -448,7 +460,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     {
         Log.e(" in create  ", "eventis "+event);
         dismissProgressDialog();
-        if(event.getEventId()!=-1) {
+        if(event.getEventId()!=-1 && !eventType.equals(getResources().getString(R.string.create_event_category_private))) {
 
             EventBusService.getInstance().unregister(this);
             Toast.makeText(getActivity(),"Event created",Toast.LENGTH_SHORT).show();
@@ -457,7 +469,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             view.getContext().startActivity(intent);
         }
-        else{
+        else if(!eventType.equals(getResources().getString(R.string.create_event_category_private))){
             Toast.makeText(getActivity(),"Enable create event, please Try again",Toast.LENGTH_SHORT).show();
         }
     }
@@ -646,4 +658,91 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             return 0;
         else return 15;
     }
+
+    public boolean validate() {
+        boolean flag = true;
+
+
+        if (eventName.getText().toString().isEmpty()) {
+            eventName.setError("Enter valid email address");
+            flag = false;
+        } else {
+            eventName.setError(null);
+        }
+
+        if (eventDescription.getText().toString().isEmpty()) {
+            eventDescription.setError("Evnter valid description");
+            flag = false;
+        }
+        else if(eventDescription.getText().toString().length()>140) {
+            eventDescription.setError("Event Descripting exceed limit of 200 character");
+            flag = false;
+        }
+        else {
+            eventDescription.setError(null);
+        }
+
+        if (eventObj.getEventDateFrom()==null) {
+            startDate.setError("Invalid start date");
+            flag = false;
+        } else {
+            startDate.setError(null);
+        }
+
+        if (eventObj.getEventDateTo()==null) {
+            endDate.setError("Invalid end date");
+            flag = false;
+        } else {
+            endDate.setError(null);
+        }
+
+        if (eventObj.getEventTimeFrom()==null) {
+            startDate.setError("Invalid start time");
+            flag = false;
+        } else {
+            startDate.setError(null);
+        }
+
+        if (eventObj.getEventTimeTo() == null) {
+            endDate.setError("Invalid end time");
+            flag = false;
+        } else {
+            endDate.setError(null);
+        }
+        try {
+            if (eventCapacity.getText().toString().isEmpty()) {
+                eventCapacity.setError("Enter event capacity");
+                flag = false;
+             }
+            else if (Integer.parseInt(eventCapacity.getText().toString()) < 0) {
+                    eventCapacity.setError("Event Capacity cant be negative");
+                    flag = false;
+                }
+            else {
+                eventName.setError(null);
+            }
+        }catch (Exception e) {
+            eventCapacity.setError("Please enter number");
+            flag = false;
+        }
+
+        if(eventObj.getLocation() == null) {
+            mAutocompleteView.setError("Enter valid address");
+            flag = false;
+        }
+        else if(eventObj.getLocation().getLatitude()==0 && eventObj.getLocation().getLongitude()==0) {
+            mAutocompleteView.setError("Enter valid address");
+            flag = false;
+        }
+        else if(mAutocompleteView.getText().toString().isEmpty()) {
+            mAutocompleteView.setError("Enter valid address");
+            flag = false;
+        }
+        else
+            mAutocompleteView.setError(null);
+
+        return flag;
+    }
+
+
 }

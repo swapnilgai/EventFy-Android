@@ -58,14 +58,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Intent in = getIntent();
-        signUp = (SignUp) in.getSerializableExtra("user");
 
         Gson g = new Gson();
         Log.e("object is : ", "????? : "+g.toJson(signUp));
         registerEventBusInstance();
 
-        getUserObject(signUp);
+        getUserObject();
 
 
         //if(signUp!=null && signUp.getNotificationDetail()!=null)
@@ -219,7 +217,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_item_create_event_public)
         {
             Intent intent = new Intent(this, CreatePublicEvent.class);
-            intent.putExtra("public", getResources().getString(R.string.create_event_category_public));
+            intent.putExtra(getResources().getString(R.string.create_event_category), getResources().getString(R.string.create_event_category_public));
             startActivity(intent);
 
         } else if (id == R.id.nav_item_create_event_private)
@@ -231,8 +229,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         } else if (id == R.id.nav_item_my_events)
         {
-            Log.e("in my event ", "{}{}{}");
-
 
             Intent intent = new Intent(this, MyEvents.class);
             startActivity(intent);
@@ -293,35 +289,34 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             DeviceDimensions.deviceWeidth = size.x;
     }
 
-    private void getUserObject(SignUp signUp) {
+    private void getUserObject() {
         SharedPreferences mPrefs = getSharedPreferences(getResources().getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = null;
+        //String json = null;
         //TODO uncomment
-        //String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
 
         if(json!=null && json.length()<100)
             json = null;
 
-        Log.e("string is ", "((((: "+json);
 
         if(json==null)
         {
-             storeUserObject(signUp, editor);
+             storeUserObject(editor);
         }
         else {
             this.signUp = gson.fromJson(json, SignUp.class);
         }
-
-        Log.e("storded object is : ", "((((:"+mPrefs.getString(getResources().getString(R.string.userObject), ""));
     }
 
 
 
 
-    public void storeUserObject(SignUp signUp, SharedPreferences.Editor editor)
+    public void storeUserObject(SharedPreferences.Editor editor)
     {
+        Intent in = getIntent();
+        signUp = (SignUp) in.getSerializableExtra("user");
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
         Log.e("string is ", "((((: "+json);

@@ -87,27 +87,25 @@ public class EventInfoPrivate extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
 
-        About about_fragment = new About();
-        Comment comments_fragment = new Comment();
-        Invited invited_fragment = new Invited();
-        Attending attending_fragment = new Attending();
+        About aboutFragment = new About();
+        Comment commentsFragment = new Comment();
+        Invited invitedFragment = new Invited();
+        Attending attendingFragment = new Attending();
 
 
         Bundle bundle = new Bundle();
         bundle.putSerializable(getResources().getString(R.string.event_for_eventinfo), event);
 
-        about_fragment.setArguments(bundle);
-        comments_fragment.setArguments(bundle);
-        invited_fragment.setArguments(bundle);
-        attending_fragment.setArguments(bundle);
-
-        Log.e("in main : ", ""+event.getEventName());
+        aboutFragment.setArguments(bundle);
+        commentsFragment.setArguments(bundle);
+        invitedFragment.setArguments(bundle);
+        attendingFragment.setArguments(bundle);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(comments_fragment, "Comments");
-        adapter.addFrag(invited_fragment, "Invited");
-        adapter.addFrag(attending_fragment, "Attending");
-        adapter.addFrag(about_fragment, "About");
+        adapter.addFrag(commentsFragment, "Comments");
+        adapter.addFrag(invitedFragment, "Invited");
+        adapter.addFrag(attendingFragment, "Attending");
+        adapter.addFrag(aboutFragment, "About");
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
     }

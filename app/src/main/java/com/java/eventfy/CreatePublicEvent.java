@@ -16,13 +16,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1;
+import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
+import com.java.eventfy.utils.CustomViewPager;
 import com.java.eventfy.utils.ImagePicker;
 import com.soundcloud.android.crop.Crop;
 
@@ -35,7 +39,7 @@ public class CreatePublicEvent extends AppCompatActivity {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     private FloatingActionButton addImage;
     private String category;
     private View view;
@@ -49,8 +53,7 @@ public class CreatePublicEvent extends AppCompatActivity {
         setContentView(R.layout.activity_create_public_event);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-
-   //     category = getIntent().getExtras().getString(getResources().getString(R.string.create_event_category));
+        category = getIntent().getExtras().getString(getResources().getString(R.string.create_event_category));
 
 
         setSupportActionBar(toolbar);
@@ -58,7 +61,8 @@ public class CreatePublicEvent extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (CustomViewPager) findViewById(R.id.viewpager);
+        viewPager.setPagingEnabled(false);
         setupViewPager(viewPager);
 
         eventImageIV = (ImageView) findViewById(R.id.event_image);
@@ -87,18 +91,37 @@ public class CreatePublicEvent extends AppCompatActivity {
             }
         });
 
+        LinearLayout tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
+        for(int i = 0; i < tabStrip.getChildCount(); i++) {
+            tabStrip.getChildAt(i).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
+        }
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new CreateEventFragment1(), "Information");
-//        if(category.equals(getResources().getString(R.string.create_event_category_private))) {
-//            adapter.addFrag(new CreateEventFragment2(), "Invite");
-//
-//        }
+
+        CreateEventFragment1 createEventFragment1 = new CreateEventFragment1();
+        CreateEventFragment2 createEventFragment2 = new CreateEventFragment2();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(getResources().getString(R.string.event_type_value), category);
+
+        createEventFragment1.setArguments(bundle);
+
+        adapter.addFrag(createEventFragment1, "Information");
+        if(category.equals(getResources().getString(R.string.create_event_category_private))) {
+            adapter.addFrag(createEventFragment2, "Invite");
+
+        }
 
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(0);
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

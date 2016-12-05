@@ -135,6 +135,7 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         void onLoadMore();
     }
 
+
     @Override
     public int getItemViewType(int position) {
         SignUp signUp = getItem(position);
