@@ -2,7 +2,9 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -48,6 +50,10 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
+             Log.e("event is : ", " "+url);
+        Gson g = new Gson();
+        Log.e("event is : ", " "+g.toJson(signUp));
+
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -58,7 +64,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
             Events[] event = response.getBody();
 
             eventLst = Arrays.asList(event);
-
+        Log.e("event size : ", " "+eventLst.size());
 
         return null;
     }
@@ -78,6 +84,12 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
             events.setViewMessage(context.getResources().getString(R.string.home_no_data));
             eventLst.add(events);
         }
+
+        Gson g = new Gson();
+        for(Events e : eventLst) {
+            Log.e("event is : ", " "+g.toJson(e));
+        }
+
         EventBusService.getInstance().post(flag);
         EventBusService.getInstance().post(eventLst);
     }

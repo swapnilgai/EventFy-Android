@@ -35,69 +35,88 @@
             android:layout_gravity="center_horizontal|bottom"
             >
 
-
-            <LinearLayout
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                app:cardUseCompatPadding="true"
+                android:visibility="invisible"
+                android:id="@+id/CommentPostImageLayout"
+                android:background="@color/place_autocomplete_search_hint">
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal|bottom"
-                android:background="@color/cardview_light_background"
-                android:id="@+id/CommentPostImageLayout"
-                android:padding="16dp"
-                android:visibility="invisible"
-                >
+                android:background="@color/cardview_light_background">
 
-                <ImageView
-                    android:id="@+id/slectedImageViewFromDevice"
-                    android:layout_width="0dip"
-                    android:layout_height="180dp"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="6dp"
-                    android:layout_gravity="center_vertical"
-                    android:scaleType="fitXY"
-                    />
+                <android.support.design.widget.FloatingActionButton
 
-                <ImageButton
                     android:id="@+id/btnCommentImageDsicard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_public_white_24dp"
-                    android:layout_gravity="center"
-                    />
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_add_white_18dp"
+                    android:scaleType="fitXY"/>
 
+                <ImageView
+                    android:id="@+id/slectedImageViewFromDevice"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:padding="2dp"
+                    android:src="@drawable/logo"
+                    android:scaleType="fitXY"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"/>
 
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
+            </RelativeLayout>
+</android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal|bottom"
-                android:background="@color/cardview_light_background">
-
-                <ImageButton
-                    android:id="@+id/btnSelectImageFromDevice"
-                    android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                app:cardUseCompatPadding="true"
+                android:paddingTop="10dp"
+                android:background="@color/place_autocomplete_search_hint">
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_navigation_white_24dp" />
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:background="@color/cardview_light_background">
 
-                <EditText
-                    android:id="@+id/commentText"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="6dp" />
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/btnSelectImageFromDevice"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        app:cb_color="@color/colorPrimary"
+                        app:cb_pressedRingWidth="3dip"
+                        android:src="@drawable/ic_camera_enhance_black_24dp" />
 
-                <ImageButton
-                    android:id="@+id/btnCommentSend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_create_black_24dp" />
-            </LinearLayout>
+                    <EditText
+                        android:id="@+id/commentText"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="6dp"
+                        />
 
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/btnCommentSend"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="8dp"
+                        app:cb_color="@color/colorPrimary"
+                        app:cb_pressedRingWidth="3dip"
+                        android:src="@drawable/ic_send_black_24dp" />
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 

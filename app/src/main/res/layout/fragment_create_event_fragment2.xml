@@ -126,7 +126,7 @@
     android:gravity="center">
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/private_previous"
+        android:id="@+id/public_cancle"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
@@ -136,7 +136,7 @@
         android:text="Previous"/>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/private_create_event"
+            android:id="@+id/public_create_event"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"

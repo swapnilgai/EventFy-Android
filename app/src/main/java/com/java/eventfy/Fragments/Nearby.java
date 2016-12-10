@@ -22,8 +22,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
@@ -52,8 +50,10 @@ public class Nearby extends Fragment {
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
     private List<Events> eventsList;
+    private List<Events> eventsListTemp;
     private SignUp signUp;
     private Location location;
+    private Events currentEventToDelete;
 
 
     public Nearby() {
@@ -74,16 +74,17 @@ public class Nearby extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
 
         eventsList = new ArrayList<Events>();
+        eventsListTemp = new ArrayList<Events>();
         Events events = new Events();
         events.setViewMessage(getResources().getString(R.string.home_loading));
         eventsList.add(events);
-
-
 
         getUserObject();
 
        if(!EventBusService.getInstance().isRegistered(this))
         EventBusService.getInstance().register(this);
+
+        getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
@@ -187,8 +188,50 @@ public class Nearby extends Fragment {
             bindAdapter(adapter, eventsList);
         }
         else {
-          //  getNearbEventServerCall();
+            getNearbEventServerCall();
         }
+    }
+
+    @Subscribe
+    public void getEventAfterUnregistratation(Events events)
+    {
+        int index = -1;
+        Events deleteEvent = null;
+        // Remove user from event to reflect icon for RSVP button
+        for(Events e: eventsList) {
+            if(e.getEventId() == events.getEventId()) {
+                index = eventsList.indexOf(e);
+                deleteEvent =  e;
+                //Log.e("index of event ", "index* "+index);
+                //Log.e("eventid of event ", "index* "+e.getEventId());
+                e.setDecesion(events.getDecesion());
+                Log.e("decesion of event ", "index* "+e.getDecesion());
+                break;
+            }
+        }
+        Log.e("index is : ", " indexxxxx : "+index);
+        Log.e("message : ", " indexxxxx : "+events.getViewMessage());
+        if(events.getViewMessage().equals(getResources().getString(R.string.deleted))
+                &&  index!=-1){
+                deleteEvent.setViewMessage(events.getViewMessage());
+                currentEventToDelete = deleteEvent;
+                removeEvent(index, currentEventToDelete);
+            }
+    }
+
+    public void removeEvent(int index, Events deleteEvent) {
+        Log.e("decesion of event ", "index* "+eventsList.size());
+
+        for(Events e: eventsList)
+        if(e.getEventId()!= deleteEvent.getEventId()) {
+            eventsListTemp.add(e);
+        }
+
+        eventsList = eventsListTemp;
+        Log.e("decesion of event ", "index* "+eventsList.size());
+        adapter.notifyItemRemoved(index);
+        bindAdapter(adapter, eventsList);
+
     }
 
     // ****** ASYNC CALL
@@ -202,18 +245,6 @@ public class Nearby extends Fragment {
         tempSignUp.setLocation(location);
         tempSignUp.setToken(signUp.getToken());
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            String str = mapper.writeValueAsString(tempSignUp);
-            Log.e("signup temp","&&&&&& :: "+str);
-
-            // signUp.getEvents().get(0).setEventId(-1);
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
         String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
         getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag), getContext());
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -222,9 +253,21 @@ public class Nearby extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("in resume "," *** ");
-        getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
+        if(!EventBusService.getInstance().isRegistered(this))
+            EventBusService.getInstance().register(this);
+//
+//        if(currentEventToDelete!=null && currentEventToDelete.getViewMessage().equals(getResources().getString(R.string.deleted)))
+//        {
+//            int index = eventsList.indexOf(currentEventToDelete);
+//            Log.e("list size : ", " ((((((( "+eventsList.size());
+//            eventsList.remove(currentEventToDelete);
+//            adapter.notifyItemRemoved(index);
+//            bindAdapter(adapter, eventsList);
+//            currentEventToDelete = null;
+//        }
 
+
+        Log.e("in resume "," *** ");
     }
 
     @Override
@@ -259,13 +302,13 @@ public class Nearby extends Fragment {
 
     public void getUserObject()
     {
-        SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
-        Log.e("json is ", "***** : "+json);
-
+        Log.e("home nearby ", "***** "+json);
     }
+
 }
 

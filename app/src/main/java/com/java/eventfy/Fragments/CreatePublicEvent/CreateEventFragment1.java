@@ -106,7 +106,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private Spinner evenrCategory;
     private Spinner eventVisibilityMiles;
     private Button createBtn;
-    private Events eventObj = new Events();
+    private Events eventObj;
     protected GoogleApiClient mGoogleApiClient;
     private AutoCompleteTextView mAutocompleteView;
     private PlaceAutocompleteAdapter mAdapter;
@@ -123,6 +123,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private  String flag;
     private Location eventLocation = new Location();
     private ViewPager viewPager;
+    private Button cancleBtn;
 
 
 
@@ -133,16 +134,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         view = inflater.inflate(R.layout.fragment_create_event_fragment1, container, false);
         getUserObject();
         eventType = getArguments().getString(getResources().getString(R.string.event_type_value));
-            EventBusService.getInstance().register(this);
-        viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
-        eventObj.setViewMessage("temp");
-        Log.e("event type ", "%%%%%%%  "+eventType);
 
-        eventObj.setEventCategory(eventType);
+        // To check if it is crate new event or edit existing event
+        eventObj = (Events) getArguments().getSerializable(getResources().getString(R.string.event_to_edit_eventinfo));
+
+        EventBusService.getInstance().register(this);
+        viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
+
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
-       // imageView.setVisibility(View.GONE);
-
         eventName = (EditText) view.findViewById(R.id.event_name);
         eventDescription  = (EditText) view.findViewById(R.id.public_event_description);
         startDate = (EditText) view.findViewById(R.id.public_event_start_date);
@@ -154,7 +154,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         currentLocationBtn = (CircleButton) view.findViewById(R.id.create_event_current_location);
         // Retrieve the AutoCompleteTextView that will display Place suggestions.
         mAutocompleteView = (AutoCompleteTextView) view.findViewById(R.id.create_public_event_autocomplete_places);
-
         eventsVolatile = (CheckBox) view.findViewById(R.id.public_events_volatile);
         locationInfoLinearLayout = (LinearLayout) view.findViewById(R.id.location_info_linear_layout);
 
@@ -185,6 +184,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         datePickerDialogEnd = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), false);
         timePickerDialogEnd = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY) ,calendar.get(Calendar.MINUTE), false, false);
+
+        cancleBtn = (Button) view.findViewById(R.id.public_cancle);
+
+        if(eventObj==null) {
+            eventObj = new Events();
+            eventObj.setViewMessage("temp");
+            eventObj.setEventCategory(eventType);
+            cancleBtn.setVisibility(View.GONE);
+            createBtn.setText("Next");
+        }
+
 
         startDate.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -561,8 +571,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     {
         progressDialog.dismiss();
     }
-    public void setUpMarker()
-    {
+    public void setUpMarker() {
         int radius = getZoonValue(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
         mapView.setVisibility(View.VISIBLE);
 
@@ -571,8 +580,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        googleMap.clear();
         googleMap.addMarker(markerOptions);
-
         //googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -742,6 +751,45 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             mAutocompleteView.setError(null);
 
         return flag;
+    }
+
+
+    public void setEditEventValues() {
+
+        setUpMarker();
+        eventLocation.setName(eventObj.getLocation().getName());
+        locationMapViewLinearLayout.setVisibility(View.VISIBLE);
+        locationInfoLinearLayout.setVisibility(View.VISIBLE);
+        locationEditTextLinearLayout.setVisibility(View.GONE);
+        eventLocationTv.setText(eventObj.getLocation().getName());
+        mAutocompleteView.setText(eventObj.getLocation().getName());
+        eventName.setText(eventObj.getEventName());
+        eventDescription.setText(eventObj.getEventDescription());
+        startDate.setText(eventObj.getEventDateFrom()+" "+eventObj.getEventTimeFrom());
+        endDate.setText(eventObj.getEventDateTo()+" "+eventObj.getEventTimeTo());
+        eventCapacity.setText(eventObj.getEventCapacity());
+
+       int index = getIndexOfSpinerItem(getResources().getStringArray(R.array.category_arrays), eventObj.getEventCategory());
+        evenrCategory.setSelection(index);
+
+        index = getIndexOfSpinerItem(getResources().getStringArray(R.array.EventVisiblityMiles), eventObj.getEventCategory());
+        eventVisibilityMiles.setSelection(index);
+
+        if(eventObj.getEventVolatile())
+            eventsVolatile.setChecked(true);
+        else
+            eventsVolatile.setChecked(false);
+    }
+
+    public int getIndexOfSpinerItem( String[] androidStrings , String item) {
+        int i = 0 ;
+        for (String s : androidStrings) {
+            i = s.indexOf(item);
+            if (i >= 0) {
+                return i;
+            }
+        }
+        return i;
     }
 
 

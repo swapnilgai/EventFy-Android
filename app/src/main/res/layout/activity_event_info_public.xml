@@ -73,12 +73,12 @@
         <!-- <include layout="@layout/content_show_detail" />-->
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/rsvp_for_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             app:layout_anchor="@id/appbar"
-            android:src="@drawable/ic_menu_manage"
+            android:src="@drawable/fab_add"
             app:layout_anchorGravity="bottom|end"/>
     </android.support.design.widget.CoordinatorLayout>
 

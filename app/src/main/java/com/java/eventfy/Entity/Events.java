@@ -54,6 +54,9 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String decesion;
+
     // mapping for signUp - Events (users in events and  events by user)
     @JsonView(SignUp.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -288,6 +291,14 @@ public class Events implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public String getDecesion() {
+        return decesion;
+    }
+
+    public void setDecesion(String decesion) {
+        this.decesion = decesion;
     }
 
 }

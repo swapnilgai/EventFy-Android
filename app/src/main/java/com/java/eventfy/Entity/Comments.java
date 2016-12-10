@@ -34,6 +34,7 @@ public class Comments  implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private Date date;
 
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(Events.class)
     private Events events;

@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
+import com.java.eventfy.utils.RoundedCornersTransform;
+import com.squareup.picasso.Picasso;
 
 import at.markushi.ui.CircleButton;
 
@@ -85,6 +87,13 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
             ((ResultHolder)holder).eventinfo_user_status.setText(signUp.getUserId());
 
             ((ResultHolder)holder).addOrRemoveUser.setImageResource(R.drawable.ic_clear_white_24dp);
+
+            if(!signUp.getImageUrl().equals("default"))
+                Picasso.with(holder.itemView.getContext())
+                        .load(signUp.getImageUrl())
+                        .transform(new RoundedCornersTransform())
+                        .into(((InviteAddedAdapter.ResultHolder) holder).userImage);
+
             ((ResultHolder)holder).addOrRemoveUser.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

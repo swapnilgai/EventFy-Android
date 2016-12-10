@@ -14,11 +14,11 @@
 
 
     <!-- Web servises url -->
-    <!--<string name="ip_local">http://192.168.0.7:8080/EventFy</string>-->
+    <string name="ip_local">http://192.168.0.7:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>
 
-    <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
-    <!--<string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>-->
+    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
+    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
     <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
@@ -32,12 +32,19 @@
     <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
     <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
     <string name="add_comment_in_event">/webapi/comments/addcomment</string>
+    <string name="delete_comment_from_event">/webapi/comments/deletecomment</string>
     <string name="login_action">/webapi/login/checkuser</string>
     <string name="login_action_facebook">/webapi/login/checkuserfacebookuser</string>
     <string name="verify_vcode">/webapi/signup/checkverificationcode</string>
     <string name="register_notification_detail">/webapi/notifications/registeruser</string>
     <string name="GCM_sender_id">1070420205452</string>
     <string name="get_nearby_users">/webapi/events/getnearbyusers</string>
+    <string name="rspv_user_to_event">/webapi/events/addusertoevent</string>
+    <string name="remove_user_from_event">/webapi/events/deleteuserfromevent</string>
+    <string name="delete_event">/webapi/events/deleteevent</string>
+    <string name="attending">Attending</string>
+    <string name="not_attending">Not Attending</string>
+
     <!--Home page view strings-->
     <string name="home_no_location">noLocation</string>
     <string name="home_no_data">noData</string>
@@ -46,6 +53,9 @@
     <string name="home_connection_error">data</string>
     <string name="invite_add_user">inviteAddUser</string>
     <string name="invite_remove_user">inviteRemoveUser</string>
+
+    <string name="deleted">deleted</string>
+    <string name="undo">undo</string>
 
     <!--Home page view strings end-->
 
@@ -128,6 +138,8 @@
     <string name="event_type_value">Event Type Value</string>
     <string name="event_private">Event Private</string>
     <string name="title_activity_profile_page">ProfilePage</string>
+
+    <string name="event_to_edit_eventinfo">Event Type Value</string>
 
     <string name="create_event_event_view_pager">Event View Pager</string>
     <string name="event_object_pass_to_createeventfragment2">event object pass to createeventfragment2</string>

@@ -104,7 +104,6 @@
             fab:fab_colorPressed="@color/colorPrimaryDark"
             fab:fab_size="mini" />
 
-
     </com.github.clans.fab.FloatingActionMenu>
 
 </FrameLayout>

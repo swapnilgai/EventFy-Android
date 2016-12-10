@@ -1,19 +1,26 @@
 package com.java.eventfy.Fragments.EventInfo;
 
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -24,8 +31,17 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
+import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
+import com.java.eventfy.asyncCalls.DeleteEvent;
+
+import org.greenrobot.eventbus.Subscribe;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import at.markushi.ui.CircleButton;
 
@@ -36,7 +52,7 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMap;
     private MapView mapView;
-
+    private SignUp signUp;
     private LatLng myLaLn;
     private View view;
     private Events event;
@@ -56,6 +72,11 @@ public class About extends Fragment implements OnMapReadyCallback {
     private RobotoTextView eventTimeTo;
     private RobotoTextView eventTimeToAmPm;
     private RobotoTextView eventCapacity;
+    private Button deleteEvent;
+    private Button editEvent;
+    private ProgressDialog progressDialog;
+
+    private LinearLayout adminOptionLayout;
 
 
     @Override
@@ -81,35 +102,53 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventTimeToAmPm = (RobotoTextView) view.findViewById(R.id.time_to_am_pm);
 
         eventCapacity = (RobotoTextView) view.findViewById(R.id.event_capacity);
+        adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
+
+        deleteEvent = (Button) view.findViewById(R.id.event_delete);
 
         mapValuesFromEventObject();
 
         MapsInitializer.initialize(getActivity());
 
+        getUserObject();
+        createProgressDialog();
+
+        Log.e("admin user id = ", ""+event.getAdmin().getUserId());
+
+        Log.e("user id = ", ""+signUp.getUserId());
+
+        if(!signUp.getUserId().equals(event.getAdmin().getUserId()))
+            adminOptionLayout.setVisibility(View.INVISIBLE);
+        else{
+
+        }
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
 
+        deleteEvent.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dialogBox(getResources().getString(R.string.deleted), event);
+            }
+        });
+
+        editEvent.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return view;
     }
 
 
     public void mapValuesFromEventObject() {
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            String str = mapper.writeValueAsString(event);
-            Log.e("event object ","&&&&&& :: "+str);
-
-            // signUp.getEvents().get(0).setEventId(-1);
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-
 
          eventName.setText(event.getEventName());
          adminName.setText(event.getAdmin().getUserName());
@@ -119,12 +158,12 @@ public class About extends Fragment implements OnMapReadyCallback {
          eventLocation.setText(event.getLocation().getName());
          eventVisiblityMiles.setText(event.getEventVisiblityMile());
 
-         eventTimeFrom.setText(event.getEventTimeFrom());
+         eventTimeFrom.setText( convertTimeInTwelve(event.getEventTimeFrom()));
          eventDateFrom.setText(event.getEventDateFrom());
 
          eventTimeFromAmPm.setText(timeConverter(event.getEventTimeFrom()));
          eventDateTo.setText(event.getEventDateTo());
-         eventTimeTo.setText(event.getEventTimeTo());
+         eventTimeTo.setText(convertTimeInTwelve(event.getEventTimeTo()));
          eventTimeToAmPm.setText(timeConverter(event.getEventTimeTo()));
          eventCapacity.setText(event.getEventCapacity());
     }
@@ -144,6 +183,8 @@ public class About extends Fragment implements OnMapReadyCallback {
     @Override
     public void onResume() {
         super.onResume();
+        if(progressDialog.isShowing())
+            dismissProgressDialog();
         //googleMap.clear();
     }
 
@@ -151,6 +192,8 @@ public class About extends Fragment implements OnMapReadyCallback {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(progressDialog.isShowing())
+            dismissProgressDialog();
     }
 
     @Override
@@ -219,5 +262,107 @@ public class About extends Fragment implements OnMapReadyCallback {
             return 5;
         else return 10;
     }
+
+    public void getUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
+
+    public String convertTimeInTwelve(String time) {
+        try {
+                char timeArray[] = time.toCharArray();
+                for (int i = timeArray.length-1; i > 1 ; i--) {
+                    timeArray[i+1] = timeArray[i];
+                }
+                timeArray[2] = ':';
+                time =  String.copyValueOf(timeArray);
+                final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+                final Date dateObj = sdf.parse(time);
+                System.out.println(dateObj);
+                return new SimpleDateFormat("K:mm").format(dateObj).toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return time;
+    }
+
+    public void dialogBox(final String message, final Events event) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        alertDialogBuilder.setMessage(message);
+
+
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        startProgressDialog(message);
+                        event.getUserDetail().add(signUp);
+                        serverCallToDelete(event);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void serverCallToDelete(Events event) {
+        String url = getContext().getResources().getString(R.string.ip_local) + getContext().getResources().getString(R.string.delete_event);
+        DeleteEvent deleteEvent = new DeleteEvent(url, event);
+        deleteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+
+    public void serverCallToUndo(Comments comment) {
+
+        String url = getContext().getResources().getString(R.string.ip_local) + getContext().getResources().getString(R.string.get_comment_for_event);
+
+        DeleteEvent deleteEvent = new DeleteEvent(url, event);
+        deleteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
+
+    @Subscribe
+    public void getDeletedOrUndoComment(Comments comments) {
+        dismissProgressDialog();
+
+    }
+
+    @Subscribe
+    public void getDeletedEcent(Events event) {
+        dismissProgressDialog();
+    }
+    public void createProgressDialog() {
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+    }
+
+    public void startProgressDialog(String message) {
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+
+
+    public void dismissProgressDialog()
+    {
+        progressDialog.dismiss();
+    }
+
 
 }

@@ -310,9 +310,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
-
-
-
     public void storeUserObject(SharedPreferences.Editor editor)
     {
         Intent in = getIntent();

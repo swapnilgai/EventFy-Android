@@ -33,10 +33,9 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-
             Log.e(" url ", url);
-        Log.e(" user ", new Gson().toJson(event));
-        RestTemplate restTemplate = new RestTemplate(true);
+            Log.e(" user ", new Gson().toJson(event));
+            RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
             HttpEntity<Events> request = new HttpEntity<>(event);

@@ -1,12 +1,14 @@
 package com.java.eventfy.Fragments.EventInfo;
 
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -27,6 +30,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,10 +47,7 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     private OnLoadMoreListener onLoadMoreListener;
     private Events event;
     private SignUp signUp;
-
-    public Attending() {
-        // Required empty public constructor
-    }
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,12 +61,12 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
         event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
 
+        signUp = getUserObject();
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_attendance);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_attendance);
 
-        userList.add(null);
-
-        getUsersForEvent();
+        viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
 
         recyclerView.setHasFixedSize(true);
 
@@ -76,18 +78,25 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         handler = new Handler();
 
         recyclerView.setAdapter(adapter);
-        //  bindAdapter(commentsList);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        addLoadingAtStrat();
+        addLoading();
+
+        getUsersForEvent();
+
+        Log.e("in create ", " 0000 "+adapter);
+
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getUsersForEvent();
-                bindAdapter(userList);
+                removeALl();
+                addLoading();
             }
         });
+
 
         return view;
     }
@@ -117,41 +126,77 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
     public void getUsersForEvent()
     {
-
+        signUp.setEventAdmin(event);
         String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.get_user_for_event);
-        GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()));
+        GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, signUp, getContext());
         getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
     @Subscribe
-    public void getUsersForEvent(List<SignUp> userListTemp)
-    {
-        Log.e("item received out : ", "" + userListTemp.size());
+    public void getUsersForEvent(List<SignUp> userList) {
 
-        if(userListTemp.get(0) instanceof SignUp) {
-            if( userList!=null && userList.size()>0 && userList.get(0) == null)
-                userList.remove(0);
-
-            this.userList.addAll(userListTemp);
-            this.userList.add(null);
-
-            displayUsers();
+        if(userList.get(0) instanceof SignUp) {
+            Log.e("item received frag : ", " 0000 " + userList.size());
+                this.userList.addAll(userList);
+            Log.e("size in frag : ", " 0000 " + this.userList.size());
+                displayUsers();
+            }
+        else {
+            //TODO Thost message
         }
     }
 
     @Subscribe
-    public void getEnrolledUserForEvent(SignUp signUp)
+    public void getEnrolledUserForEvent(Events events)
     {
+        signUp = getUserObject();
+        viewPager.setCurrentItem(1, true);
+        if(userList.get(0).getViewMessage()!=null &&
+                (userList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))
+                || userList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_no_data))))
+            userList.remove(0);
 
-        if(signUp != null) {
+        if(events.getDecesion()!=null && events.getDecesion().equals(getContext().getResources().getString(R.string.attending))) {
 
-            this.userList.add(signUp);
-
-            displayUsers();
+            Log.e("adding event ", " ^^^^^ "+events.getDecesion());
+            userList.add(0, signUp);
+            Log.e("adding event ", " ^^^^^ "+userList.size());
+            Log.e("adding event ", " ^^^^^ "+signUp.getUserId());
         }
-    }
+        else if(events.getDecesion()!=null  && events.getDecesion().equals(getContext().getResources().getString(R.string.not_attending))){
+            int index =-1;
+            for(SignUp user: userList) {
+                Log.e("Get User Id : ", " ^^^^^ "+signUp.getUserId());
+                Log.e("userlist Id : ", " ^^^^^ "+user);
+               if (signUp.getUserId() == user.getUserId())
+                   Log.e("removing before event ", " ^^^^^ "+userList.size());
+                    index = userList.indexOf(user);
+                    break;
+           }
 
+            if(index!=-1) {
+                userList.remove(index);
+                adapter.notifyItemRemoved(index);
+            }
+        }
+
+        // removing no user tag
+        if( userList.size()>=2 && userList.get(1).getViewMessage()!=null &&
+                (  userList.get(1).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))
+                || userList.get(1).getViewMessage().equals(getContext().getResources().getString(R.string.home_no_data))))
+            userList.remove(1);
+
+        // all element removed all no on attening view
+        if(userList.size()<=0) {
+            SignUp signUpTemp = new SignUp();
+            signUpTemp.setViewMessage(getContext().getResources().getString(R.string.home_no_data));
+            userList.add(signUpTemp);
+        }
+        Log.e("size is ", "rsvp : "+userList.size());
+            bindAdapter(userList);
+
+    }
 
     public void displayUsers()
     {
@@ -164,21 +209,26 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
 //                userList.remove(userList.size() - 1);
 //                adapter.notifyItemRemoved(userList.size());
-
-                if(userList.size()>0) {
+                Log.e("size in display: ", " 0000 " + userList.size());
+                if(userList!= null
+                        && userList.get(userList.size()-1).getViewMessage() != null
+                        && userList.get(userList.size()-1).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading) )) {
                     userList.remove(userList.size() - 1);
-                    adapter.notifyItemRemoved(userList.size());
+                    adapter.notifyItemRemoved(userList.size()-1);
                 }
-                userList.addAll(userList);
+                if(userList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))) {
+                    userList.remove(0);
+                    adapter.notifyItemRemoved(0);
+                }
+               bindAdapter(userList);
 
-                bindAdapter(userList);
             }
         }, 5000);
 
     }
 
 
-    private void bindAdapter(List<SignUp> commentList){
+    private void bindAdapter(List<SignUp> userList){
         swipeRefreshLayout.setRefreshing(false);
         refreshData(userList);
     }
@@ -192,6 +242,7 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
     @UiThread
     private void refreshData(List<SignUp> userList){
+        Log.e("in refresh adapter ", " 0000 "+userList.size());
         if (adapter != null){
             adapter.clear();
             adapter.addAll(userList);
@@ -202,7 +253,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
     public void removeALl() {
         userList.removeAll(userList);
-        addLoading();
     }
 
     public void addLoading(){
@@ -210,18 +260,21 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         signUp.setViewMessage(getResources().getString(R.string.home_loading));
         userList.add(signUp);
         bindAdapter(userList);
+        Log.e("in add loading ", " 0000 ");
     }
 
-    public void addLoadingAtStrat(){
-        signUp = new SignUp();
-        signUp.setViewMessage(getResources().getString(R.string.home_loading));
-        for(int i = userList.size()-1; i > 0; i--)
-        {
-            //set the last element to the value of the 2nd to last element
-            userList.set(i,userList.get(i-1));
-        }
-        userList.add(0,signUp);
-        bindAdapter(userList);
-    }
+    private SignUp getUserObject() {
+        SharedPreferences mPrefs = getContext().getSharedPreferences(getResources().getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        //TODO uncomment
+        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
 
+        if(json!=null && json.length()<100)
+            json = null;
+
+        Log.e("user in attending is : ", " attending user : "+json);
+
+        return  gson.fromJson(json, SignUp.class);
+    }
 }

@@ -14,8 +14,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.UiThread;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,9 +26,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -50,6 +50,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.markushi.ui.CircleButton;
+
 import static com.java.eventfy.R.id.commentText;
 
 /**
@@ -59,15 +61,15 @@ public class Comment extends Fragment {
     private CommentAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private LinearLayout CommentPostImageLayout;
+    private CardView CommentPostImageLayout;
     private View view;
     private List<Comments> commentsList = new ArrayList<>();
     private List<Comments> commentsListTemp = new ArrayList<>();
     private EditText commentTextEditText;
-    private ImageButton btnCommentSend;
-    private ImageButton selectImageFromDevice;
+    private CircleButton btnCommentSend;
+    private CircleButton selectImageFromDevice;
     private ImageView slectedImageViewFromDevice;
-    private ImageButton btnCommentImageDsicard;
+    private FloatingActionButton btnCommentImageDsicard;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
     protected Handler handler;
@@ -102,11 +104,11 @@ public class Comment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
         commentTextEditText = (EditText) view.findViewById(commentText);
-        btnCommentSend = (ImageButton) view.findViewById(R.id.btnCommentSend);
-        selectImageFromDevice = (ImageButton) view.findViewById(R.id.btnSelectImageFromDevice);
-        CommentPostImageLayout = (LinearLayout) view.findViewById(R.id.CommentPostImageLayout);
+        btnCommentSend = (CircleButton) view.findViewById(R.id.btnCommentSend);
+        selectImageFromDevice = (CircleButton) view.findViewById(R.id.btnSelectImageFromDevice);
+        CommentPostImageLayout = (CardView) view.findViewById(R.id.CommentPostImageLayout);
         slectedImageViewFromDevice = (ImageView) view.findViewById(R.id.slectedImageViewFromDevice);
-        btnCommentImageDsicard = (ImageButton) view.findViewById(R.id.btnCommentImageDsicard);
+        btnCommentImageDsicard = (FloatingActionButton) view.findViewById(R.id.btnCommentImageDsicard);
 
         getNearbEventServerCall();
 
@@ -115,7 +117,7 @@ public class Comment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new CommentAdapter(recyclerView, view.getContext());
+        adapter = new CommentAdapter(recyclerView, view.getContext(), event);
 
         handler = new Handler();
 
@@ -124,13 +126,15 @@ public class Comment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
 
-       addLoadingAtStrat();
+        addLoadingAtStrat();
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getNearbEventServerCall();
+                commentsList.removeAll(commentsList);
+                removeALl();
                 bindAdapter(commentsList);
+                getNearbEventServerCall();
             }
         });
 
@@ -141,7 +145,8 @@ public class Comment extends Fragment {
 
                 Comments commentTemp = new Comments();
 
-                urlForComment = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_comment_in_event);;
+                urlForComment = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_comment_in_event);
+                ;
 
                 commentTemp.setUser(signUp);
 
@@ -160,6 +165,7 @@ public class Comment extends Fragment {
 
                 addLoadingAtStrat();
                 linearLayoutManager.scrollToPosition(0);
+
                 String commentText = commentTextEditText.getText().toString();
 
                 if (bm != null) {
@@ -231,24 +237,25 @@ public class Comment extends Fragment {
         addLoading();
     }
 
-    public void addLoading(){
+    public void addLoading() {
         comments = new Comments();
         comments.setViewMessage(getResources().getString(R.string.home_loading));
         commentsList.add(comments);
         bindAdapter(commentsList);
     }
 
-    public void addLoadingAtStrat(){
+    public void addLoadingAtStrat() {
         comments = new Comments();
         comments.setViewMessage(getResources().getString(R.string.home_loading));
-        for(int i = commentsList.size()-1; i > 0; i--)
-        {
-            //set the last element to the value of the 2nd to last element
-            commentsList.set(i,commentsList.get(i-1));
-        }
-        commentsList.add(0,comments);
+//        for(int i = commentsList.size()-1; i > 0; i--)
+//        {
+//            //set the last element to the value of the 2nd to last element
+//            commentsList.set(i,commentsList.get(i-1));
+//        }
+        commentsList.add(0, comments);
         bindAdapter(commentsList);
     }
+
     public void setLoaded() {
         loading = false;
     }
@@ -280,6 +287,8 @@ public class Comment extends Fragment {
 
     @UiThread
     private void refreshData(List<Comments> commentList) {
+
+        Log.e("refresh data called: ", " cmt : "+commentList.size());
         if (adapter != null) {
             adapter.clear();
             adapter.addAll(commentList);
@@ -295,12 +304,6 @@ public class Comment extends Fragment {
 
         getUserObject();
 
-        Log.e("sign up : ", " comment : " + signUp);
-
-//        List<Events> eventLst = new ArrayList<Events>();
-//        eventLst.add(event);
-//        signUp.setEvents();
-
         signUp.setEventAdmin(event);
 
         GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, signUp, view.getContext());
@@ -313,7 +316,7 @@ public class Comment extends Fragment {
         Log.e("in get comment user: ", "" + commentsList.size());
 
         if (commentsList.get(0) instanceof Comments) {
-            this.commentsListTemp.addAll(commentsList);
+            this.commentsList.addAll(commentsList);
 
             displayComments();
         }
@@ -323,26 +326,37 @@ public class Comment extends Fragment {
     public void getPostedComment(Comments comments) {
         Log.e("posted comment: ", "" + comments.getCommentId());
 
-
-        if (comments != null) {
-           // commentsList.removeAll(commentsList);
-
-          //  commentsList.add(comments);
-          //  adapter.notifyItemInserted(commentsList.size() - 1);
-          //  adapter.notifyDataSetChanged();
+        if (comments != null && comments.getViewMessage() == null && !comments.getViewMessage().equals(getResources().getString(R.string.deleted))) {
             CommentPostImageLayout.setVisibility(View.INVISIBLE);
             bm = null;
             commentTextEditText.setText("");
-
+            commentsList.remove(0);
             commentsList.add(0, comments);
             bindAdapter(commentsList);
             //getNearbEventServerCall();
             Toast.makeText(getContext(), "You'r comment has been posted", Toast.LENGTH_LONG).show();
+        } else if (comments != null && comments.getViewMessage().equals(getResources().getString(R.string.deleted))) {
+            int index = -1;
+            for (Comments c : commentsList)
+                if (c.getCommentId() == comments.getCommentId()) {
+                    index = commentsList.indexOf(c);
+                    Log.e("index ", " cmt : " + comments.getCommentId());
+                    break;
+                }
+            if (index != -1) {
+                Log.e("before : ", " cmt : " + commentsList.size());
+                commentsList.remove(index);
+                Log.e("after : ", " cmt : " + commentsList.size());
+                adapter.notifyItemRemoved(index);
+            }
+            bindAdapter(commentsList);
+        } else if (comments != null && comments.getViewMessage().equals(getResources().getString(R.string.undo))) {
+
         } else {
             Toast.makeText(getContext(), "Unable to post you'r comment", Toast.LENGTH_LONG).show();
         }
-
     }
+
 
     public void setCommentSectionVisible() {
         CommentPostImageLayout.setVisibility(View.VISIBLE);
@@ -357,12 +371,10 @@ public class Comment extends Fragment {
             @Override
             public void run() {
 
-                if(commentsList.size()>0) {
-                    commentsList.remove(commentsList.size() - 1);
+                if(commentsList.size()>0 && commentsList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))) {
+                    commentsList.remove(0);
                     adapter.notifyItemRemoved(commentsList.size());
                 }
-                commentsList.addAll(commentsListTemp);
-
                bindAdapter(commentsList);
             }
         }, 5000);
@@ -446,6 +458,4 @@ public class Comment extends Fragment {
         String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
-
-
 }

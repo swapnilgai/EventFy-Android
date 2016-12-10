@@ -6,19 +6,20 @@ import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
+import com.java.eventfy.utils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
 
-import butterknife.ButterKnife;
+import at.markushi.ui.CircleButton;
 
 /**
  * Created by swapnil on 10/7/16.
@@ -73,16 +74,17 @@ public class Attendance_adapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
 public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
     ViewHolder v;
-
+    Log.e("in create view type", " 0000 "+viewType);
 
     if(viewType == VIEW_DATA)
         v = new ResultHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.attendance_adapter, parent, false));
 
-    else if(viewType == VIEW_LOADING)
+    else if(viewType == VIEW_LOADING) {
         v = new ProgressBarHolder(LayoutInflater.from(parent.getContext()).
-            inflate(R.layout.loading_list_items, parent, false));
-
+                inflate(R.layout.loading_list_items, parent, false));
+        Log.e("view create in: ", " 0000 "+v);
+    }
     else if(viewType == VIEW_NODATA)
         v = new NoDataHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.attendance_no_data, parent, false));
@@ -90,7 +92,7 @@ public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType
         v = new NetworkErrorHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.network_error, parent, false));
 
-
+    Log.e("view create out: ", " 0000 "+v);
 
     return v;
 }
@@ -105,23 +107,28 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if(holder instanceof ResultHolder){
             SignUp r = getItem(position);
 
-        ((ResultHolder)holder).linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-        // Doesn't do anything, but need Click Listener to get that sweet Ripple
-                }
-                });
+//        ((ResultHolder)holder).linearLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//        // Doesn't do anything, but need Click Listener to get that sweet Ripple
+//                }
+//                });
 
-        Picasso.with(holder.itemView.getContext())
-        .load(r.getImageUrl())
-        .placeholder(R.drawable.img_placeholder)
-        .into(((ResultHolder)holder).picture);
+        final SignUp signUp = getItem(position);
 
-        ((ResultHolder)holder).userName.setText(r.getUserName());
-        ((ResultHolder)holder).userStatus.setText(r.getUserName());
+        ((ResultHolder)holder).eventinfo_user_name.setText(signUp.getUserName());
+        //TODO add status table in RDB
+        ((ResultHolder)holder).eventinfo_user_status.setText(signUp.getUserId());
 
+        ((ResultHolder)holder).addOrRemoveUser.setVisibility(View.INVISIBLE);
+
+        if(!signUp.getImageUrl().equals("default"))
+            Picasso.with(holder.itemView.getContext())
+                    .load(signUp.getImageUrl())
+                    .transform(new RoundedCornersTransform())
+                    .into(((ResultHolder) holder).userImage);
         }
-    else{
+    else if (holder instanceof  ProgressBarHolder){
         ProgressBarHolder loadingViewHolder = (ProgressBarHolder) holder;
         ObjectAnimator animator = ObjectAnimator.ofFloat(loadingViewHolder.progressBar, "rotation", 0, 360);
         animator.setRepeatCount(ValueAnimator.INFINITE);
@@ -140,46 +147,52 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     public int getItemViewType(int position) {
         SignUp signUp = getItem(position);
 
-        if(signUp.getViewMessage() == null )
-            return VIEW_DATA;
+        if(signUp!= null && signUp.getViewMessage()==null)
+        {
+            return VIEW_DATA;}
         else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
             return VIEW_NODATA;
-        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_loading)))
-            return VIEW_LOADING;
+        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_loading))){
+             return VIEW_LOADING;
+        }
 
         return VIEW_NETWORK_ERROR;
-
     }
 
 
 
- class ResultHolder extends RecyclerView.ViewHolder {
-   // @Bind(R.id.linear_layout)
-    private LinearLayout linearLayout;
- //   @Bind(R.id.eventinfo_user_image)
-    private ImageView picture;
- //   @Bind(R.id.eventinfo_user_status)
-    private TextView userStatus;
- //    @Bind(R.id.eventinfo_user_name)
-     private TextView userName;
+ public class ResultHolder extends RecyclerView.ViewHolder {
+     private  ImageView userImage;
+
+     private TextView eventinfo_user_name;
+
+     private TextView eventinfo_user_status;
+
+     private CircleButton user_status_mode;
+
+     private CircleButton addOrRemoveUser;
 
 
-    public ResultHolder(View itemView) {
-        super(itemView);
-        ButterKnife.bind(this, itemView);
-    }
+     public ResultHolder(View itemView) {
+         super(itemView);
+         userImage = (ImageView) itemView.findViewById(R.id.eventinfo_user_image);
+         eventinfo_user_name = (TextView) itemView.findViewById(R.id.eventinfo_user_name);
+         eventinfo_user_status = (TextView) itemView.findViewById(R.id.eventinfo_user_status);
+         user_status_mode = (CircleButton) itemView.findViewById(R.id.user_status_mode);
+         addOrRemoveUser = (CircleButton) itemView.findViewById(R.id.invite_add_or_remove_user_btn);
+
+
+     }
 }
 
 
 
-class ProgressBarHolder extends RecyclerView.ViewHolder {
+public class ProgressBarHolder extends RecyclerView.ViewHolder {
 
     ImageView progressBar;
     public ProgressBarHolder(View itemView) {
         super(itemView);
-
         progressBar = (ImageView) itemView.findViewById(R.id.loadingImage);
-
     }
     }
 
