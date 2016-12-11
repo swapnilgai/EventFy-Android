@@ -83,6 +83,7 @@ public class Comment extends Fragment {
     private Events event;
     private SignUp signUp;
     private LinearLayoutManager linearLayoutManager;
+    private Context context;
 
     public Comment() {
         // Required empty public constructor
@@ -95,10 +96,12 @@ public class Comment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_comments, container, false);
 
+        Log.e("in create frag ", " PPPP ");
         if (!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
-        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
+        context = view.getContext();
+        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_comment);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
@@ -114,16 +117,16 @@ public class Comment extends Fragment {
 
         recyclerView.setHasFixedSize(true);
 
-        linearLayoutManager = new LinearLayoutManager(view.getContext());
+        linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new CommentAdapter(recyclerView, view.getContext(), event);
+        adapter = new CommentAdapter(recyclerView, context, event);
 
         handler = new Handler();
 
         recyclerView.setAdapter(adapter);
         //  bindAdapter(commentsList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
 
         addLoadingAtStrat();
@@ -145,8 +148,7 @@ public class Comment extends Fragment {
 
                 Comments commentTemp = new Comments();
 
-                urlForComment = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_comment_in_event);
-                ;
+                urlForComment = getString(R.string.ip_local) + getString(R.string.add_comment_in_event);
 
                 commentTemp.setUser(signUp);
 
@@ -190,7 +192,7 @@ public class Comment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent chooseImageIntent = ImagePicker.getPickImageIntent(view.getContext());
+                Intent chooseImageIntent = ImagePicker.getPickImageIntent(context);
                 startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
             }
         });
@@ -239,14 +241,14 @@ public class Comment extends Fragment {
 
     public void addLoading() {
         comments = new Comments();
-        comments.setViewMessage(getResources().getString(R.string.home_loading));
+        comments.setViewMessage(getString(R.string.home_loading));
         commentsList.add(comments);
         bindAdapter(commentsList);
     }
 
     public void addLoadingAtStrat() {
         comments = new Comments();
-        comments.setViewMessage(getResources().getString(R.string.home_loading));
+        comments.setViewMessage(getString(R.string.home_loading));
 //        for(int i = commentsList.size()-1; i > 0; i--)
 //        {
 //            //set the last element to the value of the 2nd to last element
@@ -300,13 +302,13 @@ public class Comment extends Fragment {
     public void getNearbEventServerCall() {
 
 
-        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_comment_for_event);
+        String url = getString(R.string.ip_local) + getString(R.string.get_comment_for_event);
 
         getUserObject();
 
         signUp.setEventAdmin(event);
 
-        GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, signUp, view.getContext());
+        GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, signUp, context);
         getCommentsForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
@@ -326,7 +328,7 @@ public class Comment extends Fragment {
     public void getPostedComment(Comments comments) {
         Log.e("posted comment: ", "" + comments.getCommentId());
 
-        if (comments != null && comments.getViewMessage() == null && !comments.getViewMessage().equals(getResources().getString(R.string.deleted))) {
+        if (comments != null && comments.getViewMessage() == null && !comments.getViewMessage().equals(getString(R.string.deleted))) {
             CommentPostImageLayout.setVisibility(View.INVISIBLE);
             bm = null;
             commentTextEditText.setText("");
@@ -334,8 +336,8 @@ public class Comment extends Fragment {
             commentsList.add(0, comments);
             bindAdapter(commentsList);
             //getNearbEventServerCall();
-            Toast.makeText(getContext(), "You'r comment has been posted", Toast.LENGTH_LONG).show();
-        } else if (comments != null && comments.getViewMessage().equals(getResources().getString(R.string.deleted))) {
+            Toast.makeText(context, "You'r comment has been posted", Toast.LENGTH_LONG).show();
+        } else if (comments != null && comments.getViewMessage().equals(getString(R.string.deleted))) {
             int index = -1;
             for (Comments c : commentsList)
                 if (c.getCommentId() == comments.getCommentId()) {
@@ -350,10 +352,10 @@ public class Comment extends Fragment {
                 adapter.notifyItemRemoved(index);
             }
             bindAdapter(commentsList);
-        } else if (comments != null && comments.getViewMessage().equals(getResources().getString(R.string.undo))) {
+        } else if (comments != null && comments.getViewMessage().equals(getString(R.string.undo))) {
 
         } else {
-            Toast.makeText(getContext(), "Unable to post you'r comment", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Unable to post you'r comment", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -371,7 +373,7 @@ public class Comment extends Fragment {
             @Override
             public void run() {
 
-                if(commentsList.size()>0 && commentsList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))) {
+                if(commentsList.size()>0 && commentsList.get(0).getViewMessage().equals(context.getString(R.string.home_loading))) {
                     commentsList.remove(0);
                     adapter.notifyItemRemoved(commentsList.size());
                 }
@@ -411,7 +413,7 @@ public class Comment extends Fragment {
 
     private Uri beginCrop(Uri source) {
         Uri destination = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
-        Crop.of(source, destination).withAspect(300, 180).start(getContext(), Comment.this, Crop.REQUEST_CROP);
+        Crop.of(source, destination).withAspect(300, 180).start(context, Comment.this, Crop.REQUEST_CROP);
         return destination;
     }
 
@@ -452,10 +454,10 @@ public class Comment extends Fragment {
 
     // Crop image end
     public void getUserObject() {
-        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
 }

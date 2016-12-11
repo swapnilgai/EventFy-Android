@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,12 +24,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
 import com.java.eventfy.utils.CustomViewPager;
 import com.java.eventfy.utils.ImagePicker;
 import com.soundcloud.android.crop.Crop;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,15 +51,20 @@ public class CreatePublicEvent extends AppCompatActivity {
     private Bitmap eventImageBM;
     private ImageView eventImageIV;
     private Uri dest;
+    private Events event;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_public_event);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        category = getIntent().getExtras().getString(getResources().getString(R.string.create_event_category));
+        category = getIntent().getExtras().getString(getString(R.string.create_event_category));
 
+        event = (Events) getIntent().getSerializableExtra(getString(R.string.event_to_edit_eventinfo));
 
+        if(event!=null) {
+            category = event.getEventType();
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -109,13 +118,15 @@ public class CreatePublicEvent extends AppCompatActivity {
         CreateEventFragment1 createEventFragment1 = new CreateEventFragment1();
         CreateEventFragment2 createEventFragment2 = new CreateEventFragment2();
 
+        Log.e("event to edit : ", ""+event);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(getResources().getString(R.string.event_type_value), category);
-
+        bundle.putSerializable(getString(R.string.event_type_value), category);
+        bundle.putSerializable(getString(R.string.event_to_edit_eventinfo), event);
         createEventFragment1.setArguments(bundle);
 
+
         adapter.addFrag(createEventFragment1, "Information");
-        if(category.equals(getResources().getString(R.string.create_event_category_private))) {
+        if(category.equals(getString(R.string.create_event_category_private))) {
             adapter.addFrag(createEventFragment2, "Invite");
 
         }
@@ -220,6 +231,16 @@ public class CreatePublicEvent extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
     }
+
+
+    @Subscribe
+    public void getCreatedEventFromServer(Events event)
+    {
+        if(event.getViewMessage().equals(R.string.edited)) {
+           finish();
+        }
+    }
+
 }
 
 

@@ -26,6 +26,8 @@ import com.squareup.picasso.Picasso;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.java.eventfy.R.string.edited;
+
 
 /**
  * Created by swapnil on 5/29/16.
@@ -194,13 +196,19 @@ import butterknife.ButterKnife;
        Events eventTemp =  getItem(position);
         if(eventTemp!=null)
         {
+
+            Log.e("adapter data ", " indexxx : "+eventTemp.getViewMessage());
             if(eventTemp.getViewMessage() == null )
                 return VIEW_DATA;
-            else if(eventTemp.getViewMessage().equals(context.getResources().getString(R.string.home_no_location)))
+            else if(eventTemp.getViewMessage().equals(edited)) {
+                return VIEW_DATA;
+
+            }
+            else if(eventTemp.getViewMessage().equals(context.getString(R.string.home_no_location)))
                 return VIEW_NOLOCATION;
-            else if(eventTemp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
+            else if(eventTemp.getViewMessage().equals(context.getString(R.string.home_no_data)))
                 return VIEW_NODATA;
-            else if(eventTemp.getViewMessage().equals(context.getResources().getString(R.string.home_loading)))
+            else if(eventTemp.getViewMessage().equals(context.getString(R.string.home_loading)))
                 return VIEW_LOADING;
         }
         return VIEW_LOADING;

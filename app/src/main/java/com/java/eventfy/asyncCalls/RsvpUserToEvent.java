@@ -59,7 +59,7 @@ protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         if(events==null) {
                 Events events = new Events();
-                events.setViewMessage(context.getResources().getString(R.string.home_connection_error));
+                events.setViewMessage(context.getString(R.string.home_connection_error));
         }
 
         Gson g =new Gson();

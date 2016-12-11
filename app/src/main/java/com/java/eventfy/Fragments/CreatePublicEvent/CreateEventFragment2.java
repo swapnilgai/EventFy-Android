@@ -193,7 +193,7 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
     public void getLocation(LatLng latLag)
     {
 
-        if(eventObj.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2)) &&
+        if(eventObj.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2)) &&
                 (latLag.latitude == 0.0 && latLag.longitude == 0.0))
         {
             if(userListInvited == null)
@@ -202,12 +202,12 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
                 userListInvited.remove(userListInvited.size()-1);
 
             SignUp signUp = new SignUp();
-            signUp.setViewMessage(getContext().getResources().getString(R.string.home_no_location));
+            signUp.setViewMessage(getContext().getString(R.string.home_no_location));
             userListInvited.add(signUp);
 
             bindAdapterForInviteNearbyAdapter(userListInvited);
         }
-        else if(eventObj!=null && event.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2))) {
+        else if(eventObj!=null && event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))) {
             Location location = new Location();
             location.setLatitude(latLag.latitude);
             location.setLongitude(latLag.longitude);
@@ -233,14 +233,14 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
         Log.e("user in frag2 ", ""+signUp.getViewMessage());
         if(userListInvited!= null && userListInvited.size()>0 && userListInvited.get(userListInvited.size()-1).getViewMessage().
-                equals(getContext().getResources().getString(R.string.home_no_data))) {
+                equals(getContext().getString(R.string.home_no_data))) {
             userListInvited.remove(userListInvited.size() - 1);
         }
-        if(signUp.getViewMessage().equals(getContext().getResources().getString(R.string.invite_add_user))) {
+        if(signUp.getViewMessage().equals(getContext().getString(R.string.invite_add_user))) {
             userListInvited.add(signUp);
             userListNearBy.remove(signUp);
         }
-        else if(signUp.getViewMessage().equals(getContext().getResources().getString(R.string.invite_remove_user))) {
+        else if(signUp.getViewMessage().equals(getContext().getString(R.string.invite_remove_user))) {
             userListInvited.remove(signUp);
             userListNearBy.add(signUp);
         }
@@ -257,9 +257,9 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
     @Subscribe
     public void getNearByUsers(List<SignUp> userListNearBy) {
        SignUp signUp  = this.userListNearBy.get(this.userListNearBy.size()-1);
-        if(signUp.getViewMessage().equals(getContext().getResources().getString(R.string.home_no_data))
-                || signUp.getViewMessage().equals(getContext().getResources().getString(R.string.home_connection_error))
-                || signUp.getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))) {
+        if(signUp.getViewMessage().equals(getContext().getString(R.string.home_no_data))
+                || signUp.getViewMessage().equals(getContext().getString(R.string.home_connection_error))
+                || signUp.getViewMessage().equals(getContext().getString(R.string.home_loading))) {
             this.userListNearBy.remove(this.userListNearBy.size() - 1);
         }
         this.userListNearBy.addAll(userListNearBy);
@@ -332,10 +332,10 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
     public void getUserObject()
     {
-        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
         Log.e("user in create is ", "(((( "+json);
     }
@@ -408,17 +408,17 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
         // remove unnecessery element
         if(userListInvited.get(userListInvited.size()-1).getViewMessage().equals(
-                getResources().getString(R.string.home_no_data))
+                getString(R.string.home_no_data))
         || userListInvited.get(userListInvited.size()-1).getViewMessage().equals(
-                getResources().getString(R.string.home_connection_error))
+                getString(R.string.home_connection_error))
          || userListInvited.get(userListInvited.size()-1).getViewMessage().equals(
-                getResources().getString(R.string.home_loading)))
+                getString(R.string.home_loading)))
             userListInvited.remove(userListInvited.size()-1);
 
         eventObj.setUserDetail(userListInvited);
 
 
-        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_event);
+        String url = getString(R.string.ip_local) + getString(R.string.add_event);
         CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
         createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -435,10 +435,10 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             view.getContext().startActivity(intent);
         }
-        else if(!event.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2))){
+        else if(!event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))){
             Toast.makeText(getActivity(),"Enable create event, please Try again",Toast.LENGTH_SHORT).show();
         }
-        else if (event.getViewMessage().equals(getResources().getString(R.string.event_object_pass_to_createeventfragment2))){
+        else if (event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))){
             eventObj = event;
             Log.e("view message is ; ", "*** "+new Gson().toJson(eventObj));
             getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
@@ -454,7 +454,7 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
     @Subscribe
     public void createEventToServer(String eventImageurl)
     {
-        if(eventImageurl != null && !eventImageurl.equals(getResources().getString(R.string.create_event_flag))){
+        if(eventImageurl != null && !eventImageurl.equals(getString(R.string.create_event_flag))){
 
             createEventServerCall(eventImageurl);
         }

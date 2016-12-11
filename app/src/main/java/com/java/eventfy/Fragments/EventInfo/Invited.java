@@ -54,7 +54,7 @@ public class Invited extends Fragment implements OnLoadMoreListener {
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
-        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
+        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_attendance);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_attendance);

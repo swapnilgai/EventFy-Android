@@ -34,7 +34,6 @@ import com.java.eventfy.asyncCalls.RsvpUserToEvent;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,12 +61,12 @@ public class EventInfoPublic extends AppCompatActivity {
         setContentView(R.layout.activity_event_info_public);
 
         Intent intent = getIntent();
-        event = (Events) intent.getSerializableExtra(getResources().getString(R.string.event_for_eventinfo));
+        event = (Events) intent.getSerializableExtra(getString(R.string.event_for_eventinfo));
 
         EventBusService.getInstance().register(this);
 
         this.signUp = getUserObject();
-        Log.e("event id in info ", "** " + event.getEventId());
+        Log.e("event id in info ", "** " + event);
 
         eventImage = (ImageView) findViewById(R.id.event_image);
         rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
@@ -82,7 +81,7 @@ public class EventInfoPublic extends AppCompatActivity {
                     .load(event.getEventImageUrl())
                     .into(eventImage);
 
-        if(event.getDecesion().equals(getResources().getString(R.string.attending)))
+        if(event.getDecesion().equals(getString(R.string.attending)))
              rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
 
         rsvpForEventBtn.setOnClickListener(new OnClickListener() {
@@ -146,7 +145,7 @@ public class EventInfoPublic extends AppCompatActivity {
 
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(getResources().getString(R.string.event_for_eventinfo), event);
+        bundle.putSerializable(getString(R.string.event_for_eventinfo), event);
 
         about_fragment.setArguments(bundle);
         comments_fragment.setArguments(bundle);
@@ -209,21 +208,21 @@ public class EventInfoPublic extends AppCompatActivity {
     }
 
     private SignUp getUserObject() {
-        SharedPreferences mPrefs = getSharedPreferences(getResources().getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         //String json = null;
         //TODO uncomment
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
        return  gson.fromJson(json, SignUp.class);
     }
 
 
     public void dialogBox() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        if(event.getDecesion().equals(getResources().getString(R.string.attending)))
+        if(event.getDecesion().equals(getString(R.string.attending)))
             alertDialogBuilder.setMessage("Unregister ?");
-        else if(event.getDecesion().equals(getResources().getString(R.string.not_attending)))
+        else if(event.getDecesion().equals(getString(R.string.not_attending)))
             alertDialogBuilder.setMessage("Regiser to event ?");
 
         alertDialogBuilder.setPositiveButton("Yes",
@@ -232,11 +231,11 @@ public class EventInfoPublic extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         startProgressDialog();
-                        if(event.getDecesion().equals(getResources().getString(R.string.attending)))
+                        if(event.getDecesion().equals(getString(R.string.attending)))
                             serverCallToUnRegister();
 
 
-                        else if(event.getDecesion().equals(getResources().getString(R.string.not_attending)))
+                        else if(event.getDecesion().equals(getString(R.string.not_attending)))
                             serverCallToRegister();
                     }
                 });
@@ -255,7 +254,7 @@ public class EventInfoPublic extends AppCompatActivity {
     }
 
     public void serverCallToRegister() {
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.rspv_user_to_event);
+        String url = getString(R.string.ip_local)+getString(R.string.rspv_user_to_event);
         ArrayList<Events> eventListTemp = new ArrayList<Events>();
         eventListTemp.add(event);
         signUp.setEvents(eventListTemp);
@@ -263,7 +262,7 @@ public class EventInfoPublic extends AppCompatActivity {
         rsvpUserToEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     public void serverCallToUnRegister() {
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.remove_user_from_event);
+        String url = getString(R.string.ip_local)+getString(R.string.remove_user_from_event);
         ArrayList<Events> eventListTemp = new ArrayList<Events>();
         eventListTemp.add(event);
         signUp.setEvents(eventListTemp);
@@ -271,19 +270,24 @@ public class EventInfoPublic extends AppCompatActivity {
         rsvpUserToEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe
     public void getEventAfterUnregistratation(Events events)
     {
         dismissProgressDialog();
         //TODO add thoast message
-        if(events.getDecesion().equals(getResources().getString(R.string.attending)))
+        if(events.getDecesion().equals(getString(R.string.attending)))
             rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
         else
              rsvpForEventBtn.setImageResource(R.drawable.fab_add);
 
+
         event.setDecesion(events.getDecesion());
 
-        finish();
+        Log.e("out publicevent info ", " infoooooo "+events.getViewMessage());
+        if(events.getViewMessage().equals(getString(R.string.deleted))) {
+            Log.e("in publicevent info ", "infoooooo : "+events.getViewMessage());
+            finish();
+        }
     }
 
     public void createProgressDialog()
@@ -294,9 +298,9 @@ public class EventInfoPublic extends AppCompatActivity {
     }
 
     public void startProgressDialog() {
-        if(event.getDecesion().equals(getResources().getString(R.string.attending)))
+        if(event.getDecesion().equals(getString(R.string.attending)))
             progressDialog.setMessage("Un regestering...");
-        else if(event.getDecesion().equals(getResources().getString(R.string.not_attending)))
+        else if(event.getDecesion().equals(getString(R.string.not_attending)))
             progressDialog.setMessage("Regisering...?");
         progressDialog.show();
     }

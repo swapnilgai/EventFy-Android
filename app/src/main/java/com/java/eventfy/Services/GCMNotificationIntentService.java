@@ -75,12 +75,12 @@ public class GCMNotificationIntentService extends GcmListenerService {
 
 
 //        RemoteInput snoozRemoteInput = new RemoteInput.Builder(Intent.EXTRA_TEXT)
-//                .setLabel(getResources().getString(R.string.notification_prompt_reply))
+//                .setLabel(getString(R.string.notification_prompt_reply))
 //                .setChoices(choices)
 //                .build();
 //
 //        RemoteInput dismissRemoteInput = new RemoteInput.Builder(Intent.EXTRA_TEXT)
-//                .setLabel(getResources().getString(R.string.notification_prompt_reply))
+//                .setLabel(getString(R.string.notification_prompt_reply))
 //                .setChoices(choices)
 //                .build();
 

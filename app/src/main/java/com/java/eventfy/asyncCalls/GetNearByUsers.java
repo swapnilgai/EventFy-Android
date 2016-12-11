@@ -65,7 +65,7 @@ public class GetNearByUsers   extends AsyncTask<Void, Void, Void> {
 
         if(userList ==null) {
             SignUp signUp = new SignUp();
-            signUp.setViewMessage(context.getResources().getString(R.string.home_no_data));
+            signUp.setViewMessage(context.getString(R.string.home_no_data));
             userList.add(signUp);
         }
 

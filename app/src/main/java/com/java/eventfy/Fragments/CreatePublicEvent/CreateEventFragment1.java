@@ -3,6 +3,7 @@ package com.java.eventfy.Fragments.CreatePublicEvent;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +73,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -124,6 +127,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private Location eventLocation = new Location();
     private ViewPager viewPager;
     private Button cancleBtn;
+    private String url;
+
 
 
 
@@ -133,10 +138,12 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_create_event_fragment1, container, false);
         getUserObject();
-        eventType = getArguments().getString(getResources().getString(R.string.event_type_value));
+        eventType = getArguments().getString(getString(R.string.event_type_value));
 
         // To check if it is crate new event or edit existing event
-        eventObj = (Events) getArguments().getSerializable(getResources().getString(R.string.event_to_edit_eventinfo));
+        eventObj = ((Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_to_edit_eventinfo))));
+
+        Log.e("event obj ", " !!!!!!! "+eventObj);
 
         EventBusService.getInstance().register(this);
         viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
@@ -156,6 +163,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         mAutocompleteView = (AutoCompleteTextView) view.findViewById(R.id.create_public_event_autocomplete_places);
         eventsVolatile = (CheckBox) view.findViewById(R.id.public_events_volatile);
         locationInfoLinearLayout = (LinearLayout) view.findViewById(R.id.location_info_linear_layout);
+        locationMapViewLinearLayout = (LinearLayout) view.findViewById(R.id.location_map_view_linear_layout);
 
         locationEditTextLinearLayout = (LinearLayout) view.findViewById(R.id.location_edit_text_linear_layout);
 
@@ -192,9 +200,18 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             eventObj.setViewMessage("temp");
             eventObj.setEventCategory(eventType);
             cancleBtn.setVisibility(View.GONE);
-            createBtn.setText("Next");
+            createBtn.setText("Create");
+            url = getString(R.string.ip_local) + getString(R.string.add_event);
         }
-
+        else{
+            eventType = eventObj.getEventType();
+            setEditEventValues();
+            if(eventObj.getEventType().equals(getString(R.string.create_event_category_public)))
+                createBtn.setText("Save");
+            if(eventObj.getEventType().equals(getString(R.string.create_event_category_private)))
+                createBtn.setText("Next");
+            url = getString(R.string.ip_local) + getString(R.string.edit_event);
+        }
 
         startDate.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -203,7 +220,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 datePickerDialogStart.setFirstDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK));
                 datePickerDialogStart.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
                 datePickerDialogStart.show(getActivity().getSupportFragmentManager(), DATEPICKER_TAG);
-
                 viewToIdentifyTimePicker = v;
 
             }
@@ -227,11 +243,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
                 createEentObject();
-
-                if(eventType.equals(getResources().getString(R.string.create_event_category_private)))
+                if(createBtn.getText().equals("Save")) {
+                    if(validate()) {
+                        dialogBox();
+                    }
+                }
+                else if(eventType.equals(getString(R.string.create_event_category_private)))
                 {
                     if(validate()) {
-                        eventObj.setViewMessage(getResources().getString(R.string.event_object_pass_to_createeventfragment2));
+                        eventObj.setViewMessage(getString(R.string.event_object_pass_to_createeventfragment2));
                         EventBusService.getInstance().post(eventObj);
                         viewPager.setCurrentItem(1, true);
                     }
@@ -255,7 +275,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
               //  currentLocationBtn.setEnabled(false);
                 // setting flag to avoid nearby and remote server call
-                EventBusService.getInstance().post(getResources().getString(R.string.create_event_flag));
+                EventBusService.getInstance().post(getString(R.string.create_event_flag));
             }
         });
 
@@ -274,7 +294,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         mapView.onResume();
         mapView.getMapAsync(this);
 
-        locationMapViewLinearLayout = (LinearLayout) view.findViewById(R.id.location_map_view_linear_layout);
         locationMapViewLinearLayout.setVisibility(View.GONE);
 
         return view;
@@ -435,7 +454,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Subscribe
     public void createEventToServer(String eventImageurl)
     {
-        if(eventImageurl != null && !eventImageurl.equals(getResources().getString(R.string.create_event_flag))){
+        if(eventImageurl != null && !eventImageurl.equals(getString(R.string.create_event_flag))){
 
             createEventServerCall(eventImageurl);
         }
@@ -444,7 +463,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public void createEventServerCall(String eventImageurl) {
         eventObj.setEventImageUrl(eventImageurl);
-
 
         eventObj.setAdmin(signUp);
 
@@ -460,7 +478,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             e.printStackTrace();
         }
 
-          String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.add_event);
+
           CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
           createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -470,7 +488,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     {
         Log.e(" in create  ", "eventis "+event);
         dismissProgressDialog();
-        if(event.getEventId()!=-1 && !eventType.equals(getResources().getString(R.string.create_event_category_private))) {
+        if(progressDialog!=null && progressDialog.isShowing()) {
+            dismissProgressDialog();
+        }
+        else if(event.getEventId()!=-1 && !eventType.equals(getString(R.string.create_event_category_private))) {
 
             EventBusService.getInstance().unregister(this);
             Toast.makeText(getActivity(),"Event created",Toast.LENGTH_SHORT).show();
@@ -479,7 +500,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             view.getContext().startActivity(intent);
         }
-        else if(!eventType.equals(getResources().getString(R.string.create_event_category_private))){
+        else if(!eventType.equals(getString(R.string.create_event_category_private))){
             Toast.makeText(getActivity(),"Enable create event, please Try again",Toast.LENGTH_SHORT).show();
         }
     }
@@ -545,6 +566,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Override
     public void onPause() {
         super.onPause();
+        if(progressDialog.isShowing())
+            dismissProgressDialog();
         Log.e("registering frag pause", "eventImg ");
 
     }
@@ -552,6 +575,9 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if(progressDialog.isShowing())
+            dismissProgressDialog();
+
         EventBusService.getInstance().unregister(this);
     }
     public void createProgressDialog()
@@ -612,6 +638,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        if(eventObj.getLocation().getLatitude()!= 0.0 && eventObj.getLocation().getLongitude()!=0.0)
+             setUpMarker();
 
     }
 
@@ -647,10 +675,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public void getUserObject()
     {
-        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject),Context.MODE_PRIVATE);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
         Log.e("user in create is ", "(((( "+json);
     }
@@ -756,7 +784,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public void setEditEventValues() {
 
-        setUpMarker();
         eventLocation.setName(eventObj.getLocation().getName());
         locationMapViewLinearLayout.setVisibility(View.VISIBLE);
         locationInfoLinearLayout.setVisibility(View.VISIBLE);
@@ -769,28 +796,92 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         endDate.setText(eventObj.getEventDateTo()+" "+eventObj.getEventTimeTo());
         eventCapacity.setText(eventObj.getEventCapacity());
 
-       int index = getIndexOfSpinerItem(getResources().getStringArray(R.array.category_arrays), eventObj.getEventCategory());
-        evenrCategory.setSelection(index);
+        Log.e("event type : ", ""+eventObj.getEventType());
+        Log.e("event visiblity: ", ""+eventObj.getEventVisiblityMile());
 
-        index = getIndexOfSpinerItem(getResources().getStringArray(R.array.EventVisiblityMiles), eventObj.getEventCategory());
-        eventVisibilityMiles.setSelection(index);
+        int index = -1;
+        if(eventObj.getEventCategory()!=null) {
+            //index = getIndexOfSpinerItem(getStringArray(R.array.category_arrays), eventObj.getEventCategory());
+            Log.e("category index : ", ""+index);
+            evenrCategory.setSelection(index);
+        }
 
+        if(eventObj.getEventVisiblityMile()!=null) {
+            index = getIndexOfSpinerItem(getResources().getIntArray(R.array.EventVisiblityMiles), Integer.parseInt(eventObj.getEventVisiblityMile()));
+            eventVisibilityMiles.setSelection(index);
+        }
         if(eventObj.getEventVolatile())
             eventsVolatile.setChecked(true);
         else
             eventsVolatile.setChecked(false);
     }
 
-    public int getIndexOfSpinerItem( String[] androidStrings , String item) {
-        int i = 0 ;
-        for (String s : androidStrings) {
-            i = s.indexOf(item);
-            if (i >= 0) {
-                return i;
-            }
-        }
+//    public int getIndexOfSpinerItem( String[] androidStrings , String item) {
+//        int i = 0 ;
+//        Log.e("itemp  : ", ""+item);
+//        Log.e("array len  : ", ""+androidStrings.length);
+//        for (String s : androidStrings) {
+//            i = s.indexOf(item);
+//            if (i >= 0) {
+//                return i;
+//            }
+//        }
+//        return i;
+//    }
+
+    public int getIndexOfSpinerItem( int[] androidStrings , int item) {
+        int i = -1 ;
+        Log.e("itemp  : ", ""+item);
+        Log.e("array len  : ", ""+androidStrings.length);
+
+        for(i=0 ; i<androidStrings.length; i++)
+            if(androidStrings[i] == item)
+                     return i;
+
         return i;
     }
 
+    public void dialogBox() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
+            alertDialogBuilder.setMessage("Would you like to save the changes ?");
+
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        startProgressDialog("Saving Changes");
+                            serverCallToEdit();
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void startProgressDialog(String message) {
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+
+    public void serverCallToEdit(){
+        if(eventObj.getUserDetail() == null) {
+            List<SignUp> userList = new ArrayList<SignUp>();
+            userList.add(signUp);
+            eventObj.setUserDetail(userList);
+
+        }
+        CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
+        createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 }

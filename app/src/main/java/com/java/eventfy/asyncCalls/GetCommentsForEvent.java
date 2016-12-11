@@ -65,7 +65,7 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
             commentList = new ArrayList<Comments>();
 
 
-            comments.setViewMessage(context.getResources().getString(R.string.home_connection_error));
+            comments.setViewMessage(context.getString(R.string.home_connection_error));
 
             Log.e("Comment list is excp ", ""+commentList.size());
             commentList.add(comments);
@@ -79,7 +79,7 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
 
         if(commentList.size()<=0) {
             commentList = new ArrayList<Comments>();
-            comments.setViewMessage(context.getResources().getString(R.string.home_no_data));
+            comments.setViewMessage(context.getString(R.string.home_no_data));
             commentList.add(comments);
         }
 

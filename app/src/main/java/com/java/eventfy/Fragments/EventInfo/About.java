@@ -4,6 +4,7 @@ package com.java.eventfy.Fragments.EventInfo;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -77,14 +78,16 @@ public class About extends Fragment implements OnMapReadyCallback {
     private ProgressDialog progressDialog;
 
     private LinearLayout adminOptionLayout;
+    private Context context;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_about, container, false);
 
-        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
+        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
+        context = view.getContext();
 
         eventName = (TextView) view.findViewById(R.id.event_name);
         adminName = (TextView) view.findViewById(R.id.admin_name);
@@ -105,6 +108,8 @@ public class About extends Fragment implements OnMapReadyCallback {
         adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
 
         deleteEvent = (Button) view.findViewById(R.id.event_delete);
+
+        editEvent= (Button) view.findViewById(R.id.event_edit);
 
         mapValuesFromEventObject();
 
@@ -132,7 +137,7 @@ public class About extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onClick(View v) {
-                dialogBox(getResources().getString(R.string.deleted), event);
+                dialogBox(getString(R.string.deleted), event);
             }
         });
 
@@ -140,7 +145,10 @@ public class About extends Fragment implements OnMapReadyCallback {
 
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getActivity(), com.java.eventfy.CreatePublicEvent.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                intent.putExtra(context.getString(R.string.event_to_edit_eventinfo), event);
+                context.startActivity(intent);
             }
         });
 
@@ -264,10 +272,10 @@ public class About extends Fragment implements OnMapReadyCallback {
     }
 
     public void getUserObject() {
-        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
 
@@ -291,7 +299,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     }
 
     public void dialogBox(final String message, final Events event) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage(message);
 
 
@@ -320,7 +328,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     }
 
     public void serverCallToDelete(Events event) {
-        String url = getContext().getResources().getString(R.string.ip_local) + getContext().getResources().getString(R.string.delete_event);
+        String url = getString(R.string.ip_local) + getString(R.string.delete_event);
         DeleteEvent deleteEvent = new DeleteEvent(url, event);
         deleteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -328,7 +336,7 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     public void serverCallToUndo(Comments comment) {
 
-        String url = getContext().getResources().getString(R.string.ip_local) + getContext().getResources().getString(R.string.get_comment_for_event);
+        String url = getString(R.string.ip_local) + getString(R.string.get_comment_for_event);
 
         DeleteEvent deleteEvent = new DeleteEvent(url, event);
         deleteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -344,10 +352,16 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     @Subscribe
     public void getDeletedEcent(Events event) {
-        dismissProgressDialog();
+        if(event.getViewMessage().equals(R.string.edited)) {
+            this.event = event;
+            mapValuesFromEventObject();
+            }
+        else {
+            dismissProgressDialog();
+        }
     }
     public void createProgressDialog() {
-        progressDialog = new ProgressDialog(getContext());
+        progressDialog = new ProgressDialog(context);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
     }
@@ -357,12 +371,9 @@ public class About extends Fragment implements OnMapReadyCallback {
         progressDialog.show();
     }
 
-
-
     public void dismissProgressDialog()
     {
         progressDialog.dismiss();
     }
-
 
 }

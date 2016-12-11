@@ -276,7 +276,7 @@ public class Login extends AppCompatActivity {
 
     private void serverCallFbLogin(SignUp signUp) {
 
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login_action_facebook);
+        String url = getString(R.string.ip_local)+getString(R.string.login_action_facebook);
         SignUpAction loginAction = new SignUpAction(signUp,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -284,7 +284,7 @@ public class Login extends AppCompatActivity {
 
         securityOperations = new SecurityOperations();
         user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login);
+        String url = getString(R.string.ip_local)+getString(R.string.login);
         LoginAction loginAction = new LoginAction(user,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -318,11 +318,11 @@ public class Login extends AppCompatActivity {
     }
 
     private String getUserObject() {
-        SharedPreferences mPrefs = getSharedPreferences(getResources().getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         //TODO uncomment
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
 
         if(json!=null && json.length()<100)
             json = null;

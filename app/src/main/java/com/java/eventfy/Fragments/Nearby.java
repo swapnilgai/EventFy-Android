@@ -76,7 +76,7 @@ public class Nearby extends Fragment {
         eventsList = new ArrayList<Events>();
         eventsListTemp = new ArrayList<Events>();
         Events events = new Events();
-        events.setViewMessage(getResources().getString(R.string.home_loading));
+        events.setViewMessage(getString(R.string.home_loading));
         eventsList.add(events);
 
         getUserObject();
@@ -156,7 +156,7 @@ public class Nearby extends Fragment {
     public void receiveEvents(List<Events> eventsList)
     {
         if(eventsList!= null && eventsList.get(0) instanceof Events)
-            if(flag.equals(getResources().getString(R.string.nearby_flag))){
+            if(flag.equals(getString(R.string.nearby_flag))){
                 this.eventsList = eventsList;
                 bindAdapter(adapter, eventsList);
             }
@@ -181,9 +181,8 @@ public class Nearby extends Fragment {
                 eventsList.remove(eventsList.size()-1);
 
             Events events = new Events();
-            events.setViewMessage(getContext().getResources().getString(R.string.home_no_location));
+            events.setViewMessage(getContext().getString(R.string.home_no_location));
             eventsList.add(events);
-
 
             bindAdapter(adapter, eventsList);
         }
@@ -196,12 +195,12 @@ public class Nearby extends Fragment {
     public void getEventAfterUnregistratation(Events events)
     {
         int index = -1;
-        Events deleteEvent = null;
+        Events changedEvent = null;
         // Remove user from event to reflect icon for RSVP button
         for(Events e: eventsList) {
             if(e.getEventId() == events.getEventId()) {
                 index = eventsList.indexOf(e);
-                deleteEvent =  e;
+                changedEvent =  e;
                 //Log.e("index of event ", "index* "+index);
                 //Log.e("eventid of event ", "index* "+e.getEventId());
                 e.setDecesion(events.getDecesion());
@@ -211,12 +210,25 @@ public class Nearby extends Fragment {
         }
         Log.e("index is : ", " indexxxxx : "+index);
         Log.e("message : ", " indexxxxx : "+events.getViewMessage());
-        if(events.getViewMessage().equals(getResources().getString(R.string.deleted))
+        if(events.getViewMessage().equals(getString(R.string.deleted))
                 &&  index!=-1){
-                deleteEvent.setViewMessage(events.getViewMessage());
-                currentEventToDelete = deleteEvent;
+            changedEvent.setViewMessage(events.getViewMessage());
+                currentEventToDelete = changedEvent;
                 removeEvent(index, currentEventToDelete);
             }
+        else if(events.getViewMessage().equals(getString(R.string.edited))) {
+            Log.e("in edit tab : ", " indexxxxx : "+events.getViewMessage());
+            Log.e("message bef : ", " indexxxxx : "+eventsList.get(index).getViewMessage());
+            Log.e("name bef : ", " indexxxxx : "+eventsList.get(index).getEventName());
+            Log.e("list sizefe bef : ", " indexxxxx : "+eventsList.size());
+            events.setViewMessage(null);
+            eventsList.set(index, events);
+            Log.e("message aft : ", " indexxxxx : "+eventsList.get(index).getViewMessage());
+            Log.e("name aft : ", " indexxxxx : "+eventsList.get(index).getEventName());
+            Log.e("list size aft : ", " indexxxxx : "+eventsList.size());
+            Log.e("call for bind : ", " indexxxxx : "+adapter);
+            bindAdapter(adapter, eventsList);
+        }
     }
 
     public void removeEvent(int index, Events deleteEvent) {
@@ -245,8 +257,8 @@ public class Nearby extends Fragment {
         tempSignUp.setLocation(location);
         tempSignUp.setToken(signUp.getToken());
 
-        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag), getContext());
+        String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
+        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag), getContext());
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -256,7 +268,7 @@ public class Nearby extends Fragment {
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 //
-//        if(currentEventToDelete!=null && currentEventToDelete.getViewMessage().equals(getResources().getString(R.string.deleted)))
+//        if(currentEventToDelete!=null && currentEventToDelete.getViewMessage().equals(getString(R.string.deleted)))
 //        {
 //            int index = eventsList.indexOf(currentEventToDelete);
 //            Log.e("list size : ", " ((((((( "+eventsList.size());
@@ -279,6 +291,8 @@ public class Nearby extends Fragment {
     }
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
+        Log.e("call in bind : ", " indexxxxx : "+eventsList.size());
+
         swipeRefreshLayout.setRefreshing(false);
         refreshData(eventsList);
     }
@@ -292,6 +306,8 @@ public class Nearby extends Fragment {
 
     @UiThread
     private void refreshData(List<Events> eventsList){
+        if(eventsList.size()>=2)
+        Log.e("adapter : ", "indexxxxx : "+eventsList.get(1).getEventName());
         if (adapter != null){
             adapter.clear();
             adapter.addAll(eventsList);
@@ -299,16 +315,14 @@ public class Nearby extends Fragment {
         }
     }
 
-
     public void getUserObject()
     {
-        SharedPreferences mPrefs = getActivity().getSharedPreferences(getResources().getString(R.string.userObject),Context.MODE_PRIVATE);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
         Log.e("home nearby ", "***** "+json);
     }
-
 }
 

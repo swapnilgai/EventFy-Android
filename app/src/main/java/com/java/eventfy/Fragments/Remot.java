@@ -207,8 +207,8 @@ public class Remot extends Fragment {
         tempSignUp.setLocation(location);
 
 
-        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-          getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.remot_flag));
+        String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
+          getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.remot_flag));
           getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -218,7 +218,7 @@ public class Remot extends Fragment {
     public void receiveEvents(List<Events> eventsList)
     {
         if(eventsList.get(0) instanceof Events)
-            if(flag.equals(getResources().getString(R.string.remot_flag)))
+            if(flag.equals(getString(R.string.remot_flag)))
                 bindAdapter(adapter, eventsList);
     }
 
@@ -238,7 +238,7 @@ public class Remot extends Fragment {
         SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
 }

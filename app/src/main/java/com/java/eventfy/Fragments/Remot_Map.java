@@ -127,7 +127,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     public void receiveEvents(List<Events> eventsList)
     {
         if(eventsList.get(0) instanceof Events)
-           if(flag.equals(getResources().getString(R.string.remot_flag)))
+           if(flag.equals(getString(R.string.remot_flag)))
                 initializeMap();
     }
 

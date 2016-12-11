@@ -1,6 +1,7 @@
 package com.java.eventfy.Fragments.EventInfo;
 
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -48,6 +49,7 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     private Events event;
     private SignUp signUp;
     private ViewPager viewPager;
+    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,7 +61,10 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
-        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
+        context = view.getContext();
+
+        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
+
 
         signUp = getUserObject();
 
@@ -70,16 +75,16 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
         recyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager l = new LinearLayoutManager(view.getContext());
+        LinearLayoutManager l = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(l);
 
-        adapter = new Attendance_adapter(recyclerView, view.getContext());
+        adapter = new Attendance_adapter(recyclerView, context);
 
         handler = new Handler();
 
         recyclerView.setAdapter(adapter);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         addLoading();
 
@@ -127,8 +132,8 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     public void getUsersForEvent()
     {
         signUp.setEventAdmin(event);
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.get_user_for_event);
-        GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, signUp, getContext());
+        String url = getString(R.string.ip_local)+getString(R.string.get_user_for_event);
+        GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, signUp, context);
         getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
@@ -153,18 +158,14 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         signUp = getUserObject();
         viewPager.setCurrentItem(1, true);
         if(userList.get(0).getViewMessage()!=null &&
-                (userList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))
-                || userList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_no_data))))
+                (userList.get(0).getViewMessage().equals(getString(R.string.home_loading))
+                || userList.get(0).getViewMessage().equals(getString(R.string.home_no_data))))
             userList.remove(0);
 
-        if(events.getDecesion()!=null && events.getDecesion().equals(getContext().getResources().getString(R.string.attending))) {
-
-            Log.e("adding event ", " ^^^^^ "+events.getDecesion());
+        if(events.getDecesion()!=null && events.getDecesion().equals(getString(R.string.attending))) {
             userList.add(0, signUp);
-            Log.e("adding event ", " ^^^^^ "+userList.size());
-            Log.e("adding event ", " ^^^^^ "+signUp.getUserId());
         }
-        else if(events.getDecesion()!=null  && events.getDecesion().equals(getContext().getResources().getString(R.string.not_attending))){
+        else if(events.getDecesion()!=null  && events.getDecesion().equals(getString(R.string.not_attending))){
             int index =-1;
             for(SignUp user: userList) {
                 Log.e("Get User Id : ", " ^^^^^ "+signUp.getUserId());
@@ -183,14 +184,14 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
         // removing no user tag
         if( userList.size()>=2 && userList.get(1).getViewMessage()!=null &&
-                (  userList.get(1).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))
-                || userList.get(1).getViewMessage().equals(getContext().getResources().getString(R.string.home_no_data))))
+                (  userList.get(1).getViewMessage().equals(getString(R.string.home_loading))
+                || userList.get(1).getViewMessage().equals(getString(R.string.home_no_data))))
             userList.remove(1);
 
         // all element removed all no on attening view
         if(userList.size()<=0) {
             SignUp signUpTemp = new SignUp();
-            signUpTemp.setViewMessage(getContext().getResources().getString(R.string.home_no_data));
+            signUpTemp.setViewMessage(context.getString(R.string.home_no_data));
             userList.add(signUpTemp);
         }
         Log.e("size is ", "rsvp : "+userList.size());
@@ -212,11 +213,12 @@ public class Attending extends Fragment implements OnLoadMoreListener {
                 Log.e("size in display: ", " 0000 " + userList.size());
                 if(userList!= null
                         && userList.get(userList.size()-1).getViewMessage() != null
-                        && userList.get(userList.size()-1).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading) )) {
+                        && userList.get(userList.size()-1).getViewMessage().equals(context.getString(R.string.home_loading) )) {
                     userList.remove(userList.size() - 1);
                     adapter.notifyItemRemoved(userList.size()-1);
                 }
-                if(userList.get(0).getViewMessage().equals(getContext().getResources().getString(R.string.home_loading))) {
+                if(userList!= null && userList.get(0)!=null && userList.get(0).getViewMessage()!= null
+                        && userList.get(0).getViewMessage().equals(context.getString(R.string.home_loading))) {
                     userList.remove(0);
                     adapter.notifyItemRemoved(0);
                 }
@@ -257,18 +259,18 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
     public void addLoading(){
         signUp = new SignUp();
-        signUp.setViewMessage(getResources().getString(R.string.home_loading));
+        signUp.setViewMessage(getString(R.string.home_loading));
         userList.add(signUp);
         bindAdapter(userList);
         Log.e("in add loading ", " 0000 ");
     }
 
     private SignUp getUserObject() {
-        SharedPreferences mPrefs = getContext().getSharedPreferences(getResources().getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences mPrefs = context.getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         //TODO uncomment
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
 
         if(json!=null && json.length()<100)
             json = null;

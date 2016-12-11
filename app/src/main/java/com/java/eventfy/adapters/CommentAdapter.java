@@ -164,7 +164,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
                                     break;
                                 case R.id.delete:
                                     //handle menu2 click
-                                    dialogBox(context.getResources().getString(R.string.deleted), comment);
+                                    dialogBox(context.getString(R.string.deleted), comment);
                                     break;
                             }
                             return false;
@@ -194,9 +194,9 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
 
         if (comment.getViewMessage() == null)
             return VIEW_DATA;
-        else if (comment.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
+        else if (comment.getViewMessage().equals(context.getString(R.string.home_no_data)))
             return VIEW_NODATA;
-        else if (comment.getViewMessage().equals(context.getResources().getString(R.string.home_loading)))
+        else if (comment.getViewMessage().equals(context.getString(R.string.home_loading)))
             return VIEW_LOADING;
 
         return VIEW_NETWORK_ERROR;
@@ -275,8 +275,8 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
             super(itemView);
 
             noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
-            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
-            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
             setLoaded();
         }
     }
@@ -290,7 +290,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
             super(itemView);
 
             networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
-            networErrorIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            networErrorIv.setColorFilter(context.getColor(R.color.colorPrimary));
             setLoaded();
         }
     }
@@ -325,7 +325,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
 
     public void serverCallToDelete(Comments comment) {
 
-        String url = context.getResources().getString(R.string.ip_local) + context.getResources().getString(R.string.delete_comment_from_event);
+        String url = context.getString(R.string.ip_local) + context.getString(R.string.delete_comment_from_event);
 
         DeleteCommentFromEvent deleteCommentFromEvent = new DeleteCommentFromEvent(url, comment, context);
         deleteCommentFromEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -335,7 +335,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
 
     public void serverCallToUndo(Comments comment) {
 
-        String url = context.getResources().getString(R.string.ip_local) + context.getResources().getString(R.string.get_comment_for_event);
+        String url = context.getString(R.string.ip_local) + context.getString(R.string.get_comment_for_event);
 
         DeleteCommentFromEvent deleteCommentFromEvent = new DeleteCommentFromEvent(url, comment, view.getContext());
         deleteCommentFromEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

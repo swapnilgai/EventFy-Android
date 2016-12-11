@@ -81,7 +81,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
         else{
             eventLst = new ArrayList<Events>();
             Events events = new Events();
-            events.setViewMessage(context.getResources().getString(R.string.home_no_data));
+            events.setViewMessage(context.getString(R.string.home_no_data));
             eventLst.add(events);
         }
 

@@ -99,7 +99,7 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
                 public void onClick(View v) {
                     // Doesn't do anything, but need Click Listener to get that sweet Ripple
                     Log.e("in added adapter: ", ""+signUp.getUserName());
-                    signUp.setViewMessage(context.getResources().getString(R.string.invite_remove_user));
+                    signUp.setViewMessage(context.getString(R.string.invite_remove_user));
                     EventBusService.getInstance().post(signUp);
 
                 }
@@ -126,12 +126,12 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
         Log.e("data add adapter ", ""+signUp.getViewMessage());
 
         if(signUp.getViewMessage() == null ||
-                signUp.getViewMessage().equals(context.getResources().getString(R.string.invite_add_user))
-                || signUp.getViewMessage().equals(context.getResources().getString(R.string.invite_remove_user)))
+                signUp.getViewMessage().equals(context.getString(R.string.invite_add_user))
+                || signUp.getViewMessage().equals(context.getString(R.string.invite_remove_user)))
             return VIEW_DATA;
-        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
+        else if(signUp.getViewMessage().equals(context.getString(R.string.home_no_data)))
             return VIEW_NODATA;
-        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_loading)))
+        else if(signUp.getViewMessage().equals(context.getString(R.string.home_loading)))
             return VIEW_LOADING;
 
         return VIEW_NETWORK_ERROR;
@@ -180,8 +180,8 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
             super(itemView);
 
 //            noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
-//            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
-//            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+//            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
+//            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
             setLoaded();
         }
     }
@@ -193,7 +193,7 @@ public class InviteAddedAdapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
             super(itemView);
 
             networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
-            networErrorIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            networErrorIv.setColorFilter(context.getColor(R.color.colorPrimary));
             setLoaded();
         }
     }

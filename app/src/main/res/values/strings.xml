@@ -27,6 +27,7 @@
     <string name="verification_check">/webapi/signup/checkverificationcode</string>
     <string name="title_activity_maps">Map</string>
     <string name="add_event">/webapi/events/add</string>
+    <string name="edit_event">/webapi/events/editevent</string>
     <string name="get_nearby_event">/webapi/events/getnearbyevents</string>
     <string name="reg_gcm_userid">/webapi/notifications/registeruser</string>
     <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
@@ -56,6 +57,7 @@
 
     <string name="deleted">deleted</string>
     <string name="undo">undo</string>
+    <string name="edited">Edited</string>
 
     <!--Home page view strings end-->
 

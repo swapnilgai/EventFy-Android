@@ -38,7 +38,7 @@ public class EventInfoPrivate extends AppCompatActivity {
         setContentView(R.layout.activity_event_info_public);
 
         Intent intent = getIntent();
-        event = (Events) intent.getSerializableExtra(getResources().getString(R.string.event_for_eventinfo));
+        event = (Events) intent.getSerializableExtra(getString(R.string.event_for_eventinfo));
 
         Log.e(" in evenifo  ", "00000000 "+event.getEventId());
 
@@ -94,7 +94,7 @@ public class EventInfoPrivate extends AppCompatActivity {
 
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(getResources().getString(R.string.event_for_eventinfo), event);
+        bundle.putSerializable(getString(R.string.event_for_eventinfo), event);
 
         aboutFragment.setArguments(bundle);
         commentsFragment.setArguments(bundle);

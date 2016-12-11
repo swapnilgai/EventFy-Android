@@ -72,7 +72,7 @@ public class GetUsersForEvent  extends AsyncTask<Void, Void, Void> {
         if(userList==null || userList.size()<=0) {
             userList = new ArrayList<SignUp>();
             SignUp signUp = new SignUp();
-            signUp.setViewMessage(context.getResources().getString(R.string.home_no_data));
+            signUp.setViewMessage(context.getString(R.string.home_no_data));
             userList.add(signUp);
         }
 

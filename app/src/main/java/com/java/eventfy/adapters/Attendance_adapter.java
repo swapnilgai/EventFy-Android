@@ -150,9 +150,9 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(signUp!= null && signUp.getViewMessage()==null)
         {
             return VIEW_DATA;}
-        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_no_data)))
+        else if(signUp.getViewMessage().equals(context.getString(R.string.home_no_data)))
             return VIEW_NODATA;
-        else if(signUp.getViewMessage().equals(context.getResources().getString(R.string.home_loading))){
+        else if(signUp.getViewMessage().equals(context.getString(R.string.home_loading))){
              return VIEW_LOADING;
         }
 
@@ -204,8 +204,8 @@ public class ProgressBarHolder extends RecyclerView.ViewHolder {
             super(itemView);
 
             noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
-            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
-            noDataIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
             setLoaded();
         }
     }
@@ -217,7 +217,7 @@ public class ProgressBarHolder extends RecyclerView.ViewHolder {
             super(itemView);
 
             networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
-            networErrorIv.setColorFilter(context.getResources().getColor(R.color.colorPrimary));
+            networErrorIv.setColorFilter(context.getColor(R.color.colorPrimary));
             setLoaded();
         }
     }

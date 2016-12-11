@@ -59,9 +59,9 @@ public class UnRegisterUserFromEvent extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if(events==null) {
             Events events = new Events();
-            events.setViewMessage(context.getResources().getString(R.string.home_no_data));
+            events.setViewMessage(context.getString(R.string.home_no_data));
         }
-        events.setDecesion(context.getResources().getString(R.string.not_attending));
+        events.setDecesion(context.getString(R.string.not_attending));
 
         EventBusService.getInstance().post(events);
 

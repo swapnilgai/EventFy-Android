@@ -136,13 +136,13 @@ public void resendVcodeStatus(String result)
 
     private void serverCall(SignUp signUp) {
         setProgressDialog();
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.verify_vcode);
+        String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
         VerifyVcode verifyVcode = new VerifyVcode(signUp,url);
         verifyVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void serverCallToResendVcode(SignUp signUp) {
         setProgressDialog();
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.verification_code_get);
+        String url = getString(R.string.ip_local)+getString(R.string.verification_code_get);
         ResendVcode resendVcode = new ResendVcode(signUp,url);
         resendVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

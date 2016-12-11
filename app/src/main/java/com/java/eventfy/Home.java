@@ -97,7 +97,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void registerDeviceForNotification() {
         gcm = GoogleCloudMessaging.getInstance(this);
-        String senderId = getResources().getString(R.string.GCM_sender_id);
+        String senderId = getString(R.string.GCM_sender_id);
         RegisterToGCM registerToGCM = new RegisterToGCM(gcm, getApplicationContext(), senderId);
         registerToGCM.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -217,14 +217,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_item_create_event_public)
         {
             Intent intent = new Intent(this, CreatePublicEvent.class);
-            intent.putExtra(getResources().getString(R.string.create_event_category), getResources().getString(R.string.create_event_category_public));
+            intent.putExtra(getString(R.string.create_event_category), getString(R.string.create_event_category_public));
             startActivity(intent);
 
         } else if (id == R.id.nav_item_create_event_private)
         {
             // Handle the Private event action
             Intent intent = new Intent(this, CreatePublicEvent.class);
-            intent.putExtra(getResources().getString(R.string.create_event_category), getResources().getString(R.string.create_event_category_private));
+            intent.putExtra(getString(R.string.create_event_category), getString(R.string.create_event_category_private));
             startActivity(intent);
 
         } else if (id == R.id.nav_item_my_events)
@@ -275,7 +275,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void getNotificationDetail(NotificationId notificationId)
     {
         signUp.setNotificationId(notificationId);
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.register_notification_detail);
+        String url = getString(R.string.ip_local)+getString(R.string.register_notification_detail);
         UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url);
         updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         EventBusService.getInstance().unregister(this);
@@ -290,12 +290,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void getUserObject() {
-        SharedPreferences mPrefs = getSharedPreferences(getResources().getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         //String json = null;
         //TODO uncomment
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
 
         if(json!=null && json.length()<100)
             json = null;
@@ -317,7 +317,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
         Log.e("string is ", "((((: "+json);
-        editor.putString(getResources().getString(R.string.userObject), json);
+        editor.putString(getString(R.string.userObject), json);
 
         editor.commit();
     }

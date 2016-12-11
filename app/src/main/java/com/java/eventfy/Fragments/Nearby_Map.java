@@ -133,7 +133,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void receiveEvents(List<Events> eventsList)
     {
         if(eventsList.get(0) instanceof Events)
-             if(flag.equals(getResources().getString(R.string.nearby_flag)))
+             if(flag.equals(getString(R.string.nearby_flag)))
                  initializeMap();
     }
 

@@ -221,8 +221,8 @@ Log.e("lat ", ""+place.getLatLng().latitude);
         location.setLatitude(place.getLatLng().latitude);
         location.setLongitude(place.getLatLng().longitude);
         //setting url
-        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-      //  getNearbyEvent = new GetNearbyEvent(url, location, getResources().getString(R.string.remot_flag));
+        String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
+      //  getNearbyEvent = new GetNearbyEvent(url, location, getString(R.string.remot_flag));
       //  getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
