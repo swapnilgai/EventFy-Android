@@ -328,7 +328,7 @@ public class Comment extends Fragment {
     public void getPostedComment(Comments comments) {
         Log.e("posted comment: ", "" + comments.getCommentId());
 
-        if (comments != null && comments.getViewMessage() == null && !comments.getViewMessage().equals(getString(R.string.deleted))) {
+        if (comments != null && comments.getViewMessage() == null) {
             CommentPostImageLayout.setVisibility(View.INVISIBLE);
             bm = null;
             commentTextEditText.setText("");
@@ -373,7 +373,8 @@ public class Comment extends Fragment {
             @Override
             public void run() {
 
-                if(commentsList.size()>0 && commentsList.get(0).getViewMessage().equals(context.getString(R.string.home_loading))) {
+                if(commentsList.size()>0 && commentsList.get(0).getViewMessage() !=null
+                        && commentsList.get(0).getViewMessage().equals(context.getString(R.string.home_loading))) {
                     commentsList.remove(0);
                     adapter.notifyItemRemoved(commentsList.size());
                 }

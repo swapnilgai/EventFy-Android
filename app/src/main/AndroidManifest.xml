@@ -132,8 +132,10 @@
 
         <activity
             android:name=".ProfilePage"
-            android:label="@string/title_activity_profile_page"
             android:theme="@style/AppTheme">
+
+        </activity>
+        <activity android:name=".ViewerProfilePage">
         </activity>
     </application>
 

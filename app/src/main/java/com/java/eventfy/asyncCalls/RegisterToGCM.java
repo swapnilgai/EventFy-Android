@@ -24,7 +24,6 @@ public class RegisterToGCM  extends AsyncTask<Void, Void, Void> {
     public RegisterToGCM(GoogleCloudMessaging gcm, Context context, String senderId){
         this.gcm = gcm;
         this.context = context;
-        SENDER_ID = senderId;
     }
 
 

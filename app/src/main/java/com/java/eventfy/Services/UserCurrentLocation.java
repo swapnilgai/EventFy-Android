@@ -87,7 +87,7 @@ public class UserCurrentLocation extends Service implements
         Log.e("location obj : ", ""+location);
 
         if (location == null) {
-
+            handleNewLocation(location);
             LocationServices.FusedLocationApi.requestLocationUpdates(mClient, mLocationRequest, this);
         }
         else {
@@ -101,12 +101,19 @@ public class UserCurrentLocation extends Service implements
     }
 
     private void handleNewLocation(Location location) {
+        LatLng myLatLan;
         if (location != null) {
             Log.e("in else : ", location.toString());
             mClient.disconnect();
-            LatLng myLatLan = new LatLng(location.getLatitude(), location.getLongitude());
-            EventBusService.getInstance().post(myLatLan);
+
+
+            myLatLan = new LatLng(location.getLatitude(), location.getLongitude());
         }
+        else{
+            myLatLan = new LatLng(0.0, 0.0);
+        }
+                EventBusService.getInstance().post(myLatLan);
+
     }
     @Override
     public void onConnectionSuspended(int cause) {

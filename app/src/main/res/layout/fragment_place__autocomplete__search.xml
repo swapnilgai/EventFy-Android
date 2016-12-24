@@ -1,59 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:background="@color/white"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/vertical_page_margin"
-        android:paddingLeft="@dimen/horizontal_page_margin"
-        android:paddingRight="@dimen/horizontal_page_margin"
-        android:paddingTop="@dimen/vertical_page_margin">
+        android:layout_gravity="center"
+        >
 
-        <ImageView
-            android:id="@+id/fly"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:src="@drawable/airplane_earth" />
 
         <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
+            android:layout_margin="16dp"
             card_view:cardPreventCornerOverlap="true">
-
-            <AutoCompleteTextView
-                android:id="@+id/autocomplete_places"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:hint="@string/autocomplete_hint"
-                android:singleLine="true" />
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <AutoCompleteTextView
+                    android:id="@+id/autocomplete_places"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:hint="@string/autocomplete_hint"
+                    android:inputType="textMultiLine"
+                    android:layout_marginTop="16dp"
+                    android:maxLines="3"
+                    android:paddingLeft="16dp"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <android.support.design.widget.TextInputLayout
+
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:layout_margin="3dp">
+
+                    <com.devspark.robototextview.widget.RobotoEditText
+                        android:id="@+id/remote_event_start_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:hint="Start Date(Optional)"
+                        android:layout_weight="1.0"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:singleLine="true"
+                        android:inputType="textCapWords|date"
+                        android:textColor="@color/colorPrimaryDark"
+                        />
+                </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:layout_margin="3dp"
+                        >
+
+                    <com.devspark.robototextview.widget.RobotoEditText
+                        android:id="@+id/remote_event_start_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:layout_gravity="center_horizontal"
+                        android:hint="Start Time(Optional)"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:singleLine="true"
+                        android:inputType="textCapWords|date"
+                        android:textColor="@color/colorPrimaryDark"
+                        />
+</android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:layout_margin="3dp">
+
+                        <com.devspark.robototextview.widget.RobotoEditText
+                            android:id="@+id/remote_event_end_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:hint="End Date(Optional)"
+                            android:layout_weight="1.0"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:singleLine="true"
+                            android:inputType="textCapWords|date"
+                            android:textColor="@color/colorPrimaryDark"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:layout_margin="3dp"
+                        >
+
+                        <com.devspark.robototextview.widget.RobotoEditText
+                            android:id="@+id/remote_event_end_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.0"
+                            android:layout_gravity="center_horizontal"
+                            android:hint="End Time(Optional)"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:singleLine="true"
+                            android:inputType="textCapWords|date"
+                            android:textColor="@color/colorPrimaryDark"
+                            />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
+
+                <SeekBar
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/remote_event_visibliry_miles"
+                    android:scrollIndicators="top"
+                    android:progressDrawable="@drawable/custom_seekbar"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="35dp"
+                    android:layout_marginRight="35dp"
+                    android:layout_marginTop="20dp"/>
+
+            </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/remote_search"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/selected_place"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_margin="24dp"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:background="@drawable/content_main2_button_color"
+            android:text="Search"/>
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/place_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/place_attribution"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autoLink="all"
-            android:paddingTop="@dimen/margin_medium"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+
     </LinearLayout>
 </ScrollView>

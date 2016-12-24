@@ -62,9 +62,14 @@ public class CreatePublicEvent extends AppCompatActivity {
 
         event = (Events) getIntent().getSerializableExtra(getString(R.string.event_to_edit_eventinfo));
 
+        Log.e("cate bef "," 000000 "+category);
+
         if(event!=null) {
             category = event.getEventType();
         }
+
+
+        Log.e("cate aft "," 000000 "+category);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -236,9 +241,10 @@ public class CreatePublicEvent extends AppCompatActivity {
     @Subscribe
     public void getCreatedEventFromServer(Events event)
     {
-        if(event.getViewMessage().equals(R.string.edited)) {
-           finish();
-        }
+        finish();
+//        if(event.getViewMessage().equals(R.string.edited)) {
+//           finish();
+//        }
     }
 
 }

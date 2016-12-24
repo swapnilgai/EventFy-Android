@@ -55,7 +55,6 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
 
             signUp = rateResponse.getBody();
 
-            Log.e("object is ", "" + signUp.getToken());
 
         return null;
     }

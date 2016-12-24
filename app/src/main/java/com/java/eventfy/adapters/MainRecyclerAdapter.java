@@ -37,12 +37,10 @@ import static com.java.eventfy.R.string.edited;
     private final int VIEW_DATA= 1;
     private final int VIEW_LOADING= 0;
     private final int VIEW_NODATA= -1;
-    private RecyclerView recyclerView;
     private Context context;
 
-    public MainRecyclerAdapter(RecyclerView recyclerView, Context context)
+    public MainRecyclerAdapter( Context context)
     {
-        this.recyclerView =recyclerView;
         this.context = context;
     }
 

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -34,7 +33,7 @@ import com.java.eventfy.asyncCalls.GetNearbyEvent;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Nearby extends Fragment {
@@ -54,6 +53,7 @@ public class Nearby extends Fragment {
     private SignUp signUp;
     private Location location;
     private Events currentEventToDelete;
+    private Events eventLoadingObj;
 
 
     public Nearby() {
@@ -73,11 +73,9 @@ public class Nearby extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
 
-        eventsList = new ArrayList<Events>();
-        eventsListTemp = new ArrayList<Events>();
-        Events events = new Events();
-        events.setViewMessage(getString(R.string.home_loading));
-        eventsList.add(events);
+        eventsList = new LinkedList<Events>();
+        eventsListTemp = new LinkedList<Events>();
+        createLoadingObj();
 
         getUserObject();
 
@@ -89,26 +87,33 @@ public class Nearby extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
-
-        adapter = new MainRecyclerAdapter(recyclerView, getContext());
-
-
+        adapter = new MainRecyclerAdapter(getContext());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
 
         initServices();
+        addLoading();
 
         bindAdapter(adapter, eventsList);
+
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 initServices();
+                removeAll();
+                addLoading();
+                bindAdapter(adapter, eventsList);
+                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setEnabled(false);
             }
         });
+
+        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setEnabled(false);
 
         fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
         fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
@@ -141,26 +146,40 @@ public class Nearby extends Fragment {
             }
         });
 
+        fragment_switch_button.setVisibility(View.GONE);
         super.onSaveInstanceState(savedInstanceState);
         return view;
     }
 
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-
+        Log.e("in start ser : ", " **** ");
         getActivity().startService(new Intent(getContext(), com.java.eventfy.Services.UserCurrentLocation.class));
+    }
+
+
+    private void stopServices() {
+        // GET USER CURRENT LOCATION ON APPLICATION STARTUP
+        Log.e("in stop ser : ", " **** ");
+        getActivity().stopService(new Intent(getContext(), com.java.eventfy.Services.UserCurrentLocation.class));
     }
 
     // ***** event bus call
     @Subscribe
-    public void receiveEvents(List<Events> eventsList)
+    public void receiveEvents(LinkedList<Events> eventsList)
     {
-        if(eventsList!= null && eventsList.get(0) instanceof Events)
+        if(eventsList!= null && eventsList.size()>0 && eventsList.get(0) instanceof Events)
             if(flag.equals(getString(R.string.nearby_flag))){
-                this.eventsList = eventsList;
+                this.eventsList.addAll(eventsList);
+
+                fragment_switch_button.setVisibility(View.VISIBLE);
                 bindAdapter(adapter, eventsList);
+
+                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setEnabled(true);
             }
     }
+
 
     @Subscribe
     public void setFlag(String flag)
@@ -172,11 +191,12 @@ public class Nearby extends Fragment {
     public void getLocation(LatLng latLag)
     {
         this.latLng = latLag;
+        stopServices();
+        Log.e("lat ", "Lat : in1 "+latLag);
         if(this.latLng.latitude == 0.0 && this.latLng.longitude == 0.0)
         {
-            Log.e("lat ", "Lat : in1 "+adapter);
             if(eventsList == null)
-                eventsList = new ArrayList<Events>();
+                eventsList = new LinkedList<Events>();
             else
                 eventsList.remove(eventsList.size()-1);
 
@@ -208,27 +228,28 @@ public class Nearby extends Fragment {
                 break;
             }
         }
-        Log.e("index is : ", " indexxxxx : "+index);
-        Log.e("message : ", " indexxxxx : "+events.getViewMessage());
-        if(events.getViewMessage().equals(getString(R.string.deleted))
+
+        if(events.getViewMessage()==null) {
+            eventsList.add(events);
+        bindAdapter(adapter, eventsList);
+    }
+        else if(events.getViewMessage().equals(getString(R.string.deleted))
                 &&  index!=-1){
             changedEvent.setViewMessage(events.getViewMessage());
                 currentEventToDelete = changedEvent;
                 removeEvent(index, currentEventToDelete);
             }
         else if(events.getViewMessage().equals(getString(R.string.edited))) {
-            Log.e("in edit tab : ", " indexxxxx : "+events.getViewMessage());
-            Log.e("message bef : ", " indexxxxx : "+eventsList.get(index).getViewMessage());
-            Log.e("name bef : ", " indexxxxx : "+eventsList.get(index).getEventName());
-            Log.e("list sizefe bef : ", " indexxxxx : "+eventsList.size());
+
             events.setViewMessage(null);
             eventsList.set(index, events);
-            Log.e("message aft : ", " indexxxxx : "+eventsList.get(index).getViewMessage());
-            Log.e("name aft : ", " indexxxxx : "+eventsList.get(index).getEventName());
-            Log.e("list size aft : ", " indexxxxx : "+eventsList.size());
-            Log.e("call for bind : ", " indexxxxx : "+adapter);
+
             bindAdapter(adapter, eventsList);
         }
+
+
+
+
     }
 
     public void removeEvent(int index, Events deleteEvent) {
@@ -240,7 +261,6 @@ public class Nearby extends Fragment {
         }
 
         eventsList = eventsListTemp;
-        Log.e("decesion of event ", "index* "+eventsList.size());
         adapter.notifyItemRemoved(index);
         bindAdapter(adapter, eventsList);
 
@@ -258,8 +278,8 @@ public class Nearby extends Fragment {
         tempSignUp.setToken(signUp.getToken());
 
         String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
-        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag), getContext());
-        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       // getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag), getContext());
+       // getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -323,6 +343,17 @@ public class Nearby extends Fragment {
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
         Log.e("home nearby ", "***** "+json);
+    }
+    public void removeAll() {
+        eventsList.removeAll(eventsList);
+    }
+
+    public void createLoadingObj() {
+         eventLoadingObj = new Events();
+        eventLoadingObj.setViewMessage(getString(R.string.home_loading));
+    }
+    public void addLoading() {
+        eventsList.add(eventLoadingObj);
     }
 }
 

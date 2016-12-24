@@ -16,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -63,7 +63,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
 
             Events[] event = response.getBody();
 
-            eventLst = Arrays.asList(event);
+            eventLst = new LinkedList<Events>(Arrays.asList(event));
         Log.e("event size : ", " "+eventLst.size());
 
         return null;
@@ -79,7 +79,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
                     obj.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
             }
         else{
-            eventLst = new ArrayList<Events>();
+            eventLst = new LinkedList<Events>();
             Events events = new Events();
             events.setViewMessage(context.getString(R.string.home_no_data));
             eventLst.add(events);

@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.NotificationDetail;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.EventInfo.About;
@@ -63,52 +64,66 @@ public class EventInfoPublic extends AppCompatActivity {
         Intent intent = getIntent();
         event = (Events) intent.getSerializableExtra(getString(R.string.event_for_eventinfo));
 
-        EventBusService.getInstance().register(this);
+        NotificationDetail notificationDetail = (NotificationDetail) intent.getSerializableExtra(getString(R.string.notification_object_for_eventinfo));
 
-        this.signUp = getUserObject();
-        Log.e("event id in info ", "** " + event);
+        // handel request form notification tab
+        if(event==null && notificationDetail!=null) {
 
-        eventImage = (ImageView) findViewById(R.id.event_image);
-        rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
+            // handle 3 cases 1. create, 2. update, 3. delete
+            event = notificationDetail.getEvents();
 
-        if (event.getEventImageUrl().equals("default"))
-            Picasso.with(this)
-                    .load(event.getEventImageUrl())
-                    .placeholder(R.drawable.logo)
-                    .into(eventImage);
-        else
-            Picasso.with(this)
-                    .load(event.getEventImageUrl())
-                    .into(eventImage);
+        }
+        // event is deleted
+        if(event == null){
+            dialogBoxToHandleDelete();
+        }
+        else {
+            EventBusService.getInstance().register(this);
 
-        if(event.getDecesion().equals(getString(R.string.attending)))
-             rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
+            this.signUp = getUserObject();
+            Log.e("event id in info ", "** " + event);
 
-        rsvpForEventBtn.setOnClickListener(new OnClickListener() {
+            eventImage = (ImageView) findViewById(R.id.event_image);
+            rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
 
-            @Override
-            public void onClick(View v) {
-                dialogBox();
-            }
-        });
-        setupToolbar();
+            if (event.getEventImageUrl().equals("default"))
+                Picasso.with(this)
+                        .load(event.getEventImageUrl())
+                        .placeholder(R.drawable.logo)
+                        .into(eventImage);
+            else
+                Picasso.with(this)
+                        .load(event.getEventImageUrl())
+                        .into(eventImage);
 
-        setupViewPager();
+            if (event.getDecesion().equals(getString(R.string.attending)))
+                rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
 
-        setupCollapsingToolbar();
+            rsvpForEventBtn.setOnClickListener(new OnClickListener() {
 
-        setupDrawer();
+                @Override
+                public void onClick(View v) {
+                    dialogBox();
+                }
+            });
+            setupToolbar();
 
-        createProgressDialog();
+            setupViewPager();
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //What to do on back clicked
-                onBackPressed();
-            }
-        });
+            setupCollapsingToolbar();
 
+            setupDrawer();
+
+            createProgressDialog();
+
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //What to do on back clicked
+                    onBackPressed();
+                }
+            });
+        }
     }
 
     private void setupDrawer() {
@@ -220,9 +235,9 @@ public class EventInfoPublic extends AppCompatActivity {
 
     public void dialogBox() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        if(event.getDecesion().equals(getString(R.string.attending)))
+        if(event !=null && event.getDecesion().equals(getString(R.string.attending)))
             alertDialogBuilder.setMessage("Unregister ?");
-        else if(event.getDecesion().equals(getString(R.string.not_attending)))
+        else if(event !=null && event.getDecesion().equals(getString(R.string.not_attending)))
             alertDialogBuilder.setMessage("Regiser to event ?");
 
         alertDialogBuilder.setPositiveButton("Yes",
@@ -252,6 +267,28 @@ public class EventInfoPublic extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+    public void dialogBoxToHandleDelete() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setMessage("Event is no longer available");
+
+        alertDialogBuilder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                            finish();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+
+
 
     public void serverCallToRegister() {
         String url = getString(R.string.ip_local)+getString(R.string.rspv_user_to_event);

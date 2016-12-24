@@ -48,18 +48,25 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     private void initializeMap() {
         Log.e("in init map", ""+myLaLn);
 
-//        if(googleMapRemot==null)
+//      if(googleMapRemot==null)
 //        {
 //            googleMapRemot = supportMapFragmentRemot.getMap();
 //        }
+
+
        setUpMarker();
     }
 
     public void setUpMarker()
     {
+        googleMapRemot.clear();
+        for(Events events : eventLst)
         {
-            Log.e("set marker in ", ""+myLaLn);
             int zoomVal = 10;
+
+            myLaLn = new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude());
+            Log.e("set marker in ", ""+myLaLn);
+
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLaLn);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -126,9 +133,11 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        if(eventsList.get(0) instanceof Events)
-           if(flag.equals(getString(R.string.remot_flag)))
-                initializeMap();
+        if(eventsList!=null && eventsList.size()>0 && eventsList.get(0) instanceof Events)
+           if(flag.equals(getString(R.string.remot_flag))) {
+               this.eventLst = eventsList;
+               initializeMap();
+           }
     }
 
     @Subscribe

@@ -43,8 +43,12 @@
     <string name="rspv_user_to_event">/webapi/events/addusertoevent</string>
     <string name="remove_user_from_event">/webapi/events/deleteuserfromevent</string>
     <string name="delete_event">/webapi/events/deleteevent</string>
-    <string name="attending">Attending</string>
-    <string name="not_attending">Not Attending</string>
+    <string name="remote_events">/webapi/events/getremoteevents</string>
+
+    <string name="upda_user">/webapi/signup/updateuser</string>
+
+    <string name="get_user_notifications">/webapi/notifications/getusernotification</string>
+
 
     <!--Home page view strings-->
     <string name="home_no_location">noLocation</string>
@@ -59,6 +63,8 @@
     <string name="undo">undo</string>
     <string name="edited">Edited</string>
 
+    <string name="attending">Attending</string>
+    <string name="not_attending">Not Attending</string>
     <!--Home page view strings end-->
 
 
@@ -132,18 +138,25 @@
     <string name="create_event_category_public">Event_Category_Public</string>
     <string name="create_event_category_private">Event_Category_Private</string>
 
+    <string name="notification_object_for_eventinfo">Notification_Object</string>
+
     <string name="facebook_app_id">250414581969875</string>
     <string name="facebook_profile_start_url">https://graph.facebook.com/</string>
     <string name="facebook_profile_end_url">/picture?type=large</string>
 
 
     <string name="event_type_value">Event Type Value</string>
-    <string name="event_private">Event Private</string>
+    <string name="event_private">Event Private</string>event_type_value
     <string name="title_activity_profile_page">ProfilePage</string>
 
-    <string name="event_to_edit_eventinfo">Event Type Value</string>
+    <string name="event_to_edit_eventinfo">Event To Edit EditInfo</string>
 
     <string name="create_event_event_view_pager">Event View Pager</string>
     <string name="event_object_pass_to_createeventfragment2">event object pass to createeventfragment2</string>
 
+    <!--visibility modes-->
+
+    <string name="visibility_mode_visible">Visible</string>
+    <string name="visibility_mode_invisible">Invisible</string>
+    <string name="visibility_mode_donotdisturb">DoNotDisturb</string>
 </resources>

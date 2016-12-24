@@ -1,5 +1,7 @@
 package com.java.eventfy.utils;
 
+import android.util.Log;
+
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 /**
@@ -19,5 +21,15 @@ public class SecurityOperations {
         return authenticationToken;
     }
 
+    public boolean comparePassword(String inputPassword, String encryptedPassword) {
+        StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
+        jasypt.setPassword("testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh");
+        Log.e("decrypt : ", "decr : "+jasypt.decrypt(encryptedPassword));
+        if(jasypt.decrypt(encryptedPassword).equals(inputPassword))
+                return true;
+        else
+            return false;
+
+    }
 
 }

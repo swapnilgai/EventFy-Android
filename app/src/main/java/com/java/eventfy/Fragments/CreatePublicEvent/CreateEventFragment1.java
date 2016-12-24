@@ -143,7 +143,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         // To check if it is crate new event or edit existing event
         eventObj = ((Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_to_edit_eventinfo))));
 
-        Log.e("event obj ", " !!!!!!! "+eventObj);
+        Log.e("event obj ", " !!!!!!! "+eventType);
 
         EventBusService.getInstance().register(this);
         viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
@@ -248,7 +248,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                         dialogBox();
                     }
                 }
-                else if(eventType.equals(getString(R.string.create_event_category_private)))
+                else if(eventType!= null && eventType.equals(getString(R.string.create_event_category_private)))
                 {
                     if(validate()) {
                         eventObj.setViewMessage(getString(R.string.event_object_pass_to_createeventfragment2));
@@ -381,6 +381,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             eventObj.setEventCapacity(eventCapacity.getText().toString());
             eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
             eventObj.setEventVisiblityMile(eventVisibilityMiles.getSelectedItem().toString());
+            if(eventObj.getLocation()!=null)
+            eventObj.getLocation().setDistance(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
             eventObj.setEventIsVisible(true);
             eventObj.setEventType(eventType);
             eventObj.setComments(null);
@@ -491,7 +493,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         if(progressDialog!=null && progressDialog.isShowing()) {
             dismissProgressDialog();
         }
-        else if(event.getEventId()!=-1 && !eventType.equals(getString(R.string.create_event_category_private))) {
+        else if(event.getEventId()!=-1) {
 
             EventBusService.getInstance().unregister(this);
             Toast.makeText(getActivity(),"Event created",Toast.LENGTH_SHORT).show();
@@ -638,7 +640,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        if(eventObj.getLocation().getLatitude()!= 0.0 && eventObj.getLocation().getLongitude()!=0.0)
+        if(eventObj!=null && eventObj.getLocation() != null &&
+                eventObj.getLocation().getLatitude()!= 0.0 && eventObj.getLocation().getLongitude()!=0.0)
              setUpMarker();
 
     }

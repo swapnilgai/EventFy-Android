@@ -31,11 +31,13 @@ public class SignUp implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(Boolean.class)
     private String isVerified;
+    private String visibilityMode;
+    private String status;
 
+    private int  visibilityMiles;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;
-
 
     @JsonView(Events.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -81,6 +83,23 @@ public class SignUp implements Serializable {
     private Events eventAdmin;
 
 
+    public String getVisibilityMode() {
+        return visibilityMode;
+    }
+
+    public void setVisibilityMode(String visibilityMode) {
+        this.visibilityMode = visibilityMode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
     public Events getEventAdmin() {
         return eventAdmin;
     }
@@ -92,7 +111,6 @@ public class SignUp implements Serializable {
     public void setViewMessage(String viewMessage) {
         this.viewMessage = viewMessage;
     }
-
 
     public void setEventAdmin(Events eventAdmin) {
         this.eventAdmin = eventAdmin;
@@ -196,5 +214,11 @@ public class SignUp implements Serializable {
         this.notificationDetails = notificationDetails;
     }
 
+    public int getVisibilityMiles() {
+        return visibilityMiles;
+    }
 
+    public void setVisibilityMiles(int visibilityMiles) {
+        this.visibilityMiles = visibilityMiles;
+    }
 }

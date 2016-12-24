@@ -24,9 +24,18 @@ public class NotificationDetail implements Serializable {
 
     private Events events;
 
+    private String viewMessage;
 
     public Events getEvents() {
         return events;
+    }
+
+    public String getViewMessage() {
+        return viewMessage;
+    }
+
+    public void setViewMessage(String viewMessage) {
+        this.viewMessage = viewMessage;
     }
 
     public void setEvents(Events events) {

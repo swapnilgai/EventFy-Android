@@ -51,8 +51,11 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     public void setUpMarker()
     {
+        googleMap.clear();
+        for(Events events : eventLst)
         {
             int zoomVal = 10;
+            myLaLn = new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude());
 
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLaLn);
@@ -132,9 +135,11 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void receiveEvents(List<Events> eventsList)
     {
-        if(eventsList.get(0) instanceof Events)
-             if(flag.equals(getString(R.string.nearby_flag)))
+        if(eventsList!=null && eventsList.size()>0 && eventsList.get(0) instanceof Events)
+             if(flag.equals(getString(R.string.nearby_flag))) {
+                 this.eventLst = eventsList;
                  initializeMap();
+             }
     }
 
     @Subscribe

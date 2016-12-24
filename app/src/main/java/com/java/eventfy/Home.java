@@ -59,16 +59,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setContentView(R.layout.activity_home);
 
 
-        Gson g = new Gson();
-        Log.e("object is : ", "????? : "+g.toJson(signUp));
+
         registerEventBusInstance();
 
         getUserObject();
 
+        Gson g = new Gson();
+        Log.e("object is : ", "????? : "+g.toJson(signUp));
 
-        //if(signUp!=null && signUp.getNotificationDetail()!=null)
+        if(signUp!=null)
         {
-            //registerDeviceForNotification();
+         //   registerDeviceForNotification();
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -243,6 +244,21 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         {
             // Handle the MyAccount action
 
+            Intent intent = new Intent(this, ProfilePage.class);
+            startActivity(intent);
+
+        }
+        else if (id == R.id.nav_item_logout)
+        {
+            SharedPreferences preferences =getSharedPreferences(getString(R.string.userObject),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+            finish();
+
+            Intent intent = new Intent(this, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
         drawer.closeDrawer(GravityCompat.START);
