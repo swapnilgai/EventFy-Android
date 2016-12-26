@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,14 +24,19 @@ import android.widget.TextView;
 
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.ImageFullScreenMode;
 import com.java.eventfy.R;
+import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteCommentFromEvent;
 import com.java.eventfy.utils.RoundedCornersTransform;
 import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
+
+import static com.java.eventfy.R.id.commentImage;
 
 /**
  * Created by @vitovalov on 30/9/15.
@@ -139,6 +145,26 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
 
             ((ResultHolder) holder).autherName.setText(comment.getUser().getUserName());
             ((ResultHolder) holder).commentTime.setText(comment.getDate().toString());
+
+            ((ResultHolder) holder).commentImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //handle menu2 click
+
+                    ImageViewEntity imageViewEntity = new ImageViewEntity();
+                    imageViewEntity.setImageUrl(comment.getCommentText());
+
+                    imageViewEntity.setUserName(comment.getUserName());
+
+                    Intent intent = new Intent(context, ImageFullScreenMode.class);
+                    intent.putExtra(context.getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
+
+                    context.startActivity(intent);
+
+
+                }
+            });
 
 
             ((ResultHolder) holder).buttonViewOption.setOnClickListener(new View.OnClickListener() {

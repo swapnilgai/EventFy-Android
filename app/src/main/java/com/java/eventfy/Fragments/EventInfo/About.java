@@ -37,6 +37,7 @@ import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
+import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteEvent;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -62,7 +63,6 @@ public class About extends Fragment implements OnMapReadyCallback {
     private TextView adminName;
     private TextView adminStatus;
     private ImageView adminImage;
-    private CircleButton navigateAdminProfile;
     private RobotoTextView eventLocation;
     private RobotoTextView eventVisiblityMiles;
 
@@ -76,7 +76,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     private Button deleteEvent;
     private Button editEvent;
     private ProgressDialog progressDialog;
-
+    private CircleButton navigateAdminProfile;
     private LinearLayout adminOptionLayout;
     private Context context;
 
@@ -103,7 +103,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventDateTo  = (RobotoTextView) view.findViewById(R.id.date_to);
         eventTimeTo  = (RobotoTextView) view.findViewById(R.id.time_to);
         eventTimeToAmPm = (RobotoTextView) view.findViewById(R.id.time_to_am_pm);
-
         eventCapacity = (RobotoTextView) view.findViewById(R.id.event_capacity);
         adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
 
@@ -152,6 +151,16 @@ public class About extends Fragment implements OnMapReadyCallback {
             }
         });
 
+
+        navigateAdminProfile.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ViewerProfilePage.class);
+                intent.putExtra(context.getString(R.string.signup_object_viewe_profile), event.getAdmin());
+                context.startActivity(intent);
+            }
+        });
         return view;
     }
 

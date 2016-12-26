@@ -49,6 +49,7 @@
 
     <string name="get_user_notifications">/webapi/notifications/getusernotification</string>
 
+    <string name="signup_object_viewe_profile">signup_object_viewe_profile</string>
 
     <!--Home page view strings-->
     <string name="home_no_location">noLocation</string>
@@ -138,6 +139,8 @@
     <string name="create_event_category_public">Event_Category_Public</string>
     <string name="create_event_category_private">Event_Category_Private</string>
 
+    <string name="image_view_for_fullscreen_mode">Image View For Fullscreen Mode</string>
+
     <string name="notification_object_for_eventinfo">Notification_Object</string>
 
     <string name="facebook_app_id">250414581969875</string>
@@ -156,7 +159,15 @@
 
     <!--visibility modes-->
 
-    <string name="visibility_mode_visible">Visible</string>
+    <string name="visibility_mode_visible">Visible</string>event_to_edit_eventinfo
     <string name="visibility_mode_invisible">Invisible</string>
     <string name="visibility_mode_donotdisturb">DoNotDisturb</string>
+
+
+    <!--ButtonClickFlag-->
+    <string name="status_button">status_button</string>
+    <string name="personal_info_button">personal_info_button</string>
+    <string name="password_button">password_button</string>
+
+
 </resources>

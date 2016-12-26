@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                      xmlns:app="http://schemas.android.com/apk/res-auto"
                                                      android:layout_width="match_parent"
                                                      android:layout_height="match_parent">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+
 
         <!--<android.support.design.widget.AppBarLayout-->
             <!--android:layout_width="match_parent"-->
@@ -61,23 +71,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:layout_marginTop="80dp"
+
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_margin="10dp">
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp">
 
-            <ImageView
-                android:id="@+id/user_profile_pic"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:background="@drawable/logo"
-                android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                android:layout_gravity="center"
-                app:layout_collapseMode="parallax" />
+                <ImageView
+                    android:id="@+id/user_profile_pic"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:elevation="10dp"
+                    android:background="@drawable/circular_user_image"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center"
+                    app:layout_collapseMode="parallax" />
+
+            </LinearLayout>
+
+
        <LinearLayout
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
@@ -90,43 +113,35 @@
                    android:layout_height="wrap_content"
                    android:textSize="15sp"
                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
-               <at.markushi.ui.CircleButton
-                   android:layout_width="25dp"
-                   android:layout_height="25dp"
-                   android:padding="6dp"
-                   android:layout_gravity="top"
-                   android:layout_marginLeft="10dp"
-                   app:cb_color="@color/colorPrimary"
-                   android:id="@+id/status_edit_btn"
-                   app:cb_pressedRingWidth="3dip"
-                   android:src="@drawable/ic_mode_edit_white_24dp" />
-           </LinearLayout>
-           <LinearLayout
-                android:id="@+id/linear_layout_status"
-               android:layout_width="fill_parent"
-               android:layout_height="wrap_content"
-               android:orientation="horizontal"
-               android:layout_marginTop="8dp"
-               android:layout_gravity="center_horizontal|bottom"
-               android:background="@color/cardview_light_background"
-               android:paddingTop="5dp"
-               android:paddingBottom="5dp">
-
-
-                   <EditText android:id="@+id/user_status"
-                             android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:inputType="textMultiLine"
-                             android:maxLines="3"
-                             android:enabled="false"
-                             android:hint="Status"
-                             android:text="User's status"
-                             android:textColorHint="@color/colorPrimaryDark"
-                             android:textColor="@color/transparent_black"/>
 
            </LinearLayout>
 
-        <!-- Personal info -->
+            <LinearLayout
+                 android:id="@+id/linear_layout_status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@color/cardview_light_background"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+
+
+                    <EditText android:id="@+id/user_status"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:inputType="textMultiLine"
+                              android:maxLines="3"
+                              android:enabled="false"
+                              android:hint="Status"
+                              android:text="User's status"
+                              android:textColorHint="@color/colorPrimaryDark"
+                              android:textColor="@color/transparent_black"/>
+
+            </LinearLayout>
+
+            <!-- Personal info -->
            <LinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
@@ -140,15 +155,7 @@
                           android:textSize="15sp"
                           android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
 
-               <at.markushi.ui.CircleButton
-                   android:layout_width="25dp"
-                   android:layout_height="25dp"
-                   android:padding="6dp"
-                   android:layout_marginLeft="10dp"
-                   app:cb_color="@color/colorPrimary"
-                   app:cb_pressedRingWidth="3dip"
-                   android:src="@drawable/ic_mode_edit_white_24dp"
-                   android:id="@+id/pesronal_info_edit_btn"/>
+
            </LinearLayout>
 
            <LinearLayout
@@ -204,83 +211,20 @@
                    android:layout_marginTop="8dp"
                    android:layout_marginBottom="8dp"
                    >
-                   <EditText android:id="@+id/user_dob"
-                             android:layout_width="match_parent"
-                             android:layout_height="wrap_content"
-                             android:inputType="text"
-                             android:hint="Date of Birth(MM/DD/YYYY)"
-                             android:text="03/28/1992"
-                             android:enabled="false"
-                             android:textColorHint="@color/colorPrimaryDark"
-                             android:textColor="@color/transparent_black"/>
                </android.support.design.widget.TextInputLayout>
+
+               <EditText android:id="@+id/user_dob"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:inputType="text"
+                     android:hint="Date of Birth(MM/DD/YYYY)"
+                     android:text="03/28/1992"
+                     android:enabled="false"
+                     android:textColorHint="@color/colorPrimaryDark"
+                     android:textColor="@color/transparent_black"/>
 
            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp">
-                <TextView
-                    android:text=" Password "
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
-                <at.markushi.ui.CircleButton
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:padding="6dp"
-                    android:id="@+id/password_edit_btn"
-                    android:layout_marginLeft="10dp"
-                    app:cb_color="@color/colorPrimary"
-                    app:cb_pressedRingWidth="3dip"
-                    android:src="@drawable/ic_mode_edit_white_24dp" />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="8dp"
-                android:layout_gravity="center_horizontal|bottom"
-                android:background="@color/cardview_light_background"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
-
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    >
-                    <EditText android:id="@+id/user_password"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:inputType="textPassword"
-                              android:hint="New Password"
-                              android:text="password"
-                              android:enabled="false"
-                              android:textColorHint="@color/colorPrimaryDark"
-                              android:textColor="@color/transparent_black"/>
-                </android.support.design.widget.TextInputLayout>
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp">
-                    <EditText android:id="@+id/user_confirm_password"
-                              android:layout_width="match_parent"
-                              android:layout_height="wrap_content"
-                              android:inputType="textPassword"
-                              android:hint="Confirm Password"
-                              android:text="password"
-                              android:enabled="false"
-                              android:textColorHint="@color/colorPrimaryDark"
-                              android:textColor="@color/transparent_black"/>
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -288,7 +232,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="15dp">
                 <TextView
-                    android:text=" Status "
+                    android:text=" Visibility Miles "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
@@ -328,6 +272,7 @@
                         android:layout_height="40dp"
                         android:padding="8dp"
                         android:text="100"
+                        android:id="@+id/user_visibility_miles_text_view"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:src="@drawable/ic_send_black_24dp" />
@@ -340,7 +285,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="15dp">
                 <TextView
-                    android:text=" Visibiliry Miles "
+                    android:text=" Visibility Mode "
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
@@ -461,5 +406,5 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>
 

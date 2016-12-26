@@ -151,7 +151,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void getMyLatLang(LatLng myLaLn)
     {
-        if(myLaLn!=null)
+        if(myLaLn!=null && eventLst!=null && eventLst.size()>0)
         {
             this.myLaLn = myLaLn;
             initializeMap();

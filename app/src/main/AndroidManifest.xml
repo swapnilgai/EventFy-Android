@@ -132,10 +132,14 @@
 
         <activity
             android:name=".ProfilePage"
-            android:theme="@style/AppTheme">
-
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity android:name=".ViewerProfilePage">
+        </activity>
+        <activity android:name=".passwordUpdate">
+        </activity>
+        <activity android:name=".ImageFullScreenMode">
+
         </activity>
     </application>
 

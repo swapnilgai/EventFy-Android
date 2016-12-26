@@ -3,19 +3,23 @@ package com.java.eventfy.adapters;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
+import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.utils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
 
@@ -127,6 +131,18 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
                     .load(signUp.getImageUrl())
                     .transform(new RoundedCornersTransform())
                     .into(((ResultHolder) holder).userImage);
+
+
+        ((ResultHolder)holder).attendanceLinearLayout.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ViewerProfilePage.class);
+                intent.putExtra(context.getString(R.string.signup_object_viewe_profile), signUp);
+                context.startActivity(intent);
+            }
+        });
+
         }
     else if (holder instanceof  ProgressBarHolder){
         ProgressBarHolder loadingViewHolder = (ProgressBarHolder) holder;
@@ -170,6 +186,9 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
      private CircleButton user_status_mode;
 
+     private LinearLayout attendanceLinearLayout;
+
+
      private CircleButton addOrRemoveUser;
 
 
@@ -180,7 +199,7 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
          eventinfo_user_status = (TextView) itemView.findViewById(R.id.eventinfo_user_status);
          user_status_mode = (CircleButton) itemView.findViewById(R.id.user_status_mode);
          addOrRemoveUser = (CircleButton) itemView.findViewById(R.id.invite_add_or_remove_user_btn);
-
+         attendanceLinearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_attendance);
 
      }
 }

@@ -116,7 +116,7 @@ import static com.java.eventfy.R.string.edited;
                           .into(((ResultHolder) holder).eventImage);
 
                 ((ResultHolder)holder).eventName.setText(event.getEventName());
-               // ((ResultHolder)holder).eventLocation.setText(event.getEventLocation());
+                ((ResultHolder)holder).eventLocation.setText(event.getLocation().getName());
 
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());

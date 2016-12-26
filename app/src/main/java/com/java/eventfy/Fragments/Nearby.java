@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
@@ -97,7 +98,6 @@ public class Nearby extends Fragment {
         addLoading();
 
         bindAdapter(adapter, eventsList);
-
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -272,14 +272,14 @@ public class Nearby extends Fragment {
         Location location = new Location();
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
-        location.setDistance(50);
+        location.setDistance(signUp.getVisibilityMiles());
         SignUp tempSignUp = new SignUp();
         tempSignUp.setLocation(location);
         tempSignUp.setToken(signUp.getToken());
 
         String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
-       // getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag), getContext());
-       // getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag), getContext());
+        getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override
@@ -287,7 +287,7 @@ public class Nearby extends Fragment {
         super.onResume();
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
-//
+
 //        if(currentEventToDelete!=null && currentEventToDelete.getViewMessage().equals(getString(R.string.deleted)))
 //        {
 //            int index = eventsList.indexOf(currentEventToDelete);
@@ -298,8 +298,6 @@ public class Nearby extends Fragment {
 //            currentEventToDelete = null;
 //        }
 
-
-        Log.e("in resume "," *** ");
     }
 
     @Override

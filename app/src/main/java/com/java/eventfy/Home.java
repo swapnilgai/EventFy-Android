@@ -58,8 +58,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
-
         registerEventBusInstance();
 
         getUserObject();
