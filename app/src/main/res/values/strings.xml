@@ -14,8 +14,8 @@
 
 
     <!-- Web servises url -->
-    <string name="ip_local">http://192.168.0.7:8080/EventFy</string>
-    <string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>
+    <string name="ip_local">http://192.168.0.19:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.19:8080/EventFy</string>
 
     <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
     <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
@@ -44,6 +44,7 @@
     <string name="remove_user_from_event">/webapi/events/deleteuserfromevent</string>
     <string name="delete_event">/webapi/events/deleteevent</string>
     <string name="remote_events">/webapi/events/getremoteevents</string>
+    <string name="update_user_password">/webapi/signup/updatepassword</string>
 
     <string name="upda_user">/webapi/signup/updateuser</string>
 

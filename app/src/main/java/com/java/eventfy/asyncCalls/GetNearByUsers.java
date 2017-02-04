@@ -15,6 +15,7 @@ import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -37,7 +38,7 @@ public class GetNearByUsers   extends AsyncTask<Void, Void, Void> {
     public GetNearByUsers(String url, SignUp signUp, Context context){
         this.url = url;
         this.signUp = signUp;
-        this.flag= flag;
+        this.context = context;
     }
 
 
@@ -45,17 +46,19 @@ public class GetNearByUsers   extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-        HttpEntity<SignUp> request = new HttpEntity<>(signUp);
+            HttpEntity<SignUp> request = new HttpEntity<>(signUp);
 
-        ResponseEntity<SignUp[]> response = restTemplate.exchange(url, HttpMethod.POST, request, SignUp[].class);
+            ResponseEntity<SignUp[]> response = restTemplate.exchange(url, HttpMethod.POST, request, SignUp[].class);
 
-        SignUp[] signUpList = response.getBody();
+            SignUp[] signUpList = response.getBody();
 
-        userList = Arrays.asList(signUpList);
-
+            userList = Arrays.asList(signUpList);
+        } catch (Exception e)
+        {}
         return null;
     }
 
@@ -66,6 +69,7 @@ public class GetNearByUsers   extends AsyncTask<Void, Void, Void> {
         if(userList ==null) {
             SignUp signUp = new SignUp();
             signUp.setViewMessage(context.getString(R.string.home_no_data));
+            userList = new LinkedList<SignUp>();
             userList.add(signUp);
         }
 

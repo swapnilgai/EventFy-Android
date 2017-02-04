@@ -49,8 +49,10 @@ public class DeleteEvent extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         // send in eventinfo activity to finish activity and nearby fragment to remove from list
-
-        event.setViewMessage("deleted");
-        EventBusService.getInstance().postSticky(event);
+        com.java.eventfy.Entity.EventSudoEntity.DeleteEvent deleteEvent = new com.java.eventfy.Entity.EventSudoEntity.DeleteEvent();
+        deleteEvent.setEvents(event);
+        Log.e("view msg : ", " msg : "+deleteEvent.getEvents().getViewMessage());
+       // event.setViewMessage("deleted");
+        EventBusService.getInstance().post(deleteEvent);
     }
 }

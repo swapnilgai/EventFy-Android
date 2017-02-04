@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -71,6 +70,7 @@ public class ProfilePage extends AppCompatActivity {
     private  Bitmap eventImageBM;
     private ImageView userProfilePic;
     private static final int PICK_IMAGE_ID = 234;
+    private TextView changePasswordLink;
     private Uri dest;
 private TextView userVisibilityMilesTextView;
 
@@ -218,6 +218,18 @@ private TextView userVisibilityMilesTextView;
                 // TODO Auto-generated method stub
             }
         });
+
+        changePasswordLink = (TextView) findViewById(R.id.link_chnage_password);
+
+
+        changePasswordLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), PasswordUpdate.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     public void getVisibilityMode() {
@@ -512,21 +524,27 @@ private TextView userVisibilityMilesTextView;
     @Override
     protected void onResume() {
         super.onResume();
+        if(!EventBusService.getInstance().isRegistered(this))
+             EventBusService.getInstance().register(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        EventBusService.getInstance().unregister(this);
     }
 
 
     @Subscribe
-    public void getCreatedEventFromServer(Events event)
+    public void getUpdatedDataFromServer(SignUp signUp)
     {
-        finish();
-//        if(event.getViewMessage().equals(R.string.edited)) {
-//           finish();
-//        }
+       if(signUp.getViewMessage()==null) {
+           this.signUp = signUp;
+           setUserData();
+       }
+        else{
+           //TODO thost message unsuccessfull update
+       }
     }
 
 

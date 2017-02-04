@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
@@ -52,6 +53,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void setUpMarker()
     {
         googleMap.clear();
+
         for(Events events : eventLst)
         {
             int zoomVal = 10;
@@ -138,7 +140,13 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         if(eventsList!=null && eventsList.size()>0 && eventsList.get(0) instanceof Events)
              if(flag.equals(getString(R.string.nearby_flag))) {
                  this.eventLst = eventsList;
-                 initializeMap();
+//                 if(eventsList!=null && eventsList.size()>0
+//                         && !eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_data))
+//                         && !eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)) )
+
+
+                     if(eventsList!=null && eventsList.size()>0 && eventsList.get(0).getViewMessage()==null)
+                        initializeMap();
              }
     }
 
@@ -149,11 +157,11 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     }
     // event bus subscribtion
     @Subscribe
-    public void getMyLatLang(LatLng myLaLn)
+    public void getMyLatLang(LocationNearby loaLocationNearby)
     {
         if(myLaLn!=null && eventLst!=null && eventLst.size()>0)
         {
-            this.myLaLn = myLaLn;
+            this.myLaLn = new LatLng(loaLocationNearby.getLocation().getLatitude(), loaLocationNearby.getLocation().getLongitude());
             initializeMap();
         }
     }

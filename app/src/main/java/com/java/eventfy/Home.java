@@ -267,7 +267,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onPause() {
         super.onPause();
-        stopService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
+        stopService(new Intent(this, com.java.eventfy.Services.GPSTracker.class));
         EventBusService.getInstance().unregister(this);
     }
 

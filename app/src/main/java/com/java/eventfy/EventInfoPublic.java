@@ -24,6 +24,7 @@ import android.widget.ImageView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.NotificationDetail;
 import com.java.eventfy.Entity.SignUp;
@@ -66,6 +67,8 @@ public class EventInfoPublic extends AppCompatActivity {
 
         NotificationDetail notificationDetail = (NotificationDetail) intent.getSerializableExtra(getString(R.string.notification_object_for_eventinfo));
 
+        EventBusService.getInstance().register(this);
+
         // handel request form notification tab
         if(event==null && notificationDetail!=null) {
 
@@ -78,7 +81,7 @@ public class EventInfoPublic extends AppCompatActivity {
             dialogBoxToHandleDelete();
         }
         else {
-            EventBusService.getInstance().register(this);
+           // EventBusService.getInstance().register(this);
 
             this.signUp = getUserObject();
             Log.e("event id in info ", "** " + event);
@@ -312,6 +315,9 @@ public class EventInfoPublic extends AppCompatActivity {
     {
         dismissProgressDialog();
         //TODO add thoast message
+
+       if(!events.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2)))
+        {
         if(events.getDecesion().equals(getString(R.string.attending)))
             rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
         else
@@ -325,6 +331,16 @@ public class EventInfoPublic extends AppCompatActivity {
             Log.e("in publicevent info ", "infoooooo : "+events.getViewMessage());
             finish();
         }
+        }
+    }
+
+    @Subscribe
+    public void getDeletedEvent(DeleteEvent deleteEvent)
+    {
+        Log.e("in event public info ", ""+deleteEvent.getEvents().getViewMessage());
+            if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+                finish();
+            }
     }
 
     public void createProgressDialog()
@@ -352,6 +368,20 @@ public class EventInfoPublic extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EventBusService.getInstance().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!EventBusService.getInstance().isRegistered(this))
+        EventBusService.getInstance().register(this);
+    }
+
 
 }
 

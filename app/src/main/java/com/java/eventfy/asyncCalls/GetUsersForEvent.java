@@ -67,7 +67,6 @@ public class GetUsersForEvent  extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        Log.e("items from server : ", " 0000 "+userList.size());
 
         if(userList==null || userList.size()<=0) {
             userList = new ArrayList<SignUp>();

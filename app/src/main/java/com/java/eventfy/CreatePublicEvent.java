@@ -131,11 +131,12 @@ public class CreatePublicEvent extends AppCompatActivity {
 
 
         adapter.addFrag(createEventFragment1, "Information");
-        if(category.equals(getString(R.string.create_event_category_private))) {
+
+        Log.e("edit option : ", " 0000) "+category);
+        if(category!=null && category.equals(getString(R.string.create_event_category_private))) {
             adapter.addFrag(createEventFragment2, "Invite");
 
         }
-
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(0);
     }

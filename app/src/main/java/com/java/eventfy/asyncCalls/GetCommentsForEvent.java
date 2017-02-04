@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
-import com.java.eventfy.Fragments.EventInfo.Comment;
 import com.java.eventfy.R;
 
 import org.springframework.http.HttpEntity;

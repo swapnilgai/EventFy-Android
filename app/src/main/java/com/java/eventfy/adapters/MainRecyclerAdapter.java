@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
@@ -12,20 +13,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventInfoPublic;
+import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.R;
 import com.java.eventfy.utils.DeviceDimensions;
+import com.java.eventfy.utils.OnLocationEnableClickListner;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static android.content.Context.MODE_PRIVATE;
 import static com.java.eventfy.R.string.edited;
 
 
@@ -38,11 +46,24 @@ import static com.java.eventfy.R.string.edited;
     private final int VIEW_LOADING= 0;
     private final int VIEW_NODATA= -1;
     private Context context;
+    private OnLocationEnableClickListner onLocationEnableClickListner;
+    private Nearby nearby;
+    private SignUp signUp;
 
-    public MainRecyclerAdapter( Context context)
-    {
+    public MainRecyclerAdapter( Context context) {
         this.context = context;
     }
+
+    public void setOnLocationEnableClickListner(OnLocationEnableClickListner onLocationEnableClickListner) {
+        this.onLocationEnableClickListner =  onLocationEnableClickListner;
+    }
+
+
+    public void setFragment(Nearby nearby) {
+        this.nearby =  nearby;
+    }
+
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -80,13 +101,35 @@ import static com.java.eventfy.R.string.edited;
             animator.start();
             return;
         }
-        else if(holder instanceof NoDataHolder)
-        {
+        else if(holder instanceof NoDataHolder) {
+            getUserObject();
+
+            ((NoDataHolder)holder).visibilityMiles.setProgress(signUp.getVisibilityMiles());
+
+            ((NoDataHolder)holder).searchEvents.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Doesn't do anything, but need Click Listener to get that sweet Ripple
+
+                    nearby.updateUserLocation(((NoDataHolder)holder).visibilityMiles.getProgress());
+                }
+            });
 
         }
         else if(holder instanceof NoLocationHolder)
         {
-            Log.e("in no", "in no location");
+
+            ((NoLocationHolder)holder).enableLocationbtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Doesn't do anything, but need Click Listener to get that sweet Ripple
+                onLocationEnableClickListner.enableGpsPopUp();
+
+                }
+            });
+
+
+
         }
         else {
 
@@ -163,23 +206,28 @@ import static com.java.eventfy.R.string.edited;
     public class NoDataHolder extends RecyclerView.ViewHolder {
 
         TextView textView;
+        SeekBar visibilityMiles;
+        Button searchEvents;
         public NoDataHolder(View itemView) {
             super(itemView);
 
+            visibilityMiles = (SeekBar) itemView.findViewById(R.id.evnet_visibility_miles);
             textView = (TextView) itemView.findViewById(R.id.nodata);
-
+            searchEvents = (Button) itemView.findViewById(R.id.btn_search_nearby_events);
         }
     }
 
     public class NoLocationHolder extends RecyclerView.ViewHolder {
 
-        TextView textView;
+        Button enableLocationbtn;
+
         public NoLocationHolder(View itemView) {
             super(itemView);
-
-            textView = (TextView) itemView.findViewById(R.id.nodata);
-
+            enableLocationbtn = (Button) itemView.findViewById(R.id.btn_enable_location);
         }
+
+
+
     }
 
     public double getDistanvce(double lat, double log) {
@@ -212,4 +260,15 @@ import static com.java.eventfy.R.string.edited;
         return VIEW_LOADING;
     }
 
+
+    private void getUserObject() {
+        SharedPreferences mPrefs = context.getSharedPreferences(context.getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        //String json = null;
+        //TODO uncomment
+        String json = mPrefs.getString(context.getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
 }
+

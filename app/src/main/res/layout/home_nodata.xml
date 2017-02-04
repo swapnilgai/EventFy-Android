@@ -29,11 +29,20 @@
     <SeekBar
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:id="@+id/seekBar"
+        android:id="@+id/evnet_visibility_miles"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
         android:layout_marginTop="30dp"/>
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_search_nearby_events"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:background="@drawable/content_main2_button_color"
+        android:text="Search"/>
 
 
 </LinearLayout>

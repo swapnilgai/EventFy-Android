@@ -56,10 +56,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.LocationSudoEntity.LocationPublicEvent;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.R;
+import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.asyncCalls.CreatePublicEvent;
 import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.PlaceAutocompleteAdapter;
@@ -195,12 +197,16 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         cancleBtn = (Button) view.findViewById(R.id.public_cancle);
 
+        Log.e("event Tupe : ", " ppppppp "+eventType);
         if(eventObj==null) {
             eventObj = new Events();
             eventObj.setViewMessage("temp");
             eventObj.setEventCategory(eventType);
             cancleBtn.setVisibility(View.GONE);
-            createBtn.setText("Create");
+            if(eventType.equals(getString(R.string.create_event_category_public)))
+                createBtn.setText("Create");
+            if(eventType.equals(getString(R.string.create_event_category_private)))
+                createBtn.setText("Next");
             url = getString(R.string.ip_local) + getString(R.string.add_event);
         }
         else{
@@ -256,7 +262,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                         viewPager.setCurrentItem(1, true);
                     }
                 }
-                else {
+                else if(eventType!= null && eventType.equals(getString(R.string.create_event_category_public))) {
                         setProgressDialog();
 
                         if (eventImageBm != null && signUp != null)
@@ -272,8 +278,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         currentLocationBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
-                getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
               //  currentLocationBtn.setEnabled(false);
+                startService();
                 // setting flag to avoid nearby and remote server call
                 EventBusService.getInstance().post(getString(R.string.create_event_flag));
             }
@@ -489,32 +495,42 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     public void getCreatedEventFromServer(Events event)
     {
         Log.e(" in create  ", "eventis "+event);
-        dismissProgressDialog();
-        if(progressDialog!=null && progressDialog.isShowing()) {
+        if (event.getViewMessage()!=null && !event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))) {
             dismissProgressDialog();
-        }
-        else if(event.getEventId()!=-1) {
+            if (progressDialog != null && progressDialog.isShowing()) {
+                dismissProgressDialog();
+            } else if (event.getEventId() != -1) {
 
+                EventBusService.getInstance().unregister(this);
+                Toast.makeText(getActivity(), "Event created", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
+                intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                view.getContext().startActivity(intent);
+            } else if (!eventType.equals(getString(R.string.create_event_category_private))) {
+                Toast.makeText(getActivity(), "Enable create event, please Try again", Toast.LENGTH_SHORT).show();
+            }
+        }else if(event.getViewMessage() == null && event.getEventId() != -1)
+        {
             EventBusService.getInstance().unregister(this);
-            Toast.makeText(getActivity(),"Event created",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Event created", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
             intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             view.getContext().startActivity(intent);
-        }
-        else if(!eventType.equals(getString(R.string.create_event_category_private))){
-            Toast.makeText(getActivity(),"Enable create event, please Try again",Toast.LENGTH_SHORT).show();
+
         }
     }
 
 
     @Subscribe
-    public void getUserCurrentLocation(LatLng myLatLan){
+    public void getUserCurrentLocation(LocationPublicEvent locationPublicEvent) {
 
-        getActivity().stopService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation.class));
-        getAddressFromLatLang(myLatLan.latitude, myLatLan.longitude);
-        setUpMarker();
-
+        if (locationPublicEvent instanceof  LocationPublicEvent){
+            getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.GPSTracker.class));
+            getAddressFromLatLang(locationPublicEvent.getLocation().getLatitude(), locationPublicEvent.getLocation().getLongitude());
+            setUpMarker();
+        }
     }
 
 
@@ -886,5 +902,13 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         }
         CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
         createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void startService() {
+        GPSTracker gpsTracker = new GPSTracker(getContext(), new LocationPublicEvent());
+    }
+
+    public void stopService() {
+        getActivity().stopService(new Intent(getActivity(),com.java.eventfy.Services.GPSTracker.class));
     }
 }

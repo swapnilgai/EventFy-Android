@@ -36,6 +36,7 @@ import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteEvent;
@@ -88,6 +89,8 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
         context = view.getContext();
+
+        EventBusService.getInstance().register(this);
 
         eventName = (TextView) view.findViewById(R.id.event_name);
         adminName = (TextView) view.findViewById(R.id.admin_name);
@@ -360,12 +363,21 @@ public class About extends Fragment implements OnMapReadyCallback {
     }
 
     @Subscribe
-    public void getDeletedEcent(Events event) {
+    public void getDeletedEvent(Events event) {
         if(event.getViewMessage().equals(R.string.edited)) {
             this.event = event;
             mapValuesFromEventObject();
             }
         else {
+            dismissProgressDialog();
+        }
+    }
+
+    @Subscribe
+    public void getDeletedEvent(com.java.eventfy.Entity.EventSudoEntity.DeleteEvent deleteEvent) {
+        Log.e("msg : ", ""+deleteEvent.getEvents().getViewMessage());
+
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
             dismissProgressDialog();
         }
     }
