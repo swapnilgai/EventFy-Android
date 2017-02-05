@@ -1,14 +1,16 @@
 package com.java.eventfy.asyncCalls;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.cloudinary.Cloudinary;
-import com.java.eventfy.Entity.Comments;
+import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,14 +25,15 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     private Events event = null;
     private String Url;
     private Bitmap bm;
-    private Comments comments = null;
+    private AddComment addComment = null;
     private String urlForComment;
+    private Context context;
 
-
-    public UploadImage(Comments comments, Bitmap bm, String urlForComment) {
-        this.comments = comments;
+    public UploadImage(AddComment addComment, Bitmap bm, String urlForComment, Context context) {
+        this.addComment = addComment;
         this.bm = bm;
         this.urlForComment = urlForComment;
+        this.context = context;
     }
 
     public UploadImage(Events event, Bitmap bm) {
@@ -71,12 +74,16 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(comments!=null)
+        if(addComment!=null && Url!=null)
         {
-            comments.setIsImage("true");
-            comments.setCommentText(Url);
-            PostUsersComment postUsersComment = new PostUsersComment(urlForComment, comments);
+            addComment.getComment().setIsImage("true");
+            addComment.getComment().setImageUrl(Url);
+            PostUsersComment postUsersComment = new PostUsersComment(urlForComment, addComment, context);
             postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else if(addComment!=null && Url!=null) {
+            addComment.setViewMsg(context.getString(R.string.comment_add_fail));
+            EventBusService.getInstance().post(addComment);
         }
         else if(event!=null) {
             // send url to CreateEventFragment1

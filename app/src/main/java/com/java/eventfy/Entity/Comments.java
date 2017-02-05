@@ -34,11 +34,20 @@ public class Comments  implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private Date date;
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String imageUrl;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(Events.class)
     private Events events;
-
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(SignUp.class)

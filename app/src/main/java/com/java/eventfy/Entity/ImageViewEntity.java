@@ -13,6 +13,16 @@ public class ImageViewEntity implements Serializable{
     private String textMessage;
     private  byte[] bitmapByteArray;
     private String viewMessage;
+    private String userImageUrl;
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public byte[] getBitmapByteArray() {
         return bitmapByteArray;
@@ -52,5 +62,13 @@ public class ImageViewEntity implements Serializable{
 
     public void setViewMessage(String viewMessage) {
         this.viewMessage = viewMessage;
+    }
+
+    public String getUserImageUrl() {
+        return userImageUrl;
+    }
+
+    public void setUserImageUrl(String userImageUrl) {
+        this.userImageUrl = userImageUrl;
     }
 }

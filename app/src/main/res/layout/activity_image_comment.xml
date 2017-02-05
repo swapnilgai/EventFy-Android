@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/layout_practitioner"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical"
+             android:background="@color/navigationBarColor"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/transparent_black"
+        android:elevation="4dp"
+        android:theme="@style/ToolbarStyle"
+        />
+
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        />
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal|bottom"
+        android:background="@color/transparent_black">
+
+        <EditText
+            android:id="@+id/commentText"
+            android:layout_width="0dip"
+            android:textColor="@color/cardview_light_background"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:paddingLeft="8dp"
+            android:paddingRight="6dp"
+            />
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/btnCommentSend"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            app:cb_color="@color/colorPrimary"
+            app:cb_pressedRingWidth="3dip"
+            android:src="@drawable/ic_send_black_24dp" />
+    </LinearLayout>
+
+</FrameLayout>

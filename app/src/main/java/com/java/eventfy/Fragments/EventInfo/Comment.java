@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
@@ -14,10 +15,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.UiThread;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,14 +25,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.ImageComment;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.CommentAdapter;
 import com.java.eventfy.asyncCalls.GetCommentsForEvent;
@@ -44,6 +45,7 @@ import com.soundcloud.android.crop.Crop;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
@@ -61,15 +63,13 @@ public class Comment extends Fragment {
     private CommentAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private CardView CommentPostImageLayout;
     private View view;
     private List<Comments> commentsList = new ArrayList<>();
-    private List<Comments> commentsListTemp = new ArrayList<>();
     private EditText commentTextEditText;
     private CircleButton btnCommentSend;
     private CircleButton selectImageFromDevice;
-    private ImageView slectedImageViewFromDevice;
-    private FloatingActionButton btnCommentImageDsicard;
+    private List<AddComment> addCommentsList = new ArrayList<>();
+
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
     protected Handler handler;
@@ -109,9 +109,6 @@ public class Comment extends Fragment {
         commentTextEditText = (EditText) view.findViewById(commentText);
         btnCommentSend = (CircleButton) view.findViewById(R.id.btnCommentSend);
         selectImageFromDevice = (CircleButton) view.findViewById(R.id.btnSelectImageFromDevice);
-        CommentPostImageLayout = (CardView) view.findViewById(R.id.CommentPostImageLayout);
-        slectedImageViewFromDevice = (ImageView) view.findViewById(R.id.slectedImageViewFromDevice);
-        btnCommentImageDsicard = (FloatingActionButton) view.findViewById(R.id.btnCommentImageDsicard);
 
         getNearbEventServerCall();
 
@@ -170,20 +167,18 @@ public class Comment extends Fragment {
 
                 String commentText = commentTextEditText.getText().toString();
 
-                if (bm != null) {
-                    commentTemp.setCommentText(dest.toString());
-                    commentTemp.setIsImage("true");
-                    commentTemp.setEventId(event.getEventId());
 
-                    uploadImage = new UploadImage(commentTemp, bm, urlForComment);
-                    uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                } else {
                     commentTemp.setCommentText(commentText);
                     commentTemp.setEventId(event.getEventId());
                     commentTemp.setIsImage("false");
-                    postUsersComment = new PostUsersComment(urlForComment, commentTemp);
+
+                AddComment addComment = new AddComment();
+                addComment.setViewMsg(getString(R.string.comment_add_posting));
+                addComment.setComment(commentTemp);
+
+                    postUsersComment = new PostUsersComment(urlForComment, addComment, getContext());
                     postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
+
 
                 // bindAdapter(commentsList);
             }
@@ -197,14 +192,7 @@ public class Comment extends Fragment {
             }
         });
 
-        btnCommentImageDsicard.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                CommentPostImageLayout.setVisibility(View.INVISIBLE);
-                bm = null;
-            }
-        });
 
         if (commentsList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -289,7 +277,6 @@ public class Comment extends Fragment {
 
     @UiThread
     private void refreshData(List<Comments> commentList) {
-
         Log.e("refresh data called: ", " cmt : "+commentList.size());
         if (adapter != null) {
             adapter.clear();
@@ -298,6 +285,15 @@ public class Comment extends Fragment {
         }
     }
 
+
+//    public void getAddCommentList() {
+//        for(Comments c: commentsList){
+//            AddComment addC = new AddComment();
+//            addC.setComment(c);
+//            addCommentsList.add(addC);
+//        }
+//
+//    }
 
     public void getNearbEventServerCall() {
 
@@ -319,7 +315,6 @@ public class Comment extends Fragment {
 
         if (commentsList.get(0) instanceof Comments) {
             this.commentsList.addAll(commentsList);
-
             displayComments();
         }
     }
@@ -329,7 +324,7 @@ public class Comment extends Fragment {
         Log.e("posted comment: ", "" + comments.getCommentId());
 
         if (comments != null && comments.getViewMessage() == null) {
-            CommentPostImageLayout.setVisibility(View.INVISIBLE);
+
             bm = null;
             commentTextEditText.setText("");
             commentsList.remove(0);
@@ -360,10 +355,6 @@ public class Comment extends Fragment {
     }
 
 
-    public void setCommentSectionVisible() {
-        CommentPostImageLayout.setVisibility(View.VISIBLE);
-        slectedImageViewFromDevice.setImageBitmap(bm);
-    }
 
     public void displayComments() {
 
@@ -378,7 +369,7 @@ public class Comment extends Fragment {
                     commentsList.remove(0);
                     adapter.notifyItemRemoved(commentsList.size());
                 }
-               bindAdapter(commentsList);
+                bindAdapter(commentsList);
             }
         }, 5000);
 
@@ -425,7 +416,27 @@ public class Comment extends Fragment {
             Log.e("crop : ", "" + getActivity().getCacheDir());
 
             bm = decodeBitmap(getActivity(), destination, 3);
-            setCommentSectionVisible();
+
+
+
+            if(bm!=null) {
+                ImageViewEntity imageViewEntity = new ImageViewEntity();
+                imageViewEntity.setImageUrl(null);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bm.compress(CompressFormat.JPEG, 50, stream);
+                byte[] byteArray = stream.toByteArray();
+                imageViewEntity.setBitmapByteArray(byteArray);
+
+                imageViewEntity.setUserName(signUp.getUserName());
+
+                Intent intent = new Intent(getActivity(), ImageComment.class);
+                intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
+                intent.putExtra(getString(R.string.event_object_for_image_comment_activity), event);
+                context.startActivity(intent);
+            }
+
+            //setCommentSectionVisible();
 
         } else if (resultCode == Crop.RESULT_ERROR) {
             Toast.makeText(getActivity(), Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
@@ -461,4 +472,41 @@ public class Comment extends Fragment {
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bm = null;
+    }
+
+    @Subscribe
+    public void getAddCommentObject(AddComment addComment) {
+
+        addComment.getComment().setViewMessage(addComment.getViewMsg());
+
+        Log.e("item inserted : ", ""+addComment.getViewMsg());
+        Log.e("item inserted 1 : ", ""+addComment.getComment().getViewMessage());
+        Log.e("msg 0 : ", ""+commentsList.get(0).getViewMessage());
+        Log.e("signup : ", ""+addComment.getComment().getUser().getImageUrl());
+
+
+        if(commentsList!= null && commentsList.get(0).getViewMessage()!= null)
+            if(commentsList.get(0).getViewMessage().equals(getString(R.string.home_loading)) ||
+                    commentsList.get(0).getViewMessage().equals(getString(R.string.home_no_data)))
+                commentsList.remove(0);
+
+        if(commentsList.contains(addComment.getComment()))
+            commentsList.remove(commentsList.indexOf(addComment.getComment()));
+
+        commentsList.add(0, addComment.getComment());
+        adapter.insert(addComment.getComment(), 0);
+        bindAdapter(commentsList);
+        // adapter.add(addComment.getComment());
+       // adapter.notifyDataSetChanged();
+
+        //adapter.insert(addComment.getComment(), 0);
+       // adapter.notifyItemInserted(0);
+
+    }
+
 }

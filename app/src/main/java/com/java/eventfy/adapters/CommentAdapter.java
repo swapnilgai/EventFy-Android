@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,24 +20,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.devspark.robototextview.widget.RobotoTextView;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.ImageFullScreenMode;
 import com.java.eventfy.R;
-import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteCommentFromEvent;
-import com.java.eventfy.utils.RoundedCornersTransform;
 import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import static com.java.eventfy.R.id.commentImage;
+import static com.java.eventfy.R.id.imageView;
 
 /**
  * Created by @vitovalov on 30/9/15.
@@ -46,6 +46,10 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
     private final int VIEW_DATA = 1;
     private final int VIEW_LOADING = 0;
     private final int VIEW_NODATA = -1;
+    private final int VIEW_POSTING = 98;
+    private final int VIEW_FAIL = 99;
+    private final int VIEW_SUCCESS = 100;
+
     private final int VIEW_NETWORK_ERROR = -1;
     private int visibleThreshold = 50;
     private int lastVisibleItem, totalItemCount;
@@ -123,49 +127,102 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
         if (holder instanceof ResultHolder) {
             final Comments comment = getItem(position);
 
-            Picasso.with(holder.itemView.getContext())
+            Gson g  = new Gson();
+
+            Log.e("comment obj : ", g.toJson(comment));
+
+            Log.e("user image url : ", comment.getUser().getImageUrl());
+
+                Picasso.with(holder.itemView.getContext())
                     .load(comment.getUser().getImageUrl())
                     .resize(50, 50)
                     .transform(new RoundedCornersTransformCommentAuthor())
                     .placeholder(R.drawable.ic_perm_identity_white_24dp)
                     .into(((ResultHolder) holder).autherImage);
 
-            if (comment.getIsImage().equals("false")) {
-                ((ResultHolder) holder).commentImage.setVisibility(View.GONE);
+
+            if (comment.getCommentText()!=null) {
+
                 ((ResultHolder) holder).autherCommentText.setText(comment.getCommentText());
-            } else {
-                ((ResultHolder) holder).autherCommentText.setVisibility(View.GONE);
+            }
+            if(comment.getImageUrl()!=null)
+            {
 
                 Picasso.with(holder.itemView.getContext())
-                        .load(comment.getCommentText())
-                        .transform(new RoundedCornersTransform())
+                        .load(comment.getImageUrl())
+                        .fit()
                         .into(((ResultHolder) holder).commentImage);
                 ((ResultHolder) holder).commentImage.setVisibility(View.VISIBLE);
+
+
             }
 
+            else{
+                ((ResultHolder) holder).commentImage.setVisibility(View.GONE);
+            }
+
+
+
+
             ((ResultHolder) holder).autherName.setText(comment.getUser().getUserName());
-            ((ResultHolder) holder).commentTime.setText(comment.getDate().toString());
 
             ((ResultHolder) holder).commentImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     //handle menu2 click
-
                     ImageViewEntity imageViewEntity = new ImageViewEntity();
-                    imageViewEntity.setImageUrl(comment.getCommentText());
-
-                    imageViewEntity.setUserName(comment.getUserName());
+                    imageViewEntity.setImageUrl(comment.getImageUrl());
+                    imageViewEntity.setTextMessage(comment.getCommentText());
+                    imageViewEntity.setUserName(comment.getUser().getUserName());
+                    imageViewEntity.setUserImageUrl(comment.getUser().getImageUrl());
+                    if(comment.getDate()!=null)
+                    imageViewEntity.setDate(comment.getDate().toString());
 
                     Intent intent = new Intent(context, ImageFullScreenMode.class);
                     intent.putExtra(context.getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
 
                     context.startActivity(intent);
-
-
                 }
             });
 
+            if(comment.getViewMessage()!=null) {
+                if (comment.getViewMessage().equals(context.getString(R.string.comment_add_success))) {
+                    ((ResultHolder) holder).commentTime.setVisibility(View.VISIBLE);
+                    ((ResultHolder) holder).commentTime.setText(comment.getDate().toString());
+                    ((ResultHolder) holder).commentRetry.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentDiscard.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentPosting.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentPostingText.setVisibility(View.GONE);
+                } else if (comment.getViewMessage().equals(context.getString(R.string.comment_add_posting))) {
+
+                    ((ResultHolder) holder).commentTime.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentRetry.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentDiscard.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentPosting.setVisibility(View.VISIBLE);
+
+                    ObjectAnimator animator = ObjectAnimator.ofFloat(((ResultHolder) holder).commentPosting, "rotation", 0, 360);
+                    animator.setRepeatCount(ValueAnimator.INFINITE);
+                    animator.setInterpolator(new LinearInterpolator());
+                    animator.setDuration(1000);
+                    animator.start();
+
+                    ((ResultHolder) holder).commentPostingText.setVisibility(View.VISIBLE);
+
+                } else {
+                    ((ResultHolder) holder).commentTime.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentRetry.setVisibility(View.VISIBLE);
+                    ((ResultHolder) holder).commentDiscard.setVisibility(View.VISIBLE);
+                    ((ResultHolder) holder).commentPosting.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentPostingText.setVisibility(View.GONE);
+                }
+            }
+            else{
+                ((ResultHolder) holder).commentTime.setText(comment.getDate().toString());
+                ((ResultHolder) holder).commentRetry.setVisibility(View.GONE);
+                ((ResultHolder) holder).commentDiscard.setVisibility(View.GONE);
+                ((ResultHolder) holder).commentPosting.setVisibility(View.GONE);
+                ((ResultHolder) holder).commentPostingText.setVisibility(View.GONE);
+            }
 
             ((ResultHolder) holder).buttonViewOption.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -218,12 +275,20 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
     public int getItemViewType(int position) {
         Comments comment = getItem(position);
 
+        Log.e("in adapter item view ", ""+comment.getViewMessage());
+
         if (comment.getViewMessage() == null)
             return VIEW_DATA;
         else if (comment.getViewMessage().equals(context.getString(R.string.home_no_data)))
             return VIEW_NODATA;
         else if (comment.getViewMessage().equals(context.getString(R.string.home_loading)))
             return VIEW_LOADING;
+        else  if(comment.getViewMessage().equals(context.getString(R.string.comment_add_posting)))
+            return VIEW_DATA;
+        else if(comment.getViewMessage().equals(context.getString(R.string.comment_add_success)))
+            return VIEW_DATA;
+        else if(comment.getViewMessage().equals(context.getString(R.string.comment_add_fail)))
+            return VIEW_DATA;
 
         return VIEW_NETWORK_ERROR;
     }
@@ -244,24 +309,29 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
 
     public class ResultHolder extends RecyclerView.ViewHolder {
 
-        TextView autherName;
+        RobotoTextView autherName;
         ImageView autherImage;
-        TextView autherCommentText;
+        RobotoTextView autherCommentText;
         ImageView commentImage;
         TextView commentTime;
-        LinearLayout linearLayout;
+        TextView commentRetry;
+        TextView commentDiscard;
         private TextView buttonViewOption;
-
+        ImageView commentPosting;
+        TextView commentPostingText;
 
         public ResultHolder(View itemView) {
             super(itemView);
-            autherName = (TextView) itemView.findViewById(R.id.autherName);
+            autherName = (RobotoTextView) itemView.findViewById(R.id.autherName);
             autherImage = (ImageView) itemView.findViewById(R.id.autherImage);
-            autherCommentText = (TextView) itemView.findViewById(R.id.autherCommentText);
+            autherCommentText = (RobotoTextView) itemView.findViewById(R.id.autherCommentText);
             commentImage = (ImageView) itemView.findViewById(R.id.commentImage);
             commentTime = (TextView) itemView.findViewById(R.id.comment_time);
             buttonViewOption = (TextView) itemView.findViewById(R.id.textViewOptions);
-
+            commentRetry = (TextView) itemView.findViewById(R.id.comment_retry);
+            commentDiscard = (TextView) itemView.findViewById(R.id.comment_discard);
+            commentPosting = (ImageView) itemView.findViewById(R.id.posting_comment);
+            commentPostingText = (TextView) itemView.findViewById(R.id.posting_comment_text);
 
             //  linearLayout = (ImageView) itemView.findViewById(R.id.commentImage);
         }

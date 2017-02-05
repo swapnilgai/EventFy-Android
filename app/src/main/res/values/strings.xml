@@ -14,11 +14,13 @@
 
 
     <!-- Web servises url -->
-    <string name="ip_local">http://192.168.0.19:8080/EventFy</string>
-    <string name="ip_localhost">http://192.168.0.19:8080/EventFy</string>
+    <!--<string name="ip_local">http://192.168.0.19:8080/EventFy</string>-->
+    <!--<string name="ip_localhost">http://192.168.0.19:8080/EventFy</string>-->
 
-    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
-    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
+    <string name="ip_local">https://eventfy.herokuapp.com</string>
+    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
+
+
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
     <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
@@ -142,6 +144,8 @@
 
     <string name="image_view_for_fullscreen_mode">Image View For Fullscreen Mode</string>
 
+    <string name="event_object_for_image_comment_activity">event_object_for_image_comment_activity</string>
+
     <string name="notification_object_for_eventinfo">Notification_Object</string>
 
     <string name="facebook_app_id">250414581969875</string>
@@ -169,6 +173,11 @@
     <string name="status_button">status_button</string>
     <string name="personal_info_button">personal_info_button</string>
     <string name="password_button">password_button</string>
+
+
+    <string name="comment_add_success">comment_add_success</string>
+    <string name="comment_add_posting">comment_add_posting</string>
+    <string name="comment_add_fail">comment_add_fail</string>
 
 
 </resources>

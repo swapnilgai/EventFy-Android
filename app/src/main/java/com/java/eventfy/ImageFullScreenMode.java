@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
 public class ImageFullScreenMode extends AppCompatActivity {
@@ -21,6 +22,10 @@ public class ImageFullScreenMode extends AppCompatActivity {
     private TextView textView;
     private  Toolbar myToolbar;
     private ImageViewEntity imageViewObj;
+    private ImageView userImage;
+    private TextView userName;
+    private TextView date;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +42,14 @@ public class ImageFullScreenMode extends AppCompatActivity {
 
         imageView = (ImageView) findViewById(R.id.item_image);
         textView = (TextView) findViewById(R.id.item_text);
+        userImage = (ImageView) findViewById(R.id.user_image);
+        userName = (TextView) findViewById(R.id.user_name);
+        date = (TextView) findViewById(R.id.date_text);
 
-        Intent intent = getIntent();
+                Intent intent = getIntent();
         imageViewObj = (ImageViewEntity) intent.getSerializableExtra(getString(R.string.image_view_for_fullscreen_mode));
+
+
         setImageDataObject();
 
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -59,10 +69,17 @@ public class ImageFullScreenMode extends AppCompatActivity {
                 if(myToolbar.getVisibility()!= View.INVISIBLE) {
                     myToolbar.setVisibility(View.INVISIBLE);
                     textView.setVisibility(View.INVISIBLE);
+                    date.setVisibility(View.INVISIBLE);
+                    userImage.setVisibility(View.INVISIBLE);
+                    userName.setVisibility(View.INVISIBLE);
+
                 }
                 else{
                     myToolbar.setVisibility(View.VISIBLE);
                     textView.setVisibility(View.VISIBLE);
+                    date.setVisibility(View.VISIBLE);
+                    userImage.setVisibility(View.VISIBLE);
+                    userName.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -92,9 +109,29 @@ public class ImageFullScreenMode extends AppCompatActivity {
         if(imageViewObj.getTextMessage()!=null)
             textView.setText(imageViewObj.getTextMessage());
         else
-            textView.setText("");
+            textView.setVisibility(View.GONE);
 
-        Log.e("image title : ", ""+imageViewObj.getUserName());
+
+        if(imageViewObj.getUserImageUrl()!=null)
+
+            Picasso.with(getApplicationContext()).
+                load(imageViewObj.getUserImageUrl())
+                .fit()
+                .transform(new RoundedCornersTransformCommentAuthor())
+                .into(userImage);
+        else
+            userImage.setVisibility(View.GONE);
+
+        if(imageViewObj.getUserName()!=null)
+            userName.setText(imageViewObj.getUserName());
+        else
+            userName.setVisibility(View.GONE);
+
+        if(imageViewObj.getDate()!=null)
+            date.setText(imageViewObj.getDate());
+        else
+            date.setVisibility(View.GONE);
+
 
         myToolbar.setTitle(imageViewObj.getUserName());
 
