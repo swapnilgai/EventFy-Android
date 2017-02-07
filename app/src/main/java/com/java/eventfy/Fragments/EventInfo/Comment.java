@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
+import com.java.eventfy.Entity.CommentSudoEntity.DeleteComment;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
@@ -64,7 +65,7 @@ public class Comment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private View view;
-    private List<Comments> commentsList = new ArrayList<>();
+//    private List<Comments> commentsList = new ArrayList<>();
     private EditText commentTextEditText;
     private CircleButton btnCommentSend;
     private CircleButton selectImageFromDevice;
@@ -131,9 +132,9 @@ public class Comment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                commentsList.removeAll(commentsList);
+                addCommentsList.removeAll(addCommentsList);
                 removeALl();
-                bindAdapter(commentsList);
+                bindAdapter(addCommentsList);
                 getNearbEventServerCall();
             }
         });
@@ -194,7 +195,7 @@ public class Comment extends Fragment {
 
 
 
-        if (commentsList.isEmpty()) {
+        if (addCommentsList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             // tvEmptyView.setVisibility(View.VISIBLE);
 
@@ -207,13 +208,13 @@ public class Comment extends Fragment {
             @Override
             public void onLoadMore() {
 
-                if (!commentsList.isEmpty())
-                    commentsList.remove(commentsList.size() - 1);
-                adapter.notifyItemRemoved(commentsList.size());
+                if (!addCommentsList.isEmpty())
+                    addCommentsList.remove(addCommentsList.size() - 1);
+                adapter.notifyItemRemoved(addCommentsList.size());
 
-                commentsList.add(null);
+                addCommentsList.add(null);
 
-                adapter.notifyItemInserted(commentsList.size() - 1);
+                adapter.notifyItemInserted(addCommentsList.size() - 1);
 
                 getNearbEventServerCall();
             }
@@ -223,27 +224,31 @@ public class Comment extends Fragment {
     }
 
     public void removeALl() {
-        commentsList.removeAll(commentsList);
+        addCommentsList.removeAll(addCommentsList);
         addLoading();
     }
 
     public void addLoading() {
         comments = new Comments();
         comments.setViewMessage(getString(R.string.home_loading));
-        commentsList.add(comments);
-        bindAdapter(commentsList);
+        AddComment addComment = new AddComment();
+        addComment.setComment(comments);
+        addCommentsList.add(addComment);
+        bindAdapter(addCommentsList);
     }
 
     public void addLoadingAtStrat() {
         comments = new Comments();
         comments.setViewMessage(getString(R.string.home_loading));
+        AddComment addComment = new AddComment();
+        addComment.setComment(comments);
 //        for(int i = commentsList.size()-1; i > 0; i--)
 //        {
 //            //set the last element to the value of the 2nd to last element
 //            commentsList.set(i,commentsList.get(i-1));
 //        }
-        commentsList.add(0, comments);
-        bindAdapter(commentsList);
+        addCommentsList.add(0, addComment);
+        bindAdapter(addCommentsList);
     }
 
     public void setLoaded() {
@@ -251,7 +256,7 @@ public class Comment extends Fragment {
     }
 
     public int getItemCount() {
-        return commentsList.size();
+        return addCommentsList.size();
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
@@ -263,9 +268,9 @@ public class Comment extends Fragment {
     }
 
 
-    private void bindAdapter(List<Comments> commentList) {
+    private void bindAdapter(List<AddComment> addCommentsList) {
         swipeRefreshLayout.setRefreshing(false);
-        refreshData(commentList);
+        refreshData(addCommentsList);
     }
 
     @Override
@@ -276,11 +281,11 @@ public class Comment extends Fragment {
     }
 
     @UiThread
-    private void refreshData(List<Comments> commentList) {
-        Log.e("refresh data called: ", " cmt : "+commentList.size());
+    private void refreshData(List<AddComment> addCommentsList) {
+        Log.e("refresh data called: ", " cmt : "+addCommentsList.size());
         if (adapter != null) {
             adapter.clear();
-            adapter.addAll(commentList);
+            adapter.addAll(addCommentsList);
             adapter.notifyDataSetChanged();
         }
     }
@@ -314,45 +319,45 @@ public class Comment extends Fragment {
         Log.e("in get comment user: ", "" + commentsList.size());
 
         if (commentsList.get(0) instanceof Comments) {
-            this.commentsList.addAll(commentsList);
+            convertToAddCommentListObject(commentsList);
+
             displayComments();
         }
     }
 
-    @Subscribe
-    public void getPostedComment(Comments comments) {
-        Log.e("posted comment: ", "" + comments.getCommentId());
-
-        if (comments != null && comments.getViewMessage() == null) {
-
-            bm = null;
-            commentTextEditText.setText("");
-            commentsList.remove(0);
-            commentsList.add(0, comments);
-            bindAdapter(commentsList);
-            //getNearbEventServerCall();
-            Toast.makeText(context, "You'r comment has been posted", Toast.LENGTH_LONG).show();
-        } else if (comments != null && comments.getViewMessage().equals(getString(R.string.deleted))) {
-            int index = -1;
-            for (Comments c : commentsList)
-                if (c.getCommentId() == comments.getCommentId()) {
-                    index = commentsList.indexOf(c);
-                    Log.e("index ", " cmt : " + comments.getCommentId());
-                    break;
-                }
-            if (index != -1) {
-                Log.e("before : ", " cmt : " + commentsList.size());
-                commentsList.remove(index);
-                Log.e("after : ", " cmt : " + commentsList.size());
-                adapter.notifyItemRemoved(index);
-            }
-            bindAdapter(commentsList);
-        } else if (comments != null && comments.getViewMessage().equals(getString(R.string.undo))) {
-
-        } else {
-            Toast.makeText(context, "Unable to post you'r comment", Toast.LENGTH_LONG).show();
+    public void convertToAddCommentListObject(List<Comments> commentsList){
+        for(Comments c: commentsList){
+            AddComment addComment = new AddComment();
+            addComment.setComment(c);
+            addCommentsList.add(addComment);
         }
     }
+
+//    @Subscribe
+//    public void getPostedComment(Comments comments) {
+//        Log.e("posted comment: ", "" + comments.getCommentId());
+//
+//        if (comments != null && comments.getViewMessage().equals(getString(R.string.deleted))) {
+//            int index = -1;
+//            for (Comments c : commentsList)
+//                if (c.getCommentId() == comments.getCommentId()) {
+//                    index = commentsList.indexOf(c);
+//                    Log.e("index ", " cmt : " + comments.getCommentId());
+//                    break;
+//                }
+//            if (index != -1) {
+//                Log.e("before : ", " cmt : " + commentsList.size());
+//                commentsList.remove(index);
+//                Log.e("after : ", " cmt : " + commentsList.size());
+//                adapter.notifyItemRemoved(index);
+//            }
+//            bindAdapter(commentsList);
+//        } else if (comments != null && comments.getViewMessage().equals(getString(R.string.undo))) {
+//
+//        } else {
+//            Toast.makeText(context, "Unable to post you'r comment", Toast.LENGTH_LONG).show();
+//        }
+//    }
 
 
 
@@ -364,12 +369,12 @@ public class Comment extends Fragment {
             @Override
             public void run() {
 
-                if(commentsList.size()>0 && commentsList.get(0).getViewMessage() !=null
-                        && commentsList.get(0).getViewMessage().equals(context.getString(R.string.home_loading))) {
-                    commentsList.remove(0);
-                    adapter.notifyItemRemoved(commentsList.size());
+                if(addCommentsList.size()>0 && addCommentsList.get(0).getComment().getViewMessage() !=null
+                        && addCommentsList.get(0).getComment().getViewMessage().equals(context.getString(R.string.home_loading))) {
+                    addCommentsList.remove(0);
+                    adapter.notifyItemRemoved(0);
                 }
-                bindAdapter(commentsList);
+                bindAdapter(addCommentsList);
             }
         }, 5000);
 
@@ -486,27 +491,34 @@ public class Comment extends Fragment {
 
         Log.e("item inserted : ", ""+addComment.getViewMsg());
         Log.e("item inserted 1 : ", ""+addComment.getComment().getViewMessage());
-        Log.e("msg 0 : ", ""+commentsList.get(0).getViewMessage());
+        Log.e("msg 0 : ", ""+addCommentsList.get(0).getComment().getViewMessage());
         Log.e("signup : ", ""+addComment.getComment().getUser().getImageUrl());
 
+        if(addCommentsList!= null && addCommentsList.get(0).getComment().getViewMessage()!= null)
+            if(addCommentsList.get(0).getComment().getViewMessage().equals(getString(R.string.home_loading)) ||
+                    addCommentsList.get(0).getComment().getViewMessage().equals(getString(R.string.home_no_data)))
+                addCommentsList.remove(0);
 
-        if(commentsList!= null && commentsList.get(0).getViewMessage()!= null)
-            if(commentsList.get(0).getViewMessage().equals(getString(R.string.home_loading)) ||
-                    commentsList.get(0).getViewMessage().equals(getString(R.string.home_no_data)))
-                commentsList.remove(0);
+        if(addCommentsList.contains(addComment))
+            addCommentsList.remove(addCommentsList.indexOf(addComment));
 
-        if(commentsList.contains(addComment.getComment()))
-            commentsList.remove(commentsList.indexOf(addComment.getComment()));
-
-        commentsList.add(0, addComment.getComment());
-        adapter.insert(addComment.getComment(), 0);
-        bindAdapter(commentsList);
-        // adapter.add(addComment.getComment());
-       // adapter.notifyDataSetChanged();
-
-        //adapter.insert(addComment.getComment(), 0);
-       // adapter.notifyItemInserted(0);
+        addCommentsList.add(0, addComment);
+        adapter.insert(addComment, 0);
+        bindAdapter(addCommentsList);
 
     }
+
+    @Subscribe
+    public void getDeletedCommentObject(DeleteComment deleteComment) {
+                 int index = addCommentsList.indexOf(deleteComment.getAddComment());
+                dis
+                Log.e("before : ", " cmt : " + addCommentsList.size());
+                addCommentsList.remove(index);
+                Log.e("after : ", " cmt : " + addCommentsList.size());
+                adapter.notifyItemRemoved(index);
+                bindAdapter(addCommentsList);
+
+    }
+
 
 }

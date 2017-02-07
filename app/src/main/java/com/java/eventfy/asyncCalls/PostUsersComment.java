@@ -41,6 +41,8 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
 
             Log.e("comment object is : ", "obj : "+g.toJson(addComment.getComment()));
 
+            addComment.getComment().setViewMessage(null);
+
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -61,18 +63,19 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
 
-        if(comment==null) {
-            addComment.setViewMsg(context.getString(R.string.comment_add_fail));
-        }
-        else {
+        if(comment!=null && comment.getDate()!=null){
             Gson g = new Gson();
             Log.e("posted comment : ", g.toJson(comment));
 
-            addComment.getComment().setCommentId(comment.getCommentId());
-            addComment.getComment().setDate(comment.getDate());
+            addComment.setComment(comment);
             addComment.setViewMsg(context.getString(R.string.comment_add_success));
 
             Log.e("original comment : ", g.toJson(addComment.getComment()));
+        }
+        else{
+            Log.e("posting fail", " +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            addComment.setViewMsg(context.getString(R.string.comment_add_fail));
+            addComment.getComment().setViewMessage(context.getString(R.string.comment_add_fail));
         }
 
         EventBusService.getInstance().post(addComment);

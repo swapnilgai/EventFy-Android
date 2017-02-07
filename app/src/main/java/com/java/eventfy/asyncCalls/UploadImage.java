@@ -81,7 +81,7 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
             PostUsersComment postUsersComment = new PostUsersComment(urlForComment, addComment, context);
             postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        else if(addComment!=null && Url!=null) {
+        else if(addComment!=null && Url==null) {
             addComment.setViewMsg(context.getString(R.string.comment_add_fail));
             EventBusService.getInstance().post(addComment);
         }

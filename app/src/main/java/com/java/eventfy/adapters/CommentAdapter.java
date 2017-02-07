@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -24,6 +25,8 @@ import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
+import com.java.eventfy.Entity.CommentSudoEntity.DeleteComment;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
@@ -31,17 +34,21 @@ import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.ImageFullScreenMode;
 import com.java.eventfy.R;
 import com.java.eventfy.asyncCalls.DeleteCommentFromEvent;
+import com.java.eventfy.asyncCalls.PostUsersComment;
+import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.java.eventfy.R.id.commentImage;
 import static com.java.eventfy.R.id.imageView;
 
 /**
  * Created by @vitovalov on 30/9/15.
  */
-public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.ViewHolder> {
+public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerView.ViewHolder> {
     public View view;
     private final int VIEW_DATA = 1;
     private final int VIEW_LOADING = 0;
@@ -49,7 +56,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
     private final int VIEW_POSTING = 98;
     private final int VIEW_FAIL = 99;
     private final int VIEW_SUCCESS = 100;
-
+    private Bitmap imageBitmap;
     private final int VIEW_NETWORK_ERROR = -1;
     private int visibleThreshold = 50;
     private int lastVisibleItem, totalItemCount;
@@ -125,7 +132,8 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         if (holder instanceof ResultHolder) {
-            final Comments comment = getItem(position);
+            final  AddComment addComment = getItem(position);
+            final Comments comment = addComment.getComment();
 
             Gson g  = new Gson();
 
@@ -155,6 +163,11 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
                 ((ResultHolder) holder).commentImage.setVisibility(View.VISIBLE);
 
 
+            }else if(addComment.getBitmapByteArray()!=null) {
+                //if(((ResultHolder) holder).commentImage.getDrawable()==null) {
+                decodeImageDataObject(addComment);
+                ((ResultHolder) holder).commentImage.setImageBitmap(imageBitmap);
+               // }
             }
 
             else{
@@ -165,6 +178,47 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
 
 
             ((ResultHolder) holder).autherName.setText(comment.getUser().getUserName());
+
+
+            ((ResultHolder) holder).commentRetry.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //handle menu2 click
+                    addComment.setViewMsg(context.getString(R.string.comment_add_posting));
+                    addComment.getComment().setViewMessage(context.getString(R.string.comment_add_posting));
+                    Gson g = new Gson();
+                    Log.e("retry : ", g.toJson(addComment.getComment()));
+
+                  //  EventBusService.getInstance().post(addComment);
+                    String urlForComment = context.getString(R.string.ip_local) + context.getString(R.string.add_comment_in_event);
+
+                    ((ResultHolder) holder).commentTime.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentRetry.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentDiscard.setVisibility(View.GONE);
+                    ((ResultHolder) holder).commentPosting.setVisibility(View.VISIBLE);
+
+                    ObjectAnimator animator = ObjectAnimator.ofFloat(((ResultHolder) holder).commentPosting, "rotation", 0, 360);
+                    animator.setRepeatCount(ValueAnimator.INFINITE);
+                    animator.setInterpolator(new LinearInterpolator());
+                    animator.setDuration(1000);
+                    animator.start();
+
+                    ((ResultHolder) holder).commentPostingText.setVisibility(View.VISIBLE);
+
+                    if(addComment.getComment().getImageUrl()==null) {
+                        UploadImage uploadImage = new UploadImage(addComment, imageBitmap, urlForComment, getApplicationContext());
+                        uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                    else{
+                        PostUsersComment postUsersComment = new PostUsersComment(urlForComment, addComment, context);
+                        postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+
+
+
+                }
+            });
+
 
             ((ResultHolder) holder).commentImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -247,7 +301,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
                                     break;
                                 case R.id.delete:
                                     //handle menu2 click
-                                    dialogBox(context.getString(R.string.deleted), comment);
+                                    dialogBox(context.getString(R.string.deleted), addComment);
                                     break;
                             }
                             return false;
@@ -268,12 +322,16 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
             return;
 
         }
+
+
     }
 
 
     @Override
     public int getItemViewType(int position) {
-        Comments comment = getItem(position);
+        final  AddComment addComment = getItem(position);
+        final Comments comment = addComment.getComment();
+
 
         Log.e("in adapter item view ", ""+comment.getViewMessage());
 
@@ -391,7 +449,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
         }
     }
 
-    public void dialogBox(final String message, final Comments comments) {
+    public void dialogBox(final String message, final AddComment addComment) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage(message);
 
@@ -402,7 +460,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         startProgressDialog(message);
-                        serverCallToDelete(comments);
+                        serverCallToDelete(addComment);
                     }
                 });
 
@@ -419,28 +477,28 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
         alertDialog.show();
     }
 
-    public void serverCallToDelete(Comments comment) {
+    public void serverCallToDelete(AddComment AddComment) {
 
         String url = context.getString(R.string.ip_local) + context.getString(R.string.delete_comment_from_event);
 
-        DeleteCommentFromEvent deleteCommentFromEvent = new DeleteCommentFromEvent(url, comment, context);
+        DeleteCommentFromEvent deleteCommentFromEvent = new DeleteCommentFromEvent(url, AddComment, context);
         deleteCommentFromEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
 
-    public void serverCallToUndo(Comments comment) {
+    public void serverCallToUndo(AddComment addComment) {
 
         String url = context.getString(R.string.ip_local) + context.getString(R.string.get_comment_for_event);
 
-        DeleteCommentFromEvent deleteCommentFromEvent = new DeleteCommentFromEvent(url, comment, view.getContext());
+        DeleteCommentFromEvent deleteCommentFromEvent = new DeleteCommentFromEvent(url, addComment, view.getContext());
         deleteCommentFromEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
 
     @Subscribe
-    public void getDeletedOrUndoComment(Comments comments) {
+    public void getDeletedOrUndoComment(DeleteComment deleteComment) {
         dismissProgressDialog();
 
     }
@@ -458,11 +516,14 @@ public class CommentAdapter extends ArrayRecyclerAdapter<Comments, RecyclerView.
         progressDialog.show();
     }
 
-
-
     public void dismissProgressDialog()
     {
         progressDialog.dismiss();
     }
 
+    public void decodeImageDataObject(AddComment addComment) {
+        if (addComment.getBitmapByteArray() != null) {
+            imageBitmap = BitmapFactory.decodeByteArray(addComment.getBitmapByteArray(), 0, addComment.getBitmapByteArray().length);
+        }
+    }
 }
