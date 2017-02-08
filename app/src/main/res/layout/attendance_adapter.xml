@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linear_layout_attendance"
     android:orientation="horizontal"
+    android:background="#d3d3d3"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,9 +12,12 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginLeft="10dp"
+    android:background="@drawable/curve_liner_layout"
+    android:layout_marginRight="10dp"
     android:padding="3dp"
-    android:background="@color/cardview_light_background">
+>
 
     <ImageView
         android:id="@+id/eventinfo_user_image"
@@ -65,11 +69,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/place_autocomplete_search_hint" />
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="10dp"-->
+                <!--android:background="@color/place_autocomplete_search_hint" />-->
 </LinearLayout>
 
         <at.markushi.ui.CircleButton

@@ -10,8 +10,9 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="#d3d3d3"
               android:orientation="vertical"
-              android:padding="16dp">
+             >
 
     <!-- TODO: Update blank fragment layout -->
     <com.devspark.robototextview.widget.RobotoTextView
@@ -19,186 +20,52 @@
         android:layout_height="wrap_content"
         android:id="@+id/event_name"
         android:text="Even Name"
-        android:textSize="25dp"
-        android:layout_marginLeft="15dp"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/white"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:layout_marginBottom="10dp"/>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="15dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="@color/cardview_light_background">
-
-        <ImageButton
-            android:id="@+id/admin_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:scaleType="fitXY"
-            android:padding="5dp"
-            android:layout_margin="1dp"
-            android:src="@drawable/ic_person_white_24dp"
-            android:background="@color/colorPrimaryDark"/>
-
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_margin="2dp"
-            android:layout_weight="1.0"
-            android:paddingLeft="10dp"
-            android:background="@color/cardview_light_background">
-
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:id="@+id/admin_name"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="1.0"
-                android:paddingLeft="8dp"
-                android:layout_gravity="top"
-                android:textStyle="bold"
-                android:paddingRight="6dp"/>
-
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:id="@+id/admin_status"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1.0"
-                android:paddingLeft="8dp"
-                android:paddingRight="6dp"
-                android:layout_gravity="center"
-                android:inputType="textMultiLine"/>
-
-</LinearLayout>
-        <View
-            android:layout_width="3dp"
-            android:layout_height="fill_parent"
-            android:paddingTop="2dp"
-            android:layout_margin="5dp"
-            android:background="@color/place_autocomplete_search_hint" />
-
-        <at.markushi.ui.CircleButton
-            android:id="@+id/navigate_admin_profile"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_navigate_next_white_24dp"
-            android:background="@color/colorPrimaryDark"/>
-
-
-    </LinearLayout>
-
-
-    <android.support.v7.widget.CardView
+    <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Description"
+        android:textSize="15dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginRight="1dp"
-        app:cardUseCompatPadding="true"
-        android:background="@color/place_autocomplete_search_hint">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/place_autocomplete_search_hint">
-
-            <LinearLayout
-                android:id="@+id/location_map_view_linear_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp">
-
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/location_map_view"
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginRight="2dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_height="170dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/location_info_linear_layout"
-                android:layout_width="fill_parent"
-                android:paddingTop="4dp"
-                android:layout_height="match_parent"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:layout_marginTop="2dp"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal|bottom"
-                android:background="@color/cardview_light_background">
-
-                <at.markushi.ui.CircleButton
-                    android:id="@+id/btnSelectImageFromDevice"
-                    android:layout_width="45dip"
-                    android:layout_height="45dip"
-                    android:layout_gravity="bottom"
-                    android:gravity="bottom"
-                    android:padding="10dp"
-                    android:layout_marginBottom="6dp"
-                    android:layout_marginRight="5dp"
-                    android:src="@drawable/ic_location_on_black_18dp"
-                    app:cb_color="@color/colorPrimary"
-                    app:cb_pressedRingWidth="5dip" />
-
-                <View
-                    android:layout_width="3dp"
-                    android:layout_height="fill_parent"
-                    android:paddingTop="5dp"
-                    android:layout_margin="10dp"
-                    android:background="@color/place_autocomplete_search_hint" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
 
     <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/event_location_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
+        android:text="Description"
         android:textSize="15dp"
-        android:inputType="textMultiLine"
         android:background="@color/white"
-        android:text="location"
-        android:paddingLeft="15dp"
-        android:paddingRight="4dp"/>
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:id="@+id/event_visiblirt_miles"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:textStyle="italic"
-        android:background="@color/white"
-        android:text="3 mile visile"
-        android:paddingLeft="15dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:paddingRight="4dp"/>
-</LinearLayout>
-            </LinearLayout>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
 
-            </LinearLayout>
-    </android.support.v7.widget.CardView>
-
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date/Time"
+        android:textSize="15dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="5dp"
-        android:layout_margin="5dp"
+
         android:background="@color/cardview_light_background">
     <LinearLayout
         android:orientation="horizontal"
@@ -306,10 +173,211 @@
             android:text="10-Non-2016"
             android:paddingBottom="10dp"
             android:textSize="20dp"/>
+    </LinearLayout>
+    </LinearLayout>
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Location"
+        android:textSize="15dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/place_autocomplete_search_hint">
+
+        <LinearLayout
+            android:id="@+id/location_map_view_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp">
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/location_map_view"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="2dp"
+                android:layout_height="170dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/location_info_linear_layout"
+            android:layout_width="fill_parent"
+            android:paddingTop="4dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/cardview_light_background">
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/btnSelectImageFromDevice"
+                android:layout_width="45dip"
+                android:layout_height="45dip"
+                android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:padding="10dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/ic_location_on_black_18dp"
+                app:cb_color="@color/colorPrimary"
+                app:cb_pressedRingWidth="5dip" />
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="fill_parent"
+                android:paddingTop="5dp"
+                android:layout_margin="10dp"
+                android:background="@color/place_autocomplete_search_hint" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/event_location_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:textSize="15dp"
+                    android:inputType="textMultiLine"
+                    android:background="@color/white"
+                    android:text="location"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="4dp"/>
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/event_visiblirt_miles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="15dp"
+                    android:textStyle="italic"
+                    android:background="@color/white"
+                    android:text="3 mile visile"
+                    android:paddingLeft="15dp"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
+
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Admin"
+        android:textSize="15dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/curve_liner_layout"
+        android:padding="3dp"
+        >
+
+        <ImageView
+            android:id="@+id/admin_image"
+            android:padding="5dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_placeholder"
+            android:layout_gravity="center_vertical"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+
+        <LinearLayout
+            android:layout_marginRight="5dp"
+            android:layout_width="0dip"
+            android:layout_marginTop="3dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="1.0"
+            android:paddingLeft="10dp">
+
+            <LinearLayout
+                android:layout_marginRight="2dp"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1.0"
+                android:paddingLeft="10dp"
+                >
+
+                <TextView
+                    android:id="@+id/admin_name"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:paddingTop="5dp"
+                    android:text="User Name"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+                <TextView
+                    android:id="@+id/admin_status"
+                    android:textColor="#6c7880"
+                    android:textSize="12sp"
+                    android:text="user staus is xys "
+                    android:inputType="textImeMultiLine"
+                    android:lines="2"
+                    android:paddingTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="10dp"-->
+                <!--android:background="@color/place_autocomplete_search_hint" />-->
+            </LinearLayout>
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/user_status_mode"
+                android:layout_width="18dip"
+                android:layout_height="18dip"
+                android:layout_gravity="center"
+                android:gravity="center"
+                app:cb_color="@color/colorActiveGreen"/>
+
+
+            <at.markushi.ui.CircleButton
+                android:id="@+id/navigate_admin_profile"
+                android:layout_width="35dip"
+                android:layout_height="35dip"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:src="@drawable/ic_navigate_next_white_24dp"
+                app:cb_color="@color/colorPrimary"
+                app:cb_pressedRingWidth="5dip" />
+
+
         </LinearLayout>
+
+
+    </LinearLayout>
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"

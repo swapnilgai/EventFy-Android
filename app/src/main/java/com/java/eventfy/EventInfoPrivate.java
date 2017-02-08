@@ -102,10 +102,11 @@ public class EventInfoPrivate extends AppCompatActivity {
         attendingFragment.setArguments(bundle);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(aboutFragment, "About");
         adapter.addFrag(commentsFragment, "Comments");
         adapter.addFrag(invitedFragment, "Invited");
         adapter.addFrag(attendingFragment, "Attending");
-        adapter.addFrag(aboutFragment, "About");
+       
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
     }

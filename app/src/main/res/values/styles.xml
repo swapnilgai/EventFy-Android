@@ -34,11 +34,12 @@
     <style name="FloatingTextLabel" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/transparent_black</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">19sp</item>
+
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
-        <item name="colorAccent">@color/colorPrimaryDark</item>
-        <item name="colorControlNormal">@color/colorPrimaryDark</item>
-        <item name="colorControlActivated">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/transparent_black</item>
+        <item name="colorControlNormal">@color/common_google_signin_btn_text_light_focused</item>
+        <item name="colorControlActivated">@color/common_google_signin_btn_text_light_focused</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
@@ -48,6 +49,17 @@
     <style name="ToolbarStyle" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <!-- Customize color of navigation drawer icon and back arrow -->
         <item name="colorControlNormal">@color/white</item>
+    </style>
+
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <!--<item name="android:textColorHint">@color/Color Name</item>-->
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColorHint">@color/common_google_signin_btn_text_light_focused</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/common_google_signin_btn_text_light_focused</item>
+        <!--<item name="colorControlNormal">@color/Color Name</item>-->
+        <!--<item name="colorControlActivated">@color/Color Name</item>-->
     </style>
 
 </resources>

@@ -511,7 +511,7 @@ public class Comment extends Fragment {
     @Subscribe
     public void getDeletedCommentObject(DeleteComment deleteComment) {
                  int index = addCommentsList.indexOf(deleteComment.getAddComment());
-                dis
+
                 Log.e("before : ", " cmt : " + addCommentsList.size());
                 addCommentsList.remove(index);
                 Log.e("after : ", " cmt : " + addCommentsList.size());
