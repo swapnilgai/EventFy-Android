@@ -11,8 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.java.eventfy.Entity.ImageViewEntity;
@@ -20,12 +18,15 @@ import com.java.eventfy.Entity.SignUp;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import at.markushi.ui.CircleButton;
+
 public class ViewerProfilePage extends AppCompatActivity {
     private TextView usetStatus;
     private TextView usetName;
-    private RadioGroup userVisibilityMode;
+    private TextView userVisibilityMode;
+    private CircleButton userVisibilityModeBtn;
+
     private SignUp signUp;
-    private RadioButton visibilityModeVisible;
     private ImageView userProfilePic;
     private static final int PICK_IMAGE_ID = 234;
     private Uri dest;
@@ -36,7 +37,9 @@ public class ViewerProfilePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewer_profile_page);
 
-        userVisibilityMode = (RadioGroup) findViewById(R.id.user_visibility_mode);
+        userVisibilityMode = (TextView) findViewById(R.id.visibility_mode);
+        userVisibilityModeBtn = (CircleButton) findViewById(R.id.visibility_mode_btn);
+
         usetStatus = (TextView) findViewById(R.id.user_status);
         usetName = (TextView) findViewById(R.id.user_name);
 
@@ -57,6 +60,7 @@ public class ViewerProfilePage extends AppCompatActivity {
         });
         Intent intent = getIntent();
         signUp = (SignUp) intent.getSerializableExtra(getString(R.string.signup_object_viewe_profile));
+
 
 
         if (signUp != null && signUp.getUserId() != null)
@@ -86,30 +90,6 @@ public class ViewerProfilePage extends AppCompatActivity {
     }
 
 
-    public void getVisibilityMode() {
-
-
-        userVisibilityMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId) {
-                    case R.id.user_visible:
-                        signUp.setVisibilityMode(getString(R.string.visibility_mode_visible));
-                        // do operations specific to this selection
-                        break;
-                    case R.id.user_donotdisturb:
-                        signUp.setVisibilityMode(getString(R.string.visibility_mode_donotdisturb));
-                        // do operations specific to this selection
-                        break;
-                    case R.id.user_invisible:
-                        signUp.setVisibilityMode(getString(R.string.visibility_mode_invisible));
-                        // do operations specific to this selection
-                        break;
-                }
-            }
-        });
-
-    }
-
 
     public void setUserData() {
 
@@ -127,6 +107,7 @@ public class ViewerProfilePage extends AppCompatActivity {
 
 
             Picasso.with(getApplicationContext()).load(signUp.getImageUrl())
+                    .resize(160, 160)
                     .into(userProfilePic, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -142,6 +123,19 @@ public class ViewerProfilePage extends AppCompatActivity {
                             userProfilePic.setImageResource(R.drawable.circular_user_image);
                         }
                     });
+
+
+            userVisibilityMode.setText(signUp.getVisibilityMode());
+
+            if(signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_invisible))) {
+                userVisibilityModeBtn.setColor(getColor(R.color.colorErrorRed));
+            }
+            else if(signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_donotdisturb))) {
+                userVisibilityModeBtn.setColor(getColor(R.color.colorDoNotDisturbYellow));
+            }
+            else{
+                userVisibilityModeBtn.setColor(getColor(R.color.colorActiveGreen));
+            }
 
         }
 

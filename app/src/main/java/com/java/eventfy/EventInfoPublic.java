@@ -86,6 +86,7 @@ public class EventInfoPublic extends AppCompatActivity {
             this.signUp = getUserObject();
             Log.e("event id in info ", "** " + event);
 
+            Log.e("event image url ", "** " + event.getEventImageUrl());
             eventImage = (ImageView) findViewById(R.id.event_image);
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
 
@@ -97,6 +98,7 @@ public class EventInfoPublic extends AppCompatActivity {
             else
                 Picasso.with(this)
                         .load(event.getEventImageUrl())
+                        .fit()
                         .into(eventImage);
 
             if (event.getDecesion().equals(getString(R.string.attending)))
@@ -173,9 +175,10 @@ public class EventInfoPublic extends AppCompatActivity {
         Log.e("in main : ", "" + event.getEventName());
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(about_fragment, "About");
         adapter.addFrag(comments_fragment, "Comments");
         adapter.addFrag(attendance_fragment, "Attendees");
-        adapter.addFrag(about_fragment, "About");
+
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(adapter);
     }

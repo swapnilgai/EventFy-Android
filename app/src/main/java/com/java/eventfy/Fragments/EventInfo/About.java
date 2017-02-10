@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,6 +41,8 @@ import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteEvent;
+import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -47,6 +50,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import at.markushi.ui.CircleButton;
+
+import static com.java.eventfy.R.id.admin_image;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,21 +64,16 @@ public class About extends Fragment implements OnMapReadyCallback {
     private LatLng myLaLn;
     private View view;
     private Events event;
-    private TextView eventDescription;
-    private TextView eventName;
+    private RobotoTextView eventDescription;
+    private RobotoTextView eventName;
     private TextView adminName;
     private TextView adminStatus;
     private ImageView adminImage;
     private RobotoTextView eventLocation;
-    private RobotoTextView eventVisiblityMiles;
-
-    private RobotoTextView eventTimeFrom;
-    private RobotoTextView eventDateFrom;
-    private RobotoTextView eventTimeFromAmPm;
-    private RobotoTextView eventDateTo;
-    private RobotoTextView eventTimeTo;
-    private RobotoTextView eventTimeToAmPm;
-    private RobotoTextView eventCapacity;
+    private EditText eventVisiblityMiles;
+    private EditText eventCapacity;
+    private EditText eventDateTimeFrom;
+    private EditText eventDateTimeTo;
     private Button deleteEvent;
     private Button editEvent;
     private ProgressDialog progressDialog;
@@ -92,21 +92,19 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         EventBusService.getInstance().register(this);
 
-        eventName = (TextView) view.findViewById(R.id.event_name);
+
+        eventName = (RobotoTextView) view.findViewById(R.id.event_name);
         adminName = (TextView) view.findViewById(R.id.admin_name);
         adminStatus = (TextView) view.findViewById(R.id.admin_status);
-        adminImage = (ImageView) view.findViewById(R.id.admin_image);
+        adminImage = (ImageView) view.findViewById(admin_image);
         navigateAdminProfile = (CircleButton) view.findViewById(R.id.navigate_admin_profile);
         eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
-        eventVisiblityMiles = (RobotoTextView) view.findViewById(R.id.event_visiblirt_miles);
+        eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
+        eventVisiblityMiles = (EditText) view.findViewById(R.id.event_visibility_miles);
+        eventCapacity = (EditText) view.findViewById(R.id.event_capacity);
+        eventDateTimeFrom  = (EditText) view.findViewById(R.id.event_date_from);
+        eventDateTimeTo  = (EditText) view.findViewById(R.id.event_date_to);
 
-        eventTimeFrom  = (RobotoTextView) view.findViewById(R.id.time_from);
-        eventDateFrom  = (RobotoTextView) view.findViewById(R.id.date_from);
-        eventTimeFromAmPm  = (RobotoTextView) view.findViewById(R.id.time_from_am_pm);
-        eventDateTo  = (RobotoTextView) view.findViewById(R.id.date_to);
-        eventTimeTo  = (RobotoTextView) view.findViewById(R.id.time_to);
-        eventTimeToAmPm = (RobotoTextView) view.findViewById(R.id.time_to_am_pm);
-        eventCapacity = (RobotoTextView) view.findViewById(R.id.event_capacity);
         adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
 
         deleteEvent = (Button) view.findViewById(R.id.event_delete);
@@ -172,20 +170,36 @@ public class About extends Fragment implements OnMapReadyCallback {
 
          eventName.setText(event.getEventName());
          adminName.setText(event.getAdmin().getUserName());
-         adminStatus.setText("yer to implement funcnality");
-       // Picasso.
+         adminStatus.setText(event.getAdmin().getStatus());
 
-         eventLocation.setText(event.getLocation().getName());
-         eventVisiblityMiles.setText(event.getEventVisiblityMile());
+        eventVisiblityMiles.setText(event.getEventVisiblityMile() + " Miles");
 
-         eventTimeFrom.setText( convertTimeInTwelve(event.getEventTimeFrom()));
-         eventDateFrom.setText(event.getEventDateFrom());
+        eventCapacity.setText(event.getEventCapacity()+ " People");
+        Picasso.with(getContext())
+                .load(event.getAdmin().getImageUrl())
+                .resize(50, 50)
+                .transform(new RoundedCornersTransformCommentAuthor())
+                .placeholder(R.drawable.ic_perm_identity_white_24dp)
+                .into(adminImage);
 
-         eventTimeFromAmPm.setText(timeConverter(event.getEventTimeFrom()));
-         eventDateTo.setText(event.getEventDateTo());
-         eventTimeTo.setText(convertTimeInTwelve(event.getEventTimeTo()));
-         eventTimeToAmPm.setText(timeConverter(event.getEventTimeTo()));
+        eventDescription.setText(event.getEventDescription());
+
+        eventLocation.setText(event.getLocation().getName());
+      //   eventVisiblityMiles.setText(event.getEventVisiblityMile());
+
+        eventDateTimeFrom.setText(event.getEventDateFrom() + " AT "+convertTimeInTwelve(event.getEventTimeFrom())+" "+timeConverter(event.getEventTimeFrom()));
+
+        eventDateTimeTo.setText(event.getEventDateTo()+" AT "+convertTimeInTwelve(event.getEventTimeTo()) + " " + timeConverter(event.getEventTimeTo()));
+
+//         eventTimeFrom.setText( convertTimeInTwelve(event.getEventTimeFrom()));
+//         eventDateFrom.setText(event.getEventDateFrom());
+//
+//         eventTimeFromAmPm.setText();
+//         eventDateTo.setText(event.getEventDateTo());
+//         eventTimeTo.setText(convertTimeInTwelve(event.getEventTimeTo()));
+//         eventTimeToAmPm.setText(timeConverter(event.getEventTimeTo()));
          eventCapacity.setText(event.getEventCapacity());
+
     }
 
     @Override
@@ -240,7 +254,7 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     public void setUpMarker()
     {
-        int zoomVal = Integer.parseInt(eventVisiblityMiles.getText().toString());
+        int zoomVal = Integer.parseInt(event.getEventVisiblityMile());
         zoomVal = getZoonValue(zoomVal);
         myLaLn = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
 

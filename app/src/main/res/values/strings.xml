@@ -62,6 +62,8 @@
     <string name="home_connection_error">data</string>
     <string name="invite_add_user">inviteAddUser</string>
     <string name="invite_remove_user">inviteRemoveUser</string>
+    <string name="update_event_success">update_success</string>
+    <string name="update_event_fail">update_fail</string>
 
     <string name="deleted">deleted</string>
     <string name="undo">undo</string>

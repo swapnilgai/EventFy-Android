@@ -3,7 +3,9 @@
                                             xmlns:app="http://schemas.android.com/apk/res-auto"
                                             android:layout_width="fill_parent"
                                             android:layout_height="fill_parent"
-                                            android:fitsSystemWindows="true">
+                                            android:fitsSystemWindows="true"
+                                            android:background="#d3d3d3"
+    >
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
@@ -11,217 +13,153 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#d3d3d3"
+                android:layout_marginLeft="5dp"
+              android:layout_marginRight="5dp"
               android:orientation="vertical"
              >
 
     <!-- TODO: Update blank fragment layout -->
+
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/event_name"
+        android:text="Name/Description"
+        android:textSize="10dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:layout_marginBottom="3dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="20dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/date_picker_view_animator"
+            android:orientation="vertical">
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Even Name"
-        android:textSize="20dp"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/white"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:layout_marginBottom="10dp"/>
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="15dp"
+        android:paddingBottom="6dp"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:layout_marginBottom="5dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        />
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="15dp"
-        android:background="@color/white"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        />
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Date/Time"
-        android:textSize="15dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:layout_marginBottom="5dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        />
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="5dp"
-
-        android:background="@color/cardview_light_background">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:layout_margin="10dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:background="@color/colorPrimaryTransparent">
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/time_from"
-            android:gravity="left"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:textSize="40dp"
-            android:text="8:30"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"/>
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:gravity="bottom"
-            android:id="@+id/time_from_am_pm"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:paddingLeft="2dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
-            android:textColor="@color/transparent_black"
-            android:layout_gravity="bottom"
-            android:text="AM"/>
-
-        <View
-            android:layout_width="3dp"
-            android:layout_height="32dp"
-            android:paddingTop="5dp"
-            android:layout_margin="10dp"
-            android:background="@color/circle_background" />
-
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/date_from"
-            android:gravity="bottom"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:text="10-Non-2016"
-            android:paddingBottom="10dp"
-            android:textSize="20dp"/>
-    </LinearLayout>
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:gravity="bottom"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:textColor="@color/transparent_black"
-        android:layout_gravity="center"
-        android:textSize="15dp"
+        android:textSize="18dp"
         android:textStyle="bold"
-        android:text="TO"/>
+        android:paddingRight="10dp"
+        android:id="@+id/event_name"
+        android:paddingTop="10dp"
+        android:textColor="@color/transparent_black"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+       />
 
-    <LinearLayout
-        android:orientation="horizontal"
+                <!--<EditText         android:id="@+id/event_name"-->
+                                  <!--android:layout_width="match_parent"-->
+                          <!--android:layout_height="wrap_content"-->
+                          <!--android:inputType="text"-->
+                          <!--android:hint="Event Name"-->
+                          <!--android:text="Event Name"-->
+                          <!--android:enabled="false"-->
+                                  <!--android:paddingLeft="20dp"-->
+                          <!--android:textStyle="bold"-->
+                          <!--android:textColorHint="@color/colorPrimaryDark"-->
+                          <!--android:textColor="@color/transparent_black"/>-->
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
+        android:background="@color/crop__button_text" />
+
+
+
+    <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:layout_margin="10dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:background="@color/colorPrimaryTransparent">
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/time_to"
-            android:gravity="left"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:textSize="40dp"
-            android:text="8:30"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"/>
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/time_to_am_pm"
-            android:gravity="bottom"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:paddingLeft="2dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
-            android:textColor="@color/transparent_black"
-            android:layout_gravity="bottom"
-            android:text="AM"/>
+        android:id="@+id/event_description"
+        android:text="Description"
+        android:textSize="16dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="0dp"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/transparent_black"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
 
-        <View
-            android:layout_width="3dp"
-            android:layout_height="32dp"
-            android:paddingTop="5dp"
-            android:layout_margin="10dp"
-            android:background="@color/circle_background" />
+            <!--<EditText         android:id="@+id/event_description"-->
+                              <!--android:layout_width="match_parent"-->
+                              <!--android:layout_height="wrap_content"-->
+                              <!--android:inputType="text"-->
+                              <!--android:hint="Description"-->
+                              <!--android:text="Description"-->
+                              <!--android:enabled="false"-->
+                              <!--android:paddingLeft="20dp"-->
+                              <!--android:textColorHint="@color/colorPrimaryDark"-->
+                              <!--android:textColor="@color/transparent_black"/>-->
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/date_to"
-            android:gravity="bottom"
-            android:textColor="@color/colorPrimary"
-            android:textStyle="bold"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:text="10-Non-2016"
-            android:paddingBottom="10dp"
-            android:textSize="20dp"/>
-    </LinearLayout>
-    </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
 
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Location"
-        android:textSize="15dp"
+        android:textSize="10dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="4dp"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         />
-
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/date_picker_view_animator"
+        android:layout_marginTop="1dp"
+        android:elevation="20dp"
+        >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/place_autocomplete_search_hint">
+        android:background="@color/date_picker_view_animator"
+        >
 
         <LinearLayout
             android:id="@+id/location_map_view_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp">
+            android:layout_height="wrap_content">
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/location_map_view"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="2dp"
                 android:layout_height="170dp"/>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/location_info_linear_layout"
             android:layout_width="fill_parent"
-            android:paddingTop="4dp"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:layout_marginTop="2dp"
+            android:gravity="center"
+
             android:orientation="horizontal"
             android:layout_gravity="center_horizontal|bottom"
-            android:background="@color/cardview_light_background">
+            android:background="@color/date_picker_view_animator"            android:layout_marginTop="2dp"
+            >
 
             <at.markushi.ui.CircleButton
                 android:id="@+id/btnSelectImageFromDevice"
@@ -229,70 +167,207 @@
                 android:layout_height="45dip"
                 android:layout_gravity="bottom"
                 android:gravity="bottom"
-                android:padding="10dp"
                 android:layout_marginBottom="6dp"
                 android:layout_marginRight="5dp"
                 android:src="@drawable/ic_location_on_black_18dp"
-                app:cb_color="@color/colorPrimary"
+                android:padding="5dp"
+                app:cb_color="#d3d3d3"
                 app:cb_pressedRingWidth="5dip" />
 
-            <View
-                android:layout_width="3dp"
-                android:layout_height="fill_parent"
-                android:paddingTop="5dp"
-                android:layout_margin="10dp"
-                android:background="@color/place_autocomplete_search_hint" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:id="@+id/event_location_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
-                    android:textSize="15dp"
-                    android:inputType="textMultiLine"
-                    android:background="@color/white"
-                    android:text="location"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="4dp"/>
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/event_location_text_view"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:lines="@android:integer/config_longAnimTime"
+                android:layout_weight="1.0"
+                android:paddingTop="10dp"
+                android:gravity="fill_vertical"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:inputType="textMultiLine"
+                android:text="location xyz"
+                android:paddingLeft="2dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="4dp"/>
+            <!--<View-->
+            <!--android:layout_width="2dp"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:paddingTop="2dp"-->
+            <!--android:layout_margin="5dp"-->
+            <!--android:background="@color/common_google_signin_btn_text_light_focused" />-->
 
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:id="@+id/event_visiblirt_miles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15dp"
-                    android:textStyle="italic"
-                    android:background="@color/white"
-                    android:text="3 mile visile"
-                    android:paddingLeft="15dp"
-                    android:paddingBottom="10dp"
-                    android:paddingRight="4dp"/>
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
+</android.support.v7.widget.CardView>
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date/Time"
+        android:textSize="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="20dp"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="11dp"
+
+            android:background="@color/date_picker_view_animator"
+            >
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:layout_margin="0dp"
+                >
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:textColorHint="@color/transparent_black"
+                    android:textColor="@color/transparent_black"
+                    >
+
+                    <EditText android:id="@+id/event_date_from"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:inputType="text"
+                              android:hint="From"
+                              android:text="12-Nov-2017 at 8:30 AM"
+                              android:enabled="false"
+                              android:textColorHint="@color/transparent_black"
+                              android:textColor="@color/transparent_black"/>
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_margin="5dp"-->
+            <!--&gt;-->
+            <!--<View-->
+            <!--android:layout_width="58dp"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:background="@color/transparent_black" />-->
+            <!--<com.devspark.robototextview.widget.RobotoTextView-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:textColor="@color/navigationBarColor"-->
+            <!--android:textSize="15dp"-->
+            <!--android:textStyle="bold"-->
+            <!--android:text="TO"/>-->
+
+            <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginTop="10dp"-->
+            <!--android:background="@color/transparent_black" />-->
+            <!--</LinearLayout>-->
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:layout_margin="0dp">
+                <!--<com.devspark.robototextview.widget.RobotoTextView-->
+                <!--android:id="@+id/time_to"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:textSize="20dp"-->
+                <!--android:text="8:30"-->
+                <!--android:textStyle="bold"/>-->
+                <!--<com.devspark.robototextview.widget.RobotoTextView-->
+                <!--android:id="@+id/time_to_am_pm"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:paddingLeft="5dp"-->
+                <!--android:textSize="12dp"-->
+                <!--android:paddingTop="7dp"-->
+                <!--android:paddingRight="10dp"-->
+                <!--android:text="AM"/>-->
+
+                <!--<com.devspark.robototextview.widget.RobotoTextView-->
+                <!--android:id="@+id/date_to"-->
+                <!--android:textStyle="bold"-->
+                <!--android:layout_marginLeft="10dp"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:text="10-Non-2016"-->
+                <!--android:textSize="20dp"/>-->
+
+                <!--<View-->
+                <!--android:layout_width="3dp"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:layout_margin="2dp"-->
+                <!--android:background="@color/circle_background" />-->
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    >
+                    <EditText android:id="@+id/event_date_to"
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              android:inputType="text"
+                              android:hint="To"
+                              android:text="12-Nov-2017 at 8:30 AM"
+                              android:enabled="false"
+                              android:textColorHint="@color/colorPrimaryDark"
+                              android:textColor="@color/transparent_black"/>
+                </android.support.design.widget.TextInputLayout>
 
 
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Admin"
-        android:textSize="15dp"
+        android:textSize="10dp"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/date_picker_view_animator"
+        android:elevation="20dp"
+        android:layout_marginBottom="1dp">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:background="@drawable/curve_liner_layout"
+        android:background="@color/date_picker_view_animator"
         android:padding="3dp"
         >
 
@@ -309,7 +384,6 @@
         <LinearLayout
             android:layout_marginRight="5dp"
             android:layout_width="0dip"
-            android:layout_marginTop="3dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_weight="1.0"
@@ -378,45 +452,91 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    </android.support.v7.widget.CardView>
+
+    <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_margin="22dp"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:background="@color/colorPrimaryTransparent">
+        android:text="Other"
+        android:textSize="10dp"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:gravity="bottom"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:paddingLeft="2dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:textColor="@color/transparent_black"
-            android:layout_gravity="center"
-            android:text="Event capacity : "/>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/date_picker_view_animator"
+        android:layout_marginTop="1dp"
+        android:elevation="20dp"
+        android:layout_marginBottom="9dp">
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:id="@+id/event_capacity"
-            android:gravity="bottom"
-            android:layout_height="fill_parent"
-            android:layout_width="wrap_content"
-            android:paddingLeft="2dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="10dp"
-            android:textStyle="bold"
-            android:textSize="20dp"
-            android:textColor="@color/transparent_black"
-            android:layout_gravity="bottom"
-            android:text="38"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="11dp"
 
+        android:background="@color/date_picker_view_animator"
+        >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="0dp"
+            >
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                >
+
+                <EditText android:id="@+id/event_visibility_miles"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:inputType="text"
+                          android:hint="Visibility Miles"
+                          android:text="20 Miles"
+                          android:paddingLeft="5dp"
+                          android:enabled="false"
+                          android:textColorHint="@color/colorPrimaryDark"
+                          android:textColor="@color/transparent_black"/>
+            </android.support.design.widget.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:layout_margin="0dp">
+
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                >
+                <EditText android:id="@+id/event_capacity"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:inputType="text"
+                          android:hint="Capacity"
+                          android:text="38 people"
+                          android:paddingLeft="5dp"
+                          android:enabled="false"
+                          android:textColorHint="@color/colorPrimaryDark"
+                          android:textColor="@color/transparent_black"/>
+            </android.support.design.widget.TextInputLayout>
+
+
+        </LinearLayout>
     </LinearLayout>
-
+</android.support.v7.widget.CardView>
 <LinearLayout
     android:id="@+id/linear_layout_with_admin_options"
     android:layout_width="match_parent"

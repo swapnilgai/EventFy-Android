@@ -31,6 +31,7 @@ import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
 import com.java.eventfy.utils.CustomViewPager;
 import com.java.eventfy.utils.ImagePicker;
 import com.soundcloud.android.crop.Crop;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -64,11 +65,6 @@ public class CreatePublicEvent extends AppCompatActivity {
 
         Log.e("cate bef "," 000000 "+category);
 
-        if(event!=null) {
-            category = event.getEventType();
-        }
-
-
         Log.e("cate aft "," 000000 "+category);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -83,9 +79,16 @@ public class CreatePublicEvent extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         addImage = (FloatingActionButton) findViewById(R.id.add_image);
 
+        if(event!=null) {
+            category = event.getEventType();
+            if(!event.getEventImageUrl().equals("default"))
+                Picasso.with(this)
+                        .load(event.getEventImageUrl())
+                        .placeholder(R.drawable.logo)
+                        .into(eventImageIV);
+        }
+
         tabLayout.setupWithViewPager(viewPager);
-
-
 
         addImage.setOnClickListener(new OnClickListener() {
 

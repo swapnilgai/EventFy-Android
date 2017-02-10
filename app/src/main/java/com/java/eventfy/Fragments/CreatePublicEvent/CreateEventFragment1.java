@@ -54,6 +54,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationPublicEvent;
@@ -63,6 +64,7 @@ import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.R;
 import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.asyncCalls.CreatePublicEvent;
+import com.java.eventfy.asyncCalls.EditEventSrverCall;
 import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.PlaceAutocompleteAdapter;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
@@ -522,6 +524,29 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         }
     }
 
+    @Subscribe
+    public void getUserCurrentLocation(EditEvent editEvent) {
+
+        dismissProgressDialog();
+        if(editEvent.getViewMsg()==null)
+        {
+            //Success
+
+            EventBusService.getInstance().unregister(this);
+            Toast.makeText(getActivity(), "Event Updated", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
+            intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), editEvent.getEvents());
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            view.getContext().startActivity(intent);
+
+        }
+        else{
+            //fail
+            Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     @Subscribe
     public void getUserCurrentLocation(LocationPublicEvent locationPublicEvent) {
@@ -815,6 +840,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         endDate.setText(eventObj.getEventDateTo()+" "+eventObj.getEventTimeTo());
         eventCapacity.setText(eventObj.getEventCapacity());
 
+
         Log.e("event type : ", ""+eventObj.getEventType());
         Log.e("event visiblity: ", ""+eventObj.getEventVisiblityMile());
 
@@ -900,8 +926,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             eventObj.setUserDetail(userList);
 
         }
-        CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
-        createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EditEvent editEventObj = new EditEvent();
+        editEventObj.setEvents(eventObj);
+        EditEventSrverCall editEventSrverCall = new EditEventSrverCall(url, editEventObj, getContext());
+        editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void startService() {
