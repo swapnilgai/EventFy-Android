@@ -284,7 +284,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
               //  currentLocationBtn.setEnabled(false);
                 startService();
                 // setting flag to avoid nearby and remote server call
-                EventBusService.getInstance().post(getString(R.string.create_event_flag));
+              //  EventBusService.getInstance().post(getString(R.string.create_event_flag));
             }
         });
 
@@ -562,7 +562,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         if (locationPublicEvent instanceof  LocationPublicEvent && locationPublicEvent.getLocation()!=null){
             getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.GPSTracker.class));
             getAddressFromLatLang(locationPublicEvent.getLocation().getLatitude(), locationPublicEvent.getLocation().getLongitude());
-            setUpMarker();
+
         }
     }
 
@@ -570,6 +570,9 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     public void getAddressFromLatLang(double latitude, double longitude) {
         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
         List<Address> addresses = null;
+        Log.e("location lat : ", ""+latitude);
+        Log.e("location lon : ", ""+longitude);
+
         try {
             addresses = gcd.getFromLocation(latitude, longitude, 1);
         } catch (IOException e) {
@@ -595,6 +598,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             eventLocationTv.setText(outputAddress);
             mAutocompleteView.setText(outputAddress);
             eventLocationTv.setText(outputAddress);
+            setUpMarker();
 
         }
         else

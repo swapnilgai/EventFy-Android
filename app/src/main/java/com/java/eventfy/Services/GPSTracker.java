@@ -109,6 +109,7 @@ public class GPSTracker extends Service implements LocationListener {
 						location = locationManager
 								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 						if (location != null) {
+							Log.d("Network", "Network ; "+location);
 							latitude = location.getLatitude();
 							longitude = location.getLongitude();
 							broacastLocationObject();
@@ -271,7 +272,7 @@ public class GPSTracker extends Service implements LocationListener {
 
 	public void broacastLocationObject() {
 
-		Log.e("broadcast : "," ------: "+locationNearby);
+		Log.e("broadcast : "," ------: "+location);
 
 		if(locationNearby !=null) {
 				locationNearby.setLocation(location);

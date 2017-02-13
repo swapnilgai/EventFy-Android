@@ -35,6 +35,7 @@ import com.java.eventfy.Fragments.Remot;
 import com.java.eventfy.asyncCalls.RegisterToGCM;
 import com.java.eventfy.asyncCalls.UpdateNotificationDetail;
 import com.java.eventfy.utils.DeviceDimensions;
+import com.java.eventfy.utils.SecurityOperations;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,6 +54,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private SignUp signUp;
     private  GoogleCloudMessaging gcm;
     private Context context;
+    private SecurityOperations securityOperations;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +67,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Gson g = new Gson();
         Log.e("object is : ", "????? : "+g.toJson(signUp));
 
-        if(signUp!=null)
+        Intent in = getIntent();
+
+        if(in.getSerializableExtra("user")!=null )
         {
-         //   registerDeviceForNotification();
+            registerDeviceForNotification();
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -328,6 +332,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     {
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("user");
+
+        securityOperations = new SecurityOperations();
+        signUp.setPassword(securityOperations.encryptNetworkPassword(signUp.getPassword()));
+
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
         Log.e("string is ", "((((: "+json);

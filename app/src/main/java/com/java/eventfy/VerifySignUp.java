@@ -119,6 +119,7 @@ public class VerifySignUp extends AppCompatActivity {
         {
             Intent intent = new Intent(this, Home.class);
             intent.putExtra("user", signUp);
+
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
