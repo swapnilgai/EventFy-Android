@@ -198,7 +198,6 @@ private TextView userVisibilityMilesTextView;
             }
         });
 
-
         userVisibilityMiles.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
 
             @Override

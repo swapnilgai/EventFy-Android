@@ -29,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
+import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
@@ -285,6 +286,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         return index;
     }
 
+
     @Subscribe
     public void setFlag(String flag)
     {
@@ -299,6 +301,17 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             stopServices();
             getNearbEventServerCall();
         }
+    }
+
+    @Subscribe
+    public void receiveEvents(NearbyEventData nearbyEventData)
+    {
+        if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
+            fragment_switch_button.setVisibility(View.VISIBLE);
+            this.eventsList = nearbyEventData.getEventsList();
+            bindAdapter(adapter, this.eventsList);
+        }
+
     }
 
     @Subscribe
@@ -518,11 +531,12 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     public void removeNoDataOrLoadingObj() {
 
-        if(eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
+        if(eventsList.get(0).getViewMessage()!=null)
+          if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
                 eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
             eventsList.remove(0);
 
-        if(eventsList.size()>1)
+        if(eventsList.size()>1 && eventsList.get(0).getViewMessage()!=null)
             if(eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_location)) ||
                     eventsList.get(1).getViewMessage().equals(getString(R.string.home_loading)))
 

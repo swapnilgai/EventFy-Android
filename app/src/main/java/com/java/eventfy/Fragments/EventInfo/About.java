@@ -64,8 +64,9 @@ public class About extends Fragment implements OnMapReadyCallback {
     private LatLng myLaLn;
     private View view;
     private Events event;
-    private RobotoTextView eventDescription;
+    private EditText eventDescription;
     private RobotoTextView eventName;
+    private EditText evengtType;
     private TextView adminName;
     private TextView adminStatus;
     private ImageView adminImage;
@@ -94,17 +95,17 @@ public class About extends Fragment implements OnMapReadyCallback {
 
 
         eventName = (RobotoTextView) view.findViewById(R.id.event_name);
+        evengtType = (EditText) view.findViewById(R.id.event_type);
         adminName = (TextView) view.findViewById(R.id.admin_name);
         adminStatus = (TextView) view.findViewById(R.id.admin_status);
         adminImage = (ImageView) view.findViewById(admin_image);
         navigateAdminProfile = (CircleButton) view.findViewById(R.id.navigate_admin_profile);
         eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
-        eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
         eventVisiblityMiles = (EditText) view.findViewById(R.id.event_visibility_miles);
         eventCapacity = (EditText) view.findViewById(R.id.event_capacity);
         eventDateTimeFrom  = (EditText) view.findViewById(R.id.event_date_from);
         eventDateTimeTo  = (EditText) view.findViewById(R.id.event_date_to);
-
+        eventDescription = (EditText) view.findViewById(R.id.event_description);
         adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
 
         deleteEvent = (Button) view.findViewById(R.id.event_delete);
@@ -171,6 +172,7 @@ public class About extends Fragment implements OnMapReadyCallback {
          eventName.setText(event.getEventName());
          adminName.setText(event.getAdmin().getUserName());
          adminStatus.setText(event.getAdmin().getStatus());
+         evengtType.setText(event.getEventCategory());
 
         eventVisiblityMiles.setText(event.getEventVisiblityMile() + " Miles");
 
@@ -185,19 +187,11 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventDescription.setText(event.getEventDescription());
 
         eventLocation.setText(event.getLocation().getName());
-      //   eventVisiblityMiles.setText(event.getEventVisiblityMile());
 
         eventDateTimeFrom.setText(event.getEventDateFrom() + " AT "+convertTimeInTwelve(event.getEventTimeFrom())+" "+timeConverter(event.getEventTimeFrom()));
 
         eventDateTimeTo.setText(event.getEventDateTo()+" AT "+convertTimeInTwelve(event.getEventTimeTo()) + " " + timeConverter(event.getEventTimeTo()));
 
-//         eventTimeFrom.setText( convertTimeInTwelve(event.getEventTimeFrom()));
-//         eventDateFrom.setText(event.getEventDateFrom());
-//
-//         eventTimeFromAmPm.setText();
-//         eventDateTo.setText(event.getEventDateTo());
-//         eventTimeTo.setText(convertTimeInTwelve(event.getEventTimeTo()));
-//         eventTimeToAmPm.setText(timeConverter(event.getEventTimeTo()));
          eventCapacity.setText(event.getEventCapacity());
 
     }

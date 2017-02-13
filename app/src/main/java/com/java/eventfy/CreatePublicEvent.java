@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
@@ -15,8 +16,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
@@ -35,6 +39,7 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -94,10 +99,78 @@ public class CreatePublicEvent extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent chooseImageIntent = ImagePicker.getPickImageIntent(getApplicationContext());
-                startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+
             }
         });
+
+
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(CreatePublicEvent.this, addImage);
+                //inflating menu from xml resource
+
+//                    popup.inflate(R.menu.profilepicturemenu);
+
+                popup.getMenuInflater()
+                        .inflate(R.menu.profilepicturemenu, popup.getMenu());
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.remove_profile_pic:
+                                //handle menu1 click
+                                eventImageIV.setImageResource(R.drawable.logo);
+                                eventImageBM = null;
+                                // sending fake object to avoid over writing of image after removal
+                                double d = 2.0;
+                                EventBusService.getInstance().post(d);
+                                break;
+                            case R.id.replace_profile_pic:
+                                //handle menu2 click
+                                Intent chooseImageIntent = ImagePicker.getPickImageIntent(getApplicationContext());
+                                startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+                                break;
+                            case R.id.view_profile_pic:
+                                //handle menu2 click
+
+                                ImageViewEntity imageViewEntity = new ImageViewEntity();
+                                if(event!=null && !event.getEventImageUrl().equals("default")) {
+                                    imageViewEntity.setImageUrl(event.getEventImageUrl());
+                                }
+
+                                else if(eventImageBM!=null) {
+                                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                    eventImageBM.compress(CompressFormat.JPEG, 50, stream);
+                                    byte[] byteArray = stream.toByteArray();
+                                    imageViewEntity.setBitmapByteArray(byteArray);
+                                }
+
+
+                                Intent intent = new Intent(CreatePublicEvent.this, ImageFullScreenMode.class);
+                                intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
+
+                                startActivity(intent);
+
+
+                                // EventBusService.getInstance().post(imageViewEntity);
+                                EventBusService.getInstance().unregister(this);
+
+                                break;
+
+                        }
+                        return false;
+                    }
+                });
+                //displaying the popup
+                popup.show();
+
+            }
+        });
+
 
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         fab:menu_animationDelayPerItem="55"
         fab:menu_backgroundColor="@color/colorBlackTransparent"
-        fab:menu_buttonSpacing="0dp"
+        fab:menu_buttonSpacing="3dp"
         fab:menu_colorNormal="@color/colorPrimary"
         fab:menu_colorPressed="@color/colorPrimaryDark"
         fab:menu_colorRipple="#99d4d4d4"

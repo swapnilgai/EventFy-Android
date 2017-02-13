@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
+import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -22,29 +22,21 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by swapnil on 6/4/16.
+ * Created by swapnil on 2/11/17.
  */
-public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
+
+public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
 
     private String url;
     private SignUp signUp;
     private List<Events> eventLst;
     private String flag;
     private Context context;
-    public GetNearbyEvent()
-    {}
 
 
-    public GetNearbyEvent(String url, SignUp signUp, String flag){
+    public GetRemoteEvent(String url, SignUp signUp, Context context){
         this.url = url;
         this.signUp = signUp;
-        this.flag= flag;
-    }
-
-    public GetNearbyEvent(String url, SignUp signUp, String flag, Context context){
-        this.url = url;
-        this.signUp = signUp;
-        this.flag= flag;
         this.context = context;
     }
 
@@ -94,9 +86,9 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
             Log.e("event is : ", " "+g.toJson(e));
         }
 
-        NearbyEventData nearbyEventData = new NearbyEventData();
-        nearbyEventData.setEventsList(eventLst);
+        RemoteEventData remoteEventData = new RemoteEventData();
+        remoteEventData.setEventsList(eventLst);
 
-        EventBusService.getInstance().post(nearbyEventData);
+        EventBusService.getInstance().post(remoteEventData);
     }
 }

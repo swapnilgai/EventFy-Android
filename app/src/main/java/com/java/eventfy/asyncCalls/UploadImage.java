@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.cloudinary.Cloudinary;
 import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
+import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
@@ -28,6 +29,8 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     private AddComment addComment = null;
     private String urlForComment;
     private Context context;
+    private EditEvent editEvent;
+    private String urlForEditEvent;
 
     public UploadImage(AddComment addComment, Bitmap bm, String urlForComment, Context context) {
         this.addComment = addComment;
@@ -36,6 +39,13 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
         this.context = context;
     }
 
+
+    public UploadImage(EditEvent editEvent, Bitmap bm, String urlForEditEvent, Context context) {
+        this.editEvent = editEvent;
+        this.bm = bm;
+        this.urlForEditEvent = urlForEditEvent;
+        this.context = context;
+    }
     public UploadImage(Events event, Bitmap bm) {
         this.event = event;
         this.bm = bm;
@@ -84,6 +94,11 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
         else if(addComment!=null && Url==null) {
             addComment.setViewMsg(context.getString(R.string.comment_add_fail));
             EventBusService.getInstance().post(addComment);
+        }
+        else if(editEvent!=null && Url != null) {
+            editEvent.getEvents().setEventImageUrl(Url);
+            EditEventSrverCall editEventSrverCall = new EditEventSrverCall(urlForEditEvent, editEvent, context);
+            editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         else if(event!=null) {
             // send url to CreateEventFragment1

@@ -76,10 +76,18 @@ public class ImageFullScreenMode extends AppCompatActivity {
                 }
                 else{
                     myToolbar.setVisibility(View.VISIBLE);
-                    textView.setVisibility(View.VISIBLE);
-                    date.setVisibility(View.VISIBLE);
-                    userImage.setVisibility(View.VISIBLE);
-                    userName.setVisibility(View.VISIBLE);
+
+                    if(imageViewObj.getTextMessage()!=null)
+                        textView.setVisibility(View.VISIBLE);
+
+                    if(imageViewObj.getDate()!=null)
+                        date.setVisibility(View.VISIBLE);
+
+                    if(imageViewObj.getUserImageUrl()!=null)
+                        userImage.setVisibility(View.VISIBLE);
+
+                    if(imageViewObj.getUserName()!=null)
+                        userName.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -88,7 +96,11 @@ public class ImageFullScreenMode extends AppCompatActivity {
     }
 
     public void setImageDataObject() {
-        if(imageViewObj.getBitmapByteArray()==null)
+        Log.e("out condition 1  : ", ""+imageViewObj.getBitmapByteArray());
+        Log.e("out condition 2  : ", ""+imageViewObj.getUserName());
+
+
+        if(imageViewObj.getBitmapByteArray()==null && imageViewObj.getImageUrl()!=null && !imageViewObj.getImageUrl().equals("default") )
         {
             Picasso.with(getApplicationContext()).
                     load(imageViewObj.getImageUrl())
@@ -96,11 +108,20 @@ public class ImageFullScreenMode extends AppCompatActivity {
                     .into(imageView);
 
         }
-        else if(imageViewObj.getBitmapByteArray()!=null && imageViewObj.getBitmapByteArray().equals("default")){
+        else if(imageViewObj.getBitmapByteArray()!=null){
             Bitmap imageBitmap =  BitmapFactory.decodeByteArray(imageViewObj.getBitmapByteArray(), 0, imageViewObj.getBitmapByteArray().length);
 
             imageView.setImageBitmap(imageBitmap);
-        }else {
+        }
+        else if(imageViewObj.getBitmapByteArray()==null && imageViewObj.getUserName()!=null && imageViewObj.getImageUrl().equals("default")) {
+            imageView.setImageResource(R.drawable.logo);
+        }
+        else if(imageViewObj.getBitmapByteArray() == null && imageViewObj.getUserName()==null){
+            Log.e("in condition :  : ", ""+imageViewObj.getUserName());
+
+            imageView.setImageResource(R.drawable.logo);
+        }
+        else {
             imageView.setImageResource(R.drawable.circular_user_image);
         }
 

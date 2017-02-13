@@ -23,6 +23,7 @@ import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
@@ -88,6 +89,7 @@ public class Remot extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
+
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -229,14 +231,14 @@ public class Remot extends Fragment {
     // ***** event bus call
 
     @Subscribe
-    public void receiveEvents(List<Events> eventsList)
+    public void receiveEvents(RemoteEventData remoteEventData)
     {
-        if(eventsList!=null && eventsList.size()>0 && eventsList.get(0) instanceof Events)
-            if(flag.equals(getString(R.string.remot_flag))) {
-                floatingActionMenu.setVisibility(View.VISIBLE);
-                this.eventsList = eventsList;
-                bindAdapter(adapter, this.eventsList);
-            }
+        if(remoteEventData.getEventsList()!=null && remoteEventData.getEventsList().size()>0 && remoteEventData.getEventsList().get(0) instanceof Events) {
+            floatingActionMenu.setVisibility(View.VISIBLE);
+            this.eventsList = remoteEventData.getEventsList();
+            bindAdapter(adapter, this.eventsList);
+        }
+
     }
 
     @Subscribe
@@ -248,6 +250,7 @@ public class Remot extends Fragment {
     public void getRemotPlaceLatLang(Place place)
     {
         this.latLng = place.getLatLng();
+        removeAll();
         addLoading();
         bindAdapter(adapter,eventsList);
         setEnableFloatingButton();

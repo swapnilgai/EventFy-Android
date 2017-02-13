@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.EventBus.EventBusService;
@@ -133,21 +134,14 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     }
 
-    // ***** event bus call
     @Subscribe
-    public void receiveEvents(List<Events> eventsList)
+    public void receiveEvents(NearbyEventData nearbyEventData)
     {
-        if(eventsList!=null && eventsList.size()>0 && eventsList.get(0) instanceof Events)
-             if(flag.equals(getString(R.string.nearby_flag))) {
-                 this.eventLst = eventsList;
-//                 if(eventsList!=null && eventsList.size()>0
-//                         && !eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_data))
-//                         && !eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)) )
+        if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
+            this.eventLst = nearbyEventData.getEventsList();
+            initializeMap();
+        }
 
-
-                     if(eventsList!=null && eventsList.size()>0 && eventsList.get(0).getViewMessage()==null)
-                        initializeMap();
-             }
     }
 
     @Subscribe

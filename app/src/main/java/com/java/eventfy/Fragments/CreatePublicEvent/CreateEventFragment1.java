@@ -108,6 +108,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private Bitmap eventImageBm;
     private EditText eventName;
     private EditText eventDescription;
+    private EditText eventTypeEditText;
     private EditText eventCapacity;
     private CheckBox eventsVolatile;
     private Spinner evenrCategory;
@@ -368,9 +369,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 }
                 // Get the Place object from the buffer.
                 final Place place = places.get(0);
-                getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
-
-                setUpMarker();
+                if(place!=null) {
+                    getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
+                    setUpMarker();
+                }
                 places.release();
             }
         };
@@ -462,6 +464,12 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
 
     @Subscribe
+    public void setBitmapToNull(double d) {
+        Log.e("sending to null", "++++++++++++++++++++++++");
+        this.eventImageBm = null;
+        eventObj.setEventImageUrl("default");
+    }
+    @Subscribe
     public void createEventToServer(String eventImageurl)
     {
         if(eventImageurl != null && !eventImageurl.equals(getString(R.string.create_event_flag))){
@@ -551,7 +559,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Subscribe
     public void getUserCurrentLocation(LocationPublicEvent locationPublicEvent) {
 
-        if (locationPublicEvent instanceof  LocationPublicEvent){
+        if (locationPublicEvent instanceof  LocationPublicEvent && locationPublicEvent.getLocation()!=null){
             getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.GPSTracker.class));
             getAddressFromLatLang(locationPublicEvent.getLocation().getLatitude(), locationPublicEvent.getLocation().getLongitude());
             setUpMarker();
@@ -928,8 +936,14 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         }
         EditEvent editEventObj = new EditEvent();
         editEventObj.setEvents(eventObj);
-        EditEventSrverCall editEventSrverCall = new EditEventSrverCall(url, editEventObj, getContext());
-        editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(eventImageBm != null){
+            UploadImage uploadImage = new UploadImage(editEventObj, eventImageBm, url, getContext());
+            uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+        else {
+            EditEventSrverCall editEventSrverCall = new EditEventSrverCall(url, editEventObj, getContext());
+            editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
     public void startService() {
