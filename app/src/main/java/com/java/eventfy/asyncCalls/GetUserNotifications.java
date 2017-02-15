@@ -4,12 +4,21 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.NotificationDetail;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -34,24 +43,25 @@ public class GetUserNotifications extends  AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-//        try {
-//
-//            Gson g = new Gson();
-//
-//            RestTemplate restTemplate = new RestTemplate(true);
-//            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-//
-//            HttpEntity<SignUp> request = new HttpEntity<>(signUp);
-//
-//            ResponseEntity<NotificationDetail[]> response = restTemplate.exchange(url, HttpMethod.POST, request, NotificationDetail[].class);
-//
-//            NotificationDetail[] userListArray = response.getBody();
-//
-//            notificationDetailsList = new LinkedList(Arrays.asList(userListArray));
-//
-//        }catch (Exception e) {
-//
-//        }
+        try {
+
+            Gson g = new Gson();
+
+            Log.e("", g.toJson(signUp));
+            RestTemplate restTemplate = new RestTemplate(true);
+            restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+
+            HttpEntity<SignUp> request = new HttpEntity<>(signUp);
+
+            ResponseEntity<NotificationDetail[]> response = restTemplate.exchange(url, HttpMethod.POST, request, NotificationDetail[].class);
+
+            NotificationDetail[] userListArray = response.getBody();
+
+            notificationDetailsList = new LinkedList(Arrays.asList(userListArray));
+
+        }catch (Exception e) {
+
+        }
         return null;
     }
 
@@ -66,7 +76,6 @@ public class GetUserNotifications extends  AsyncTask<Void, Void, Void> {
             notificationDetailObj.setViewMessage(context.getString(R.string.home_no_data));
             notificationDetailsList.add(notificationDetailObj);
         }
-        Log.e("items from server : ", " 0000 "+notificationDetailsList.size());
 
         EventBusService.getInstance().post(notificationDetailsList);
     }

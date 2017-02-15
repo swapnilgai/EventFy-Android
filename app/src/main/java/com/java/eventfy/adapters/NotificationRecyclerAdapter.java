@@ -3,7 +3,9 @@ package com.java.eventfy.adapters;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
@@ -57,6 +59,9 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+
+
         switch(holder.getItemViewType()){
             case 0:
 
@@ -76,17 +81,65 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
                     public void onClick(View v) {
                         // Doesn't do anything, but need Click Listener to get that sweet Ripple
                         Events events = notification.getEvents();
-                        Intent intent = new Intent(context, EventInfoPublic.class);
-                        intent.putExtra(context.getString(R.string.event_for_eventinfo), events);
-                        context.startActivity(intent);
+                        notificationOnClickEvent(events);
+//                        if(events==null)
+//                            dialogBox(notification);
+//                        else{
+//                            notificationOnClickEvent(events);
+//                        }
 
                     }
                 });
 
-                Picasso.with(holder.itemView.getContext())
-                        .load(notification.getNotifierImageUrl())
-                        .placeholder(R.drawable.img_placeholder)
-                        .into(((ResultHolder)holder).notificationImage);
+                ((ResultHolder)holder).notificationTitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Doesn't do anything, but need Click Listener to get that sweet Ripple
+                    Events events = notification.getEvents();
+                    notificationOnClickEvent(events);
+
+                }
+            });
+                ((ResultHolder)holder).notificationTime.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Doesn't do anything, but need Click Listener to get that sweet Ripple
+                        Events events = notification.getEvents();
+                        notificationOnClickEvent(events);
+//                        if(events==null)
+//                            dialogBox(notification);
+//                        else{
+//                            notificationOnClickEvent(events);
+//                        }
+                    }
+                });
+                ((ResultHolder)holder).notificationMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Doesn't do anything, but need Click Listener to get that sweet Ripple
+                        Events events = notification.getEvents();
+                        notificationOnClickEvent(events);
+
+                    }
+                });
+
+
+                if(notification.getEvents()!= null && !notification.getEvents().getEventImageUrl().equals("default"))
+                        Picasso.with(holder.itemView.getContext())
+                             .load(notification.getEvents().getEventImageUrl())
+                            .fit()
+                            .placeholder(R.drawable.img_placeholder)
+                            .into(((ResultHolder)holder).notificationImage);
+               else if(notification.getEvents()== null && notification.getNotifierImageUrl()!=null) {
+                    Picasso.with(holder.itemView.getContext())
+                            .load(notification.getNotifierImageUrl())
+                            .fit()
+                            .placeholder(R.drawable.img_placeholder)
+                            .into(((ResultHolder)holder).notificationImage);
+                }
+                else{
+                    ((ResultHolder)holder).notificationImage.setImageResource(R.drawable.logo);
+                }
 
                 ((ResultHolder)holder).notificationTitle.setText("  "+notification.getNotificationTitle());
                 ((ResultHolder)holder).notificationTime.setText(notification.getNotificationTime());
@@ -101,7 +154,11 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
                 break;
             case 3:
                 break;
+
+
         }
+
+
     }
 
     public class ResultHolder extends RecyclerView.ViewHolder {
@@ -176,6 +233,32 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
 
             networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
         }
+    }
+
+    public void dialogBox(final NotificationDetail notificationDetail) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage(notificationDetail.getViewMessage());
+        alertDialogBuilder.setTitle("Deleted");
+
+        alertDialogBuilder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                    }
+                });
+
+
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+    public void notificationOnClickEvent(final Events events) {
+        Intent intent = new Intent(context, EventInfoPublic.class);
+        intent.putExtra(context.getString(R.string.event_for_eventinfo), events);
+        context.startActivity(intent);
     }
 
 }

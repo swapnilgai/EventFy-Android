@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.java.eventfy.Fragments.Notification">
+             android:background="#d3d3d3"
+             tools:context="com.java.eventfy.Fragments.Notification">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container_notification"
@@ -12,6 +13,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_notification"
             android:layout_width="match_parent"
+            android:background="#d3d3d3"
             android:layout_height="match_parent" />
     </android.support.v4.widget.SwipeRefreshLayout>
 

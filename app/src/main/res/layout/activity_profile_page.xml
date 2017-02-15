@@ -43,7 +43,7 @@
                     android:layout_width="160dp"
                     android:layout_height="160dp"
                     android:elevation="10dp"
-                    android:background="@drawable/circular_user_image"
+                    android:background="@drawable/user_image"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:layout_gravity="center"

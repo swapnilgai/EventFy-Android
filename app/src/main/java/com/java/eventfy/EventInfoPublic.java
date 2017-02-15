@@ -90,19 +90,17 @@ public class EventInfoPublic extends AppCompatActivity {
             eventImage = (ImageView) findViewById(R.id.event_image);
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
 
-            if (event.getEventImageUrl().equals("default"))
-                Picasso.with(this)
-                        .load(event.getEventImageUrl())
-                        .placeholder(R.drawable.logo)
-                        .into(eventImage);
-            else
+            if (event.getEventImageUrl()==null || event.getEventImageUrl().equals("default"))
+                eventImage.setImageResource(R.drawable.logo);
+            else {
                 Picasso.with(this)
                         .load(event.getEventImageUrl())
                         .fit()
                         .into(eventImage);
+            }
 
-            if (event.getDecesion().equals(getString(R.string.attending)))
-                rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
+//            if (event.getDecesion().equals(getString(R.string.attending)))
+//                rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
 
             rsvpForEventBtn.setOnClickListener(new OnClickListener() {
 
@@ -276,9 +274,9 @@ public class EventInfoPublic extends AppCompatActivity {
 
     public void dialogBoxToHandleDelete() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
+        alertDialogBuilder.setTitle("Deleted");
         alertDialogBuilder.setMessage("Event is no longer available");
-
+        alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {
 

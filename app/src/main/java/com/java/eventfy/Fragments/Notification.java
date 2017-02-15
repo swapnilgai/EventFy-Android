@@ -91,7 +91,10 @@ public class Notification extends Fragment {
             addLoading();
             setverCallToGetNotification();
         }
-
+        else{
+            swipeRefreshLayoutNotification.setEnabled(true);
+            swipeRefreshLayoutNotification.setRefreshing(false);
+        }
         bindAdapter(adapterNotification, notificationList);
         // Initialize SwipeRefreshLayout
         swipeRefreshLayoutNotification.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -100,6 +103,7 @@ public class Notification extends Fragment {
               //TODO add notification async call
                 removeAll();
                 addLoading();
+                bindAdapter(adapterNotification, notificationList);
                 setverCallToGetNotification();
 
             }
@@ -118,8 +122,8 @@ public class Notification extends Fragment {
 
     private void bindAdapter(NotificationRecyclerAdapter adapter, List<com.java.eventfy.Entity.NotificationDetail> notificationList){
         swipeRefreshLayoutNotification.setRefreshing(false);
+
         if (adapter != null){
-            swipeRefreshLayoutNotification.setEnabled(false);
             adapter.clear();
             adapter.addAll(notificationList);
             adapter.notifyDataSetChanged();
@@ -149,7 +153,18 @@ public class Notification extends Fragment {
             removeLoading();
             bindAdapter(adapterNotification, this.notificationList);
             swipeRefreshLayoutNotification.setEnabled(true);
+            swipeRefreshLayoutNotification.setRefreshing(false);
+            storeNotification();
         }
+    }
+
+    public void storeNotification() {
+        SharedPreferences mPrefs = getApplicationContext().getSharedPreferences("notificationList", MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(notificationList);
+        prefsEditor.putString("notificationList", json);
+        prefsEditor.commit();
     }
 
 

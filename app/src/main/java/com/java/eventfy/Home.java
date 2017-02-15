@@ -22,6 +22,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -36,12 +37,15 @@ import com.java.eventfy.asyncCalls.RegisterToGCM;
 import com.java.eventfy.asyncCalls.UpdateNotificationDetail;
 import com.java.eventfy.utils.DeviceDimensions;
 import com.java.eventfy.utils.SecurityOperations;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -52,6 +56,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private  DrawerLayout drawer;
     private NavigationView navigationView;
     private SignUp signUp;
+    private TextView userName;
+    private CircleImageView userImage;
     private  GoogleCloudMessaging gcm;
     private Context context;
     private SecurityOperations securityOperations;
@@ -65,7 +71,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         getUserObject();
 
         Gson g = new Gson();
-        Log.e("object is : ", "????? : "+g.toJson(signUp));
+       // Log.e("object is : ", "????? : "+g.toJson(signUp));
 
         Intent in = getIntent();
 
@@ -84,6 +90,27 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+        Log.e("user image ", ""+userImage);
+
+        View headerLayout =
+                navigationView.getHeaderView(0);
+
+
+        userName = (TextView) headerLayout.findViewById(R.id.user_name_drawer);
+        userImage = (CircleImageView) headerLayout.findViewById(R.id.user_image_drawer);
+
+
+        userName.setText(signUp.getUserName());
+
+        if(signUp.getImageUrl()!=null && signUp.getImageUrl().equals("default"))
+             userImage.setImageResource(R.drawable.user_image);
+        else
+            Picasso.with(getApplicationContext()).load(signUp.getImageUrl())
+                    .fit()
+                    .into(userImage);
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
