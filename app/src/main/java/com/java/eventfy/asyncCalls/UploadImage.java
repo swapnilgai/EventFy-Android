@@ -10,6 +10,7 @@ import com.cloudinary.Cloudinary;
 import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
@@ -31,6 +32,8 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     private Context context;
     private EditEvent editEvent;
     private String urlForEditEvent;
+    private String urlForUpdateUserImage;
+    private SignUp signUp;
 
     public UploadImage(AddComment addComment, Bitmap bm, String urlForComment, Context context) {
         this.addComment = addComment;
@@ -38,6 +41,13 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
         this.urlForComment = urlForComment;
         this.context = context;
     }
+
+    public  UploadImage(String urlForUpdateUserImage, SignUp signUp, Bitmap bm) {
+            this.urlForUpdateUserImage = urlForUpdateUserImage;
+            this.signUp = signUp;
+            this.bm = bm;
+        }
+
 
 
     public UploadImage(EditEvent editEvent, Bitmap bm, String urlForEditEvent, Context context) {
@@ -91,18 +101,38 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
             PostUsersComment postUsersComment = new PostUsersComment(urlForComment, addComment, context);
             postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-        else if(addComment!=null && Url==null) {
+        else{
+            // TODO Send Error msg
+        }
+        if(addComment!=null && Url==null) {
             addComment.setViewMsg(context.getString(R.string.comment_add_fail));
             EventBusService.getInstance().post(addComment);
+        } else{
+            // TODO Send Error msg
         }
-        else if(editEvent!=null && Url != null) {
+
+        if(editEvent!=null && Url != null) {
             editEvent.getEvents().setEventImageUrl(Url);
             EditEventSrverCall editEventSrverCall = new EditEventSrverCall(urlForEditEvent, editEvent, context);
             editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else{
         }
-        else if(event!=null) {
+        if(signUp!=null && Url!=null)
+        {
+            signUp.setImageUrl(Url);
+            UpdateUserDetail updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserImage);
+            updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else{
+            signUp.setViewMessage("unsuccessfull");
+            EventBusService.getInstance().post(signUp);
+        }
+
+        if(event!=null && Url==null) {
             // send url to CreateEventFragment1
             EventBusService.getInstance().post(Url);
+        }
+        else{
+            // TODO Send Error msg
         }
     }
 }

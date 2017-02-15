@@ -9,12 +9,13 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
  */
 public class SecurityOperations {
 
+    StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
+
     public String encryptNetworkPassword(String key)
     {
 
-        StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
-
-        jasypt.setPassword("testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh");
+        if(!jasypt.isInitialized())
+            jasypt.setPassword("testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh");
         // this is the authentication token user will send in order to use the web service
         String authenticationToken = jasypt.encrypt(key);
 
@@ -22,14 +23,24 @@ public class SecurityOperations {
     }
 
     public boolean comparePassword(String inputPassword, String encryptedPassword) {
-        StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
-        jasypt.setPassword("testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh");
+
+        Log.e("comp ;  "+inputPassword, "   with :   "+encryptedPassword);
+        if(!jasypt.isInitialized())
+            jasypt.setPassword("testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh");
         Log.e("decrypt : ", "decr : "+jasypt.decrypt(encryptedPassword));
         if(jasypt.decrypt(encryptedPassword).equals(inputPassword))
                 return true;
         else
             return false;
 
+    }
+
+
+    public String decryptPassword(String password) {
+        if(!jasypt.isInitialized())
+            jasypt.setPassword("testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh");
+
+       return jasypt.decrypt(password);
     }
 
 }

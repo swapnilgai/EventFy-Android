@@ -104,13 +104,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         userName.setText(signUp.getUserName());
 
-        if(signUp.getImageUrl()!=null && signUp.getImageUrl().equals("default"))
-             userImage.setImageResource(R.drawable.user_image);
-        else
-            Picasso.with(getApplicationContext()).load(signUp.getImageUrl())
-                    .fit()
-                    .into(userImage);
-
+        setNavigationDrawerUserData();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
@@ -123,6 +117,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //initServices();
         toggle.syncState();
         setupTabIcons();
+    }
+
+    public void setNavigationDrawerUserData(){
+
+        if(signUp.getImageUrl()!=null && signUp.getImageUrl().equals("default"))
+            userImage.setImageResource(R.drawable.user_image);
+        else
+            Picasso.with(getApplicationContext()).load(signUp.getImageUrl())
+                    .fit()
+                    .into(userImage);
     }
 
     private void registerDeviceForNotification() {
@@ -299,7 +303,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onPause() {
         super.onPause();
         stopService(new Intent(this, com.java.eventfy.Services.GPSTracker.class));
-        EventBusService.getInstance().unregister(this);
+        //EventBusService.getInstance().unregister(this);
     }
 
     @Override
@@ -361,14 +365,27 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         signUp = (SignUp) in.getSerializableExtra("user");
 
         securityOperations = new SecurityOperations();
-        signUp.setPassword(securityOperations.encryptNetworkPassword(signUp.getPassword()));
 
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
-        Log.e("string is ", "((((: "+json);
+
+        Log.e("string before ", "((((: "+json);
+
+        signUp.setPassword(securityOperations.encryptNetworkPassword(signUp.getPassword()));
+        json = gson.toJson(signUp);
+
+        Log.e("string after ", "((((: "+json);
         editor.putString(getString(R.string.userObject), json);
 
         editor.commit();
     }
+
+    @Subscribe
+    public void getUserObject(SignUp signUp) {
+        this.signUp.setImageUrl(signUp.getImageUrl());
+        this.signUp.setUserName(signUp.getUserName());
+        setNavigationDrawerUserData();
+    }
+
 
 }

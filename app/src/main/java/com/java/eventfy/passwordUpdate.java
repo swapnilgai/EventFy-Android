@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
@@ -35,6 +36,7 @@ public class PasswordUpdate extends AppCompatActivity {
     private SecurityOperations securityOperations;
     private SignUp signUp;
     private TextView errorMsg;
+    private String passwordTemp;
     private ProgressDialog progressDialog;
 
     @Override
@@ -170,6 +172,7 @@ public class PasswordUpdate extends AppCompatActivity {
         if(userPassword.getText().toString().equals(userConfirmPassword.getText().toString())) {
 
             startProgressDialog();
+            passwordTemp = userPassword.getText().toString();
             signUp.setPassword(securityOperations.encryptNetworkPassword(userPassword.getText().toString()));
             String url = getString(R.string.ip_local).concat(getString(R.string.update_user_password));
             UpdatePassword updatePassword = new UpdatePassword(signUp, url);
@@ -240,10 +243,21 @@ public class PasswordUpdate extends AppCompatActivity {
     @Subscribe
     public void getUpdatedPassword(SignUp signUp) {
         Log.e("in password signup", ""+signUp.getPassword());
+        dismissProgressDialog();
         if(signUp.getViewMessage()==null) {
-            dismissProgressDialog();
+
             Log.e("password signup dismiss", ""+signUp.getPassword());
+            this.signUp.setPassword(securityOperations.encryptNetworkPassword(passwordTemp));
             storeUserObject();
+            userPassword.setEnabled(false);
+            userConfirmPassword.setEnabled(false);
+
+            Toast.makeText(getApplicationContext(), "Password updated successfully",
+                    Toast.LENGTH_LONG).show();
+
+        }else{
+            Toast.makeText(getApplicationContext(), "Error, please retry",
+                    Toast.LENGTH_LONG).show();
         }
     }
 }

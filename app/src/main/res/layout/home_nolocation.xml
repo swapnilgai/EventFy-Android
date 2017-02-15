@@ -8,10 +8,10 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="190dp"
         android:id="@+id/imageView2"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_location_on_black_36dp"/>
+        android:src="@drawable/no_location"/>
 
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
@@ -36,6 +36,7 @@
 
 
     <android.support.v7.widget.AppCompatButton
+        android:layout_marginTop="15dp"
         android:id="@+id/btn_enable_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

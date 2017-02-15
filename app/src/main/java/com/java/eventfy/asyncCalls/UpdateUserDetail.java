@@ -3,6 +3,7 @@ package com.java.eventfy.asyncCalls;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -34,6 +35,9 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
 
         Log.e(" url ", url);
 
+        Gson g = new Gson();
+        Log.e("obj : ", g.toJson(signUp));
+
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -57,10 +61,11 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(signUp==null)
+        if(signUp==null) {
             signUp = new SignUp();
+            signUp.setViewMessage("unsuccessfull");
+        }
 
-        signUp.setToken(result);
         EventBusService.getInstance().post(signUp);
     }
 }

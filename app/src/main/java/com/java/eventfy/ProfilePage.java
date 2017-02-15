@@ -28,7 +28,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -41,6 +40,7 @@ import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.UpdateUserDetail;
+import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.ImagePicker;
 import com.java.eventfy.utils.SecurityOperations;
 import com.soundcloud.android.crop.Crop;
@@ -52,6 +52,8 @@ import org.greenrobot.eventbus.Subscribe;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfilePage extends AppCompatActivity {
 
@@ -68,7 +70,7 @@ public class ProfilePage extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private  LinearLayout linearLayoutStatus;
     private  Bitmap eventImageBM;
-    private ImageView userProfilePic;
+    private CircleImageView userProfilePic;
     private static final int PICK_IMAGE_ID = 234;
     private TextView changePasswordLink;
     private Uri dest;
@@ -101,7 +103,7 @@ private TextView userVisibilityMilesTextView;
 
         userVisibilityMilesTextView = (TextView) findViewById(R.id.user_visibility_miles_text_view);
 
-        userProfilePic = (ImageView) findViewById(R.id.user_profile_pic);
+        userProfilePic = (CircleImageView) findViewById(R.id.user_profile_pic);
 
         securityOperations = new SecurityOperations();
 
@@ -150,9 +152,9 @@ private TextView userVisibilityMilesTextView;
                         switch (item.getItemId()) {
                             case R.id.remove_profile_pic:
                                 //handle menu1 click
-                                userProfilePic.setImageResource(R.drawable.circular_user_image);
+                                userProfilePic.setImageResource(R.drawable.user_image);
                                 eventImageBM = null;
-                                signUp.setImageUrl(null);
+                                signUp.setImageUrl("default");
                                 break;
                             case R.id.replace_profile_pic:
                                 //handle menu2 click
@@ -267,7 +269,7 @@ private TextView userVisibilityMilesTextView;
             userVisibilityMilesTextView.setText(String.valueOf(signUp.getVisibilityMiles()));
 
         if (signUp.getImageUrl()==null || signUp.getImageUrl().equals("default")) {
-            userProfilePic.setImageResource(R.drawable.ic_perm_identity_black_24dp);
+            userProfilePic.setImageResource(R.drawable.user_image);
         }
         else {
 //            Picasso.with(this)
@@ -288,7 +290,7 @@ private TextView userVisibilityMilesTextView;
                         }
                         @Override
                         public void onError() {
-                            userProfilePic.setImageResource(R.drawable.circular_user_image);
+                            userProfilePic.setImageResource(R.drawable.user_image);
                         }
                     });
 
@@ -355,20 +357,47 @@ private TextView userVisibilityMilesTextView;
 
     @Subscribe
     public void getUserObject(SignUp signUp) {
-        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPrefs.edit();
-        this.signUp = signUp;
-        setUserData();
-        dismissProgressDialog();
-        storeUserObject(editor);
+
+        if(signUp.getViewMessage() == null) {
+            SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+            SharedPreferences.Editor editor = mPrefs.edit();
+
+            if (signUp.getToken() != null)
+                this.signUp.setToken(signUp.getToken());
+
+            this.signUp.setImageUrl(signUp.getImageUrl());
+            this.signUp.setUserId(signUp.getUserId());
+            this.signUp.setIsFacebook(signUp.getIsFacebook());
+            this.signUp.setDob(signUp.getDob());
+            this.signUp.setIsVerified(signUp.getIsVerified());
+            this.signUp.setStatus(signUp.getStatus());
+            this.signUp.setUserId(signUp.getUserId());
+            this.signUp.setUserName(signUp.getUserName());
+            this.signUp.setVisibilityMiles(signUp.getVisibilityMiles());
+            this.signUp.setVisibilityMode(signUp.getVisibilityMode());
+            setUserData();
+            dismissProgressDialog();
+            storeUserObject(editor);
+            Toast.makeText(getApplicationContext(), "Profile updated successfully",
+                    Toast.LENGTH_LONG).show();
+
+        }else{
+            Toast.makeText(getApplicationContext(), "Error, please retry",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
 
     public void serverCallToUpdateUserDetail() {
         startProgressDialog();
-        String url = getString(R.string.ip_local)+getString(R.string.upda_user);
-        updateUserDetail = new UpdateUserDetail(signUp, url);
-        updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        String urlForUpdateUserData = getString(R.string.ip_local) + getString(R.string.upda_user);
+        if(eventImageBM!=null){
+            UploadImage uploadImage = new UploadImage(urlForUpdateUserData, signUp, eventImageBM);
+            uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }else {
+            updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserData);
+            updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
     }
 
 
@@ -533,18 +562,21 @@ private TextView userVisibilityMilesTextView;
         EventBusService.getInstance().unregister(this);
     }
 
-
-    @Subscribe
-    public void getUpdatedDataFromServer(SignUp signUp)
-    {
-       if(signUp.getViewMessage()==null) {
-           this.signUp = signUp;
-           setUserData();
-       }
-        else{
-           //TODO thost message unsuccessfull update
-       }
-    }
+//
+//    @Subscribe
+//    public void getUpdatedDataFromServer(SignUp signUp)
+//    {
+//       if(signUp.getViewMessage()==null) {
+//
+//
+//
+//           setUserData();
+//
+//       }
+//        else{
+//           //TODO thost message unsuccessfull update
+//       }
+//    }
 
 
 }

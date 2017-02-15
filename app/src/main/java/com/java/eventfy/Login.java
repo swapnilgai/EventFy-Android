@@ -44,7 +44,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity  {
 
     private LoginButton fbLoginBt;
     private CallbackManager callbackManager;
@@ -54,6 +54,7 @@ public class Login extends AppCompatActivity {
     private TextView signupLink;
     private Button loginButton;
     private User user;
+    private String passwordTemp;
     private SecurityOperations securityOperations;
     private ProgressDialog progressDialog;
 
@@ -282,6 +283,7 @@ public class Login extends AppCompatActivity {
     }
     private void serverCallLogin(User user) {
 
+        passwordTemp = user.getPassword();
         securityOperations = new SecurityOperations();
         user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
         String url = getString(R.string.ip_local)+getString(R.string.login);
@@ -297,6 +299,8 @@ public class Login extends AppCompatActivity {
         {
             EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, Home.class);
+            signUp.setPassword(passwordTemp);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("user", signUp);
             startActivity(intent);
         }
