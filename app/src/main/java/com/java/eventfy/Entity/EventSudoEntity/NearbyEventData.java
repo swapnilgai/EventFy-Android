@@ -1,6 +1,7 @@
 package com.java.eventfy.Entity.EventSudoEntity;
 
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
 
 import java.util.List;
 
@@ -11,6 +12,16 @@ import java.util.List;
 public class NearbyEventData {
 
     private double viewMsg;
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    private Location location;
 
     private List<Events> eventsList;
 

@@ -135,12 +135,6 @@ public class ImageComment extends AppCompatActivity {
 
             imageView.setImageBitmap(imageBitmap);
         }
-
-        Log.e("image view  obj : ", ""+imageViewObj.getTextMessage());
-
-
-        Log.e("image title : ", ""+imageViewObj.getUserName());
-
         myToolbar.setTitle(imageViewObj.getUserName());
     }
 

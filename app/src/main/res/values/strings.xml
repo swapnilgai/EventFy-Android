@@ -131,6 +131,21 @@
         <item>Incentive Travel</item>
         <item>Theme Parties</item>
         <item>Family Events</item>
+        <item>Conference</item>
+        <item>Exhibition</item>
+        <item>Airshow</item>
+        <item>Amphitheater</item>
+        <item>Anniversary</item>
+        <item>Archery</item>
+        <item>Army</item>
+        <item>Art-museum</item>
+        <item>Audio</item>
+        <item>Bar</item>
+        <item>Family</item>
+        <item>Sport-Other</item>
+        <item>Squash</item>
+        <item>Childern Sports</item>
+        <item>Other</item>
     </string-array>
 
 

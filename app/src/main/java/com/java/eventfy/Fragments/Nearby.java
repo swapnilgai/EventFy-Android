@@ -38,6 +38,7 @@ import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
+import com.java.eventfy.asyncCalls.DownloadTask;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.utils.OnLocationEnableClickListner;
 
@@ -83,49 +84,11 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_nearby, container, false);
 
+
         locationNearby = new LocationNearby();
         eventsList = new LinkedList<Events>();
         eventsListTemp = new LinkedList<Events>();
-        createLoadingObj();
 
-        getUserObject();
-
-       if(!EventBusService.getInstance().isRegistered(this))
-        EventBusService.getInstance().register(this);
-
-        getActivity().startService(new Intent(getActivity(),com.java.eventfy.Services.UserCurrentLocation1.class));
-
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
-
-        adapter = new MainRecyclerAdapter(getContext());
-        adapter.setOnLocationEnableClickListner(this);
-        adapter.setFragment(this);
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
-
-        initServices();
-        addLoading();
-
-        bindAdapter(adapter, eventsList);
-
-        // Initialize SwipeRefreshLayout
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initServices();
-                removeAll();
-                addLoading();
-                bindAdapter(adapter, eventsList);
-                swipeRefreshLayout.setRefreshing(false);
-                swipeRefreshLayout.setEnabled(false);
-            }
-        });
-
-        swipeRefreshLayout.setRefreshing(false);
-        swipeRefreshLayout.setEnabled(false);
 
         fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
         fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
@@ -137,6 +100,49 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         transaction.add(Integer.parseInt(context_id), nearby_map, "nearby_map");
         transaction.hide(nearby_map);
         transaction.commit();
+
+
+
+
+        createLoadingObj();
+
+        getUserObject();
+
+
+       if(!EventBusService.getInstance().isRegistered(this))
+        EventBusService.getInstance().register(this);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
+
+        adapter = new MainRecyclerAdapter(getContext());
+        adapter.setOnLocationEnableClickListner(this);
+        adapter.setFragment(this);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
+        addLoading();
+        bindAdapter(adapter, eventsList);
+
+
+        // Initialize SwipeRefreshLayout
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                initServices();
+                removeAll();
+                addLoading();
+                bindAdapter(adapter, eventsList);
+                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setEnabled(false);
+                EventBusService.getInstance().post(locationNearby);
+            }
+        });
+
+        swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setEnabled(false);
+
 
         fragment_switch_button.setOnClickListener(new OnClickListener() {
 
@@ -158,7 +164,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             }
         });
 
-        fragment_switch_button.setVisibility(View.GONE);
+
+        initServices();
+     //
         super.onSaveInstanceState(savedInstanceState);
         return view;
     }
@@ -298,6 +306,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         if(locationNearby instanceof LocationNearby) {
             this.locationNearby = locationNearby;
             latLng = new LatLng(locationNearby.getLocation().getLatitude(), locationNearby.getLocation().getLongitude());
+            fragment_switch_button.setVisibility(View.GONE);
             stopServices();
             getNearbEventServerCall();
         }
@@ -310,6 +319,17 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             fragment_switch_button.setVisibility(View.VISIBLE);
             this.eventsList = nearbyEventData.getEventsList();
             bindAdapter(adapter, this.eventsList);
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.setEnabled(true);
+
+
+
+            DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
+                    new LatLng(nearbyEventData.getEventsList().get(0).getLocation().getLatitude(), nearbyEventData.getEventsList().get(0).getLocation().getLongitude()));
+
+            // Start downloading json data from Google Directions API
+            downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         }
 
     }

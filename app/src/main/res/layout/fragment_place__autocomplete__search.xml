@@ -96,7 +96,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:paddingTop="18dp"
-                                    android:paddingBottom="12dp"
+                                    android:paddingBottom="11dp"
                                     android:hint="Enter Address"
                                     android:singleLine="true" />
                                 <!--<View-->

@@ -252,42 +252,59 @@
             android:layout_marginBottom="16dp"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/public_event_type"
-                android:layout_weight=".28"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginRight="12dp"
-                android:layout_marginLeft="12dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
-                android:background="@drawable/spinner_border"
-                android:orientation="horizontal">
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:id="@+id/public_event_type"-->
+                <!--android:layout_weight=".28"-->
+                <!--android:layout_marginBottom="2dp"-->
+                <!--android:layout_marginTop="12dp"-->
+                <!--android:layout_marginRight="12dp"-->
+                <!--android:layout_marginLeft="12dp"-->
+                <!--android:paddingLeft="7dp"-->
+                <!--android:paddingRight="7dp"-->
+                <!--android:background="@drawable/spinner_border"-->
+                <!--android:orientation="horizontal">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_arrow_drop_down_black_18dp" />
+                <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:src="@drawable/ic_arrow_drop_down_black_18dp" />-->
 
-                <Spinner
-                    android:id="@+id/public_event_category"
+                <!--<Spinner-->
+                    <!--android:id="@+id/public_event_category"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="45dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:gravity="center"-->
+                    <!--android:entries="@array/category_arrays"-->
+                    <!--android:spinnerMode="dropdown"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_alignParentEnd="true"/>-->
+
+
+                <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+                    android:id="@+id/spinner"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:entries="@array/category_arrays"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_marginTop="12dp"
                     android:spinnerMode="dropdown"
+                    android:background="@android:color/transparent"
+                    android:entries="@array/category_arrays"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_alignParentEnd="true"
+                    app:hintText="Category"/>
 
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
         </LinearLayout>
         <!--Time of event-->
