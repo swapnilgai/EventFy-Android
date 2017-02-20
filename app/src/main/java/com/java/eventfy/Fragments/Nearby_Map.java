@@ -1,6 +1,7 @@
 package com.java.eventfy.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,10 +16,10 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,14 +35,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.Away;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.R;
-import com.java.eventfy.utils.DistanceBetweenPoints;
 import com.java.eventfy.utils.SetEventIconGoogleMap;
 import com.squareup.picasso.Picasso;
 
@@ -49,6 +51,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -71,12 +74,14 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 //    private TextView eventName;
     private RobotoTextView eventAddress;
     private RobotoTextView eventStartDate;
-    private TextView eventAway;
+    private RobotoTextView eventDuration;
+    private RobotoTextView eventDistance;
+    private int indexForOnclickEvent;
     private LinearLayout eventInfoMapViewLinearLayout;
      private Marker [] markerArr;
     private SignUp signUp;
-
-
+    private HashMap<Integer, Away> eventAwayMapping;
+    private int index;
 
     private SetEventIconGoogleMap setEventIconGoogleMap;
     private void initializeMap(Location location) {
@@ -197,8 +202,10 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
 
     public void updateEventinfo(int index)  {
-            eventAddress.setText(eventLst.get(index).getLocation().getName().toString());
+        indexForOnclickEvent = index;
+        eventAddress.setText(eventLst.get(index).getLocation().getName().toString());
 
+        this.index = index;
         if(!eventLst.get(index).getEventImageUrl().equals("default"))
             Picasso.with(getContext())
                 .load(eventLst.get(index).getEventImageUrl())
@@ -209,8 +216,24 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                  eventImage.setImageResource(R.drawable.logo);
         }
 
-       eventAway.setText(String.valueOf(DistanceBetweenPoints.getInstance().getDistanceBetweenTwoPoints(locationObj, eventLst.get(index).getLocation())));
 
+        Away away = eventAwayMapping.get(eventLst.get(index).getEventId());
+        if(away!=null){
+            eventDistance.setText(away.getDistance());
+            eventDuration.setText(away.getDuration());
+        }
+
+
+        eventInfoMapViewLinearLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Doesn't do anything, but need Click Listener to get that sweet Ripple
+                Intent intent = new Intent(getContext(), EventInfoPublic.class);
+                intent.putExtra(getContext().getString(R.string.event_for_eventinfo), eventLst.get(indexForOnclickEvent));
+                getContext().startActivity(intent);
+
+            }
+        });
     }
 
     @Override
@@ -219,21 +242,19 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         EventBusService.getInstance().register(this);
 
         view = inflater.inflate(R.layout.fragment_nearby_map, container, false);
-       // if(!EventBusService.getInstance().isRegistered(this))
-
         getUserObject();
-
         MapsInitializer.initialize(getActivity());
         locationObj= new Location();
-
+        eventAwayMapping = new HashMap<Integer, Away>();
         mapView = (MapView) view.findViewById(R.id.nearby_map);
-
-         eventImage = (CircleImageView) view.findViewById(R.id.map_view_event_info_image_view);
-         eventAddress = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_location);
+        eventImage = (CircleImageView) view.findViewById(R.id.map_view_event_info_image_view);
+        eventAddress = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_location);
         eventStartDate = (RobotoTextView) view.findViewById(R.id.map_view_event_info_date);
-         eventAway = (TextView) view.findViewById(R.id.map_view_event_info_miles_away);
-         eventInfoMapViewLinearLayout   = (LinearLayout) view.findViewById(R.id.map_view_event_info_linear_layout);
-//         eventName = (TextView) view.findViewById(R.id.map_view_event_info_event_name);
+        eventInfoMapViewLinearLayout   = (LinearLayout) view.findViewById(R.id.map_view_event_info_linear_layout);
+        eventDuration = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
+        eventDistance =  (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
+        eventInfoMapViewLinearLayout = (LinearLayout) view.findViewById(R.id.map_view_event_info);
+
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -307,6 +328,23 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             locationObj.setLatitude(loaLocationNearby.getLocation().getLatitude());
             locationObj.setDistance(signUp.getVisibilityMiles());
             setUserOnMap(locationObj);
+        }
+    }
+
+
+    @Subscribe
+    public void getAwayObjectforEvent(Away awayObj) {
+
+        eventAwayMapping.put(awayObj.getEvents().getEventId(),awayObj);
+        updateAwayOnUi(awayObj);
+    }
+
+
+    public void updateAwayOnUi(Away awayObj){
+
+        if(eventLst.get(index).getEventId() == awayObj.getEvents().getEventId()){
+            eventDistance.setText(awayObj.getDistance());
+            eventDuration.setText(awayObj.getDuration());
         }
     }
 

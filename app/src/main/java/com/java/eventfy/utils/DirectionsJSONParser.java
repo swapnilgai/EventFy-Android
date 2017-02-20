@@ -1,6 +1,7 @@
 package com.java.eventfy.utils;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.java.eventfy.Entity.Away;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,14 +26,14 @@ public class DirectionsJSONParser {
 
 
     /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
-    public List<List<HashMap<String,String>>> parse(JSONObject jObject){
+    public Away parse(JSONObject jObject){
 
-        List<List<HashMap<String, String>>> routes = new ArrayList<List<HashMap<String,String>>>() ;
         JSONArray jRoutes = null;
         JSONArray jLegs = null;
-        JSONArray jSteps = null;
         JSONObject jDistance = null;
         JSONObject jDuration = null;
+        Away awayObj = new Away();
+
 
         try {
 
@@ -49,19 +50,16 @@ public class DirectionsJSONParser {
 
                     /** Getting distance from the json data */
                     jDistance = ((JSONObject) jLegs.get(j)).getJSONObject("distance");
-                    HashMap<String, String> hmDistance = new HashMap<String, String>();
-                    hmDistance.put("distance", jDistance.getString("text"));
 
                     /** Getting duration from the json data */
                     jDuration = ((JSONObject) jLegs.get(j)).getJSONObject("duration");
-                    HashMap<String, String> hmDuration = new HashMap<String, String>();
-                    hmDuration.put("duration", jDuration.getString("text"));
+
+                   // hmDuration.put("duration", jDuration.getString("text"));
 
                     /** Adding distance object to the path */
-                    path.add(hmDistance);
-
+                    awayObj.setDistance(jDistance.getString("text"));
+                    awayObj.setDuration(jDuration.getString("text"));
                     /** Adding duration object to the path */
-                    path.add(hmDuration);
 
 
                //     jSteps = ( (JSONObject)jLegs.get(j)).getJSONArray("steps");
@@ -81,7 +79,8 @@ public class DirectionsJSONParser {
 //                        }
 //                    }
                 }
-                routes.add(path);
+
+
             }
 
         } catch (JSONException e) {
@@ -89,7 +88,7 @@ public class DirectionsJSONParser {
         }catch (Exception e){
         }
 
-        return routes;
+        return awayObj;
     }
 
 

@@ -164,10 +164,23 @@ import static com.java.eventfy.R.string.edited;
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());
                 if(milesDistance<4)  // to check if it is walkable distance
-                ((ResultHolder)holder).eventMileAway.setText(String.valueOf(milesDistance));
+               // ((ResultHolder)holder).eventMileAway.setText(String.valueOf(milesDistance));
 
-                Log.e("height : ", ""+ Math.abs(DeviceDimensions.deviceHeight/3));
-                Log.e("weidth : ", ""+DeviceDimensions.deviceWeidth);
+                if(event.getEventAwayDuration()!= null)
+                    ((ResultHolder)holder).eventMileAwayDuration.setText(event.getEventAwayDuration());
+                else
+                    ((ResultHolder)holder).eventMileAwayDuration.setText("");
+
+                if (event.getEventAwayDistanve() !=null)
+                    ((ResultHolder)holder).eventMileAwayDistance.setText(event.getEventAwayDistanve());
+                else
+                    ((ResultHolder)holder).eventMileAwayDuration.setText("");
+
+
+                    ((ResultHolder)holder).eventAwayLinearLayout.setVisibility(View.VISIBLE);
+
+                //Log.e("height : ", ""+ Math.abs(DeviceDimensions.deviceHeight/3));
+               // Log.e("weidth : ", ""+DeviceDimensions.deviceWeidth);
 
         }
     }
@@ -182,8 +195,12 @@ import static com.java.eventfy.R.string.edited;
         RobotoTextView eventName;
         @Bind(R.id.event_location)
         RobotoTextView  eventLocation;
-        @Bind(R.id.event_mile_away)
-        RobotoTextView eventMileAway;
+        @Bind(R.id.map_view_event_info_event_away_distance)
+        RobotoTextView eventMileAwayDistance;
+        @Bind(R.id.map_view_event_info_event_away_duration)
+        RobotoTextView eventMileAwayDuration;
+        @Bind(R.id.event_info_event_away_distance_linear_layout)
+        LinearLayout eventAwayLinearLayout;
 
         public ResultHolder(View itemView) {
             super(itemView);
@@ -225,9 +242,6 @@ import static com.java.eventfy.R.string.edited;
             super(itemView);
             enableLocationbtn = (Button) itemView.findViewById(R.id.btn_enable_location);
         }
-
-
-
     }
 
     public double getDistanvce(double lat, double log) {

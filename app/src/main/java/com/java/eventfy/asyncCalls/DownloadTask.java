@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
+import com.java.eventfy.Entity.Events;
 import com.java.eventfy.utils.UrlOperationsForDirection;
 
 /**
@@ -20,11 +21,13 @@ public class DownloadTask extends AsyncTask<Void, Void, Void> {
     LatLng original;
     LatLng dest;
     UrlOperationsForDirection urlOperationsForDirection;
+    private Events events;
 
-    public DownloadTask(LatLng original,  LatLng dest){
+    public DownloadTask(LatLng original,  LatLng dest, Events events){
         this.original = original;
         this.dest = dest;
         urlOperationsForDirection = UrlOperationsForDirection.getInstance();
+        this.events = events;
     }
 
 
@@ -54,7 +57,7 @@ public class DownloadTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(result);
         //Log.e("download post "," MMMMMMM : "+data);
 
-        ParserTask parserTask = new ParserTask(data);
+        ParserTask parserTask = new ParserTask(data, events);
         // Invokes the thread for parsing the JSON data
         parserTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

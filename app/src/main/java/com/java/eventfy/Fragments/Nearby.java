@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.Away;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
@@ -174,7 +175,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
         Log.e("in start ser : ", " **** ");
-      //  getActivity().startService(new Intent(getContext(), com.java.eventfy.Services.UserCurrentLocation.class));
 
        gps = new GPSTracker(getActivity(), locationNearby);
 
@@ -219,7 +219,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                     fragment_switch_button.setVisibility(View.VISIBLE);
 
                 bindAdapter(adapter, eventsList);
-
+                stopServices();
                 swipeRefreshLayout.setRefreshing(false);
                 swipeRefreshLayout.setEnabled(true);
             }
@@ -324,11 +324,12 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
 
 
-            DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
-                    new LatLng(nearbyEventData.getEventsList().get(0).getLocation().getLatitude(), nearbyEventData.getEventsList().get(0).getLocation().getLongitude()));
-
+            for(Events events : eventsList){
+              DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
+                    new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
             // Start downloading json data from Google Directions API
-            downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
 
         }
 
@@ -442,7 +443,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     public void onPause() {
         super.onPause();
         Log.e("in pause "," *** ");
-       getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.UserCurrentLocation1.class));
+        stopServices();
      //   EventBusService.getInstance().unregister(this);
     }
 
@@ -538,6 +539,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                 break;
         }
     }
+
     public void updateUserLocation(int visibilityMileValue) {
         removeAll();
         addLoading();
@@ -563,6 +565,20 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                 eventsList.remove(1);
 
     }
+
+    @Subscribe
+    public void getAwayObjectforEvent(Away awayObj) {
+
+        if(eventsList.contains(awayObj.getEvents())) {
+            int index = eventsList.indexOf(awayObj.getEvents());
+            awayObj.getEvents().setEventAwayDistanve(awayObj.getDistance());
+            awayObj.getEvents().setEventAwayDuration(awayObj.getDuration());
+                eventsList.set(index, awayObj.getEvents());
+            bindAdapter(adapter, this.eventsList);
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 
 }
 
