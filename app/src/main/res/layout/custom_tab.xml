@@ -6,6 +6,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:textColor="@color/colorAccent"
+    android:textColor="@color/colorAccentOld"
     android:textSize="@dimen/tab_label"
     android:textStyle="bold" />
