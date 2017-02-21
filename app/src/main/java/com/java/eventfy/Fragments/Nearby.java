@@ -1,19 +1,23 @@
 package com.java.eventfy.Fragments;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -175,8 +179,33 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
         Log.e("in start ser : ", " **** ");
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        }else{
+            getLocationAndInitServices();
+        }
+    }
 
-       gps = new GPSTracker(getActivity(), locationNearby);
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getLocationAndInitServices();
+                } else {
+                    // permission denied
+                }
+                return;
+            }
+        }
+    }
+
+    private void getLocationAndInitServices(){
+        gps = new GPSTracker(getActivity(), locationNearby);
 
         if(!gps.canGetLocation())
         {
@@ -192,7 +221,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             bindAdapter(adapter, eventsList);
             stopServices();
         }
-
     }
 
 

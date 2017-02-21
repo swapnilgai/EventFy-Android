@@ -45,11 +45,10 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
 
         HttpEntity<User> request = new HttpEntity<>(login, headers);
 
-        ResponseEntity<SignUp> rateResponse = restTemplate.postForEntity(url, request, SignUp.class);
-
+        try {
+            ResponseEntity<SignUp> rateResponse = restTemplate.postForEntity(url, request, SignUp.class);
             signUp = rateResponse.getBody();
-
-
+        }catch (Exception e){}
         return null;
     }
 
