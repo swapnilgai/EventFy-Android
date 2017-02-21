@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center"
-              android:layout_gravity="center">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/network_error_image_view"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:background="@drawable/ic_notifications_none_black_48dp"
         android:fitsSystemWindows="true"
-        android:scaleType="centerCrop"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:scaleType="centerCrop" />
 
     <com.devspark.robototextview.widget.RobotoTextView
-
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:lines="@android:integer/config_longAnimTime"
-        android:paddingTop="10dp"
-        android:textSize="20dp"
-        android:text="No notifivations, please refresh"
-        android:paddingLeft="2dp"
-        android:paddingRight="4dp"
+        android:layout_height="40dp"
         android:gravity="center"
-        />
+        android:lines="@android:integer/config_longAnimTime"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="No notifications for now"
+        android:textSize="20sp" />
 
 </LinearLayout>

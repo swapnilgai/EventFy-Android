@@ -33,16 +33,18 @@
             android:layout_height="wrap_content"
             android:text="Event Name"
             android:textStyle="bold"
-            android:textSize="20sp" />
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="18sp" />
 
 
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/event_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:text="Event Location"
             android:textColor="#6c7880"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
 
         <View
             android:layout_width="match_parent"
