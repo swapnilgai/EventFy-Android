@@ -81,6 +81,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
             public void onClick(View v) {
                 // Finish the registration screen and return to the Login activity
                 finish();
+                overridePendingTransition(0, 0);
             }
         });
 

@@ -110,6 +110,7 @@ public class Login extends AppCompatActivity  {
             public void onClick(View v) {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
             }
         });
