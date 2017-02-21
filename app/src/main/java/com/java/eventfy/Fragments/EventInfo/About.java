@@ -64,7 +64,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     private LatLng myLaLn;
     private View view;
     private Events event;
-    private EditText eventDescription;
+    private RobotoTextView eventDescription;
     private RobotoTextView eventName;
     private EditText evengtType;
     private TextView adminName;
@@ -73,8 +73,8 @@ public class About extends Fragment implements OnMapReadyCallback {
     private RobotoTextView eventLocation;
     private EditText eventVisiblityMiles;
     private EditText eventCapacity;
-    private EditText eventDateTimeFrom;
-    private EditText eventDateTimeTo;
+    private RobotoTextView eventDateTimeFrom;
+    private RobotoTextView eventDateTimeTo;
     private Button deleteEvent;
     private Button editEvent;
     private ProgressDialog progressDialog;
@@ -103,9 +103,9 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
         eventVisiblityMiles = (EditText) view.findViewById(R.id.event_visibility_miles);
         eventCapacity = (EditText) view.findViewById(R.id.event_capacity);
-        eventDateTimeFrom  = (EditText) view.findViewById(R.id.event_date_from);
-        eventDateTimeTo  = (EditText) view.findViewById(R.id.event_date_to);
-        eventDescription = (EditText) view.findViewById(R.id.event_description);
+        eventDateTimeFrom  = (RobotoTextView) view.findViewById(R.id.event_date_from);
+        eventDateTimeTo  = (RobotoTextView) view.findViewById(R.id.event_date_to);
+        eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
         adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
 
         deleteEvent = (Button) view.findViewById(R.id.event_delete);

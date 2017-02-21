@@ -3,7 +3,6 @@ package com.java.eventfy.asyncCalls;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.User;
@@ -35,12 +34,7 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
     @Override
     protected Void doInBackground(Void... strings) {
                 ObjectMapper mapper = new ObjectMapper();
-                try {
-                    String str = mapper.writeValueAsString(login);
-                    Log.e("login object ","&&&&&& :: "+str);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
+
         Log.e(" url ", url);
 
         RestTemplate restTemplate = new RestTemplate(true);
