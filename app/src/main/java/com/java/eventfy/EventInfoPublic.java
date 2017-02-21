@@ -242,7 +242,7 @@ public class EventInfoPublic extends AppCompatActivity {
         if(event !=null && event.getDecesion().equals(getString(R.string.attending)))
             alertDialogBuilder.setMessage("Unregister ?");
         else if(event !=null && event.getDecesion().equals(getString(R.string.not_attending)))
-            alertDialogBuilder.setMessage("Regiser to event ?");
+            alertDialogBuilder.setMessage("Register to event ?");
 
         alertDialogBuilder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
