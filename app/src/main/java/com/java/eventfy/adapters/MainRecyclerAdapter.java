@@ -2,9 +2,12 @@ package com.java.eventfy.adapters;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
@@ -25,6 +28,7 @@ import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.Fragments.Nearby;
+import com.java.eventfy.Home;
 import com.java.eventfy.R;
 import com.java.eventfy.utils.DeviceDimensions;
 import com.java.eventfy.utils.OnLocationEnableClickListner;
@@ -138,11 +142,18 @@ import static com.java.eventfy.R.string.edited;
                 ((ResultHolder)holder).linearLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Doesn't do anything, but need Click Listener to get that sweet Ripple
-                        Intent intent = new Intent(context, EventInfoPublic.class);
+                        View sharedView = ((ResultHolder) holder).eventImage;
+                        String transitionName = "event_transition";
+                        Activity mActivity = ((Home) context);
+                        Intent intent = new Intent(mActivity, EventInfoPublic.class);
                         intent.putExtra(context.getString(R.string.event_for_eventinfo), event);
-                        context.startActivity(intent);
 
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(mActivity, sharedView, transitionName);
+                            context.startActivity(intent, transitionActivityOptions.toBundle());
+                        }else {
+                            context.startActivity(intent);
+                        }
                     }
                 });
 

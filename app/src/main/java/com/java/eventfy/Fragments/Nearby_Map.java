@@ -1,5 +1,7 @@
 package com.java.eventfy.Fragments;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -43,7 +46,9 @@ import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.EventInfoPublic;
+import com.java.eventfy.Home;
 import com.java.eventfy.R;
+import com.java.eventfy.adapters.MainRecyclerAdapter;
 import com.java.eventfy.utils.SetEventIconGoogleMap;
 import com.squareup.picasso.Picasso;
 
@@ -227,10 +232,18 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         eventInfoMapViewLinearLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Doesn't do anything, but need Click Listener to get that sweet Ripple
+                View sharedView = eventImage;
+                String transitionName = "event_transition";
+                Activity mActivity = getActivity();
                 Intent intent = new Intent(getContext(), EventInfoPublic.class);
                 intent.putExtra(getContext().getString(R.string.event_for_eventinfo), eventLst.get(indexForOnclickEvent));
-                getContext().startActivity(intent);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(mActivity, sharedView, transitionName);
+                    mActivity.startActivity(intent, transitionActivityOptions.toBundle());
+                }else {
+                    mActivity.startActivity(intent);
+                }
 
             }
         });
