@@ -1,5 +1,6 @@
 package com.java.eventfy;
 
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -110,9 +112,12 @@ private TextView userVisibilityMilesTextView;
 
         final Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("My Account");
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -182,7 +187,13 @@ private TextView userVisibilityMilesTextView;
                                 Intent intent = new Intent(ProfilePage.this, ImageFullScreenMode.class);
                                 intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
 
-                                startActivity(intent);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(ProfilePage.this, userProfilePic, "profile_pic_transition");
+                                    startActivity(intent, transitionActivityOptions.toBundle());
+                                }else {
+                                    startActivity(intent);
+                                }
+
 
 
                                // EventBusService.getInstance().post(imageViewEntity);

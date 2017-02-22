@@ -76,13 +76,11 @@ public class ViewerProfilePage extends AppCompatActivity {
                 imageViewEntity.setImageUrl(signUp.getImageUrl());
                 imageViewEntity.setUserName(signUp.getUserName());
 
-                View sharedView = userProfilePic;
-                String transitionName = "profile_pic_transition";
                 Intent intent = new Intent(ViewerProfilePage.this, ImageFullScreenMode.class);
                 intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(ViewerProfilePage.this, sharedView, transitionName);
+                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(ViewerProfilePage.this, userProfilePic, "profile_pic_transition");
                     startActivity(intent, transitionActivityOptions.toBundle());
                 }else {
                     startActivity(intent);
