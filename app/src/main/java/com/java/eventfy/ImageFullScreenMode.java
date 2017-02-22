@@ -20,7 +20,7 @@ public class ImageFullScreenMode extends AppCompatActivity {
 
     private ImageView imageView;
     private TextView textView;
-    private  Toolbar myToolbar;
+    private Toolbar myToolbar;
     private ImageViewEntity imageViewObj;
     private ImageView userImage;
     private TextView userName;
@@ -34,11 +34,11 @@ public class ImageFullScreenMode extends AppCompatActivity {
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        myToolbar.setTitleTextColor(0xFFFFFFFF);
+        getSupportActionBar().setTitle("Profile picture");
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         imageView = (ImageView) findViewById(R.id.item_image);
         textView = (TextView) findViewById(R.id.item_text);

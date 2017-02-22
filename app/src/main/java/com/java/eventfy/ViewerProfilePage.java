@@ -1,9 +1,11 @@
 package com.java.eventfy;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -72,20 +74,24 @@ public class ViewerProfilePage extends AppCompatActivity {
 
                 ImageViewEntity imageViewEntity = new ImageViewEntity();
                 imageViewEntity.setImageUrl(signUp.getImageUrl());
-
                 imageViewEntity.setUserName(signUp.getUserName());
 
+                View sharedView = userProfilePic;
+                String transitionName = "profile_pic_transition";
                 Intent intent = new Intent(ViewerProfilePage.this, ImageFullScreenMode.class);
                 intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
 
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ActivityOptions transitionActivityOptions = ActivityOptions.makeSceneTransitionAnimation(ViewerProfilePage.this, sharedView, transitionName);
+                    startActivity(intent, transitionActivityOptions.toBundle());
+                }else {
+                    startActivity(intent);
+                }
             }
         });
     }
 
     public void setUserData() {
-
-
         usetStatus.setText(signUp.getStatus());
         usetName.setText(signUp.getUserName());
 
@@ -128,7 +134,6 @@ public class ViewerProfilePage extends AppCompatActivity {
             }
 
         }
-
         //     userVisibilityMiles.setProgress(signUp.getVisibilityMiles());
 
 //        if(signUp.getVisibilityMode()==null || signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_visible)))
@@ -137,14 +142,5 @@ public class ViewerProfilePage extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 }
 
