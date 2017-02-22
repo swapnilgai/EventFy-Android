@@ -21,14 +21,13 @@ import com.squareup.picasso.Picasso;
 import at.markushi.ui.CircleButton;
 
 public class ViewerProfilePage extends AppCompatActivity {
+    private static final int PICK_IMAGE_ID = 234;
     private TextView usetStatus;
     private TextView usetName;
     private TextView userVisibilityMode;
     private CircleButton userVisibilityModeBtn;
-
     private SignUp signUp;
     private ImageView userProfilePic;
-    private static final int PICK_IMAGE_ID = 234;
     private Uri dest;
 
 
@@ -47,9 +46,12 @@ public class ViewerProfilePage extends AppCompatActivity {
 
         final Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setTitle("Profile");
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,16 +63,12 @@ public class ViewerProfilePage extends AppCompatActivity {
         Intent intent = getIntent();
         signUp = (SignUp) intent.getSerializableExtra(getString(R.string.signup_object_viewe_profile));
 
-
-
         if (signUp != null && signUp.getUserId() != null)
             setUserData();
 
         userProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //handle menu2 click
 
                 ImageViewEntity imageViewEntity = new ImageViewEntity();
                 imageViewEntity.setImageUrl(signUp.getImageUrl());
@@ -81,15 +79,9 @@ public class ViewerProfilePage extends AppCompatActivity {
                 intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
 
                 startActivity(intent);
-
-
             }
         });
-
-
     }
-
-
 
     public void setUserData() {
 
@@ -127,19 +119,17 @@ public class ViewerProfilePage extends AppCompatActivity {
 
             userVisibilityMode.setText(signUp.getVisibilityMode());
 
-            if(signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_invisible))) {
-                userVisibilityModeBtn.setColor(getColor(R.color.colorErrorRed));
-            }
-            else if(signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_donotdisturb))) {
-                userVisibilityModeBtn.setColor(getColor(R.color.colorDoNotDisturbYellow));
-            }
-            else{
-                userVisibilityModeBtn.setColor(getColor(R.color.colorActiveGreen));
+            if (signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_invisible))) {
+                userVisibilityModeBtn.setColor(R.color.colorErrorRed);
+            } else if (signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_donotdisturb))) {
+                userVisibilityModeBtn.setColor(R.color.colorDoNotDisturbYellow);
+            } else {
+                userVisibilityModeBtn.setColor(R.color.colorActiveGreen);
             }
 
         }
 
-   //     userVisibilityMiles.setProgress(signUp.getVisibilityMiles());
+        //     userVisibilityMiles.setProgress(signUp.getVisibilityMiles());
 
 //        if(signUp.getVisibilityMode()==null || signUp.getVisibilityMode().equals(getString(R.string.visibility_mode_visible)))
 //            vis.setChecked(true);
