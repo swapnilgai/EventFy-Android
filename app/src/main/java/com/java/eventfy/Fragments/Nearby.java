@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -106,16 +105,12 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         transaction.hide(nearby_map);
         transaction.commit();
 
-
-
-
         createLoadingObj();
 
         getUserObject();
 
-
-       if(!EventBusService.getInstance().isRegistered(this))
-        EventBusService.getInstance().register(this);
+        if(!EventBusService.getInstance().isRegistered(this))
+            EventBusService.getInstance().register(this);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
@@ -129,7 +124,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
         addLoading();
         bindAdapter(adapter, eventsList);
-
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -171,7 +165,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
 
         initServices();
-     //
+        //
         super.onSaveInstanceState(savedInstanceState);
         return view;
     }
@@ -184,22 +178,32 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                 != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+
         }else{
             getLocationAndInitServices();
         }
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getLocationAndInitServices();
                 } else {
-                    // permission denied
+                    presentNoLocationView();
                 }
                 return;
+            }
+            case 2: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    enableGpsPopUpOption();
+                } else {
+                    presentNoLocationView();
+                }
             }
         }
     }
@@ -207,22 +211,26 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private void getLocationAndInitServices(){
         gps = new GPSTracker(getActivity(), locationNearby);
 
-        if(!gps.canGetLocation())
-        {
-            if(eventsList == null)
-                eventsList = new LinkedList<Events>();
-            else if(eventsList.size()>0)
-                eventsList.remove(eventsList.size()-1);
-
-            Events events = new Events();
-            events.setViewMessage(getContext().getString(R.string.home_no_location));
-            eventsList.add(events);
-
-            bindAdapter(adapter, eventsList);
-            stopServices();
+        if(!gps.canGetLocation()) {
+            presentNoLocationView();
         }
     }
 
+
+    public void presentNoLocationView(){
+
+        if(eventsList == null)
+            eventsList = new LinkedList<Events>();
+        else if(eventsList.size()>0)
+            eventsList.remove(eventsList.size()-1);
+
+        Events events = new Events();
+        events.setViewMessage(getContext().getString(R.string.home_no_location));
+        eventsList.add(events);
+
+        bindAdapter(adapter, eventsList);
+        stopServices();
+    }
 
     private void stopServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
@@ -244,7 +252,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 //                        && !eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading))
 //                        && !eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location))
 //                        && !eventsList.get(0).getViewMessage().equals(getString(R.string.home_connection_error)) )
-                    fragment_switch_button.setVisibility(View.VISIBLE);
+                fragment_switch_button.setVisibility(View.VISIBLE);
 
                 bindAdapter(adapter, eventsList);
                 stopServices();
@@ -276,7 +284,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             if(index!=-1 && originalEvent!=null)
                 updateEditedEvent(originalEvent, editEvent.getEvents(), index);
 
-           // int index = getEventIndex(editEvent.getEvents());
+            // int index = getEventIndex(editEvent.getEvents());
 
         }
         else{
@@ -288,16 +296,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     @UiThread
     public void updateEditedEvent(Events originalEvents, Events editedEvent, int index) {
 
-       // removeNoDataOrLoadingObj();
-       // this.eventsList.remove(index);
-       // this.eventsList.add(index, editedEvent);
-
-        Gson g = new Gson();
-        for(Events e: eventsList) {
-            Log.e(" event obj : ",""+g.toJson(e));
-        }
-
-        Log.e("adapter Size b l:  : ",""+eventsList.size());
         editedEvent.setViewMessage(null);
         Log.e("adapter Size a l :  : ",""+eventsList.size());
         eventsList.set(index, editedEvent);
@@ -353,10 +351,10 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
 
             for(Events events : eventsList){
-              DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
-                    new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
-            // Start downloading json data from Google Directions API
-                    downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
+                        new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
+                // Start downloading json data from Google Directions API
+                downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
         }
@@ -383,8 +381,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         if(events.getViewMessage()==null) {
             eventsList.add(events);
-        bindAdapter(adapter, eventsList);
-    }
+            bindAdapter(adapter, eventsList);
+        }
         else if(events.getViewMessage().equals(getString(R.string.edited))) {
 
             events.setViewMessage(null);
@@ -398,18 +396,18 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     public void getDeleteEvent(DeleteEvent deleteEvent)
     {
 
-    if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
-       int index = -1;
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+            int index = -1;
 
-        Events temp = null;
-        Gson g = new Gson();
-        for(Events e: this.eventsList) {
-            Log.e("Object is : ", g.toJson(e));
-            if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
-                removeEvent(e);
+            Events temp = null;
+            Gson g = new Gson();
+            for(Events e: this.eventsList) {
+                Log.e("Object is : ", g.toJson(e));
+                if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
+                    removeEvent(e);
+                }
             }
         }
-    }
     }
     @UiThread
     public void removeEvent(Events e) {
@@ -454,17 +452,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         super.onResume();
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
-
-//        if(currentEventToDelete!=null && currentEventToDelete.getViewMessage().equals(getString(R.string.deleted)))
-//        {
-//            int index = eventsList.indexOf(currentEventToDelete);
-//            Log.e("list size : ", " ((((((( "+eventsList.size());
-//            eventsList.remove(currentEventToDelete);
-//            adapter.notifyItemRemoved(index);
-//            bindAdapter(adapter, eventsList);
-//            currentEventToDelete = null;
-//        }
-
     }
 
     @Override
@@ -472,7 +459,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         super.onPause();
         Log.e("in pause "," *** ");
         stopServices();
-     //   EventBusService.getInstance().unregister(this);
+        //   EventBusService.getInstance().unregister(this);
     }
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
@@ -491,8 +478,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     @UiThread
     private void refreshData(List<Events> eventsList){
-        if(eventsList.size()>=2)
-        Log.e("adapter : ", "indexxxxx : "+eventsList.get(1).getEventName());
+
         if (adapter != null){
             adapter.clear();
             adapter.addAll(eventsList);
@@ -514,7 +500,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
     public void createLoadingObj() {
-         eventLoadingObj = new Events();
+        eventLoadingObj = new Events();
         eventLoadingObj.setViewMessage(getString(R.string.home_loading));
     }
     public void addLoading() {
@@ -524,6 +510,21 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     @Override
     public void enableGpsPopUp()
     {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+
+        }else{
+            enableGpsPopUpOption();
+        }
+
+    }
+
+
+    public void enableGpsPopUpOption(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setCancelable(false);
         builder.setTitle("Enable GPS");
@@ -539,7 +540,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             }
         });
         AlertDialog alert = builder.create();
-        alert.show();}
+        alert.show();
+    }
 
     @Override
     public void enebleLoctionService() {
@@ -555,11 +557,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             case 0:
                 removeNoDataOrLoadingObj();
 
-
-
                 addLoading();
-
-                Log.e("result code case: ", " ------:  "+eventsList.get(0).getViewMessage());
 
                 bindAdapter(adapter, eventsList);
 
@@ -582,16 +580,15 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     public void removeNoDataOrLoadingObj() {
 
         if(eventsList.get(0).getViewMessage()!=null)
-          if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
-                eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
-            eventsList.remove(0);
+            if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
+                    eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
+                eventsList.remove(0);
 
         if(eventsList.size()>1 && eventsList.get(0).getViewMessage()!=null)
             if(eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_location)) ||
                     eventsList.get(1).getViewMessage().equals(getString(R.string.home_loading)))
 
                 eventsList.remove(1);
-
     }
 
     @Subscribe
@@ -601,7 +598,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             int index = eventsList.indexOf(awayObj.getEvents());
             awayObj.getEvents().setEventAwayDistanve(awayObj.getDistance());
             awayObj.getEvents().setEventAwayDuration(awayObj.getDuration());
-                eventsList.set(index, awayObj.getEvents());
+            eventsList.set(index, awayObj.getEvents());
             bindAdapter(adapter, this.eventsList);
             adapter.notifyDataSetChanged();
         }
