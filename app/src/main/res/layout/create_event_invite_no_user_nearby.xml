@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+                android:padding="20dp">
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/nodata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No One Around"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:textColor="#6c7880"
+        android:textSize="25dp" />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Increase event's visiblity"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:textColor="#6c7880"
+        android:textSize="18dp" />
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/invite_visibliry_miles"
+        android:scrollIndicators="top"
+        android:progressDrawable="@drawable/custom_seekbar"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginTop="20dp"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/invite_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:padding="5dp"
+        android:textColor="@color/white"
+        android:background="@drawable/content_main2_button_color"
+        android:text="Search"/>
+
+
+</LinearLayout>

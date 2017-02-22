@@ -58,7 +58,8 @@ public class ResendVcode extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
+        if(result == null)
+            result = signUp.getToken();
         EventBusService.getInstance().post(result);
     }
 }

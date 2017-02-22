@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
@@ -48,18 +49,25 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     private void initializeMap() {
         Log.e("in init map", ""+myLaLn);
 
-//        if(googleMapRemot==null)
+//      if(googleMapRemot==null)
 //        {
 //            googleMapRemot = supportMapFragmentRemot.getMap();
 //        }
+
+
        setUpMarker();
     }
 
     public void setUpMarker()
     {
+        googleMapRemot.clear();
+        for(Events events : eventLst)
         {
-            Log.e("set marker in ", ""+myLaLn);
             int zoomVal = 10;
+
+            myLaLn = new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude());
+            Log.e("set marker in ", ""+myLaLn);
+
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLaLn);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -124,11 +132,12 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
     // ***** event bus call
     @Subscribe
-    public void receiveEvents(List<Events> eventsList)
+    public void receiveEvents(RemoteEventData remoteEventData)
     {
-        if(eventsList.get(0) instanceof Events)
-           if(flag.equals(getResources().getString(R.string.remot_flag)))
-                initializeMap();
+        if(remoteEventData.getEventsList()!=null && remoteEventData.getEventsList().size()>0 && remoteEventData.getEventsList().get(0) instanceof Events) {
+            eventLst = remoteEventData.getEventsList();
+            initializeMap();
+        }
     }
 
     @Subscribe

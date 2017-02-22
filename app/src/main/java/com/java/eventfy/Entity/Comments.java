@@ -3,7 +3,6 @@ package com.java.eventfy.Entity;
 /**
  * Created by swapnil on 5/29/16.
  */
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -34,14 +33,39 @@ public class Comments  implements Serializable {
     // mapping for events - comments (users in events and  events by user)
     @JsonIgnoreProperties(ignoreUnknown = true)
     private Date date;
-    @JsonBackReference
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String imageUrl;
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(Events.class)
     private Events events;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(SignUp.class)
+    private SignUp user;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private boolean isDateText;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String viewMessage;
+
+    public String getViewMessage() {
+        return viewMessage;
+    }
+
+    public void setViewMessage(String viewMessage) {
+        this.viewMessage = viewMessage;
+    }
 
     public boolean getIsDateText() {
         return isDateText;
@@ -138,4 +162,19 @@ public class Comments  implements Serializable {
         this.userImage = userImage;
     }
 
+    public SignUp getUser() {
+        return user;
+    }
+
+    public void setUser(SignUp user) {
+        this.user = user;
+    }
+
+    public boolean isDateText() {
+        return isDateText;
+    }
+
+    public void setDateText(boolean dateText) {
+        isDateText = dateText;
+    }
 }

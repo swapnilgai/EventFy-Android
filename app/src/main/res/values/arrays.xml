@@ -3,11 +3,30 @@
 
     <!--  Event Type -->
     <string-array name="EventType">
-        <item>Get Together</item>
+        <item>GetTogether</item>
         <item>Food</item>
         <item>Give Away</item>
         <item>Need Help</item>
         <item>Other</item>
+        <item>Breakout Session</item>
+
+
+        <item>Other</item>
+        <item>Other</item>
+        <item>Other</item>
+        <item>Other</item>
+        <item>Other</item>
+        <item>Other</item>
+        <item>Other</item>
+        <item>Other</item>
+
+
+
+
+
+
+
+
     </string-array>
 
     <!--  Event Type -->

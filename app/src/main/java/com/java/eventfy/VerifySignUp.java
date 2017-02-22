@@ -119,6 +119,7 @@ public class VerifySignUp extends AppCompatActivity {
         {
             Intent intent = new Intent(this, Home.class);
             intent.putExtra("user", signUp);
+
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
@@ -136,13 +137,13 @@ public void resendVcodeStatus(String result)
 
     private void serverCall(SignUp signUp) {
         setProgressDialog();
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.verify_vcode);
+        String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
         VerifyVcode verifyVcode = new VerifyVcode(signUp,url);
         verifyVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void serverCallToResendVcode(SignUp signUp) {
         setProgressDialog();
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.verification_code_get);
+        String url = getString(R.string.ip_local)+getString(R.string.verification_code_get);
         ResendVcode resendVcode = new ResendVcode(signUp,url);
         resendVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -157,13 +158,11 @@ public void resendVcodeStatus(String result)
 
     public void setProgressDialog()
     {
-        Log.e("in create view ", "**********");
         progressDialog.show();
     }
 
     public void dismissProgressDialog()
     {
-        Log.e("in dismiss view ", "++++++++");
         progressDialog.dismiss();
     }
 

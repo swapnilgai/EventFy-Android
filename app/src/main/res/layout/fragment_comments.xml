@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="#d3d3d3"
               xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    >
+              app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -17,8 +17,7 @@
             android:id="@+id/swipe_container_nearby"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="30dp"
-            >
+            android:layout_marginBottom="75dp">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_comment"
@@ -30,74 +29,60 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:orientation="vertical"
             android:layout_gravity="center_horizontal|bottom"
             >
 
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                app:cardUseCompatPadding="true"
+                android:paddingTop="10dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp"
+                android:background="@color/com_facebook_button_login_silver_background_color_pressed">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_gravity="center_horizontal|center"
+                    android:background="@color/com_facebook_button_login_silver_background_color_pressed">
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal|bottom"
-                android:background="@color/cardview_light_background"
-                android:id="@+id/CommentPostImageLayout"
-                android:padding="16dp"
-                android:visibility="invisible"
-                >
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/btnSelectImageFromDevice"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="8dp"
+                        app:cb_color="@color/com_facebook_button_login_silver_background_color_pressed"
+                        app:cb_pressedRingWidth="3dip"
+                        android:layout_marginTop="8dp"
+                        android:src="@drawable/ic_camera_enhance_black_24dp" />
 
-                <ImageView
-                    android:id="@+id/slectedImageViewFromDevice"
-                    android:layout_width="0dip"
-                    android:layout_height="180dp"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="6dp"
-                    android:layout_gravity="center_vertical"
-                    android:scaleType="fitXY"
-                    />
+                    <EditText
+                        android:id="@+id/commentText"
+                        android:layout_width="0dip"
+                        android:background="@color/cardview_light_background"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.0"
+                        android:layout_margin="10dp"
+                        />
 
-                <ImageButton
-                    android:id="@+id/btnCommentImageDsicard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_public_white_24dp"
-                    android:layout_gravity="center"
-                    />
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/btnCommentSend"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:padding="8dp"
+                        android:layout_marginTop="9dp"
+                        app:cb_color="@color/com_facebook_button_login_silver_background_color_pressed"
+                        app:cb_pressedRingWidth="3dip"
+                        android:src="@drawable/ic_send_black_24dp" />
+                </LinearLayout>
 
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal|bottom"
-                android:background="@color/cardview_light_background">
-
-                <ImageButton
-                    android:id="@+id/btnSelectImageFromDevice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_navigation_white_24dp" />
-
-                <EditText
-                    android:id="@+id/commentText"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="6dp" />
-
-                <ImageButton
-                    android:id="@+id/btnCommentSend"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_create_black_24dp" />
-            </LinearLayout>
-
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 

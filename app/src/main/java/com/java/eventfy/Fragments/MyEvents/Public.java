@@ -77,7 +77,7 @@ public class Public extends Fragment {
         floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item3);
 
-        adapter = new MainRecyclerAdapter();
+        adapter = new MainRecyclerAdapter(getContext());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -116,7 +116,7 @@ public class Public extends Fragment {
     public void receiveEvents(List<Events> eventsList)
     {
         if(eventsList.get(0) instanceof Events)
-            if(flag.equals(getResources().getString(R.string.nearby_flag))){
+            if(flag.equals(getString(R.string.nearby_flag))){
                 this.eventsList = eventsList;
                 bindAdapter(adapter, eventsList);
             }
@@ -141,8 +141,8 @@ public class Public extends Fragment {
         tempSignUp.setLocation(location);
 
 
-        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.nearby_flag));
+        String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
+        getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag));
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -178,7 +178,7 @@ public class Public extends Fragment {
         SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
 }

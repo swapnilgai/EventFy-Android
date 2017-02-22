@@ -1,40 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linear_layout"
+    android:id="@+id/linear_layout_attendance"
+    android:orientation="horizontal"
+    android:background="#d3d3d3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+<LinearLayout
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:layout_marginTop="6dp"
+    android:layout_marginLeft="10dp"
+    android:background="@drawable/curve_liner_layout"
+    android:layout_marginRight="10dp"
+    android:padding="3dp"
+>
 
     <ImageView
-        android:id="@+id/picture"
-        android:padding="16dp"
+        android:id="@+id/eventinfo_user_image"
+        android:padding="5dp"
         android:scaleType="centerCrop"
         android:src="@drawable/img_placeholder"
         android:layout_gravity="center_vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
+
 
     <LinearLayout
-        android:padding="8dp"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_marginRight="5dp"
+        android:layout_width="0dip"
+        android:layout_marginTop="3dp"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="1.0"
+        android:paddingLeft="10dp">
+
+        <LinearLayout
+            android:layout_marginRight="2dp"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1.0"
+            android:paddingLeft="10dp"
+            >
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/eventinfo_user_name"
             android:textColor="#000000"
-            android:textSize="16sp"
+            android:textSize="15sp"
+            android:paddingTop="5dp"
+            android:text="User Name"
+            android:textStyle="bold"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+           />
 
-        <TextView
-            android:id="@+id/email"
-            android:textColor="#6c7880"
-            android:textSize="14sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/eventinfo_user_status"
+                android:textColor="#6c7880"
+                android:textSize="12sp"
+                android:text="user staus is xys "
+                android:inputType="textImeMultiLine"
+                android:lines="2"
+                android:paddingTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="10dp"-->
+                <!--android:background="@color/place_autocomplete_search_hint" />-->
+</LinearLayout>
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/user_status_mode"
+            android:layout_width="18dip"
+            android:layout_height="18dip"
+            android:layout_gravity="center"
+            android:gravity="center"
+            app:cb_color="@color/colorActiveGreen"/>
+
+
+        <at.markushi.ui.CircleButton
+            android:id="@+id/invite_add_or_remove_user_btn"
+            android:layout_width="35dip"
+            android:layout_height="35dip"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/fab_add"
+            app:cb_color="@color/colorPrimary"
+            app:cb_pressedRingWidth="5dip" />
+
+        </LinearLayout>
+
+</LinearLayout>
 </LinearLayout>

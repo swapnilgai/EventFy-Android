@@ -10,6 +10,7 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_container_nearby"
         android:layout_width="fill_parent"
+        android:layout_marginBottom="5dp"
         android:layout_height="fill_parent"
         >
 
@@ -22,12 +23,12 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="25dp"
-        android:id="@+id/fragment_switch_button_nearby"
-        android:background="@drawable/abc_action_bar_item_background_material"/>
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_gravity="end|bottom"
+     android:layout_margin="25dp"
+     android:id="@+id/fragment_switch_button_nearby"
+     android:background="@drawable/abc_action_bar_item_background_material"/>
 
 </FrameLayout>
 

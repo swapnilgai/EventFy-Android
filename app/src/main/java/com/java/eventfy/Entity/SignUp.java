@@ -26,10 +26,18 @@ public class SignUp implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String imageUrl;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private boolean isFacebook;
+    @JsonView(Boolean.class)
+    private String isFacebook;
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(Boolean.class)
     private String isVerified;
+    private String visibilityMode;
+    private String status;
 
+    private int  visibilityMiles;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String viewMessage;
 
     @JsonView(Events.class)
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -39,10 +47,12 @@ public class SignUp implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String token;
 
-    @JsonIgnoreProperties(ignoreUnknown = false)
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(NotificationDetail.class)
     //@JsonBackReference
-    private NotificationDetail notificationDetail;
+    private List<NotificationDetail> notificationDetails  = new ArrayList<NotificationDetail>();
+
 
 //	@OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
 //	private Token token;
@@ -64,8 +74,47 @@ public class SignUp implements Serializable {
    // @JsonManagedReference("Comments")
     private List<Comments> comments;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(NotificationId.class)
+    private NotificationId notificationId;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(Events.class)
+    private Events eventAdmin;
 
 
+    public String getVisibilityMode() {
+        return visibilityMode;
+    }
+
+    public void setVisibilityMode(String visibilityMode) {
+        this.visibilityMode = visibilityMode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    public Events getEventAdmin() {
+        return eventAdmin;
+    }
+
+    public String getViewMessage() {
+        return viewMessage;
+}
+
+    public void setViewMessage(String viewMessage) {
+        this.viewMessage = viewMessage;
+    }
+
+    public void setEventAdmin(Events eventAdmin) {
+        this.eventAdmin = eventAdmin;
+    }
 
     public String getUserId() {
         return userId;
@@ -97,10 +146,10 @@ public class SignUp implements Serializable {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
-    public boolean getIsFacebook() {
+    public String getIsFacebook() {
         return isFacebook;
     }
-    public void setIsFacebook(boolean isFacebook) {
+    public void setIsFacebook(String isFacebook) {
         this.isFacebook = isFacebook;
     }
     public String getIsVerified() {
@@ -149,12 +198,27 @@ public class SignUp implements Serializable {
         this.verificationCode = verificationCode;
     }
 
-    public NotificationDetail getNotificationDetail() {
-        return notificationDetail;
+
+    public NotificationId getNotificationId() {
+        return notificationId;
     }
 
-    public void setNotificationDetail(NotificationDetail notificationDetail) {
-        this.notificationDetail = notificationDetail;
+    public void setNotificationId(NotificationId notificationId) {
+        this.notificationId = notificationId;
+    }
+    public List<NotificationDetail> getNotificationDetails() {
+        return notificationDetails;
     }
 
+    public void setNotificationDetails(List<NotificationDetail> notificationDetails) {
+        this.notificationDetails = notificationDetails;
+    }
+
+    public int getVisibilityMiles() {
+        return visibilityMiles;
+    }
+
+    public void setVisibilityMiles(int visibilityMiles) {
+        this.visibilityMiles = visibilityMiles;
+    }
 }

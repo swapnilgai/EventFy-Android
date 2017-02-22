@@ -12,6 +12,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
@@ -75,12 +76,12 @@ public class GCMNotificationIntentService extends GcmListenerService {
 
 
 //        RemoteInput snoozRemoteInput = new RemoteInput.Builder(Intent.EXTRA_TEXT)
-//                .setLabel(getResources().getString(R.string.notification_prompt_reply))
+//                .setLabel(getString(R.string.notification_prompt_reply))
 //                .setChoices(choices)
 //                .build();
 //
 //        RemoteInput dismissRemoteInput = new RemoteInput.Builder(Intent.EXTRA_TEXT)
-//                .setLabel(getResources().getString(R.string.notification_prompt_reply))
+//                .setLabel(getString(R.string.notification_prompt_reply))
 //                .setChoices(choices)
 //                .build();
 
@@ -119,6 +120,7 @@ public class GCMNotificationIntentService extends GcmListenerService {
         Gson gson = new Gson();
         NotificationDetail notificationDetail = gson.fromJson(msg, NotificationDetail.class);
 
+        Log.e("notification msg : ", " ----- - - -- : "+msg);
         saveSharedPreferencesLogList(notificationDetail);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),

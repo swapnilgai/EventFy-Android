@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,9 +18,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
@@ -33,6 +35,7 @@ import com.java.eventfy.customLibraries.DividerItemDecoration;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -45,8 +48,6 @@ public class Remot extends Fragment {
 
     private RecyclerView recyclerView;
 
-    private FloatingActionButton fragment_switch_button_remot;
-    private FloatingActionButton fragment_search_place_button;
     private FragmentTransaction transaction_remot;
     private FragmentManager manager_remot;
     private Fragment remot_map;
@@ -57,7 +58,11 @@ public class Remot extends Fragment {
     private String flag;
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
+    List<Events> eventsList = new LinkedList<Events>();
     private SignUp signUp;
+    private Events eventLoadingObj;
+    FloatingActionMenu floatingActionMenu;
+    FloatingActionButton fragment_switch_button_remot, fragment_search_place_button;
 
 
     public Remot() {
@@ -78,11 +83,13 @@ public class Remot extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_remot);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_remot);
 
-        adapter = new MainRecyclerAdapter();
+        createLoadingObj();
+        adapter = new MainRecyclerAdapter(getContext());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
+
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -91,6 +98,9 @@ public class Remot extends Fragment {
                 getRemotEventsServerCall();
             }
         });
+
+
+        floatingActionMenu = (FloatingActionMenu) view.findViewById(R.id.floating_action_menu_remot);
 
         fragment_switch_button_remot  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_remot);
         fragment_switch_button_remot.setImageResource(R.drawable.ic_near_me_white_24dp);
@@ -102,6 +112,7 @@ public class Remot extends Fragment {
         transaction_remot = manager_remot.beginTransaction();
         view.setId(Integer.parseInt(context_id));
 
+        floatingActionMenu.setVisibility(View.GONE);
         remot_map = new Remot_Map();
         search_place = new Place_Autocomplete_Search();
 
@@ -158,6 +169,9 @@ public class Remot extends Fragment {
                     transaction_remot.hide(search_place);
                     transaction_remot.commit();
                     fragment_switch_button_remot.setImageResource(R.drawable.ic_near_me_white_24dp);
+                    floatingActionMenu.close(true);
+                    fragment_switch_button_remot.setLabelText("List View");
+
                 }
                 else{
                     swipeRefreshLayout.setVisibility(View.VISIBLE);
@@ -166,7 +180,8 @@ public class Remot extends Fragment {
                     transaction_remot.hide(remot_map);
                     transaction_remot.commit();
                     fragment_switch_button_remot.setImageResource(R.drawable.ic_map_white_24dp);
-
+                    floatingActionMenu.close(true);
+                    fragment_switch_button_remot.setLabelText("Map View");
                 }
             }
         });
@@ -180,6 +195,7 @@ public class Remot extends Fragment {
                 swipeRefreshLayout.setVisibility(View.INVISIBLE);
                 transaction_remot.show(search_place);
                 transaction_remot.commit();
+                floatingActionMenu.close(true);
             }
         });
     }
@@ -207,19 +223,22 @@ public class Remot extends Fragment {
         tempSignUp.setLocation(location);
 
 
-        String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.get_nearby_event);
-          getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getResources().getString(R.string.remot_flag));
+        String url = getString(R.string.ip_local) + getString(R.string.remote_events);
+          getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.remot_flag));
           getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     // ***** event bus call
 
     @Subscribe
-    public void receiveEvents(List<Events> eventsList)
+    public void receiveEvents(RemoteEventData remoteEventData)
     {
-        if(eventsList.get(0) instanceof Events)
-            if(flag.equals(getResources().getString(R.string.remot_flag)))
-                bindAdapter(adapter, eventsList);
+        if(remoteEventData.getEventsList()!=null && remoteEventData.getEventsList().size()>0 && remoteEventData.getEventsList().get(0) instanceof Events) {
+            floatingActionMenu.setVisibility(View.VISIBLE);
+            this.eventsList = remoteEventData.getEventsList();
+            bindAdapter(adapter, this.eventsList);
+        }
+
     }
 
     @Subscribe
@@ -231,15 +250,43 @@ public class Remot extends Fragment {
     public void getRemotPlaceLatLang(Place place)
     {
         this.latLng = place.getLatLng();
+        removeAll();
+        addLoading();
+        bindAdapter(adapter,eventsList);
         setEnableFloatingButton();
+    }
+
+    @Subscribe
+    public void setFlag(Place place) {
+        addLoading();
     }
     public void getUserObject()
     {
         SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
+    }
+
+    public void removeAll() {
+        eventsList.removeAll(eventsList);
+    }
+
+    public void createLoadingObj() {
+        eventLoadingObj = new Events();
+        eventLoadingObj.setViewMessage(getString(R.string.home_loading));
+    }
+    public void addLoading() {
+        // search request from remot received --- flip to loading recycler view // from search tab
+
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        transaction_remot = manager_remot.beginTransaction();
+        transaction_remot.hide(search_place);
+        transaction_remot.hide(remot_map);
+        transaction_remot.commit();
+        fragment_switch_button_remot.setImageResource(R.drawable.ic_map_white_24dp);
+        eventsList.add(eventLoadingObj);
     }
 }
 

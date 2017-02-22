@@ -3,9 +3,11 @@ package com.java.eventfy.Fragments.EventInfo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
@@ -23,14 +25,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
+import com.java.eventfy.Entity.CommentSudoEntity.DeleteComment;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.ImageViewEntity;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.ImageComment;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.CommentAdapter;
 import com.java.eventfy.asyncCalls.GetCommentsForEvent;
@@ -41,13 +46,16 @@ import com.soundcloud.android.crop.Crop;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import at.markushi.ui.CircleButton;
+
+import static com.java.eventfy.R.id.commentText;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,15 +64,13 @@ public class Comment extends Fragment {
     private CommentAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private LinearLayout CommentPostImageLayout;
     private View view;
-    private List<Comments> commentsList = new ArrayList<>();
-    private List<Comments> commentsListTemp = new ArrayList<>();
+//    private List<Comments> commentsList = new ArrayList<>();
     private EditText commentTextEditText;
-    private ImageButton btnCommentSend;
-    private ImageButton selectImageFromDevice;
-    private ImageView slectedImageViewFromDevice;
-    private ImageButton btnCommentImageDsicard;
+    private CircleButton btnCommentSend;
+    private CircleButton selectImageFromDevice;
+    private List<AddComment> addCommentsList = new ArrayList<>();
+
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
     protected Handler handler;
@@ -76,6 +82,10 @@ public class Comment extends Fragment {
     private PostUsersComment postUsersComment;
     private String urlForComment;
     private Events event;
+    private SignUp signUp;
+    private LinearLayoutManager linearLayoutManager;
+    private Context context;
+
     public Comment() {
         // Required empty public constructor
     }
@@ -87,44 +97,45 @@ public class Comment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_comments, container, false);
 
-        if(!EventBusService.getInstance().isRegistered(this))
+        Log.e("in create frag ", " PPPP ");
+        if (!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
-        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
+        context = view.getContext();
+        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
 
-        commentsList.add(null);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_comment);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
-        commentTextEditText = (EditText) view.findViewById(R.id.commentText);
-        btnCommentSend = (ImageButton) view.findViewById(R.id.btnCommentSend);
-        selectImageFromDevice = (ImageButton) view.findViewById(R.id.btnSelectImageFromDevice);
-        CommentPostImageLayout = (LinearLayout) view.findViewById(R.id.CommentPostImageLayout);
-        slectedImageViewFromDevice = (ImageView) view.findViewById(R.id.slectedImageViewFromDevice);
-        btnCommentImageDsicard = (ImageButton) view.findViewById(R.id.btnCommentImageDsicard);
+
+        commentTextEditText = (EditText) view.findViewById(commentText);
+        btnCommentSend = (CircleButton) view.findViewById(R.id.btnCommentSend);
+        selectImageFromDevice = (CircleButton) view.findViewById(R.id.btnSelectImageFromDevice);
 
         getNearbEventServerCall();
 
         recyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager l = new LinearLayoutManager(view.getContext());
-        recyclerView.setLayoutManager(l);
+        linearLayoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
-        adapter = new CommentAdapter(recyclerView, (ArrayList<Comments>) commentsList);
+        adapter = new CommentAdapter(recyclerView, context, event);
 
         handler = new Handler();
 
         recyclerView.setAdapter(adapter);
         //  bindAdapter(commentsList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
 
+        addLoadingAtStrat();
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                addCommentsList.removeAll(addCommentsList);
+                removeALl();
+                bindAdapter(addCommentsList);
                 getNearbEventServerCall();
-                bindAdapter(commentsList);
-
             }
         });
 
@@ -135,53 +146,56 @@ public class Comment extends Fragment {
 
                 Comments commentTemp = new Comments();
 
-                urlForComment = "https://eventfy.herokuapp.com/webapi/comments/addcomment";
+                urlForComment = getString(R.string.ip_local) + getString(R.string.add_comment_in_event);
 
+                commentTemp.setUser(signUp);
 
-                commentTemp.setUserName("Current User");
+                Events eventTemp = new Events();
+                SignUp signUpTemp = new SignUp();
+
+                eventTemp.setEventId(event.getEventId());
+                eventTemp.setEventID(event.getEventID());
+
+                signUpTemp.setUserName(signUp.getUserName());
+                signUpTemp.setUserId(signUp.getUserId());
+                signUpTemp.setToken(signUp.getToken());
+
+                commentTemp.setEvents(eventTemp);
+                commentTemp.setUser(signUpTemp);
+
+                addLoadingAtStrat();
+                linearLayoutManager.scrollToPosition(0);
 
                 String commentText = commentTextEditText.getText().toString();
 
-                if(bm!=null) {
-                    commentTemp.setCommentText(dest.toString());
-                    commentTemp.setIsImage("true");
-                    commentTemp.setEventId(event.getEventId());
 
-                    uploadImage = new UploadImage(commentTemp, bm, urlForComment);
-                    uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-                else{
                     commentTemp.setCommentText(commentText);
                     commentTemp.setEventId(event.getEventId());
                     commentTemp.setIsImage("false");
-                    postUsersComment = new PostUsersComment(urlForComment, commentTemp);
+
+                AddComment addComment = new AddComment();
+                addComment.setViewMsg(getString(R.string.comment_add_posting));
+                addComment.setComment(commentTemp);
+
+                    postUsersComment = new PostUsersComment(urlForComment, addComment, getContext());
                     postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
+
 
                 // bindAdapter(commentsList);
             }
         });
-
-
         selectImageFromDevice.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Intent chooseImageIntent = ImagePicker.getPickImageIntent(view.getContext());
+                Intent chooseImageIntent = ImagePicker.getPickImageIntent(context);
                 startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
             }
         });
 
-        btnCommentImageDsicard.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                CommentPostImageLayout.setVisibility(View.INVISIBLE);
-                bm = null;
-            }
-        });
 
-        if (commentsList.isEmpty()) {
+        if (addCommentsList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             // tvEmptyView.setVisibility(View.VISIBLE);
 
@@ -194,13 +208,13 @@ public class Comment extends Fragment {
             @Override
             public void onLoadMore() {
 
-                if(!commentsList.isEmpty())
-                    commentsList.remove(commentsList.size() - 1);
-                adapter.notifyItemRemoved(commentsList.size());
+                if (!addCommentsList.isEmpty())
+                    addCommentsList.remove(addCommentsList.size() - 1);
+                adapter.notifyItemRemoved(addCommentsList.size());
 
-                commentsList.add(null);
+                addCommentsList.add(null);
 
-                adapter.notifyItemInserted(commentsList.size() - 1);
+                adapter.notifyItemInserted(addCommentsList.size() - 1);
 
                 getNearbEventServerCall();
             }
@@ -209,13 +223,40 @@ public class Comment extends Fragment {
         return view;
     }
 
+    public void removeALl() {
+        addCommentsList.removeAll(addCommentsList);
+        addLoading();
+    }
+
+    public void addLoading() {
+        comments = new Comments();
+        comments.setViewMessage(getString(R.string.home_loading));
+        AddComment addComment = new AddComment();
+        addComment.setComment(comments);
+        addCommentsList.add(addComment);
+        bindAdapter(addCommentsList);
+    }
+
+    public void addLoadingAtStrat() {
+        comments = new Comments();
+        comments.setViewMessage(getString(R.string.home_loading));
+        AddComment addComment = new AddComment();
+        addComment.setComment(comments);
+//        for(int i = commentsList.size()-1; i > 0; i--)
+//        {
+//            //set the last element to the value of the 2nd to last element
+//            commentsList.set(i,commentsList.get(i-1));
+//        }
+        addCommentsList.add(0, addComment);
+        bindAdapter(addCommentsList);
+    }
 
     public void setLoaded() {
         loading = false;
     }
 
     public int getItemCount() {
-        return commentsList.size();
+        return addCommentsList.size();
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
@@ -227,9 +268,9 @@ public class Comment extends Fragment {
     }
 
 
-    private void bindAdapter(List<Comments> commentList){
+    private void bindAdapter(List<AddComment> addCommentsList) {
         swipeRefreshLayout.setRefreshing(false);
-        refreshData(commentList);
+        refreshData(addCommentsList);
     }
 
     @Override
@@ -240,73 +281,87 @@ public class Comment extends Fragment {
     }
 
     @UiThread
-    private void refreshData(List<Comments> commentList){
-        if (adapter != null){
+    private void refreshData(List<AddComment> addCommentsList) {
+        Log.e("refresh data called: ", " cmt : "+addCommentsList.size());
+        if (adapter != null) {
             adapter.clear();
-            adapter.addAll(commentList);
+            adapter.addAll(addCommentsList);
             adapter.notifyDataSetChanged();
         }
     }
 
 
-    public void getNearbEventServerCall()
-    {
+//    public void getAddCommentList() {
+//        for(Comments c: commentsList){
+//            AddComment addC = new AddComment();
+//            addC.setComment(c);
+//            addCommentsList.add(addC);
+//        }
+//
+//    }
 
-        String url = "https://eventfy.herokuapp.com/webapi/comments/geteventcomment";
+    public void getNearbEventServerCall() {
 
-        GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, String.valueOf(event.getEventId()));
+
+        String url = getString(R.string.ip_local) + getString(R.string.get_comment_for_event);
+
+        getUserObject();
+
+        signUp.setEventAdmin(event);
+
+        GetCommentsForEvent getCommentsForEvent = new GetCommentsForEvent(url, signUp, context);
         getCommentsForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
     @Subscribe
-    public void getCommentForEvent(List<Comments> commentsList)
-    {
-        Log.e("in get comment user: ", ""+commentsList.size());
+    public void getCommentForEvent(List<Comments> commentsList) {
+        Log.e("in get comment user: ", "" + commentsList.size());
 
-        if(commentsList.get(0) instanceof Comments) {
-            this.commentsListTemp.addAll(commentsList);
+        if (commentsList.get(0) instanceof Comments) {
+            convertToAddCommentListObject(commentsList);
 
             displayComments();
         }
     }
 
-    @Subscribe
-    public void getPostedComment(Comments comments)
-    {
-        Log.e("posted comment: ", ""+comments.getCommentId());
-
-
-        if(comments!=null) {
-            commentsList.removeAll(commentsList);
-
-            // commentsList.add(comments);
-            commentsList.add(null);
-            adapter.notifyItemInserted(commentsList.size() - 1);
-            adapter.notifyDataSetChanged();
-
-            CommentPostImageLayout.setVisibility(View.INVISIBLE);
-            bm = null;
-            commentTextEditText.setText("");
-
-            getNearbEventServerCall();
-            Toast.makeText(getContext(), "You'r comment has been posted", Toast.LENGTH_LONG).show();
+    public void convertToAddCommentListObject(List<Comments> commentsList){
+        for(Comments c: commentsList){
+            AddComment addComment = new AddComment();
+            addComment.setComment(c);
+            addCommentsList.add(addComment);
         }
-
-        else{
-            Toast.makeText(getContext(), "Unable to post you'r comment", Toast.LENGTH_LONG).show();
-        }
-
     }
 
-    public void setCommentSectionVisible()
-    {
-        CommentPostImageLayout.setVisibility(View.VISIBLE);
-        slectedImageViewFromDevice.setImageBitmap(bm);
-    }
+//    @Subscribe
+//    public void getPostedComment(Comments comments) {
+//        Log.e("posted comment: ", "" + comments.getCommentId());
+//
+//        if (comments != null && comments.getViewMessage().equals(getString(R.string.deleted))) {
+//            int index = -1;
+//            for (Comments c : commentsList)
+//                if (c.getCommentId() == comments.getCommentId()) {
+//                    index = commentsList.indexOf(c);
+//                    Log.e("index ", " cmt : " + comments.getCommentId());
+//                    break;
+//                }
+//            if (index != -1) {
+//                Log.e("before : ", " cmt : " + commentsList.size());
+//                commentsList.remove(index);
+//                Log.e("after : ", " cmt : " + commentsList.size());
+//                adapter.notifyItemRemoved(index);
+//            }
+//            bindAdapter(commentsList);
+//        } else if (comments != null && comments.getViewMessage().equals(getString(R.string.undo))) {
+//
+//        } else {
+//            Toast.makeText(context, "Unable to post you'r comment", Toast.LENGTH_LONG).show();
+//        }
+//    }
 
-    public void displayComments()
-    {
+
+
+    public void displayComments() {
 
         //add null , so the adapter will check view_type and show progress bar at bottom
 
@@ -314,51 +369,16 @@ public class Comment extends Fragment {
             @Override
             public void run() {
 
-                commentsList.remove(commentsList.size() - 1);
-                adapter.notifyItemRemoved(commentsList.size());
-                Date date1 = null;
-                Date date2 = null;
-                //  commentsList.addAll(commentsListTemp);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                int yearDate1 = 0;
-                int yearDate2 =0;
-
-                for(int i=0; i <commentsListTemp.size()-1;i++)
-                {
-
-                    date1 = commentsListTemp.get(i).getDate();
-                    date2 = commentsListTemp.get(i+1).getDate();
-
-                    SimpleDateFormat df = new SimpleDateFormat("yyyy");
-                if(date1!=null || date2!=null) {
-                     yearDate1 = Integer.parseInt(df.format(date1));
-                     yearDate2 = Integer.parseInt(df.format(date2));
+                if(addCommentsList.size()>0 && addCommentsList.get(0).getComment().getViewMessage() !=null
+                        && addCommentsList.get(0).getComment().getViewMessage().equals(context.getString(R.string.home_loading))) {
+                    addCommentsList.remove(0);
+                    adapter.notifyItemRemoved(0);
                 }
-                    commentsList.add(commentsListTemp.get(i));
-
-                  //  TODO Current data have date as null;
-
-//                    if (yearDate2 > yearDate1 || date2.getMonth() > date1.getMonth() || date2.getDay() > date2.getDay()) {
-//                        Comments commentsTemp = new Comments();
-//                        commentsTemp.setIsDateText(true);
-//                        commentsList.add(commentsTemp);
-//                    }
-                }
-
-                commentsList.add(commentsListTemp.get(commentsListTemp.size()-1));
-
-                adapter.clear();
-                adapter.addAll(commentsList);
-                adapter.notifyDataSetChanged();
-                adapter.setLoaded();
-
+                bindAdapter(addCommentsList);
             }
         }, 5000);
 
-
-
     }
-
 
     public void processComment() throws ParseException {
 
@@ -373,7 +393,6 @@ public class Comment extends Fragment {
 //                }
 //            } );
     }
-
 
 
     // Crop Image
@@ -391,8 +410,8 @@ public class Comment extends Fragment {
 
     private Uri beginCrop(Uri source) {
         Uri destination = Uri.fromFile(new File(getActivity().getCacheDir(), "cropped"));
-        Crop.of(source, destination).withAspect(300, 180).start(getContext(), Comment.this, Crop.REQUEST_CROP);
-        return  destination;
+        Crop.of(source, destination).withAspect(300, 180).start(context, Comment.this, Crop.REQUEST_CROP);
+        return destination;
     }
 
     private void handleCrop(int resultCode, Intent result, Uri destination) {
@@ -402,7 +421,27 @@ public class Comment extends Fragment {
             Log.e("crop : ", "" + getActivity().getCacheDir());
 
             bm = decodeBitmap(getActivity(), destination, 3);
-            setCommentSectionVisible();
+
+
+
+            if(bm!=null) {
+                ImageViewEntity imageViewEntity = new ImageViewEntity();
+                imageViewEntity.setImageUrl(null);
+
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bm.compress(CompressFormat.JPEG, 50, stream);
+                byte[] byteArray = stream.toByteArray();
+                imageViewEntity.setBitmapByteArray(byteArray);
+
+                imageViewEntity.setUserName(signUp.getUserName());
+
+                Intent intent = new Intent(getActivity(), ImageComment.class);
+                intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
+                intent.putExtra(getString(R.string.event_object_for_image_comment_activity), event);
+                context.startActivity(intent);
+            }
+
+            //setCommentSectionVisible();
 
         } else if (resultCode == Crop.RESULT_ERROR) {
             Toast.makeText(getActivity(), Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
@@ -429,5 +468,57 @@ public class Comment extends Fragment {
 
         return actuallyUsableBitmap;
     }
+
     // Crop image end
+    public void getUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        bm = null;
+    }
+
+    @Subscribe
+    public void getAddCommentObject(AddComment addComment) {
+
+        addComment.getComment().setViewMessage(addComment.getViewMsg());
+
+        Log.e("item inserted : ", ""+addComment.getViewMsg());
+        Log.e("item inserted 1 : ", ""+addComment.getComment().getViewMessage());
+        Log.e("msg 0 : ", ""+addCommentsList.get(0).getComment().getViewMessage());
+        Log.e("signup : ", ""+addComment.getComment().getUser().getImageUrl());
+
+        if(addCommentsList!= null && addCommentsList.get(0).getComment().getViewMessage()!= null)
+            if(addCommentsList.get(0).getComment().getViewMessage().equals(getString(R.string.home_loading)) ||
+                    addCommentsList.get(0).getComment().getViewMessage().equals(getString(R.string.home_no_data)))
+                addCommentsList.remove(0);
+
+        if(addCommentsList.contains(addComment))
+            addCommentsList.remove(addCommentsList.indexOf(addComment));
+
+        addCommentsList.add(0, addComment);
+        adapter.insert(addComment, 0);
+        bindAdapter(addCommentsList);
+
+    }
+
+    @Subscribe
+    public void getDeletedCommentObject(DeleteComment deleteComment) {
+                 int index = addCommentsList.indexOf(deleteComment.getAddComment());
+
+                Log.e("before : ", " cmt : " + addCommentsList.size());
+                addCommentsList.remove(index);
+                Log.e("after : ", " cmt : " + addCommentsList.size());
+                adapter.notifyItemRemoved(index);
+                bindAdapter(addCommentsList);
+
+    }
+
+
 }

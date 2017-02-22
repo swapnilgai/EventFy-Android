@@ -38,7 +38,9 @@ public class EventInfoPrivate extends AppCompatActivity {
         setContentView(R.layout.activity_event_info_public);
 
         Intent intent = getIntent();
-        event = (Events) intent.getSerializableExtra(getResources().getString(R.string.event_for_eventinfo));
+        event = (Events) intent.getSerializableExtra(getString(R.string.event_for_eventinfo));
+
+        Log.e(" in evenifo  ", "00000000 "+event.getEventId());
 
         eventImage = (ImageView) findViewById(R.id.event_image);
 
@@ -49,7 +51,7 @@ public class EventInfoPrivate extends AppCompatActivity {
 
         setupToolbar();
 
-        setupViewPager();
+      //  setupViewPager();
 
         setupCollapsingToolbar();
 
@@ -85,27 +87,26 @@ public class EventInfoPrivate extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
 
-        About about_fragment = new About();
-        Comment comments_fragment = new Comment();
-        Invited invited_fragment = new Invited();
-        Attending attending_fragment = new Attending();
+        About aboutFragment = new About();
+        Comment commentsFragment = new Comment();
+        Invited invitedFragment = new Invited();
+        Attending attendingFragment = new Attending();
 
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(getResources().getString(R.string.event_for_eventinfo), event);
+        bundle.putSerializable(getString(R.string.event_for_eventinfo), event);
 
-        about_fragment.setArguments(bundle);
-        comments_fragment.setArguments(bundle);
-        invited_fragment.setArguments(bundle);
-        attending_fragment.setArguments(bundle);
-
-        Log.e("in main : ", ""+event.getEventName());
+        aboutFragment.setArguments(bundle);
+        commentsFragment.setArguments(bundle);
+        invitedFragment.setArguments(bundle);
+        attendingFragment.setArguments(bundle);
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(comments_fragment, "Comments");
-        adapter.addFrag(invited_fragment, "Invited");
-        adapter.addFrag(attending_fragment, "Attending");
-        adapter.addFrag(about_fragment, "About");
+        adapter.addFrag(aboutFragment, "About");
+        adapter.addFrag(commentsFragment, "Comments");
+        adapter.addFrag(invitedFragment, "Invited");
+        adapter.addFrag(attendingFragment, "Attending");
+       
         viewPager.setOffscreenPageLimit(3);
         viewPager.setAdapter(adapter);
     }

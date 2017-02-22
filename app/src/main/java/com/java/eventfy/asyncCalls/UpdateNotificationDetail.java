@@ -11,7 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -30,6 +30,14 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... strings) {
 
+        signUp.setPassword(null);
+        signUp.setVerificationCode(null);
+        signUp.setUserId(null);
+        signUp.setComments(null);
+        signUp.setEvents(null);
+        signUp.setNotificationDetails(null);
+        signUp.setLocation(null);
+
 
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -43,7 +51,7 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
 
 
         RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

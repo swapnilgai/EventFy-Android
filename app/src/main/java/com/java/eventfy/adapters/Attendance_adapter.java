@@ -2,11 +2,15 @@ package com.java.eventfy.adapters;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
@@ -15,12 +19,11 @@ import android.widget.TextView;
 
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
+import com.java.eventfy.ViewerProfilePage;
+import com.java.eventfy.utils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import at.markushi.ui.CircleButton;
 
 /**
  * Created by swapnil on 10/7/16.
@@ -28,19 +31,19 @@ import butterknife.ButterKnife;
 public class Attendance_adapter extends ArrayRecyclerAdapter<SignUp, RecyclerView.ViewHolder>{
 
     public View view;
-    private final int VIEW_ITEM = 5;
-    private final int VIEW_PROG = 0;
-    private final int VIEW_DATE = 1;
+    private final int VIEW_DATA= 1;
+    private final int VIEW_LOADING= 0;
+    private final int VIEW_NODATA= -1;
+    private final int VIEW_NETWORK_ERROR= -1;
     private int visibleThreshold = 50;
     private int lastVisibleItem, totalItemCount;
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
-    ArrayList<SignUp> userList;
+    private Context context;
 
-    public Attendance_adapter(RecyclerView recyclerView, ArrayList<SignUp> userList)
+    public Attendance_adapter(RecyclerView recyclerView, Context context)
     {
-        this.userList = userList;
-
+        this.context = context;
         if (recyclerView.getLayoutManager() instanceof LinearLayoutManager) {
 
             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView
@@ -75,15 +78,25 @@ public class Attendance_adapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
 public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
     ViewHolder v;
+    Log.e("in create view type", " 0000 "+viewType);
 
-    if (viewType == VIEW_ITEM) {
+    if(viewType == VIEW_DATA)
         v = new ResultHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.attendance_adapter, parent, false));
 
-    } else
-
+    else if(viewType == VIEW_LOADING) {
         v = new ProgressBarHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.loading_list_items, parent, false));
+        Log.e("view create in: ", " 0000 "+v);
+    }
+    else if(viewType == VIEW_NODATA)
+        v = new NoDataHolder(LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.attendance_no_data, parent, false));
+    else
+        v = new NetworkErrorHolder(LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.network_error, parent, false));
+
+    Log.e("view create out: ", " 0000 "+v);
 
     return v;
 }
@@ -98,22 +111,40 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
     if(holder instanceof ResultHolder){
             SignUp r = getItem(position);
 
-        ((ResultHolder)holder).linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-        // Doesn't do anything, but need Click Listener to get that sweet Ripple
-                }
-                });
+//        ((ResultHolder)holder).linearLayout.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//        // Doesn't do anything, but need Click Listener to get that sweet Ripple
+//                }
+//                });
 
-        Picasso.with(holder.itemView.getContext())
-        .load(r.getImageUrl())
-        .placeholder(R.drawable.img_placeholder)
-        .into(((ResultHolder)holder).picture);
+        final SignUp signUp = getItem(position);
 
-        ((ResultHolder)holder).name.setText(r.getUserName());
+        ((ResultHolder)holder).eventinfo_user_name.setText(signUp.getUserName());
+        //TODO add status table in RDB
+        ((ResultHolder)holder).eventinfo_user_status.setText(signUp.getUserId());
+
+        ((ResultHolder)holder).addOrRemoveUser.setVisibility(View.INVISIBLE);
+
+        if(!signUp.getImageUrl().equals("default"))
+            Picasso.with(holder.itemView.getContext())
+                    .load(signUp.getImageUrl())
+                    .transform(new RoundedCornersTransform())
+                    .into(((ResultHolder) holder).userImage);
+
+
+        ((ResultHolder)holder).attendanceLinearLayout.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ViewerProfilePage.class);
+                intent.putExtra(context.getString(R.string.signup_object_viewe_profile), signUp);
+                context.startActivity(intent);
+            }
+        });
 
         }
-    else{
+    else if (holder instanceof  ProgressBarHolder){
         ProgressBarHolder loadingViewHolder = (ProgressBarHolder) holder;
         ObjectAnimator animator = ObjectAnimator.ofFloat(loadingViewHolder.progressBar, "rotation", 0, 360);
         animator.setRepeatCount(ValueAnimator.INFINITE);
@@ -127,47 +158,86 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         void onLoadMore();
     }
 
+
     @Override
     public int getItemViewType(int position) {
+        SignUp signUp = getItem(position);
 
-       if(userList.get(position)!=null)
-            return  VIEW_ITEM;
+        if(signUp!= null && signUp.getViewMessage()==null)
+        {
+            return VIEW_DATA;}
+        else if(signUp.getViewMessage().equals(context.getString(R.string.home_no_data)))
+            return VIEW_NODATA;
+        else if(signUp.getViewMessage().equals(context.getString(R.string.home_loading))){
+             return VIEW_LOADING;
+        }
 
-        return VIEW_PROG;
+        return VIEW_NETWORK_ERROR;
     }
 
-    @Override
-    public int getItemCount() {
-        //Log.e("item count: ", "**** : "+commentList.size());
-        return userList.size();
-    }
 
 
- class ResultHolder extends RecyclerView.ViewHolder {
-    @Bind(R.id.linear_layout)
-    LinearLayout linearLayout;
-    @Bind(R.id.picture)
-    ImageView picture;
-    @Bind(R.id.name)
-    TextView name;
-    @Bind(R.id.email) TextView email;
+ public class ResultHolder extends RecyclerView.ViewHolder {
+     private  ImageView userImage;
 
-    public ResultHolder(View itemView) {
-        super(itemView);
-        ButterKnife.bind(this, itemView);
-    }
+     private TextView eventinfo_user_name;
+
+     private TextView eventinfo_user_status;
+
+     private CircleButton user_status_mode;
+
+     private LinearLayout attendanceLinearLayout;
+
+
+     private CircleButton addOrRemoveUser;
+
+
+     public ResultHolder(View itemView) {
+         super(itemView);
+         userImage = (ImageView) itemView.findViewById(R.id.eventinfo_user_image);
+         eventinfo_user_name = (TextView) itemView.findViewById(R.id.eventinfo_user_name);
+         eventinfo_user_status = (TextView) itemView.findViewById(R.id.eventinfo_user_status);
+         user_status_mode = (CircleButton) itemView.findViewById(R.id.user_status_mode);
+         addOrRemoveUser = (CircleButton) itemView.findViewById(R.id.invite_add_or_remove_user_btn);
+         attendanceLinearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_attendance);
+
+     }
 }
 
 
 
-class ProgressBarHolder extends RecyclerView.ViewHolder {
+public class ProgressBarHolder extends RecyclerView.ViewHolder {
 
     ImageView progressBar;
     public ProgressBarHolder(View itemView) {
         super(itemView);
-
         progressBar = (ImageView) itemView.findViewById(R.id.loadingImage);
-
     }
-}
+    }
+
+    public class NoDataHolder extends RecyclerView.ViewHolder {
+
+        private ImageView noDataIv;
+
+        public NoDataHolder(View itemView) {
+            super(itemView);
+
+            noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
+            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
+            setLoaded();
+        }
+    }
+
+    public class NetworkErrorHolder extends RecyclerView.ViewHolder {
+
+        private ImageView networErrorIv;
+        public NetworkErrorHolder(View itemView) {
+            super(itemView);
+
+            networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
+            networErrorIv.setColorFilter(context.getColor(R.color.colorPrimary));
+            setLoaded();
+        }
+    }
 }

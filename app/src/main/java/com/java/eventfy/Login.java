@@ -2,14 +2,17 @@ package com.java.eventfy;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.User;
@@ -42,7 +46,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity  {
 
     private LoginButton fbLoginBt;
     private CallbackManager callbackManager;
@@ -52,6 +56,7 @@ public class Login extends AppCompatActivity {
     private TextView signupLink;
     private Button loginButton;
     private User user;
+    private String passwordTemp;
     private SecurityOperations securityOperations;
     private ProgressDialog progressDialog;
 
@@ -62,6 +67,13 @@ public class Login extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         setContentView(R.layout.activity_login);
+
+        setProgressDialog();
+
+        if(getUserObject()!=null){
+            redirectToHomeActivity();
+        }
+
 
         fbLoginBt = (LoginButton) findViewById(R.id.facebook_login_button);
         fbLoginBt.setReadPermissions("email");
@@ -79,6 +91,18 @@ public class Login extends AppCompatActivity {
         loginButton = (Button) findViewById(R.id.btn_login);
         passwordText = (EditText) findViewById(R.id.input_password);
 
+        passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    loginAction();
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
 
         signupLink.setOnClickListener(new OnClickListener() {
 
@@ -86,6 +110,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
             }
         });
@@ -104,7 +129,7 @@ public class Login extends AppCompatActivity {
 
         if(validate())
         {
-            setProgressDialog();
+            startProgressDialog();
             user = new User();
             user.setUsername(emailText.getText().toString());
             user.setPassword(passwordText.getText().toString());
@@ -113,14 +138,26 @@ public class Login extends AppCompatActivity {
 
     }
 
+    public void redirectToHomeActivity() {
+
+        dismissProgressDialog();
+        finish();
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
+    }
+
     public void setProgressDialog()
     {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.setCancelable(false);
+    }
+
+    public void startProgressDialog() {
         progressDialog.show();
     }
+
 
     public void dismissProgressDialog()
     {
@@ -159,7 +196,7 @@ public class Login extends AppCompatActivity {
                                                                     signUp.setUserName(object.getString("name"));
                                                                     signUp.setDob(object.getString("birthday"));
                                                                     signUp.setImageUrl(profilePicUrl);
-                                                                    signUp.setIsFacebook(true);
+                                                                    signUp.setIsFacebook("true");
                                                                     signUp.setUserId(object.getString("email"));
 
 
@@ -255,16 +292,16 @@ public class Login extends AppCompatActivity {
 
     private void serverCallFbLogin(SignUp signUp) {
 
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login_action_facebook);
+        String url = getString(R.string.ip_local)+getString(R.string.login_action_facebook);
         SignUpAction loginAction = new SignUpAction(signUp,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void serverCallLogin(User user) {
 
+        passwordTemp = user.getPassword();
         securityOperations = new SecurityOperations();
         user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
-        Log.e("ecrypted password : ", ""+user.getPassword());
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.login);
+        String url = getString(R.string.ip_local)+getString(R.string.login);
         LoginAction loginAction = new LoginAction(user,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -272,12 +309,13 @@ public class Login extends AppCompatActivity {
     @Subscribe
     public void getUserobject(SignUp signUp)
     {
-        Log.e("in loginact string ", "&&&&&&&");
-
         dismissProgressDialog();
         if(signUp!=null && signUp.getToken()!=null)
         {
+            EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, Home.class);
+            signUp.setPassword(passwordTemp);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("user", signUp);
             startActivity(intent);
         }
@@ -297,5 +335,22 @@ public class Login extends AppCompatActivity {
         super.onPause();
         EventBusService.getInstance().unregister(this);
     }
+
+    private String getUserObject() {
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        //TODO uncomment
+        String json = mPrefs.getString(getString(R.string.userObject), "");
+
+        if(json!=null && json.length()<100)
+            json = null;
+
+        Log.e("user is : ", ""+json);
+
+        return json;
+    }
+
+
 }
 

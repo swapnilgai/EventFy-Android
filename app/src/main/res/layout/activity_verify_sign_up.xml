@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_margin="16dp"
+                    android:layout_margin="12dp"
                     android:layout_marginTop="30dp">
 
                     <ImageView
@@ -72,7 +72,7 @@
                         android:gravity="center"
                         android:layout_marginTop="12dp"
                         android:textColor="#6c7880"
-                        android:textSize="25dp" />
+                        android:textSize="20dp" />
 
                     <com.devspark.robototextview.widget.RobotoTextView
                         android:id="@+id/userId"
@@ -83,7 +83,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center"
                         android:textColor="#6c7880"
-                        android:textSize="20dp" />
+                        android:textSize="16dp" />
 
                     <com.devspark.robototextview.widget.RobotoTextView
                         android:id="@+id/dob"
@@ -93,7 +93,7 @@
                         android:gravity="center"
                         android:layout_marginTop="10dp"
                         android:textColor="#6c7880"
-                        android:textSize="15dp"
+                        android:textSize="12dp"
                         android:layout_gravity="center"/>
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/edit_btn"
@@ -210,7 +210,6 @@
         <!--</android.support.v7.widget.CardView>-->
 </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
 
 
     <!--<android.support.design.widget.FloatingActionButton-->

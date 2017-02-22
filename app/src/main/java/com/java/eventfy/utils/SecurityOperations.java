@@ -1,5 +1,7 @@
 package com.java.eventfy.utils;
 
+import android.util.Log;
+
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 
 /**
@@ -7,17 +9,39 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
  */
 public class SecurityOperations {
 
+    StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
+    private String jasPassword = "testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh";
+
     public String encryptNetworkPassword(String key)
     {
 
-        StandardPBEStringEncryptor jasypt = new StandardPBEStringEncryptor();
-
-        jasypt.setPassword("testKey@123456@hklp6426356hksdgdgjv673yf@njn3#dnsj$njdsn&bh%hbHbh");
+        if(!jasypt.isInitialized())
+            jasypt.setPassword(jasPassword);
         // this is the authentication token user will send in order to use the web service
         String authenticationToken = jasypt.encrypt(key);
 
         return authenticationToken;
     }
 
+    public boolean comparePassword(String inputPassword, String encryptedPassword) {
+
+        Log.e("comp ;  "+inputPassword, "   with :   "+encryptedPassword);
+        if(!jasypt.isInitialized())
+            jasypt.setPassword(jasPassword);
+        Log.e("decrypt : ", "decr : "+jasypt.decrypt(encryptedPassword));
+        if(jasypt.decrypt(encryptedPassword).equals(inputPassword))
+                return true;
+        else
+            return false;
+
+    }
+
+
+    public String decryptPassword(String password) {
+        if(!jasypt.isInitialized())
+            jasypt.setPassword(jasPassword);
+
+       return jasypt.decrypt(password);
+    }
 
 }

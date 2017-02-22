@@ -81,6 +81,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
             public void onClick(View v) {
                 // Finish the registration screen and return to the Login activity
                 finish();
+                overridePendingTransition(0, 0);
             }
         });
 
@@ -110,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signUp.setUserId(emailText.getText().toString());
         signUp.setPassword(passwordText.getText().toString());
         signUp.setIsVerified("false");
-        signUp.setIsFacebook(false);
+        signUp.setIsFacebook("false");
         signUp.setImageUrl("default");
         signUp.setDob(dobtext.getText().toString());
         signUp.setUserName(nameText.getText().toString());
@@ -211,7 +212,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     private void serverCall(SignUp signUp) {
 
         if(validate()) {
-            String url = getResources().getString(R.string.ip_local) + getResources().getString(R.string.signup_adduser);
+            String url = getString(R.string.ip_local) + getString(R.string.signup_adduser);
             SignUpAction loginAction = new SignUpAction(signUp, url);
             loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

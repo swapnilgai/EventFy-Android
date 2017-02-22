@@ -2,7 +2,6 @@ package com.java.eventfy.Fragments.EventInfo;
 
 
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.UiThread;
@@ -20,7 +19,6 @@ import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.Attendance_adapter;
-import com.java.eventfy.asyncCalls.GetUsersForEvent;
 import com.java.eventfy.utils.OnLoadMoreListener;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -56,7 +54,7 @@ public class Invited extends Fragment implements OnLoadMoreListener {
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
-        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getResources().getString(R.string.event_for_eventinfo)));
+        event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_attendance);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_attendance);
@@ -70,7 +68,7 @@ public class Invited extends Fragment implements OnLoadMoreListener {
         LinearLayoutManager l = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(l);
 
-        adapter = new Attendance_adapter(recyclerView,(ArrayList<SignUp>) userList);
+        adapter = new Attendance_adapter(recyclerView, view.getContext());
 
         handler = new Handler();
 
@@ -118,8 +116,8 @@ public class Invited extends Fragment implements OnLoadMoreListener {
 
         String url = "https://eventfy.herokuapp.com/webapi/comments/getuserforevent";
         Log.e("event id for get user: ", ""+event.getEventId());
-        GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()));
-        getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+       // GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()),getContext());
+       // getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/network_error_image_view"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/ic_notifications_none_black_48dp"
+        android:fitsSystemWindows="true"
+        android:gravity="center"
+        android:scaleType="centerCrop" />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center"
+        android:lines="@android:integer/config_longAnimTime"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="No notifications for now"
+        android:textSize="20sp" />
+
+</LinearLayout>

@@ -22,11 +22,12 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.NotificationDetail;
+import com.java.eventfy.Entity.NotificationId;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.Nearby;
@@ -35,12 +36,16 @@ import com.java.eventfy.Fragments.Remot;
 import com.java.eventfy.asyncCalls.RegisterToGCM;
 import com.java.eventfy.asyncCalls.UpdateNotificationDetail;
 import com.java.eventfy.utils.DeviceDimensions;
+import com.java.eventfy.utils.SecurityOperations;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,23 +56,26 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private  DrawerLayout drawer;
     private NavigationView navigationView;
     private SignUp signUp;
+    private TextView userName;
+    private CircleImageView userImage;
     private  GoogleCloudMessaging gcm;
     private Context context;
+    private SecurityOperations securityOperations;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        EventBusService.getInstance().register(this);
+        registerEventBusInstance();
+
+        getUserObject();
+
+        Gson g = new Gson();
+       // Log.e("object is : ", "????? : "+g.toJson(signUp));
 
         Intent in = getIntent();
-        signUp = (SignUp) in.getSerializableExtra("user");
 
-        Log.e("signUp ", "****** "+signUp);
-
-        getUserObject(signUp);
-
-        //if(signUp!=null && signUp.getNotificationDetail()!=null)
+        if(in.getSerializableExtra("user")!=null )
         {
             registerDeviceForNotification();
         }
@@ -83,6 +91,21 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
+
+        Log.e("user image ", ""+userImage);
+
+        View headerLayout =
+                navigationView.getHeaderView(0);
+
+
+        userName = (TextView) headerLayout.findViewById(R.id.user_name_drawer);
+        userImage = (CircleImageView) headerLayout.findViewById(R.id.user_image_drawer);
+
+
+        userName.setText(signUp.getUserName());
+
+        setNavigationDrawerUserData();
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
@@ -96,15 +119,31 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setupTabIcons();
     }
 
+    public void setNavigationDrawerUserData(){
+
+        if(signUp.getImageUrl()!=null && signUp.getImageUrl().equals("default"))
+            userImage.setImageResource(R.drawable.user_image);
+        else
+            Picasso.with(getApplicationContext()).load(signUp.getImageUrl())
+                    .fit()
+                    .into(userImage);
+    }
+
     private void registerDeviceForNotification() {
         gcm = GoogleCloudMessaging.getInstance(this);
-        String senderId = getResources().getString(R.string.GCM_sender_id);
+        String senderId = getString(R.string.GCM_sender_id);
         RegisterToGCM registerToGCM = new RegisterToGCM(gcm, getApplicationContext(), senderId);
         registerToGCM.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void initEventBus()
     {    eventBus = EventBusService.getInstance();
+    }
+
+    public void registerEventBusInstance()
+    {
+        if(!EventBusService.getInstance().isRegistered(this))
+            EventBusService.getInstance().register(this);
     }
 
 
@@ -212,20 +251,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         } else if (id == R.id.nav_item_create_event_public)
         {
             Intent intent = new Intent(this, CreatePublicEvent.class);
-            intent.putExtra(getResources().getString(R.string.create_event_category), getResources().getString(R.string.create_event_category_public));
+            intent.putExtra(getString(R.string.create_event_category), getString(R.string.create_event_category_public));
             startActivity(intent);
 
         } else if (id == R.id.nav_item_create_event_private)
         {
             // Handle the Private event action
             Intent intent = new Intent(this, CreatePublicEvent.class);
-            intent.putExtra(getResources().getString(R.string.create_event_category), getResources().getString(R.string.create_event_category_private));
+            intent.putExtra(getString(R.string.create_event_category), getString(R.string.create_event_category_private));
             startActivity(intent);
 
         } else if (id == R.id.nav_item_my_events)
         {
-            Log.e("in my event ", "{}{}{}");
-
 
             Intent intent = new Intent(this, MyEvents.class);
             startActivity(intent);
@@ -240,6 +277,21 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         {
             // Handle the MyAccount action
 
+            Intent intent = new Intent(this, ProfilePage.class);
+            startActivity(intent);
+
+        }
+        else if (id == R.id.nav_item_logout)
+        {
+            SharedPreferences preferences =getSharedPreferences(getString(R.string.userObject),Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+            finish();
+
+            Intent intent = new Intent(this, Login.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -250,7 +302,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onPause() {
         super.onPause();
-        stopService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
+        stopService(new Intent(this, com.java.eventfy.Services.GPSTracker.class));
+        //EventBusService.getInstance().unregister(this);
     }
 
     @Override
@@ -263,16 +316,18 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onResume() {
         super.onResume();
 
+        registerEventBusInstance();
       //  initServices();
     }
 
     @Subscribe
-    public void getNotificationDetail(NotificationDetail notificationDetail)
+    public void getNotificationDetail(NotificationId notificationId)
     {
-        signUp.setNotificationDetail(notificationDetail);
-        String url = getResources().getString(R.string.ip_local)+getResources().getString(R.string.register_notification_detail);
+        signUp.setNotificationId(notificationId);
+        String url = getString(R.string.ip_local)+getString(R.string.register_notification_detail);
         UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url);
         updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EventBusService.getInstance().unregister(this);
     }
 
     public void deviceDimensions() {
@@ -283,38 +338,54 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             DeviceDimensions.deviceWeidth = size.x;
     }
 
-    private void getUserObject(SignUp signUp) {
-        SharedPreferences  mPrefs = getPreferences(MODE_PRIVATE);
+    private void getUserObject() {
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        String json = mPrefs.getString(getResources().getString(R.string.userObject), "");
+        //String json = null;
+        //TODO uncomment
+        String json = mPrefs.getString(getString(R.string.userObject), "");
+
+        if(json!=null && json.length()<100)
+            json = null;
+
+
         if(json==null)
         {
-             storeUserObject(signUp, editor);
+             storeUserObject(editor);
         }
         else {
-           // this.signUp = gson.fromJson(json, SignUp.class);
+            this.signUp = gson.fromJson(json, SignUp.class);
         }
     }
 
-
-
-
-    public void storeUserObject(SignUp signUp, SharedPreferences.Editor editor)
+    public void storeUserObject(SharedPreferences.Editor editor)
     {
-//        editor.putString(getResources().getString(R.string.userName), signUp.getUserName());
-//        editor.putString(getResources().getString(R.string.userId), signUp.getUserId());
-//        editor.putString(getResources().getString(R.string.profilePicUrl), signUp.getImageUrl());
-//        editor.putString(getResources().getString(R.string.dob), signUp.getDob());
-//        editor.putString(getResources().getString(R.string.token), signUp.getToken());
-//        editor.putBoolean(getResources().getString(R.string.isFacebook), signUp.getIsFacebook());
-//        editor.putString(getResources().getString(R.string.isVerified), signUp.getIsVerified());
+        Intent in = getIntent();
+        signUp = (SignUp) in.getSerializableExtra("user");
+
+        securityOperations = new SecurityOperations();
 
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
-        editor.putString(getResources().getString(R.string.userObject), json);
+
+        Log.e("string before ", "((((: "+json);
+
+        signUp.setPassword(securityOperations.encryptNetworkPassword(signUp.getPassword()));
+        json = gson.toJson(signUp);
+
+        Log.e("string after ", "((((: "+json);
+        editor.putString(getString(R.string.userObject), json);
 
         editor.commit();
     }
+
+    @Subscribe
+    public void getUserObject(SignUp signUp) {
+        this.signUp.setImageUrl(signUp.getImageUrl());
+        this.signUp.setUserName(signUp.getUserName());
+        setNavigationDrawerUserData();
+    }
+
 
 }

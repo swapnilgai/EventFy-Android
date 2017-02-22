@@ -1,107 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
+        android:paddingTop="20dp">
 
         <!-- Name Label -->
         <ImageView
-            android:src="@drawable/logo"
+            android:id="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:layout_marginBottom="24dp"
+            android:layout_height="160dp"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/imageView" />
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/logo" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_name"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textCapWords"
-                      android:hint="Name"
-                      android:textColor="@color/transparent_black"/>
-        </android.support.design.widget.TextInputLayout>'
+            android:layout_marginBottom="8dp" >
+
+            <EditText
+                android:id="@+id/input_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/name_label"
+                android:inputType="textCapWords" />
+        </android.support.design.widget.TextInputLayout>
 
         <!--  Email Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_email"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="text"
-                      android:hint="Email/Phone Number"
-                      android:textColor="@color/transparent_black"/>
+            android:layout_marginBottom="8dp" >
+
+            <EditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_phone_number"
+                android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_password"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textPassword"
-                      android:hint="Password"
-                      android:textColor="@color/transparent_black"/>
+            android:layout_marginBottom="8dp" >
+
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password_label"
+                android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:focusable="false"
-            android:clickable="true">
-            <EditText android:id="@+id/input_DOB"
-                      android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:inputType="textCapWords|date"
-                      android:hint="Date Of Birth"
-                      android:textColor="@color/transparent_black"
-                      android:focusable="false"
-                      android:clickable="true"/>
+            android:clickable="true"
+            android:focusable="false">
+
+            <EditText
+                android:id="@+id/input_DOB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="@string/date_of_birth"
+                android:inputType="textCapWords|date" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Signup Button -->
 
         <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_signup"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:padding="12dp"
-        android:background="@drawable/content_main2_button_color"
-        android:text="Create Account"/>
+            android:id="@+id/btn_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/content_main2_button_color"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/create_account" />
 
-        <TextView android:id="@+id/link_login"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="24dp"
-                  android:text="Already a member? Login"
-                  android:gravity="center"
-                  android:textSize="16dip"
-                  android:textColor="@color/transparent_black"/>
+        <TextView
+            android:id="@+id/link_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="20dp"
+            android:text="@string/already_a_member"
+            android:textColor="@color/transparent_black"
+            android:textSize="16sp" />
 
     </LinearLayout>
 </ScrollView>

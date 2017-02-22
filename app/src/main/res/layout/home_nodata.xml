@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/nodata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="We are unable to find any events nearby"
+        android:textSize="18sp" />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Try increasing visibility radius in miles"
+        android:textSize="16sp" />
+
+    <SeekBar
+        android:id="@+id/evnet_visibility_miles"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:layout_marginTop="20dp" />
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btn_search_nearby_events"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/content_main2_button_color"
+        android:text="Search"
+        android:textColor="@color/white" />
+
+
+</LinearLayout>

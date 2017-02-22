@@ -14,9 +14,12 @@
 
 
     <!-- Web servises url -->
+    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
+    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
 
     <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">http://192.168.0.7:8080/EventFy</string>
+    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
+
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
     <string name="signup_location_update">/webapi/signup/updateuserlocation</string>
@@ -25,17 +28,49 @@
     <string name="verification_check">/webapi/signup/checkverificationcode</string>
     <string name="title_activity_maps">Map</string>
     <string name="add_event">/webapi/events/add</string>
+    <string name="edit_event">/webapi/events/editevent</string>
     <string name="get_nearby_event">/webapi/events/getnearbyevents</string>
     <string name="reg_gcm_userid">/webapi/notifications/registeruser</string>
     <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
     <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
     <string name="add_comment_in_event">/webapi/comments/addcomment</string>
+    <string name="delete_comment_from_event">/webapi/comments/deletecomment</string>
     <string name="login_action">/webapi/login/checkuser</string>
     <string name="login_action_facebook">/webapi/login/checkuserfacebookuser</string>
     <string name="verify_vcode">/webapi/signup/checkverificationcode</string>
     <string name="register_notification_detail">/webapi/notifications/registeruser</string>
     <string name="GCM_sender_id">1070420205452</string>
+    <string name="get_nearby_users">/webapi/events/getnearbyusers</string>
+    <string name="rspv_user_to_event">/webapi/events/addusertoevent</string>
+    <string name="remove_user_from_event">/webapi/events/deleteuserfromevent</string>
+    <string name="delete_event">/webapi/events/deleteevent</string>
+    <string name="remote_events">/webapi/events/getremoteevents</string>
+    <string name="update_user_password">/webapi/signup/updatepassword</string>
 
+    <string name="upda_user">/webapi/signup/updateuser</string>
+
+    <string name="get_user_notifications">/webapi/notifications/getusernotification</string>
+
+    <string name="signup_object_viewe_profile">signup_object_viewe_profile</string>
+
+    <!--Home page view strings-->
+    <string name="home_no_location">noLocation</string>
+    <string name="home_no_data">noData</string>
+    <string name="home_loading">Loading</string>
+    <string name="home_data">data</string>
+    <string name="home_connection_error">data</string>
+    <string name="invite_add_user">inviteAddUser</string>
+    <string name="invite_remove_user">inviteRemoveUser</string>
+    <string name="update_event_success">update_success</string>
+    <string name="update_event_fail">update_fail</string>
+
+    <string name="deleted">deleted</string>
+    <string name="undo">undo</string>
+    <string name="edited">Edited</string>
+
+    <string name="attending">Attending</string>
+    <string name="not_attending">Not Attending</string>
+    <!--Home page view strings end-->
 
 
     <!-- Golbal values for veriables-->
@@ -47,7 +82,7 @@
 
     <string name="nearby_flag">nearby_flag</string>
     <string name="remot_flag">remot_flag</string>
-
+    <string name="create_event_flag">nearby_flag</string>
     <!--  User SharedPreferences data  -->
     <string name="userObject">userObject</string>
 
@@ -75,6 +110,45 @@
     ]]>
     </string>
 
+    <string-array name="visiblity_miles_arrays">
+        <item>1</item>
+        <item>2</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>50</item>
+    </string-array>
+
+
+    <string-array name="category_arrays">
+        <item>Birthday</item>
+        <item>Team Building Events</item>
+        <item>Trade Shows</item>
+        <item>Golf Events</item>
+        <item>Networking Events</item>
+        <item>Incentive Travel</item>
+        <item>Theme Parties</item>
+        <item>Family Events</item>
+        <item>Conference</item>
+        <item>Exhibition</item>
+        <item>Airshow</item>
+        <item>Amphitheater</item>
+        <item>Anniversary</item>
+        <item>Archery</item>
+        <item>Army</item>
+        <item>Art-museum</item>
+        <item>Audio</item>
+        <item>Bar</item>
+        <item>Family</item>
+        <item>Sport-Other</item>
+        <item>Squash</item>
+        <item>Childern Sports</item>
+        <item>Other</item>
+    </string-array>
+
+
     <string name="selected_place">Last Selected Place:</string>
     <string name="pick_image_intent_text">Please pick image</string>
     <string name="autocomplete_hint">Enter place name or address</string>
@@ -84,8 +158,54 @@
     <string name="create_event_category_public">Event_Category_Public</string>
     <string name="create_event_category_private">Event_Category_Private</string>
 
+    <string name="image_view_for_fullscreen_mode">Image View For Fullscreen Mode</string>
+
+    <string name="event_object_for_image_comment_activity">event_object_for_image_comment_activity</string>
+
+    <string name="notification_object_for_eventinfo">Notification_Object</string>
+
     <string name="facebook_app_id">250414581969875</string>
     <string name="facebook_profile_start_url">https://graph.facebook.com/</string>
     <string name="facebook_profile_end_url">/picture?type=large</string>
+
+
+    <string name="event_type_value">Event Type Value</string>
+    <string name="event_private">Event Private</string>event_type_value
+    <string name="title_activity_profile_page">ProfilePage</string>
+
+    <string name="event_to_edit_eventinfo">Event To Edit EditInfo</string>
+
+    <string name="create_event_event_view_pager">Event View Pager</string>
+    <string name="event_object_pass_to_createeventfragment2">event object pass to createeventfragment2</string>
+
+    <!--visibility modes-->
+
+    <string name="visibility_mode_visible">Visible</string>event_to_edit_eventinfo
+    <string name="visibility_mode_invisible">Invisible</string>
+    <string name="visibility_mode_donotdisturb">DoNotDisturb</string>
+
+
+    <!--ButtonClickFlag-->
+    <string name="status_button">status_button</string>
+    <string name="personal_info_button">personal_info_button</string>
+    <string name="password_button">password_button</string>
+
+
+    <string name="comment_add_success">comment_add_success</string>
+    <string name="comment_add_posting">comment_add_posting</string>
+    <string name="comment_add_fail">comment_add_fail</string>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="or">OR</string>
+    <string name="login_text">LOGIN</string>
+    <string name="no_account">No account yet? Create one</string>
+    <string name="name_label">Name</string>
+    <string name="email_phone_number">Email/Phone Number</string>
+    <string name="password_label">Password</string>
+    <string name="date_of_birth">Date Of Birth</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_a_member">Already a member? Login</string>
+
 
 </resources>
