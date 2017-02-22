@@ -1,70 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/notification_linear_layout"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:layout_marginLeft="8dp"
-              android:layout_marginRight="4dp"
-              android:background="@android:color/white"
-              android:orientation="horizontal">
+    android:id="@+id/notification_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="8dp"
+    android:background="@android:color/white"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/notification_image"
         android:layout_width="95dp"
         android:layout_height="80dp"
-        android:padding="2dp"
         android:layout_gravity="center"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/img_placeholder" />
-
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="85dp"
-        android:layout_marginRight="1dp"
-        android:layout_weight="2"
-        android:paddingLeft="5dp"
-        android:paddingTop="3dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
         android:paddingBottom="4dp"
-        android:layout_gravity="left"
-        android:gravity="left"
-        android:orientation="vertical">
+        android:paddingTop="4dp">
 
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/notification_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notification Title"
             android:inputType="text"
             android:maxLines="1"
-            android:textColor="#000000"
-            android:textSize="15sp" />
+            android:text="Notification Title"
+            android:textColor="@color/cardview_dark_background"
+            android:textStyle="bold"
+            android:textSize="16sp" />
 
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/notification_message"
-            android:layout_marginTop="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Notification Message"
+            android:layout_marginTop="4dp"
             android:inputType="textMultiLine"
             android:maxLines="2"
-            android:paddingLeft="3dp"
-            android:layout_marginLeft="3dp"
-            android:textColor="#6c7880"
+            android:text="Notification Message"
             android:textSize="13sp" />
 
 
         <com.devspark.robototextview.widget.RobotoTextView
             android:id="@+id/notification_time"
-            android:layout_marginTop="3dp"
             android:layout_width="match_parent"
-            android:paddingLeft="2dp"
-            android:layout_marginLeft="2dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="Notification Time"
-            android:textColor="#6c7880"
-            android:textSize="10sp" />
+            android:textSize="11sp" />
     </LinearLayout>
 </LinearLayout>
 

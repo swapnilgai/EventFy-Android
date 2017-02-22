@@ -1,154 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/linear_layout_comment"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="5dp"
-              android:background="#d3d3d3"   >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linear_layout_comment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:background="#d3d3d3"
+    android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardUseCompatPadding="true"
-        app:cardElevation="1dp"
+        android:background="@color/circle_background"
         app:cardCornerRadius="2dp"
-        android:background="@color/circle_background">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
-
-        <ImageView
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:layout_marginLeft="5dp"
-            android:id="@+id/autherImage"
-            android:src="@drawable/ic_perm_identity_white_24dp"
-            android:background="@color/colorPrimary"/>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp">
-
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                android:text="User Name"
-                android:id="@+id/autherName"
-                android:padding="3dp"
-                android:textStyle="bold"
-                android:typeface="sans"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textSize="8dp"
-                android:layout_gravity="bottom"
-                android:gravity="bottom"
-                android:padding="3dp"
-                android:text="12:03 am on 12/03/2015"
-                android:id="@+id/comment_time"
-                android:textStyle="italic"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="16dp"
-                    android:layout_gravity="bottom"
-                    android:gravity="bottom"
-                    android:padding="3dp"
-                    android:text="Retry"
-                    android:id="@+id/comment_retry"
-                    android:textStyle="italic"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="16dp"
-                    android:layout_gravity="bottom"
-                    android:gravity="bottom"
-                    android:padding="3dp"
-                    android:layout_marginLeft="15dp"
-                    android:text="Discard"
-                    android:id="@+id/comment_discard"
-                    android:textStyle="italic"/>
-
-                <ImageView
-                    android:id="@+id/posting_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="10dp"
-                    android:src="@drawable/icon_loading"
-                    android:layout_gravity="center" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textSize="8dp"
-                    android:layout_gravity="bottom"
-                    android:gravity="bottom"
-                    android:padding="3dp"
-                    android:layout_marginLeft="1dp"
-                    android:text="Posting..."
-                    android:id="@+id/posting_comment_text"
-                    android:textStyle="italic"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
+        app:cardElevation="1dp"
+        app:cardUseCompatPadding="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:id="@+id/commentImage"
-                android:scaleType="fitXY"
-                android:layout_marginBottom="2dp"
-                android:layout_marginTop="8dp"/>
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/autherCommentText"
-            android:textColor="#2f3437"
-            android:textSize="16sp"
-            android:layout_gravity="center_horizontal|bottom"
-            android:text="Comment Text"
-            android:inputType="textMultiLine"
-            android:padding="2dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="3dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/autherImage"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@color/colorPrimary"
+                    android:src="@drawable/ic_perm_identity_white_24dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:orientation="vertical">
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:id="@+id/autherName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="3dp"
+                        android:text="User Name"
+                        android:textColor="@color/cardview_dark_background"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:typeface="sans" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/comment_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="bottom"
+                            android:padding="3dp"
+                            android:text="12:03 am on 12/03/2015"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textSize="8dp"
+                            android:textStyle="italic" />
+
+                        <TextView
+                            android:id="@+id/comment_retry"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="bottom"
+                            android:padding="3dp"
+                            android:text="Retry"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+
+                        <TextView
+                            android:id="@+id/comment_discard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="15dp"
+                            android:gravity="bottom"
+                            android:padding="3dp"
+                            android:text="Discard"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+
+                        <ImageView
+                            android:id="@+id/posting_comment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="10dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/icon_loading" />
+
+                        <TextView
+                            android:id="@+id/posting_comment_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:layout_marginLeft="1dp"
+                            android:gravity="bottom"
+                            android:padding="3dp"
+                            android:text="Posting..."
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textSize="8dp"
+                            android:textStyle="italic" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/commentImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginTop="8dp"
+                    android:scaleType="fitXY" />
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/autherCommentText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginTop="5dp"
+                    android:inputType="textMultiLine"
+                    android:padding="2dp"
+                    android:text="Comment Text"
+                    android:textColor="#2f3437"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
         </LinearLayout>
 
-
-
-
-</LinearLayout>
         <TextView
             android:id="@+id/textViewOptions"
             android:layout_width="wrap_content"

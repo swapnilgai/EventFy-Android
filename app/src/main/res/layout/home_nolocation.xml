@@ -1,48 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center">
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="190dp"
         android:id="@+id/imageView2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/no_location"/>
+        android:src="@drawable/no_location" />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/robotoTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Unable to detect your location"
+        android:textColor="#6c7880"
+        android:textSize="20sp" />
 
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Unable to get your location"
-        android:gravity="center"
-        android:layout_marginTop="10dp"
         android:layout_gravity="center"
-        android:textColor="#6c7880"
-        android:textSize="19dp"
-        android:id="@+id/robotoTextView"/>
-
-    <com.devspark.robototextview.widget.RobotoTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Please tap to unable the service"
-        android:gravity="center"
         android:layout_marginTop="10dp"
-        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Please enable the location service"
         android:textColor="#6c7880"
-        android:textSize="15dp" />
-
+        android:textSize="16sp" />
 
     <android.support.v7.widget.AppCompatButton
-        android:layout_marginTop="15dp"
         android:id="@+id/btn_enable_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
         android:background="@drawable/content_main2_button_color"
-        android:text="Enable"/>
-
-
+        android:text="Enable"
+        android:textColor="@color/white" />
 </LinearLayout>

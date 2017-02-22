@@ -16,6 +16,7 @@
         android:layout_height="180dp"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
+        android:transitionName="event_transition"
         android:src="@drawable/img_placeholder" />
 
     <LinearLayout

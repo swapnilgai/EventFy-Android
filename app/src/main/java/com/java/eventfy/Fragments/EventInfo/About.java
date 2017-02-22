@@ -66,13 +66,13 @@ public class About extends Fragment implements OnMapReadyCallback {
     private Events event;
     private RobotoTextView eventDescription;
     private RobotoTextView eventName;
-    private EditText evengtType;
+    private TextView evengtType;
     private TextView adminName;
     private TextView adminStatus;
     private ImageView adminImage;
     private RobotoTextView eventLocation;
-    private EditText eventVisiblityMiles;
-    private EditText eventCapacity;
+    private TextView eventVisiblityMiles;
+    private TextView eventCapacity;
     private RobotoTextView eventDateTimeFrom;
     private RobotoTextView eventDateTimeTo;
     private Button deleteEvent;
@@ -95,14 +95,14 @@ public class About extends Fragment implements OnMapReadyCallback {
 
 
         eventName = (RobotoTextView) view.findViewById(R.id.event_name);
-        evengtType = (EditText) view.findViewById(R.id.event_type);
+        evengtType = (TextView) view.findViewById(R.id.event_type);
         adminName = (TextView) view.findViewById(R.id.admin_name);
         adminStatus = (TextView) view.findViewById(R.id.admin_status);
         adminImage = (ImageView) view.findViewById(admin_image);
         navigateAdminProfile = (CircleButton) view.findViewById(R.id.navigate_admin_profile);
         eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
-        eventVisiblityMiles = (EditText) view.findViewById(R.id.event_visibility_miles);
-        eventCapacity = (EditText) view.findViewById(R.id.event_capacity);
+        eventVisiblityMiles = (TextView) view.findViewById(R.id.event_visibility_miles);
+        eventCapacity = (TextView) view.findViewById(R.id.event_capacity);
         eventDateTimeFrom  = (RobotoTextView) view.findViewById(R.id.event_date_from);
         eventDateTimeTo  = (RobotoTextView) view.findViewById(R.id.event_date_to);
         eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
