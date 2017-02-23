@@ -36,7 +36,7 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
         Log.e(" url ", url);
 
         Gson g = new Gson();
-        Log.e("obj : ", g.toJson(signUp));
+        Log.e("obj before : ", g.toJson(signUp));
 
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -50,6 +50,7 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
 
         signUp = rateResponse.getBody();
 
+        Log.e("obj after : ", g.toJson(signUp));
 
 //        }catch (Exception e)
 //        {

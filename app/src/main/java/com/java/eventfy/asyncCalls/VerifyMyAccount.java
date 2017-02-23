@@ -1,12 +1,13 @@
 package com.java.eventfy.asyncCalls;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.R;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,25 +17,26 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 /**
- * Created by swapnil on 11/4/16.
+ * Created by swapnil on 10/26/16.
  */
-public class ResendVcode extends AsyncTask<Void, Void, Void> {
+public class VerifyMyAccount extends AsyncTask<Void, Void, Void> {
     private SignUp signUp;
+    private VerifyAccount verifyAccount;
     private String url;
     private String result;
+    private Context context;
 
-    public ResendVcode(SignUp signUp, String url) {
-        this.signUp = signUp;
+    public VerifyMyAccount(VerifyAccount verifyAccount, String url, Context context) {
+        this.verifyAccount = verifyAccount;
         this.url = url;
+        this.context = context;
     }
 
     @Override
     protected Void doInBackground(Void... strings) {
 
         try {
-            Log.e("url: ", ""+url);
-            Gson gson = new Gson();
-            Log.e("gson: ", ""+gson.toJson(signUp));
+            signUp = verifyAccount.getSignUp();
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -49,21 +51,20 @@ public class ResendVcode extends AsyncTask<Void, Void, Void> {
             ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
             result = rateResponse.getBody();
 
+        }catch (Exception e)
+        {
 
-        }catch (Exception e) {
-
-            Log.e("Exception : ", ""+e.getStackTrace());
         }
-
-
         return null;
+
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(result == null)
-            result = signUp.getToken();
-        EventBusService.getInstance().post(result);
+        if(!(result!=null && result.equals(signUp.getToken())))
+            verifyAccount.setViewMsg(context.getString(R.string.verify_account_fail));
+        // send to signup activity
+        EventBusService.getInstance().post(verifyAccount);
     }
 }

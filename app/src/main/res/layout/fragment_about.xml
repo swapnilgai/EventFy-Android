@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:background="@color/white"
@@ -79,18 +78,15 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="8dp"
-                android:background="@color/date_picker_view_animator" />
+
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="8dp">
 
             <LinearLayout
                 android:id="@+id/location_map_view_linear_layout"
@@ -119,6 +115,7 @@
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
                     android:gravity="bottom"
+                    android:padding="10dp"
                     android:src="@drawable/ic_location_on_black_18dp"
                     app:cb_color="@android:color/white"
                     app:cb_pressedRingWidth="5dp" />
@@ -183,16 +180,18 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="8dp"
                 android:background="@color/date_picker_view_animator" />
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="6dp"
                 android:text="Admin"
+                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -275,67 +274,83 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
                 android:background="@color/date_picker_view_animator" />
         </LinearLayout>
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Other"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
+            android:paddingLeft="18dp"
             android:paddingRight="16dp"
-            android:paddingTop="8dp">
+            >
 
-            <com.devspark.robototextview.widget.RobotoTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="Other"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="#000000"
-                android:textSize="14sp" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal">
+                android:layout_marginBottom="2dp"
+                android:orientation="vertical">
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Visibility Radius: "
                     android:textColor="@color/transparent_black"
-                    android:textStyle="bold" />
+                    android:textSize="11dp"
+                     />
 
                 <TextView
                     android:id="@+id/event_visibility_miles"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:paddingLeft="8dp"
                     android:text="20 Miles"
+                    android:textSize="15dp"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/transparent_black" />
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/date_picker_view_animator" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Capacity: "
                     android:textColor="@color/transparent_black"
-                    android:textStyle="bold" />
-
+                    android:textSize="11dp"
+                    />
 
                 <TextView
                     android:id="@+id/event_capacity"
@@ -343,21 +358,30 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="8dp"
                     android:text="38 people"
+                    android:textSize="15dp"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/transparent_black" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@color/date_picker_view_animator" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Category: "
+                    android:text="Visibility Radius: "
                     android:textColor="@color/transparent_black"
-                    android:textStyle="bold" />
+                    android:textSize="11dp"
+                    />
 
                 <TextView
                     android:id="@+id/event_type"
@@ -365,7 +389,16 @@
                     android:layout_height="wrap_content"
                     android:paddingLeft="8dp"
                     android:text="Type"
+                    android:textSize="15dp"
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/transparent_black" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/date_picker_view_animator" />
+
             </LinearLayout>
         </LinearLayout>
 

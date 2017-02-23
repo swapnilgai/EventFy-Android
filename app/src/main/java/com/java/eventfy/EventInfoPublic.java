@@ -383,6 +383,5 @@ public class EventInfoPublic extends AppCompatActivity {
         EventBusService.getInstance().register(this);
     }
 
-
 }
 

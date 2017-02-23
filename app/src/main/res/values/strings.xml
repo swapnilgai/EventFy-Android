@@ -208,4 +208,8 @@
     <string name="already_a_member">Already a member? Login</string>
 
 
+    <string name="verify_account">verify_account</string>
+    <string name="verify_account_success">verify_account_success</string>
+     <string name="verify_account_fail">verify_account_fail</string>
+
 </resources>
