@@ -457,13 +457,11 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     @Override
     public void onPause() {
         super.onPause();
-        Log.e("in pause "," *** ");
         stopServices();
         //   EventBusService.getInstance().unregister(this);
     }
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
-        Log.e("call in bind : ", " indexxxxx : "+eventsList.size());
 
         swipeRefreshLayout.setRefreshing(false);
         refreshData(eventsList);

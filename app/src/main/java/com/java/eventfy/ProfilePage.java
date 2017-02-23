@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.UpdateAccount;
 import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.UpdateUserDetail;
@@ -383,15 +384,12 @@ public class ProfilePage extends AppCompatActivity {
 
 
     @Subscribe
-    public void getUserObject(SignUp signUp) {
+    public void getUserObject(UpdateAccount updateAccount) {
+        SignUp signUp = updateAccount.getSignUp();
 
         if(signUp.getViewMessage() == null) {
              mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
              editor = mPrefs.edit();
-
-            Log.e("is verified: ", ""+signUp.getIsVerified());
-
-            Log.e("is verified check: ", ""+signUp.getIsVerified().equals("false"));
 
             if (signUp.getToken() != null)
                 this.signUp.setToken(signUp.getToken());
@@ -414,7 +412,6 @@ public class ProfilePage extends AppCompatActivity {
             dismissProgressDialog();
             storeUserObject();
 
-            toastMsg("Profile updated successfully");
 
         }else{
             toastMsg("Error, please retry");
@@ -581,6 +578,7 @@ public class ProfilePage extends AppCompatActivity {
             signUp.setIsVerified("true");
             storeUserObject();
             verifyUserAccount.setImageResource(R.drawable.verified);
+            toastMsg("Profile updated successfully");
         }
     }
 

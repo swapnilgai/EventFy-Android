@@ -20,15 +20,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.NotificationId;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.UpdateAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.Fragments.Notification;
@@ -61,6 +63,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private  GoogleCloudMessaging gcm;
     private Context context;
     private SecurityOperations securityOperations;
+    private Location location;
+    private SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -324,7 +328,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void getUserObject() {
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPrefs.edit();
+         editor = mPrefs.edit();
         Gson gson = new Gson();
         //String json = null;
         //TODO uncomment
@@ -365,11 +369,31 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     @Subscribe
-    public void getUserObject(SignUp signUp) {
-        this.signUp.setImageUrl(signUp.getImageUrl());
-        this.signUp.setUserName(signUp.getUserName());
+    public void getUserObject(UpdateAccount updateAccount ) {
+        if(signUp == null)
+            getUserObject();
+
+        signUp.setImageUrl(updateAccount.getSignUp().getImageUrl());
+        signUp.setUserName(updateAccount.getSignUp().getUserName());
         setNavigationDrawerUserData();
     }
 
+
+    @Subscribe
+    public void getLocation(LocationNearby locationNearby) {
+
+        if(signUp.getLocation() ==null){
+            location  = new Location();
+        }else {
+            location = signUp.getLocation();
+            location.setDistance(signUp.getLocation().getDistance());
+        }
+        location.setLatitude(locationNearby.getLocation().getLatitude());
+        location.setLongitude(locationNearby.getLocation().getLongitude());
+
+        this.signUp.setLocation(location);
+
+        storeUserObject(editor);
+    }
 
 }

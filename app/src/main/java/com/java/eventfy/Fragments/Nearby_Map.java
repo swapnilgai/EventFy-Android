@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,17 +45,17 @@ import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.UpdateAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.EventInfoPublic;
-import com.java.eventfy.Home;
 import com.java.eventfy.R;
-import com.java.eventfy.adapters.MainRecyclerAdapter;
 import com.java.eventfy.utils.SetEventIconGoogleMap;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private View view;
     private String flag;
     private CircleImageView eventImage;
+    private Location userCurrentLocation;
+    private Marker userMarker;
 //    private TextView eventName;
     private RobotoTextView eventAddress;
     private RobotoTextView eventStartDate;
@@ -87,6 +90,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private SignUp signUp;
     private HashMap<Integer, Away> eventAwayMapping;
     private int index;
+    private Bitmap image = null;
 
     private SetEventIconGoogleMap setEventIconGoogleMap;
     private void initializeMap(Location location) {
@@ -96,32 +100,24 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     public void setUserOnMap(Location location){
 
-        googleMap.clear();
+        userCurrentLocation = location;
+
+        if(userMarker !=null)
+            userMarker.remove();
 
         myLaLn = new LatLng(location.getLatitude(), location.getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
 
-        Bitmap image = null;
-        try {
-            URL url = new URL(signUp.getImageUrl());
-            image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            image = Bitmap.createScaledBitmap(image, 100, 100, true);
-
-            image =  getRoundedRectBitmap(image);
-        } catch(IOException e) {
-            System.out.println(e);
-        }
         if(image!=null)
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
         else
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
 
         markerOptions.title(signUp.getUserName());
-        googleMap.addMarker(markerOptions);
+        userMarker =  googleMap.addMarker(markerOptions);
 
-        googelMapSetting(location);
 
     }
 
@@ -129,7 +125,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     {
 
         int index =0;
-        setUserOnMap(location);
+       // googleMap.clear();
+        signUp.setLocation(location);
 
         markerArr = new Marker[eventLst.size()];
 
@@ -149,6 +146,16 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         }
 
         googelMapSetting(location);
+
+        if(signUp.getImageUrl().equals("default")){
+        image = null;
+        setUserOnMap(signUp.getLocation());
+        }else {
+
+            GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
+            getBitmapBytes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -172,6 +179,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 return false;
             }
         });
+
+
 
     }
 
@@ -340,6 +349,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             locationObj.setLongitude(loaLocationNearby.getLocation().getLongitude());
             locationObj.setLatitude(loaLocationNearby.getLocation().getLatitude());
             locationObj.setDistance(signUp.getVisibilityMiles());
+
             setUserOnMap(locationObj);
         }
     }
@@ -397,5 +407,87 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     }
 
 
+
+    @Subscribe
+    public void getUserObject(UpdateAccount updateAccount ) {
+
+        boolean flag = false;
+        Log.e("inside location : ", ""+updateAccount.getSignUp().getViewMessage());
+        if(updateAccount.getSignUp().getViewMessage() != null && !updateAccount.getSignUp().getViewMessage().equals("unsuccessfull")){
+            // do nothing or toast message
+        }
+        else{
+            if(signUp == null)
+                getUserObject();
+
+            if(!signUp.getImageUrl().equals(updateAccount.getSignUp().getImageUrl())){
+                signUp.setImageUrl(updateAccount.getSignUp().getImageUrl());
+                flag = true;
+            }
+            if(!signUp.getUserName().equals(updateAccount.getSignUp().getUserName())){
+                signUp.setUserName(updateAccount.getSignUp().getUserName());
+                flag = true;
+            }
+
+            if(flag) {
+
+                 if(updateAccount.getSignUp().getLocation()!= null )
+                   signUp.setLocation(updateAccount.getSignUp().getLocation());
+                else if(userCurrentLocation!=null) {
+                     signUp.setLocation(userCurrentLocation);
+                 }
+
+
+                if(signUp.getLocation()!=null && !signUp.getImageUrl().equals("default")){
+                GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
+                getBitmapBytes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+                else if(signUp.getImageUrl().equals("default")){
+                    image = null;
+                    setUserOnMap(signUp.getLocation());
+                }
+            }
+        }
+
+    }
+
+    private class GetBitmapBytes extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // your background code fetch InputStream
+
+            URL url = null;
+            try {
+                url = new URL(signUp.getImageUrl());
+
+            Log.e("in async: ", ""+url);
+                image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return  null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void nVoid) {
+            super.onPostExecute(nVoid);
+
+
+            if (image != null) {
+                Log.e("in async after: ", ""+image);
+                image = Bitmap.createScaledBitmap(image, 100, 100, true);
+
+                image = getRoundedRectBitmap(image);
+
+                if (signUp.getLocation() != null)
+                    setUserOnMap(signUp.getLocation());
+            }
+        }
+    }
 
 }

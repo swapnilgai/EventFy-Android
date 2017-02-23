@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.UpdateAccount;
 import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
@@ -66,7 +67,9 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
             signUp = new SignUp();
             signUp.setViewMessage("unsuccessfull");
         }
+        UpdateAccount updateAccount = new UpdateAccount();
+        updateAccount.setSignUp(signUp);
 
-        EventBusService.getInstance().post(signUp);
+        EventBusService.getInstance().post(updateAccount);
     }
 }
