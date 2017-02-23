@@ -13,9 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.Entity.VerificationCode;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.ResendVcode;
+import com.java.eventfy.asyncCalls.VerifyMyAccount;
 import com.java.eventfy.asyncCalls.VerifyVcode;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -32,6 +34,7 @@ public class VerifySignUp extends AppCompatActivity {
     private TextView dob;
     private VerificationCode verificationCode;
     private TextView resendVcodelink;
+    private VerifyAccount verifyAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,8 @@ public class VerifySignUp extends AppCompatActivity {
 
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("user");
+
+        verifyAccount = (VerifyAccount) in.getSerializableExtra(getString(R.string.verify_account));
 
         if(!EventBusService.getInstance().isRegistered(this))
              EventBusService.getInstance().register(this);
@@ -53,28 +58,26 @@ public class VerifySignUp extends AppCompatActivity {
         userId = (TextView) findViewById(R.id.userId);
         dob = (TextView) findViewById(R.id.dob);
         resendVcodelink = (TextView) findViewById(R.id.link_resend_vcode);
-
-        userName.setText(signUp.getUserName());
-        userId.setText(signUp.getUserId());
-        dob.setText(signUp.getDob());
-
         mCodeSendButton.setEnabled(true);
+
+        if(verifyAccount!=null){
+            serverCallToResendVcode(verifyAccount.getSignUp());
+            setUserData(verifyAccount.getSignUp());
+        }else {
+            setUserData(signUp);
+        }
+
 
         mCodeSendButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
+            if(signUp!=null){
+                verifyAccountViaSignUp();
+            }
+            else if(verifyAccount != null){
+                verifyAccountViaMyAccount();
+            }
 
-                    if (mCodeEditText!=null && mCodeEditText.length()==4) {
-                        mCodeSendButton.setEnabled(false);
-
-                        verificationCode = new VerificationCode();
-                        verificationCode.setvCode(mCodeEditText.getText().toString());
-                        signUp.setVerificationCode(verificationCode);
-                        serverCall(signUp);
-                    }
-                else{
-                        mCodeSendButton.setError("Invalid Verification Code");
-                    }
             }
 
         });
@@ -94,6 +97,39 @@ public class VerifySignUp extends AppCompatActivity {
 
         });
 
+    }
+
+    public void setUserData(SignUp signUp){
+        userName.setText(signUp.getUserName());
+        userId.setText(signUp.getUserId());
+        dob.setText(signUp.getDob());
+    }
+
+    public void verifyAccountViaSignUp(){
+        if (mCodeEditText!=null && mCodeEditText.length()==4) {
+            mCodeSendButton.setEnabled(false);
+
+            verificationCode = new VerificationCode();
+            verificationCode.setvCode(mCodeEditText.getText().toString());
+            signUp.setVerificationCode(verificationCode);
+            serverCall(signUp);
+        }
+        else{
+            mCodeSendButton.setError("Invalid Verification Code");
+        }
+    }
+
+    public void verifyAccountViaMyAccount(){
+        if (mCodeEditText!=null && mCodeEditText.length()==4) {
+            mCodeSendButton.setEnabled(false);
+            verificationCode = new VerificationCode();
+            verificationCode.setvCode(mCodeEditText.getText().toString());
+            verifyAccount.getSignUp().setVerificationCode(verificationCode);
+            serverCallToVerifyAccount(verifyAccount);
+        }
+        else{
+            mCodeSendButton.setError("Invalid Verification Code");
+        }
     }
 
     @Override
@@ -135,6 +171,25 @@ public void resendVcodeStatus(String result)
         dismissProgressDialog();
 }
 
+    @Subscribe
+    public void resendVcodeStatus(VerifyAccount verifyAccount) {
+        dismissProgressDialog();
+
+        if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
+            toastMsg("Error while verifying account");
+        }
+        else{
+            toastMsg("Congratulations, you'r account successfully updated");
+            finish();
+        }
+    }
+
+
+    public void toastMsg(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+
     private void serverCall(SignUp signUp) {
         setProgressDialog();
         String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
@@ -142,11 +197,20 @@ public void resendVcodeStatus(String result)
         verifyVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void serverCallToResendVcode(SignUp signUp) {
-        setProgressDialog();
+        if(verifyAccount==null)
+            setProgressDialog();
         String url = getString(R.string.ip_local)+getString(R.string.verification_code_get);
         ResendVcode resendVcode = new ResendVcode(signUp,url);
         resendVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
+    private void serverCallToVerifyAccount(VerifyAccount verifyAccount) {
+        setProgressDialog();
+        String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
+        VerifyMyAccount verifyMyAccount = new VerifyMyAccount(verifyAccount,url, getApplicationContext());
+        verifyMyAccount.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
 
     public void createProgressDialog()
     {

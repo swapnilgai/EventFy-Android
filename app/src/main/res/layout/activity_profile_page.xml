@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="12dp"
-            android:background="@android:color/white"
+            android:background="@color/com_facebook_button_login_silver_background_color_pressed"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -157,17 +157,23 @@
                             android:textColorHint="@color/colorPrimaryDark" />
                     </android.support.design.widget.TextInputLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="16dp">
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="4.0">
 
                         <EditText
                             android:id="@+id/user_id"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:enabled="false"
                             android:hint="Email"
                             android:inputType="text"
@@ -175,6 +181,22 @@
                             android:textColor="@color/transparent_black"
                             android:textColorHint="@color/colorPrimaryDark" />
                     </android.support.design.widget.TextInputLayout>
+
+
+                        <at.markushi.ui.CircleButton
+                            android:id="@+id/verify_user_account_btn"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:src="@drawable/verified"
+                            app:cb_color="@color/white"
+                            app:cb_pressedRingWidth="4dip"
+                            />
+
+                    </LinearLayout>
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"

@@ -152,7 +152,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
 
 
     @Subscribe
-    public void getUserobject(SignUp signUp)
+    public void getUserObject(SignUp signUp)
     {
         Log.e("in signupact string ", "&&&&&&&");
         dismissProgressDialog();

@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.User;
 import com.java.eventfy.EventBus.EventBusService;
@@ -36,6 +37,9 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
                 ObjectMapper mapper = new ObjectMapper();
 
         Log.e(" url ", url);
+
+        Gson gson = new Gson();
+        Log.e("Obj : ", ""+gson);
 
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());

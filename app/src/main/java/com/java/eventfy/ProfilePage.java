@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.UpdateUserDetail;
 import com.java.eventfy.asyncCalls.UploadImage;
@@ -55,6 +56,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import at.markushi.ui.CircleButton;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfilePage extends AppCompatActivity {
@@ -76,7 +78,11 @@ public class ProfilePage extends AppCompatActivity {
     private static final int PICK_IMAGE_ID = 234;
     private TextView changePasswordLink;
     private Uri dest;
-private TextView userVisibilityMilesTextView;
+    private CircleButton verifyUserAccount;
+    private  SharedPreferences mPrefs;
+    private SharedPreferences.Editor editor;
+
+    private TextView userVisibilityMilesTextView;
 
     private String buttonClickFlag;
     private SecurityOperations securityOperations;
@@ -109,6 +115,8 @@ private TextView userVisibilityMilesTextView;
 
         securityOperations = new SecurityOperations();
 
+        verifyUserAccount = (CircleButton) findViewById(R.id.verify_user_account_btn);
+
 
         final Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -135,6 +143,16 @@ private TextView userVisibilityMilesTextView;
             }
         });
 
+
+        verifyUserAccount.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(signUp.getIsVerified().equals("false"))
+                    verifyAccountPopUpBox();
+            }
+        });
+
         if(signUp!=null && signUp.getUserId()!=null)
             setUserData();
 
@@ -144,9 +162,6 @@ private TextView userVisibilityMilesTextView;
 
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(ProfilePage.this, userProfilePic);
-                //inflating menu from xml resource
-
-//                    popup.inflate(R.menu.profilepicturemenu);
 
                 popup.getMenuInflater()
                         .inflate(R.menu.profilepicturemenu, popup.getMenu());
@@ -193,8 +208,6 @@ private TextView userVisibilityMilesTextView;
                                 }else {
                                     startActivity(intent);
                                 }
-
-
 
                                // EventBusService.getInstance().post(imageViewEntity);
                                 EventBusService.getInstance().unregister(this);
@@ -274,6 +287,13 @@ private TextView userVisibilityMilesTextView;
         usetName.setText(signUp.getUserName());
         usetEmail.setText(signUp.getUserId());
         usetDob.setText(signUp.getDob());
+        if(signUp.getIsVerified().equals("false")){
+            verifyUserAccount.setImageResource(R.drawable.not_verified);
+        }
+        else{
+            verifyUserAccount.setImageResource(R.drawable.verified);
+        }
+
         if(signUp.getVisibilityMiles()<=0)
             userVisibilityMilesTextView.setText("1");
         else
@@ -283,10 +303,6 @@ private TextView userVisibilityMilesTextView;
             userProfilePic.setImageResource(R.drawable.user_image);
         }
         else {
-//            Picasso.with(this)
-//                    .load(signUp.getImageUrl())
-//                    .transform(new RoundedCornersTransform())
-//                    .into(userProfilePic);
 
             Picasso.with(getApplicationContext()).load(signUp.getImageUrl())
                     .resize(160, 160)
@@ -346,8 +362,8 @@ private TextView userVisibilityMilesTextView;
 
 
     private void getUserObject() {
-        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPrefs.edit();
+        mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+        editor = mPrefs.edit();
         Gson gson = new Gson();
         //String json = null;
         //TODO uncomment
@@ -355,7 +371,7 @@ private TextView userVisibilityMilesTextView;
             this.signUp = gson.fromJson(json, SignUp.class);
     }
 
-    public void storeUserObject(SharedPreferences.Editor editor)
+    public void storeUserObject()
     {
         Intent in = getIntent();
         Gson gson = new Gson();
@@ -370,11 +386,15 @@ private TextView userVisibilityMilesTextView;
     public void getUserObject(SignUp signUp) {
 
         if(signUp.getViewMessage() == null) {
-            SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
-            SharedPreferences.Editor editor = mPrefs.edit();
+             mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+             editor = mPrefs.edit();
 
             if (signUp.getToken() != null)
                 this.signUp.setToken(signUp.getToken());
+
+            if(signUp.getIsVerified().equals("false")){
+                verifyUserAccount.setImageResource(R.drawable.not_verified);
+            }
 
             this.signUp.setImageUrl(signUp.getImageUrl());
             this.signUp.setUserId(signUp.getUserId());
@@ -388,13 +408,12 @@ private TextView userVisibilityMilesTextView;
             this.signUp.setVisibilityMode(signUp.getVisibilityMode());
             setUserData();
             dismissProgressDialog();
-            storeUserObject(editor);
-            Toast.makeText(getApplicationContext(), "Profile updated successfully",
-                    Toast.LENGTH_LONG).show();
+            storeUserObject();
+
+            toastMsg("Profile updated successfully");
 
         }else{
-            Toast.makeText(getApplicationContext(), "Error, please retry",
-                    Toast.LENGTH_LONG).show();
+            toastMsg("Error, please retry");
         }
     }
 
@@ -412,8 +431,7 @@ private TextView userVisibilityMilesTextView;
     }
 
 
-    public void setProgressDialog()
-    {
+    public void setProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Updating...");
@@ -472,6 +490,45 @@ private TextView userVisibilityMilesTextView;
         alertDialogBuilder.show();
     }
 
+
+    public void verifyAccountPopUpBox(){
+
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+            final EditText edittext = new EditText(getApplicationContext());
+            edittext.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            alertDialogBuilder.setTitle("Verify Account");
+            alertDialogBuilder.setMessage("You'r emil/phone is not verified, please click on verify to continue");
+            alertDialogBuilder.setCancelable(false);
+
+
+            alertDialogBuilder.setPositiveButton("Verify",
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+
+                            VerifyAccount verifyAccount = new VerifyAccount();
+                            verifyAccount.setSignUp(signUp);
+                            EventBusService.getInstance().unregister(this);
+                            Intent intent = new Intent(ProfilePage.this, VerifySignUp.class);
+                            intent.putExtra(getString(R.string.verify_account), verifyAccount);
+                            startActivity(intent);
+                        }
+                    });
+
+            alertDialogBuilder.setNegativeButton("Cancle",
+                    new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface arg0, int arg1) {
+
+                        }
+                    });
+
+            alertDialogBuilder.show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.profileeditmenu, menu);
@@ -509,9 +566,24 @@ private TextView userVisibilityMilesTextView;
         } else if (requestCode == Crop.REQUEST_CROP) {
             handleCrop(resultCode, data, dest);
         }
-
     }
 
+    @Subscribe
+    public void getVerifiedAccount(VerifyAccount verifyAccount){
+        if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
+            toastMsg("Error while verifying account");
+        }
+        else{
+            signUp.setIsVerified("true");
+            storeUserObject();
+            verifyUserAccount.setImageResource(R.drawable.verified);
+        }
+    }
+
+
+    public void toastMsg(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 
     private Uri beginCrop(Uri source) {
         Uri destination = Uri.fromFile(new File(this.getCacheDir(), "cropped"));
@@ -531,11 +603,10 @@ private TextView userVisibilityMilesTextView;
             imageDrawable.setCornerRadius(Math.max(eventImageBM.getWidth(), eventImageBM.getHeight()) / 2.0f);
             userProfilePic.setImageDrawable(imageDrawable);
 
-
-
             //   mImageView.setImageURI(Crop.getOutput(result));
         } else if (resultCode == Crop.RESULT_ERROR) {
-            Toast.makeText(this, Crop.getError(result).getMessage(), Toast.LENGTH_SHORT).show();
+            toastMsg(Crop.getError(result).getMessage());
+
         }
     }
 
@@ -559,7 +630,6 @@ private TextView userVisibilityMilesTextView;
     }
     // Crop image end
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -570,24 +640,6 @@ private TextView userVisibilityMilesTextView;
     @Override
     protected void onPause() {
         super.onPause();
-        EventBusService.getInstance().unregister(this);
+       // EventBusService.getInstance().unregister(this);
     }
-
-//
-//    @Subscribe
-//    public void getUpdatedDataFromServer(SignUp signUp)
-//    {
-//       if(signUp.getViewMessage()==null) {
-//
-//
-//
-//           setUserData();
-//
-//       }
-//        else{
-//           //TODO thost message unsuccessfull update
-//       }
-//    }
-
-
 }

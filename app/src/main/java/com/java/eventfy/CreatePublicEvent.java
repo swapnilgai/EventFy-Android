@@ -1,7 +1,10 @@
 package com.java.eventfy;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -15,20 +18,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
+import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
@@ -58,6 +67,7 @@ public class CreatePublicEvent extends AppCompatActivity {
     private ImageView eventImageIV;
     private Uri dest;
     private Events event;
+    private SignUp signUp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +78,61 @@ public class CreatePublicEvent extends AppCompatActivity {
 
         event = (Events) getIntent().getSerializableExtra(getString(R.string.event_to_edit_eventinfo));
 
-        Log.e("cate bef "," 000000 "+category);
+        signUp = getUserObject();
 
-        Log.e("cate aft "," 000000 "+category);
+
+        if(event == null && signUp.getIsVerified().equals("false")){
+            // Call from create event
+               setErrorMessageToVerifyAccount();
+        }else {
+            mapCofigData();
+        }
+    }
+
+    public void setErrorMessageToVerifyAccount(){
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        final EditText edittext = new EditText(getApplicationContext());
+        edittext.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        alertDialogBuilder.setTitle("Verify Account");
+        alertDialogBuilder.setMessage("Please verify you'r emil/phone to create event");
+        alertDialogBuilder.setCancelable(false);
+
+
+        alertDialogBuilder.setPositiveButton("Verify",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                        VerifyAccount verifyAccount = new VerifyAccount();
+                        verifyAccount.setSignUp(signUp);
+                        EventBusService.getInstance().unregister(this);
+                        Intent intent = new Intent(CreatePublicEvent.this, VerifySignUp.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra(getString(R.string.verify_account), verifyAccount);
+                        finish();
+                        startActivity(intent);
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("Cancle",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        finish();
+                    }
+                });
+
+        alertDialogBuilder.show();
+    }
+
+
+    public void mapCofigData(){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-
 
         viewPager = (CustomViewPager) findViewById(R.id.viewpager);
         viewPager.setPagingEnabled(false);
@@ -316,14 +374,22 @@ public class CreatePublicEvent extends AppCompatActivity {
 
 
     @Subscribe
-    public void getCreatedEventFromServer(Events event)
-    {
+    public void getCreatedEventFromServer(Events event) {
         finish();
-//        if(event.getViewMessage().equals(R.string.edited)) {
-//           finish();
-//        }
+    }
+
+    private SignUp getUserObject() {
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+        Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        //String json = null;
+        //TODO uncomment
+        String json = mPrefs.getString(getString(R.string.userObject), "");
+        return  gson.fromJson(json, SignUp.class);
     }
 
 }
+
+
 
 
