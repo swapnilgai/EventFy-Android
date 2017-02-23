@@ -389,6 +389,10 @@ public class ProfilePage extends AppCompatActivity {
              mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
              editor = mPrefs.edit();
 
+            Log.e("is verified: ", ""+signUp.getIsVerified());
+
+            Log.e("is verified check: ", ""+signUp.getIsVerified().equals("false"));
+
             if (signUp.getToken() != null)
                 this.signUp.setToken(signUp.getToken());
 
