@@ -70,6 +70,7 @@ import com.java.eventfy.utils.PlaceAutocompleteAdapter;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.sleepbot.datetimepicker.time.TimePickerDialog.OnTimeSetListener;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -111,7 +112,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private EditText eventTypeEditText;
     private EditText eventCapacity;
     private CheckBox eventsVolatile;
-    private Spinner evenrCategory;
+    private SearchableSpinner evenrCategory;
     private Spinner eventVisibilityMiles;
     private Button createBtn;
     private Events eventObj;
@@ -160,7 +161,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         startDate = (EditText) view.findViewById(R.id.public_event_start_date);
         endDate = (EditText) view.findViewById(R.id.public_event_end_date);
         eventCapacity = (EditText) view.findViewById(R.id.public_event_capacity);
-        evenrCategory = (Spinner) view.findViewById(R.id.public_event_category);
+        evenrCategory = (SearchableSpinner) view.findViewById(R.id.public_event_category);
         eventVisibilityMiles = (Spinner) view.findViewById(R.id.public_event_visiblity_miles);
         createBtn = (Button) view.findViewById(R.id.public_create_event);
         currentLocationBtn = (CircleButton) view.findViewById(R.id.create_event_current_location);
@@ -294,6 +295,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 locationEditTextLinearLayout.setVisibility(View.VISIBLE);
             }
         });
+
+
 
 
         MapsInitializer.initialize(getActivity());

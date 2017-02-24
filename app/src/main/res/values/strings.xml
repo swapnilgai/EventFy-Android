@@ -68,6 +68,12 @@
     <string name="undo">undo</string>
     <string name="edited">Edited</string>
 
+
+    <string name="invisible_event">Event will no longer visible to new or unregister users</string>
+
+    <string name="invisible_event_btn">MAKE EVENT INVISIBLE</string>
+    <string name="visible_event_btn">MAKE EVENT VISIBLE</string>
+
     <string name="attending">Attending</string>
     <string name="not_attending">Not Attending</string>
     <!--Home page view strings end-->

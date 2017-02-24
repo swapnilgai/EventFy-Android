@@ -37,6 +37,7 @@ import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
+import com.java.eventfy.Entity.Search.NearbyMapSearch;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
@@ -349,7 +350,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             swipeRefreshLayout.setEnabled(true);
 
 
-
             for(Events events : eventsList){
                 DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
                         new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
@@ -603,5 +603,17 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
 
+    @Subscribe
+    public void getSearchCriteriaFromMap(NearbyMapSearch nearbyMapSearch) {
+        if(!nearby_map.isHidden()) {
+            transaction = manager.beginTransaction();
+            transaction.hide(nearby_map);
+            transaction.commit();
+        }
+        fragment_switch_button.setVisibility(View.GONE);
+
+        updateUserLocation(nearbyMapSearch.getVisibilityMiles());
+
+    }
 }
 

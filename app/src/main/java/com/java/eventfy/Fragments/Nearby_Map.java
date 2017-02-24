@@ -24,6 +24,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,6 +46,7 @@ import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
+import com.java.eventfy.Entity.Search.NearbyMapSearch;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.UserAccount.UpdateAccount;
 import com.java.eventfy.EventBus.EventBusService;
@@ -85,18 +88,23 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private RobotoTextView eventDuration;
     private RobotoTextView eventDistance;
     private int indexForOnclickEvent;
-    private LinearLayout eventInfoMapViewLinearLayout;
      private Marker [] markerArr;
     private SignUp signUp;
     private HashMap<Integer, Away> eventAwayMapping;
     private int index;
     private Bitmap image = null;
+    private SeekBar eventSearchMiles;
+    private TextView eventVisibilityRadius;
+    private Button eventSearch;
+    private LinearLayout eventSearchLinearLayout;
+    private LinearLayout eventInfoLinearLayout;
+    private NearbyMapSearch nearbyMapSearch;
+
 
     private SetEventIconGoogleMap setEventIconGoogleMap;
     private void initializeMap(Location location) {
         setUpMarker(location);
     }
-
 
     public void setUserOnMap(Location location){
 
@@ -180,8 +188,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
-
     }
 
     public void googelMapSetting(Location location) {
@@ -238,7 +244,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         }
 
 
-        eventInfoMapViewLinearLayout.setOnClickListener(new OnClickListener() {
+        eventInfoLinearLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 View sharedView = eventImage;
@@ -272,15 +278,51 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         eventImage = (CircleImageView) view.findViewById(R.id.map_view_event_info_image_view);
         eventAddress = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_location);
         eventStartDate = (RobotoTextView) view.findViewById(R.id.map_view_event_info_date);
-        eventInfoMapViewLinearLayout   = (LinearLayout) view.findViewById(R.id.map_view_event_info_linear_layout);
         eventDuration = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
         eventDistance =  (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
-        eventInfoMapViewLinearLayout = (LinearLayout) view.findViewById(R.id.map_view_event_info);
+
+        eventSearchMiles = (SeekBar) view.findViewById(R.id.nearby_map_view_event_visibility_miles);
+        eventVisibilityRadius = (TextView) view.findViewById(R.id.nearby_map_view_visibility_miles_radius);
+        eventSearch = (Button) view.findViewById(R.id.nearby_map_view_event_search_btn);
+        eventSearchLinearLayout = (LinearLayout) view.findViewById(R.id.nearby_map_view_filter_linear_layout);
+        eventInfoLinearLayout = (LinearLayout) view.findViewById(R.id.nearby_map_view_event_info_linear_layout);
+        nearbyMapSearch = new NearbyMapSearch();
+
+        eventSearchMiles.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                // TODO Auto-generated method stub
+                eventVisibilityRadius.setText(String.valueOf(progress+1));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+        });
+
+
+        eventSearch.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("value is :****** ", ""+eventVisibilityRadius.getText());
+                nearbyMapSearch.setVisibilityMiles(Integer.parseInt(eventVisibilityRadius.getText().toString()));
+                EventBusService.getInstance().post(nearbyMapSearch);
+            }
+        });
 
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
+
         return view;
     }
 
@@ -322,13 +364,23 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     }
 
     @Subscribe
-    public void receiveEvents(NearbyEventData nearbyEventData)
+    public void receiveEvents(final NearbyEventData nearbyEventData)
     {
         if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
             this.eventLst = nearbyEventData.getEventsList();
             if(eventLst.get(eventLst.size()-1).getViewMessage()==null){
                 initializeMap(nearbyEventData.getLocation());
                 updateEventinfo(0);
+                eventInfoLinearLayout.setVisibility(View.VISIBLE);
+                eventSearchLinearLayout.setVisibility(View.GONE);
+            }else{
+                getUserObject();
+                setUserOnMap(nearbyEventData.getLocation());
+                googelMapSetting(nearbyEventData.getLocation());
+                eventInfoLinearLayout.setVisibility(View.GONE);
+                eventSearchLinearLayout.setVisibility(View.VISIBLE);
+                eventSearchMiles.setProgress(signUp.getVisibilityMiles());
+                eventVisibilityRadius.setText(signUp.getVisibilityMiles());
             }
         }
 

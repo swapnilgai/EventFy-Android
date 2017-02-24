@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,19 +34,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
+import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteEvent;
+import com.java.eventfy.asyncCalls.EditEventSrverCall;
 import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import at.markushi.ui.CircleButton;
 
@@ -81,7 +84,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     private CircleButton navigateAdminProfile;
     private LinearLayout adminOptionLayout;
     private Context context;
-
+    private Button eventInvisible;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -112,6 +115,8 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         editEvent= (Button) view.findViewById(R.id.event_edit);
 
+        eventInvisible = (Button) view.findViewById(R.id.event_invisible);
+
         mapValuesFromEventObject();
 
         MapsInitializer.initialize(getActivity());
@@ -124,7 +129,7 @@ public class About extends Fragment implements OnMapReadyCallback {
         Log.e("user id = ", ""+signUp.getUserId());
 
         if(!signUp.getUserId().equals(event.getAdmin().getUserId()))
-            adminOptionLayout.setVisibility(View.INVISIBLE);
+            adminOptionLayout.setVisibility(View.GONE);
         else{
 
         }
@@ -142,6 +147,14 @@ public class About extends Fragment implements OnMapReadyCallback {
             }
         });
 
+
+        eventInvisible.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dialogBoxToMakeEventInvisible(getString(R.string.invisible_event), event);
+            }
+        });
         editEvent.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -193,6 +206,11 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventDateTimeTo.setText(event.getEventDateTo()+" AT "+convertTimeInTwelve(event.getEventTimeTo()) + " " + timeConverter(event.getEventTimeTo()));
 
          eventCapacity.setText(event.getEventCapacity());
+
+        if(eventInvisible.getText().equals(getString(R.string.invisible_event_btn)))
+            eventInvisible.setText(getString(R.string.invisible_event_btn));
+        else
+            eventInvisible.setText(getString(R.string.visible_event_btn));
 
     }
 
@@ -347,6 +365,58 @@ public class About extends Fragment implements OnMapReadyCallback {
         alertDialog.show();
     }
 
+
+    public void dialogBoxToMakeEventInvisible(final String message, final Events event) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage(message);
+
+
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                        if(event.getEventIsVisible())
+                            event.setEventIsVisible(false);
+                        else
+                            event.setEventIsVisible(true);
+                        startProgressDialog("updating....");
+
+                        serverCallToMakeEventInvisible();
+
+                    }
+                });
+
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+
+
+    public void serverCallToMakeEventInvisible(){
+        if(event.getUserDetail() == null) {
+            List<SignUp> userList = new ArrayList<SignUp>();
+            userList.add(signUp);
+            event.setUserDetail(userList);
+
+        }
+        EditEvent editEventObj = new EditEvent();
+        editEventObj.setEvents(event);
+        String url = getString(R.string.ip_local) + getString(R.string.edit_event);
+            EditEventSrverCall editEventSrverCall = new EditEventSrverCall(url, editEventObj, getContext());
+            editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
     public void serverCallToDelete(Events event) {
         String url = getString(R.string.ip_local) + getString(R.string.delete_event);
         DeleteEvent deleteEvent = new DeleteEvent(url, event);
