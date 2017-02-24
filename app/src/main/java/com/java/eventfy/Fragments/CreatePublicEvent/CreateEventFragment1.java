@@ -391,6 +391,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             //TODO find alternate way to collect date and time
             startDate = (EditText) view.findViewById(R.id.public_event_start_date);
             endDate = (EditText) view.findViewById(R.id.public_event_end_date);
+
             eventObj.setEventCapacity(eventCapacity.getText().toString());
             eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
             eventObj.setEventVisiblityMile(eventVisibilityMiles.getSelectedItem().toString());
@@ -935,12 +936,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
 
     public void serverCallToEdit(){
-        if(eventObj.getUserDetail() == null) {
-            List<SignUp> userList = new ArrayList<SignUp>();
-            userList.add(signUp);
-            eventObj.setUserDetail(userList);
 
-        }
+        eventObj.setAdmin(signUp);
         EditEvent editEventObj = new EditEvent();
         editEventObj.setEvents(eventObj);
         if(eventImageBm != null){

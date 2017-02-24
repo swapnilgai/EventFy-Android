@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,9 +49,7 @@ import com.squareup.picasso.Picasso;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import at.markushi.ui.CircleButton;
 
@@ -131,7 +130,7 @@ public class About extends Fragment implements OnMapReadyCallback {
         if(!signUp.getUserId().equals(event.getAdmin().getUserId()))
             adminOptionLayout.setVisibility(View.GONE);
         else{
-
+            adminOptionLayout.setVisibility(View.VISIBLE);
         }
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
@@ -207,10 +206,10 @@ public class About extends Fragment implements OnMapReadyCallback {
 
          eventCapacity.setText(event.getEventCapacity());
 
-        if(eventInvisible.getText().equals(getString(R.string.invisible_event_btn)))
-            eventInvisible.setText(getString(R.string.invisible_event_btn));
-        else
+        if(event.getEventIsVisible())
             eventInvisible.setText(getString(R.string.visible_event_btn));
+        else
+            eventInvisible.setText(getString(R.string.invisible_event_btn));
 
     }
 
@@ -404,19 +403,23 @@ public class About extends Fragment implements OnMapReadyCallback {
 
 
     public void serverCallToMakeEventInvisible(){
-        if(event.getUserDetail() == null) {
-            List<SignUp> userList = new ArrayList<SignUp>();
-            userList.add(signUp);
-            event.setUserDetail(userList);
+        if(signUp == null)
+            getUserObject();
 
-        }
+        event.setAdmin(signUp);
         EditEvent editEventObj = new EditEvent();
         editEventObj.setEvents(event);
+
+        Gson g = new Gson();
+        Log.e("edit event obj : ", ""+g.toJson(event));
         String url = getString(R.string.ip_local) + getString(R.string.edit_event);
-            EditEventSrverCall editEventSrverCall = new EditEventSrverCall(url, editEventObj, getContext());
-            editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EditEventSrverCall editEventSrverCall = new EditEventSrverCall(url, editEventObj, getContext());
+        editEventSrverCall.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
+
+
+
     public void serverCallToDelete(Events event) {
         String url = getString(R.string.ip_local) + getString(R.string.delete_event);
         DeleteEvent deleteEvent = new DeleteEvent(url, event);
@@ -437,11 +440,13 @@ public class About extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void getDeletedOrUndoComment(Comments comments) {
         dismissProgressDialog();
+        dismissProgressDialog();
 
     }
 
     @Subscribe
     public void getDeletedEvent(Events event) {
+        dismissProgressDialog();
         if(event.getViewMessage().equals(R.string.edited)) {
             this.event = event;
             mapValuesFromEventObject();
@@ -459,6 +464,25 @@ public class About extends Fragment implements OnMapReadyCallback {
             dismissProgressDialog();
         }
     }
+
+    @Subscribe
+    public void getUserCurrentLocation(EditEvent editEvent) {
+
+        dismissProgressDialog();
+        if(editEvent.getViewMsg()==null)
+        {
+            //Success
+            Log.e("in success : ", " &&&&&&&&&& "+editEvent.getViewMsg());
+            event =  editEvent.getEvents();
+            mapValuesFromEventObject();
+        }
+        else{
+            //fail
+            Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     public void createProgressDialog() {
         progressDialog = new ProgressDialog(context);
         progressDialog.setIndeterminate(true);
