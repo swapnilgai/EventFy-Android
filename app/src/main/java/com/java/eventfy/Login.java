@@ -54,6 +54,7 @@ public class Login extends AppCompatActivity  {
     private EditText emailText;
     private EditText passwordText;
     private TextView signupLink;
+    private TextView forgotPasswordLink;
     private Button loginButton;
     private User user;
     private String passwordTemp;
@@ -90,6 +91,7 @@ public class Login extends AppCompatActivity  {
         emailText = (EditText) findViewById(R.id.input_email);
         loginButton = (Button) findViewById(R.id.btn_login);
         passwordText = (EditText) findViewById(R.id.input_password);
+        forgotPasswordLink  = (TextView) findViewById(R.id.link_reset_password);
 
         passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -110,6 +112,17 @@ public class Login extends AppCompatActivity  {
             public void onClick(View v) {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
+
+        forgotPasswordLink.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // Start the Signup activity
+                Intent intent = new Intent(getApplicationContext(), ResetPassword.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
             }
@@ -307,7 +320,7 @@ public class Login extends AppCompatActivity  {
     }
 
     @Subscribe
-    public void getUserobject(SignUp signUp)
+    public void getUserObject(SignUp signUp)
     {
         dismissProgressDialog();
         if(signUp!=null && signUp.getToken()!=null)

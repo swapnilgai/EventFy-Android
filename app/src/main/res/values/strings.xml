@@ -14,11 +14,11 @@
 
 
     <!-- Web servises url -->
-    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
-    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
+    <string name="ip_local">http://192.168.0.6:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>
 
-    <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
+    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
+    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -52,6 +52,11 @@
     <string name="get_user_notifications">/webapi/notifications/getusernotification</string>
 
     <string name="signup_object_viewe_profile">signup_object_viewe_profile</string>
+
+    <string name="user_get_access_code">/webapi/signup/getaccesscodetoresetpassword</string>
+
+    <string name="user_reset_password">/webapi/signup/resetuserpassword</string>
+
 
     <!--Home page view strings-->
     <string name="home_no_location">noLocation</string>
@@ -99,6 +104,8 @@
     <string name="userId">userId</string>
     <string name="isFacebook">isFacebook</string>
     <string name="isVerified">isVerified</string>
+
+    <string name="resend_vcode">Did not received code? Click to resend"</string>
     <!--  End  -->
 
     <!-- Search place autocomplete button -->
@@ -206,6 +213,7 @@
     <string name="or">OR</string>
     <string name="login_text">LOGIN</string>
     <string name="no_account">No account yet? Create one</string>
+    <string name="forgot_password">Forget password?</string>
     <string name="name_label">Name</string>
     <string name="email_phone_number">Email/Phone Number</string>
     <string name="password_label">Password</string>
@@ -216,6 +224,6 @@
 
     <string name="verify_account">verify_account</string>
     <string name="verify_account_success">verify_account_success</string>
-     <string name="verify_account_fail">verify_account_fail</string>
+    <string name="verify_account_fail">verify_account_fail</string>
 
 </resources>

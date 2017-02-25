@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.java.eventfy">
+<manifest package="com.java.eventfy"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.ACCESS_GPS" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="android.permission.ACCESS_GPS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
-    <uses-library android:name="com.google.android.maps" />
+    <uses-library android:name="com.google.android.maps"/>
 
     <permission
         android:name="com.java.eventfy.permission.C2D_MESSAGE"
-        android:protectionLevel="signature" />
+        android:protectionLevel="signature"/>
 
-    <uses-permission android:name="com.java.eventfy.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.java.eventfy.permission.C2D_MESSAGE"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true" />
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -37,21 +37,21 @@
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" />
+            android:permission="com.google.android.c2dm.permission.SEND"/>
 
         <!-- Meta data block start -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key"/>
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_app_id"/>
         <meta-data
             android:name="CLOUDINARY_URL"
-            android:value="cloudinary://338234664624354:clA_O7equySs8LDK0hJNmmK62J8@eventfy" />
+            android:value="cloudinary://338234664624354:clA_O7equySs8LDK0hJNmmK62J8@eventfy"/>
 
         <!-- Meta data block end -->
 
@@ -63,38 +63,38 @@
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Home"
             android:configChanges="orientation|screenSize"
-            android:uiOptions="splitActionBarWhenNarrow" />
-        <activity android:name=".EventInfoPublic"
+            android:uiOptions="splitActionBarWhenNarrow"/>
+        <activity
+            android:name=".EventInfoPublic"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity
             android:name=".CreatePublicEvent"
-            android:configChanges="orientation|screenSize" />
-        <activity android:name=".MyEvents" />
-        <activity android:name=".EventInfoPrivate" />
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
-        <activity android:name=".Login" />
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".MyEvents"/>
+        <activity android:name=".EventInfoPrivate"/>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
+        <activity android:name=".Login"/>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".VerifySignUp" />
+            android:label="@string/app_name"/>
+        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".VerifySignUp"/>
         <activity
             android:name=".ProfilePage"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ViewerProfilePage" />
-        <activity android:name=".PasswordUpdate" />
-        <activity android:name=".ImageFullScreenMode" />
-        <activity android:name=".ImageComment" />
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".ViewerProfilePage"/>
+        <activity android:name=".PasswordUpdate"/>
+        <activity android:name=".ImageFullScreenMode"/>
+        <activity android:name=".ImageComment"/>
         <!-- Meta data block end -->
 
 
@@ -106,11 +106,11 @@
             <intent-filter>
 
                 <!-- Receives the actual messages. -->
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
                 <!-- Receives the registration id. -->
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 
-                <category android:name="com.java.eventfy" />
+                <category android:name="com.java.eventfy"/>
             </intent-filter>
         </receiver>
 
@@ -123,21 +123,23 @@
             android:name=".Services.GCMNotificationIntentService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
             </intent-filter>
         </service>
         <service android:name=".Services.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service android:name=".Services.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
         <!-- Service data block end -->
+        <activity android:name=".ResetPassword">
+        </activity>
     </application>
 
 </manifest>

@@ -189,7 +189,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="32dp"
                         android:gravity="center"
-                        android:text="Did not received code? Click to resend"
+                        android:text="@string/resend_vcode"
                         android:textColor="@color/transparent_black"
                         android:textSize="16dip" />
                 </LinearLayout>
