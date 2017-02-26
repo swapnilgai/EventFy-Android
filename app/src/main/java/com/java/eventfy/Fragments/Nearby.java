@@ -349,13 +349,13 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(true);
 
-
-            for(Events events : eventsList){
+          //  if(!eventsList.get(eventsList.size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
+                for(Events events : eventsList){
                 DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
                         new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
-                // Start downloading json data from Google Directions API
-                downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+                    // Start downloading json data from Google Directions API
+                    downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
 
         }
 

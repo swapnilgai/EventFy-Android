@@ -39,12 +39,16 @@ import com.java.eventfy.asyncCalls.SignUpAction;
 import com.java.eventfy.utils.SecurityOperations;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class Login extends AppCompatActivity  {
 
@@ -70,6 +74,39 @@ public class Login extends AppCompatActivity  {
         setContentView(R.layout.activity_login);
 
         setProgressDialog();
+
+
+        Log.e("My time zone is : ", ""+TimeZone.getDefault().getID());
+        DateTime utc = new DateTime(DateTimeZone.UTC);
+        DateTimeZone fromTimeZone  = DateTimeZone.forID(TimeZone.getDefault().getID());
+
+        DateTime losAngelesDateTime = utc.toDateTime(fromTimeZone);
+
+        Log.e("My current date  ", ""+losAngelesDateTime);
+
+
+        final DateTimeZone toTimeZone = DateTimeZone.forID("Europe/Paris");
+        final DateTime dateTime = new DateTime(losAngelesDateTime, toTimeZone);
+
+
+        Log.e("time in india ", ""+dateTime);
+
+
+        DateTime.Property pDoW = losAngelesDateTime.dayOfWeek();
+        String strTF = pDoW.getAsText(Locale.ENGLISH);
+
+
+//
+//        Log.e("My current time is :::", ""+ strTF);
+//
+//        DateTime.Property pDoW = losAngelesDateTime.dayOfWeek();
+//        String strTF = pDoW.getAsText(Locale.ENGLISH);
+
+
+
+        Log.e("My current time is :::", ""+ strTF);
+
+
 
         if(getUserObject()!=null){
             redirectToHomeActivity();
@@ -364,6 +401,13 @@ public class Login extends AppCompatActivity  {
         return json;
     }
 
+    public static void convertTimeZones(final String fromTimeZoneString,
+                                        final String toTimeZoneString, final String fromDateTime) {
+        final DateTimeZone fromTimeZone = DateTimeZone.forID(fromTimeZoneString);
+        final DateTimeZone toTimeZone = DateTimeZone.forID(toTimeZoneString);
+        final DateTime dateTime = new DateTime(fromDateTime, fromTimeZone);
 
+
+    }
 }
 

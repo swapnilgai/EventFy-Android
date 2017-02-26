@@ -29,14 +29,6 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventVisiblityMile;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventDateFrom;
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventTimeFrom;
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventDateTo;
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private String eventTimeTo;
-    @JsonIgnoreProperties(ignoreUnknown = true)
     private boolean eventIsVerified;
     // once capacity full event will invisible or if admin want to make it invisible on he feel response is enough
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -56,6 +48,10 @@ public class Events implements Serializable {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String decesion;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(DateTime.class)
+    private DateTime dateTime;
 
     // mapping for signUp - Events (users in events and  events by user)
     @JsonView(SignUp.class)
@@ -100,6 +96,14 @@ public class Events implements Serializable {
 
     public void setEventAwayDuration(String eventAwayDuration) {
         this.eventAwayDuration = eventAwayDuration;
+    }
+
+    public DateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(DateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -242,39 +246,6 @@ public class Events implements Serializable {
 
     public void setUserDetail(List<SignUp> userDetail) {
         this.userDetail = userDetail;
-    }
-
-
-    public String getEventDateTo() {
-        return eventDateTo;
-    }
-
-    public void setEventDateTo(String eventDateTo) {
-        this.eventDateTo = eventDateTo;
-    }
-
-    public String getEventDateFrom() {
-        return eventDateFrom;
-    }
-
-    public void setEventDateFrom(String eventDateFrom) {
-        this.eventDateFrom = eventDateFrom;
-    }
-
-    public String getEventTimeFrom() {
-        return eventTimeFrom;
-    }
-
-    public void setEventTimeFrom(String eventTimeFrom) {
-        this.eventTimeFrom = eventTimeFrom;
-    }
-
-    public String getEventTimeTo() {
-        return eventTimeTo;
-    }
-
-    public void setEventTimeTo(String eventTimeTo) {
-        this.eventTimeTo = eventTimeTo;
     }
 
     public String getEventCategory() {

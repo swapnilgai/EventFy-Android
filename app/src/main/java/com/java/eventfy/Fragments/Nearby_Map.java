@@ -373,7 +373,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 updateEventinfo(0);
                 eventInfoLinearLayout.setVisibility(View.VISIBLE);
                 eventSearchLinearLayout.setVisibility(View.GONE);
-            }else{
+            }else if(!nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
+            {
                 getUserObject();
                 setUserOnMap(nearbyEventData.getLocation());
                 googelMapSetting(nearbyEventData.getLocation());

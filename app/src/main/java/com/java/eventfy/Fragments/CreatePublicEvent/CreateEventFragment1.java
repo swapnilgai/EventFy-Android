@@ -66,6 +66,7 @@ import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.asyncCalls.CreatePublicEvent;
 import com.java.eventfy.asyncCalls.EditEventSrverCall;
 import com.java.eventfy.asyncCalls.UploadImage;
+import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.PlaceAutocompleteAdapter;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
@@ -75,12 +76,7 @@ import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -115,6 +111,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private SearchableSpinner evenrCategory;
     private Spinner eventVisibilityMiles;
     private Button createBtn;
+    private String dateTimeFrom;
+    private String dateTimeTo;
     private Events eventObj;
     protected GoogleApiClient mGoogleApiClient;
     private AutoCompleteTextView mAutocompleteView;
@@ -393,7 +391,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             endDate = (EditText) view.findViewById(R.id.public_event_end_date);
 
             eventObj.setEventCapacity(eventCapacity.getText().toString());
-            eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
+          //  eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
             eventObj.setEventVisiblityMile(eventVisibilityMiles.getSelectedItem().toString());
             if(eventObj.getLocation()!=null)
             eventObj.getLocation().setDistance(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
@@ -403,7 +401,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             eventObj.setUserDetail(null);
             eventObj.setNotificationDetail(null);
             eventObj.setEventVolatile(eventsVolatile.isChecked());
+
+            com.java.eventfy.Entity.DateTime dateTimeObj = new com.java.eventfy.Entity.DateTime();
+
+            dateTimeObj.setDateTimeFrom(DateTimeStringOperations.getInstance().convertStringToDateTime(dateTimeFrom));
+
+            dateTimeObj.setDateTimeTo(DateTimeStringOperations.getInstance().convertStringToDateTime(dateTimeTo));
+
+            eventObj.setDateTime(dateTimeObj);
+
             createBtn = (Button) view.findViewById(R.id.public_create_event);
+
             return eventObj;
         }
         else{
@@ -422,15 +430,13 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         if(datePickerDialog.equals(datePickerDialogStart)) {
             startDate.setText(year + "-" + month + "-" + day);
-            eventObj.setEventDateFrom(year + "-" + month + "-" + day);
-            Log.e("date obj from "," *** "+eventObj.getEventDateFrom());
+            dateTimeFrom = year + "-" + month + "-" + day;
             timePickerDialogStart.setCloseOnSingleTapMinute(isCloseOnSingleTapDay());
             timePickerDialogStart.show(getFragmentManager(), TIMEPICKER_TAG);
         }
         else {
             endDate.setText(year + "-" + month + "-" + day);
-            eventObj.setEventDateTo(year + "-" + month + "-" + day);
-            Log.e("date obj to  "," *** "+eventObj.getEventDateTo());
+            dateTimeTo = year + "-" + month + "-" + day;
             timePickerDialogEnd.setCloseOnSingleTapMinute(isCloseOnSingleTapDay());
             timePickerDialogEnd.show(getFragmentManager(), TIMEPICKER_TAG);
         }
@@ -445,10 +451,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         if(viewToIdentifyTimePicker.getId() == R.id.public_event_start_date) {
             startDate.append(time);
-            eventObj.setEventTimeFrom(hourString+""+minuteString);        }
+            dateTimeFrom = dateTimeFrom+" "+hourString+":"+minuteString;
+
+          //  Log.e("start Date: ", ""+convertStringToDateTime(dateTimeFrom));
+
+        }
         else {
             endDate.append(time);
-            eventObj.setEventTimeTo(hourString+""+minuteString);
+            dateTimeTo = dateTimeTo + " "+hourString+":"+minuteString;
+          //  Log.e("start date: ", ""+convertStringToDateTime(dateTimeTo));
         }
     }
 
@@ -703,36 +714,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     }
 
-    public Date stringToDate(String dateStr) {
-        String DATE_FORMAT_NOW = "yyyy-MM-dd";
-        Date date;
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-        try {
-            date = sdf.parse(dateStr);
-            Log.e("date is Str "," *** "+dateStr);
-            Log.e("date is "," *** "+date);
-            return date;
-        } catch(ParseException e){
-            //Exception handling
-        } catch(Exception e){
-            //handle exception
-        }
-        return null;
-    }
-
-    public Date stringToTime(String timeStr) {
-        DateFormat sdf = new SimpleDateFormat("HHmm");
-        Date time;
-        try {
-             time = sdf.parse(timeStr);
-            Log.e("time is "," *** "+time);
-            return time;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void getUserObject()
     {
         SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject),Context.MODE_PRIVATE);
@@ -779,33 +760,20 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             eventDescription.setError(null);
         }
 
-        if (eventObj.getEventDateFrom()==null) {
+        if (eventObj.getDateTime().getDateTimeFrom()==null) {
             startDate.setError("Invalid start date");
             flag = false;
         } else {
             startDate.setError(null);
         }
 
-        if (eventObj.getEventDateTo()==null) {
+        if (eventObj.getDateTime().getDateTimeTo()==null) {
             endDate.setError("Invalid end date");
             flag = false;
         } else {
             endDate.setError(null);
         }
 
-        if (eventObj.getEventTimeFrom()==null) {
-            startDate.setError("Invalid start time");
-            flag = false;
-        } else {
-            startDate.setError(null);
-        }
-
-        if (eventObj.getEventTimeTo() == null) {
-            endDate.setError("Invalid end time");
-            flag = false;
-        } else {
-            endDate.setError(null);
-        }
         try {
             if (eventCapacity.getText().toString().isEmpty()) {
                 eventCapacity.setError("Enter event capacity");
@@ -852,8 +820,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         mAutocompleteView.setText(eventObj.getLocation().getName());
         eventName.setText(eventObj.getEventName());
         eventDescription.setText(eventObj.getEventDescription());
-        startDate.setText(eventObj.getEventDateFrom()+" "+eventObj.getEventTimeFrom());
-        endDate.setText(eventObj.getEventDateTo()+" "+eventObj.getEventTimeTo());
+
+
+        startDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeFrom()));
+        endDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeTo()));
         eventCapacity.setText(eventObj.getEventCapacity());
 
 
@@ -957,4 +927,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     public void stopService() {
         getActivity().stopService(new Intent(getActivity(),com.java.eventfy.Services.GPSTracker.class));
     }
+
+
+
+
 }

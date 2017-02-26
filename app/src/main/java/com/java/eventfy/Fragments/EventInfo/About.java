@@ -43,6 +43,7 @@ import com.java.eventfy.R;
 import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteEvent;
 import com.java.eventfy.asyncCalls.EditEventSrverCall;
+import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
@@ -93,6 +94,8 @@ public class About extends Fragment implements OnMapReadyCallback {
         event = (Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_for_eventinfo)));
         context = view.getContext();
 
+        getUserObject();
+
         EventBusService.getInstance().register(this);
 
 
@@ -120,7 +123,6 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         MapsInitializer.initialize(getActivity());
 
-        getUserObject();
         createProgressDialog();
 
         Log.e("admin user id = ", ""+event.getAdmin().getUserId());
@@ -200,9 +202,9 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         eventLocation.setText(event.getLocation().getName());
 
-        eventDateTimeFrom.setText(event.getEventDateFrom() + " AT "+convertTimeInTwelve(event.getEventTimeFrom())+" "+timeConverter(event.getEventTimeFrom()));
+        eventDateTimeFrom.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom()));
 
-        eventDateTimeTo.setText(event.getEventDateTo()+" AT "+convertTimeInTwelve(event.getEventTimeTo()) + " " + timeConverter(event.getEventTimeTo()));
+        eventDateTimeTo.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeTo()));
 
          eventCapacity.setText(event.getEventCapacity());
 

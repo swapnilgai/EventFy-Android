@@ -52,10 +52,14 @@ import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.asyncCalls.GetRemoteEvent;
+import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.PlaceAutocompleteAdapter;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.sleepbot.datetimepicker.time.TimePickerDialog.OnTimeSetListener;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.util.Calendar;
 import java.util.List;
@@ -222,7 +226,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
                 if (eventObj != null && eventObj.getLocation() != null)
-                    getRemotEventServerCall(place);
+                    getRemoteEventServerCall(place);
             }
 
             //TODO add thost message "please enter valid place"
@@ -322,20 +326,22 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
                 return;
             }
             // Get the Place object from the buffer.
+            else {
                 place = places.get(0);
 
-            Location location = new Location();
-            location.setLatitude(place.getLatLng().latitude);
-            location.setLongitude(place.getLatLng().longitude);
+                Location location = new Location();
+                location.setLatitude(place.getLatLng().latitude);
+                location.setLongitude(place.getLatLng().longitude);
 
-            eventLocationTextView.setText(mAutocompleteView.getText());
+                eventLocationTextView.setText(mAutocompleteView.getText());
 
-            setUpMarker(place.getLatLng().latitude, place.getLatLng().longitude);
+                setUpMarker(place.getLatLng().latitude, place.getLatLng().longitude);
 
-            //setting url
+                //setting url
 
-            eventObj.setLocation(location);
-            Log.e(TAG, "Place details received: " + place.getLatLng());
+                eventObj.setLocation(location);
+                Log.e(TAG, "Place details received: " + place.getLatLng());
+            }
             // Format details of the place for display and show it in a TextView.
         //    mAutocompleteView.setText(formatPlaceDetails(getResources(), place.getLatLng());
 
@@ -384,13 +390,16 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
 
     // ****** ASYNC CALL
-    private void getRemotEventServerCall(Place place){
+    private void getRemoteEventServerCall(Place place){
 
 
         eventObj.getLocation().setDistance(visiblityMilesVal);
-        eventObj.setEventDateFrom(startDate.getText().toString());
-        eventObj.setEventDateTo(endDate.getText().toString());
+        com.java.eventfy.Entity.DateTime dateTime = new  com.java.eventfy.Entity.DateTime();
 
+        dateTime.setDateTimeFrom(DateTimeStringOperations.getInstance().convertStringToDateTime(startDate.getText().toString()));
+        dateTime.setDateTimeTo(DateTimeStringOperations.getInstance().convertStringToDateTime(endDate.getText().toString()));
+
+        eventObj.setDateTime(dateTime);
 
         signUp.setEventAdmin(eventObj);
 
@@ -491,10 +500,9 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
         if(viewToIdentifyTimePicker.getId() == R.id.public_event_start_date){
            startDate.getText().append(time);
-            eventObj.setEventTimeFrom(time);}
+        }
         else {
             endDate.getText().append(time);
-            eventObj.setEventTimeTo(time);
         }
     }
 
@@ -568,6 +576,15 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+
+
+    }
+
+    public static void convertTimeZones(final String fromTimeZoneString,
+                                          final String toTimeZoneString, final String fromDateTime) {
+        final DateTimeZone fromTimeZone = DateTimeZone.forID(fromTimeZoneString);
+        final DateTimeZone toTimeZone = DateTimeZone.forID(toTimeZoneString);
+        final DateTime dateTime = new DateTime(fromDateTime, fromTimeZone);
 
 
     }

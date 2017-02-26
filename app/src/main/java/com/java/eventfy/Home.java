@@ -352,14 +352,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra("user");
 
-        securityOperations = new SecurityOperations();
-
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
 
         Log.e("string before ", "((((: "+json);
 
-        signUp.setPassword(securityOperations.encryptNetworkPassword(signUp.getPassword()));
         json = gson.toJson(signUp);
 
         Log.e("string after ", "((((: "+json);

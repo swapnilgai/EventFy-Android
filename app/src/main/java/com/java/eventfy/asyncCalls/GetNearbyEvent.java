@@ -51,7 +51,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        try {
+        {
             Log.e("event is : ", " " + url);
             Gson g = new Gson();
             Log.e("event is : ", " " + g.toJson(signUp));
@@ -67,8 +67,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
 
             eventLst = new LinkedList<Events>(Arrays.asList(event));
             Log.e("event size : ", " 8888888 " + eventLst.size());
-        }catch (Exception e)
-        {}
+        }
 
         return null;
     }
