@@ -79,6 +79,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import at.markushi.ui.CircleButton;
 
@@ -404,9 +405,11 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
             com.java.eventfy.Entity.DateTime dateTimeObj = new com.java.eventfy.Entity.DateTime();
 
-            dateTimeObj.setDateTimeFrom(DateTimeStringOperations.getInstance().convertStringToDateTime(dateTimeFrom));
+            dateTimeObj.setDateTimeFrom(dateTimeFrom);
 
-            dateTimeObj.setDateTimeTo(DateTimeStringOperations.getInstance().convertStringToDateTime(dateTimeTo));
+            dateTimeObj.setDateTimeTo(dateTimeTo);
+
+            dateTimeObj.setTimeZone(TimeZone.getDefault().getID());
 
             eventObj.setDateTime(dateTimeObj);
 
@@ -822,8 +825,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         eventDescription.setText(eventObj.getEventDescription());
 
 
-        startDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeFrom()));
-        endDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeTo()));
+        startDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeFrom(), eventObj.getDateTime().getTimeZone()));
+        endDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeTo(), eventObj.getDateTime().getTimeZone()));
         eventCapacity.setText(eventObj.getEventCapacity());
 
 

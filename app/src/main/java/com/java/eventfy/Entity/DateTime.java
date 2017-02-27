@@ -3,7 +3,6 @@ package com.java.eventfy.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by swapnil on 2/25/17.
@@ -15,9 +14,9 @@ public class DateTime  implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private int id;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private Date dateTimeFrom;
+    private String dateTimeFrom;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private Date dateTimeTo;
+    private String dateTimeTo;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String timeZone;
 
@@ -41,16 +40,16 @@ public class DateTime  implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    public Date getDateTimeFrom() {
+    public String getDateTimeFrom() {
         return dateTimeFrom;
     }
-    public void setDateTimeFrom(Date dateTimeFrom) {
+    public void setDateTimeFrom(String dateTimeFrom) {
         this.dateTimeFrom = dateTimeFrom;
     }
-    public Date getDateTimeTo() {
+    public String getDateTimeTo() {
         return dateTimeTo;
     }
-    public void setDateTimeTo(Date dateTimeTo) {
+    public void setDateTimeTo(String dateTimeTo) {
         this.dateTimeTo = dateTimeTo;
     }
     public String getTimeZone() {

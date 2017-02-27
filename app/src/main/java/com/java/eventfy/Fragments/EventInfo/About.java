@@ -202,9 +202,9 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         eventLocation.setText(event.getLocation().getName());
 
-        eventDateTimeFrom.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom()));
+        eventDateTimeFrom.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom(), event.getDateTime().getTimeZone()));
 
-        eventDateTimeTo.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeTo()));
+        eventDateTimeTo.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeTo(), event.getDateTime().getTimeZone()));
 
          eventCapacity.setText(event.getEventCapacity());
 

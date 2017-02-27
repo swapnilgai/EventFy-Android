@@ -390,7 +390,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         this.signUp.setLocation(location);
 
-        storeUserObject(editor);
+     //   storeUserObject(editor);
     }
 
 }

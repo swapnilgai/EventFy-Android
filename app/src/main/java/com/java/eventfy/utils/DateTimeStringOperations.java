@@ -3,6 +3,7 @@ package com.java.eventfy.utils;
 import android.util.Log;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
@@ -25,8 +26,8 @@ public class DateTimeStringOperations {
     }
 
 
-    public String getDateTimeString(Date date){
-        DateTime dateTime = new DateTime(date);
+    public String getDateTimeString(String dateStr, String timeZone){
+        DateTime dateTime = convertStringToDateTime(dateStr, timeZone);
 
         DateTime.Property pDoW = dateTime.dayOfWeek();
         String day = pDoW.getAsText(Locale.ENGLISH);
@@ -40,7 +41,28 @@ public class DateTimeStringOperations {
 
     }
 
-    public Date convertStringToDateTime(String dateTime){
+
+    public DateTime convertStringToDateTime(String date, String timeZone){
+        DateTimeParser[] parsers = {
+                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("MM/dd/yyyy HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy/MM/dd HH:mm").getParser()
+        };
+
+
+
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .append(null, parsers)
+                .toFormatter()
+                .withZone(DateTimeZone.forID(timeZone));
+
+        return formatter.parseDateTime(date);
+
+    }
+
+
+    public String convertStringToDateTime(String dateTime){
 
         DateTimeParser[] parsers = {
                 DateTimeFormat.forPattern("yyyy-MM-dd- HH:mm").getParser()
@@ -59,7 +81,7 @@ public class DateTimeStringOperations {
 
         Log.e("date obj = ", "  :   "+date);
 
-        return date;
+        return date.toString();
     }
 
 
