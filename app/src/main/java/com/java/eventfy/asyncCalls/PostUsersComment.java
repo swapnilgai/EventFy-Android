@@ -63,7 +63,7 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
 
-        if(comment!=null && comment.getDate()!=null){
+        if(comment!=null && comment.getDateTime().getDateTimeFrom()!=null){
             Gson g = new Gson();
             Log.e("posted comment : ", g.toJson(comment));
 

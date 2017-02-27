@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -17,11 +16,14 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
 import com.java.eventfy.Entity.Comments;
+import com.java.eventfy.Entity.DateTime;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.UploadImage;
+
+import java.util.TimeZone;
 
 import at.markushi.ui.CircleButton;
 
@@ -111,6 +113,12 @@ public class ImageComment extends AppCompatActivity {
                     addComment.setViewMsg(getApplicationContext().getString(R.string.comment_add_posting));
 
                     addComment.setBitmapByteArray(imageViewObj.getBitmapByteArray());
+
+                    DateTime dateTime = new DateTime();
+
+                    dateTime.setTimeZone(TimeZone.getDefault().getID());
+
+                    addComment.getComment().setDateTime(dateTime);
 
                     EventBusService.getInstance().post(addComment);
 

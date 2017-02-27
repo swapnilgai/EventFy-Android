@@ -94,6 +94,10 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
+
+
+        Log.e("url : ", " "+Url);
+        Log.e("url : ", " "+addComment);
         if(addComment!=null && Url!=null)
         {
             addComment.getComment().setIsImage("true");
@@ -122,7 +126,7 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
             signUp.setImageUrl(Url);
             UpdateUserDetail updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserImage);
             updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else{
+        } else if (signUp!=null){
             signUp.setViewMessage("unsuccessfull");
             EventBusService.getInstance().post(signUp);
         }

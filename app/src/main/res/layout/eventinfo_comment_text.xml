@@ -27,13 +27,12 @@
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/autherImage"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginLeft="8dp"
-                    android:background="@color/colorPrimary"
-                    android:src="@drawable/ic_perm_identity_white_24dp" />
+                    android:src="@drawable/user_image" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

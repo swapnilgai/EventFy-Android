@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Comments  implements Serializable {
@@ -31,8 +30,7 @@ public class Comments  implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String userImage; // ref to signup entity
     // mapping for events - comments (users in events and  events by user)
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private Date date;
+
 
     public String getImageUrl() {
         return imageUrl;
@@ -59,6 +57,11 @@ public class Comments  implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonView(DateTime.class)
+    private DateTime dateTime;
+
+
     public String getViewMessage() {
         return viewMessage;
     }
@@ -75,13 +78,6 @@ public class Comments  implements Serializable {
         this.isDateText = isDateText;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
     public Events getEvents() {
         return events;
     }
@@ -176,5 +172,13 @@ public class Comments  implements Serializable {
 
     public void setDateText(boolean dateText) {
         isDateText = dateText;
+    }
+
+    public DateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(DateTime dateTime) {
+        this.dateTime = dateTime;
     }
 }

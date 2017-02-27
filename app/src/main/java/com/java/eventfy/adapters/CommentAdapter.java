@@ -8,7 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -36,7 +39,9 @@ import com.java.eventfy.R;
 import com.java.eventfy.asyncCalls.DeleteCommentFromEvent;
 import com.java.eventfy.asyncCalls.PostUsersComment;
 import com.java.eventfy.asyncCalls.UploadImage;
+import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -141,13 +146,24 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
 
             Log.e("user image url : ", comment.getUser().getImageUrl());
 
-                Picasso.with(holder.itemView.getContext())
-                    .load(comment.getUser().getImageUrl())
-                    .resize(50, 50)
-                    .transform(new RoundedCornersTransformCommentAuthor())
-                    .placeholder(R.drawable.ic_perm_identity_white_24dp)
-                    .into(((ResultHolder) holder).autherImage);
 
+            if(!comment.getImageUrl().equals("default"))
+                Picasso.with(getApplicationContext()).load(comment.getUser().getImageUrl())
+                        .resize(45, 45)
+                        .into(((ResultHolder) holder).autherImage, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Bitmap imageBitmap = ((BitmapDrawable) ((ResultHolder) holder).autherImage.getDrawable()).getBitmap();
+                                RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), imageBitmap);
+                                imageDrawable.setCircular(true);
+                                imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                                ((ResultHolder) holder).autherImage.setImageDrawable(imageDrawable);
+                            }
+                            @Override
+                            public void onError() {
+                                ((ResultHolder) holder).autherImage.setImageResource(R.drawable.user_image);
+                            }
+                        });
 
             if (comment.getCommentText()!=null) {
 
@@ -229,8 +245,8 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                     imageViewEntity.setTextMessage(comment.getCommentText());
                     imageViewEntity.setUserName(comment.getUser().getUserName());
                     imageViewEntity.setUserImageUrl(comment.getUser().getImageUrl());
-                    if(comment.getDate()!=null)
-                    imageViewEntity.setDate(comment.getDate().toString());
+                    if(comment.getDateTime().getDateTimeFrom()!=null)
+                    imageViewEntity.setDate(DateTimeStringOperations.getInstance().getDateTimeString(comment.getDateTime().getDateTimeFrom(), comment.getDateTime().getTimeZone()));
 
                     Intent intent = new Intent(context, ImageFullScreenMode.class);
                     intent.putExtra(context.getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
@@ -242,7 +258,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
             if(comment.getViewMessage()!=null) {
                 if (comment.getViewMessage().equals(context.getString(R.string.comment_add_success))) {
                     ((ResultHolder) holder).commentTime.setVisibility(View.VISIBLE);
-                    ((ResultHolder) holder).commentTime.setText(comment.getDate().toString());
+                    ((ResultHolder) holder).commentTime.setText(DateTimeStringOperations.getInstance().getDateTimeString(comment.getDateTime().getDateTimeFrom(), comment.getDateTime().getTimeZone()));
                     ((ResultHolder) holder).commentRetry.setVisibility(View.GONE);
                     ((ResultHolder) holder).commentDiscard.setVisibility(View.GONE);
                     ((ResultHolder) holder).commentPosting.setVisibility(View.GONE);
@@ -271,7 +287,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                 }
             }
             else{
-                ((ResultHolder) holder).commentTime.setText(comment.getDate().toString());
+                ((ResultHolder) holder).commentTime.setText(DateTimeStringOperations.getInstance().getDateTimeString(comment.getDateTime().getDateTimeFrom(), comment.getDateTime().getTimeZone()));
                 ((ResultHolder) holder).commentRetry.setVisibility(View.GONE);
                 ((ResultHolder) holder).commentDiscard.setVisibility(View.GONE);
                 ((ResultHolder) holder).commentPosting.setVisibility(View.GONE);
