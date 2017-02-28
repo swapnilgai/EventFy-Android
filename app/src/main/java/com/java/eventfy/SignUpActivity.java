@@ -154,18 +154,20 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     @Subscribe
     public void getUserObject(SignUp signUp)
     {
-        Log.e("in signupact string ", "&&&&&&&");
         dismissProgressDialog();
-        if(signUp!=null && signUp.getToken()!=null) {
+        if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.signup_success))) {
             this.signUp = signUp;
             EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, VerifySignUp.class);
             intent.putExtra("user", signUp);
             startActivity(intent);
         }
-        else {
-            Toast.makeText(SignUpActivity.this, "Email already present", Toast.LENGTH_LONG).show();
+        else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.signup_account_already_present))) {
+            toastMsg("Email already present");
         }
+        else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.signup_server_error))){
+            toastMsg("Error at server, please try again");
+    }
         this.signUp = signUp;
     }
 
@@ -233,5 +235,8 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         progressDialog.dismiss();
     }
 
+    public void toastMsg(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 
 }

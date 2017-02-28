@@ -14,11 +14,11 @@
 
 
     <!-- Web servises url -->
-    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
-    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
+    <string name="ip_local">http://192.168.0.6:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>
 
-    <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
+    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
+    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -222,10 +222,15 @@
     <string name="already_a_member">Already a member? Login</string>
 
 
+    <!-- view messages -->
+
     <string name="verify_account">verify_account</string>
     <string name="verify_account_success">verify_account_success</string>
     <string name="verify_account_fail">verify_account_fail</string>
 
+    <string name="signup_success">signup_success</string>
+    <string name="signup_account_already_present">signup_account_already_present</string>
+    <string name="signup_server_error">signup_server_error</string>
 
     <!-- Activity names -->
 
