@@ -46,7 +46,6 @@ import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.UpdateUserDetail;
 import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.ImagePicker;
-import com.java.eventfy.utils.SecurityOperations;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -82,11 +81,8 @@ public class ProfilePage extends AppCompatActivity {
     private CircleButton verifyUserAccount;
     private  SharedPreferences mPrefs;
     private SharedPreferences.Editor editor;
-
     private TextView userVisibilityMilesTextView;
 
-    private String buttonClickFlag;
-    private SecurityOperations securityOperations;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,8 +109,6 @@ public class ProfilePage extends AppCompatActivity {
         userVisibilityMilesTextView = (TextView) findViewById(R.id.user_visibility_miles_text_view);
 
         userProfilePic = (CircleImageView) findViewById(R.id.user_profile_pic);
-
-        securityOperations = new SecurityOperations();
 
         verifyUserAccount = (CircleButton) findViewById(R.id.verify_user_account_btn);
 
@@ -155,7 +149,7 @@ public class ProfilePage extends AppCompatActivity {
         });
 
         if(signUp!=null && signUp.getUserId()!=null)
-            setUserData();
+            setUserData(signUp);
 
         userProfilePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,7 +276,7 @@ public class ProfilePage extends AppCompatActivity {
         });
     }
 
-    public void setUserData() {
+    public void setUserData(SignUp signUp) {
 
         usetStatus.setText(signUp.getStatus());
         usetName.setText(signUp.getUserName());
@@ -391,30 +385,18 @@ public class ProfilePage extends AppCompatActivity {
              mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
              editor = mPrefs.edit();
 
-            if (signUp.getToken() != null)
-                this.signUp.setToken(signUp.getToken());
-
             if(signUp.getIsVerified().equals("false")){
                 verifyUserAccount.setImageResource(R.drawable.not_verified);
             }
-
-            this.signUp.setImageUrl(signUp.getImageUrl());
-            this.signUp.setUserId(signUp.getUserId());
-            this.signUp.setIsFacebook(signUp.getIsFacebook());
-            this.signUp.setDob(signUp.getDob());
-            this.signUp.setIsVerified(signUp.getIsVerified());
-            this.signUp.setStatus(signUp.getStatus());
-            this.signUp.setUserId(signUp.getUserId());
-            this.signUp.setUserName(signUp.getUserName());
-            this.signUp.setVisibilityMiles(signUp.getVisibilityMiles());
-            this.signUp.setVisibilityMode(signUp.getVisibilityMode());
-            setUserData();
+            else{
+                verifyUserAccount.setImageResource(R.drawable.verified);
+            }
+            setUserData(signUp);
             dismissProgressDialog();
-            storeUserObject();
-
+            toastMsg("Updated successfully");
 
         }else{
-            toastMsg("Error, please retry");
+            toastMsg("Error, please try again");
         }
     }
 
@@ -449,49 +431,6 @@ public class ProfilePage extends AppCompatActivity {
         progressDialog.dismiss();
     }
 
-    public void passwordALertBox(){
-
-
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
-        final EditText edittext = new EditText(getApplicationContext());
-        edittext.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        alertDialogBuilder.setMessage("Enter the password");
-        alertDialogBuilder.setTitle("Verify");
-        alertDialogBuilder.setView(edittext);
-        alertDialogBuilder.setCancelable(false);
-
-
-        alertDialogBuilder.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                        if(securityOperations.comparePassword(edittext.getText().toString(), signUp.getPassword())) {
-                                    enableStatusFields();
-                                enablePersonalInfoFields();
-                        }
-                        else {
-                            edittext.setError("Invalid password");
-                        }
-
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton("Cancle",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-        alertDialogBuilder.show();
-    }
-
-
     public void verifyAccountPopUpBox(){
 
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -510,6 +449,7 @@ public class ProfilePage extends AppCompatActivity {
                         public void onClick(DialogInterface arg0, int arg1) {
 
                             VerifyAccount verifyAccount = new VerifyAccount();
+                            verifyAccount.setActivityName(getString(R.string.activity_ProfilePage));
                             verifyAccount.setSignUp(signUp);
                             EventBusService.getInstance().unregister(this);
                             Intent intent = new Intent(ProfilePage.this, VerifySignUp.class);
@@ -540,23 +480,11 @@ public class ProfilePage extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:
-               passwordALertBox();
                 break;
             default:
                 break;
         }
         return true;
-    }
-
-
-    public void enableStatusFields() {
-        usetStatus.setEnabled(true);
-    }
-
-    public void enablePersonalInfoFields() {
-        usetName.setEnabled(true);
-        usetEmail.setEnabled(true);
-        usetDob.setEnabled(true);
     }
 
     @Override
@@ -575,8 +503,6 @@ public class ProfilePage extends AppCompatActivity {
             toastMsg("Error while verifying account");
         }
         else{
-            signUp.setIsVerified("true");
-            storeUserObject();
             verifyUserAccount.setImageResource(R.drawable.verified);
             toastMsg("Profile updated successfully");
         }

@@ -35,6 +35,7 @@ public class VerifySignUp extends AppCompatActivity {
     private VerificationCode verificationCode;
     private TextView resendVcodelink;
     private VerifyAccount verifyAccount;
+    private TextView skipLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +59,14 @@ public class VerifySignUp extends AppCompatActivity {
         userId = (TextView) findViewById(R.id.userId);
         dob = (TextView) findViewById(R.id.dob);
         resendVcodelink = (TextView) findViewById(R.id.link_resend_vcode);
+
+        skipLink = (TextView) findViewById(R.id.link_skip_verification);
         mCodeSendButton.setEnabled(true);
 
         if(verifyAccount!=null){
             serverCallToResendVcode(verifyAccount.getSignUp());
             setUserData(verifyAccount.getSignUp());
+
         }else {
             setUserData(signUp);
         }
@@ -83,6 +87,31 @@ public class VerifySignUp extends AppCompatActivity {
         });
 
 
+        skipLink.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                if(verifyAccount!=null && verifyAccount.getActivityName()!=null && verifyAccount.getActivityName().equals(getString(R.string.activity_CreatePublicEvent)))
+                {
+                    Intent intent = new Intent(VerifySignUp.this, Home.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra(getString(R.string.verify_account), verifyAccount);
+                    finish();
+                    startActivity(intent);
+                }
+                else if(signUp!=null){
+
+                    Intent intent = new Intent(VerifySignUp.this, Home.class);
+                    intent.putExtra("user", signUp);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    finish();
+                    startActivity(intent);
+
+                }
+
+            }
+
+        });
+
         resendVcodelink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +121,18 @@ public class VerifySignUp extends AppCompatActivity {
         editBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
-            finish();
+
+            if(verifyAccount!=null && verifyAccount.getActivityName()!=null && verifyAccount.getActivityName().equals(getString(R.string.activity_CreatePublicEvent)))
+                {
+                    Intent intent = new Intent(VerifySignUp.this, ProfilePage.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra(getString(R.string.verify_account), verifyAccount);
+                    finish();
+                    startActivity(intent);
+                }
+                else{
+                    finish();
+                }
             }
 
         });

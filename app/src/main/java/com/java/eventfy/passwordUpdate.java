@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.PasswordReset;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.UpdatePassword;
 import com.java.eventfy.utils.SecurityOperations;
@@ -33,11 +34,12 @@ public class PasswordUpdate extends AppCompatActivity {
     private Button passwordUpdateBtn;
     private EditText userPassword;
     private EditText userConfirmPassword;
+    private EditText currentPassword;
     private SecurityOperations securityOperations;
     private SignUp signUp;
     private TextView errorMsg;
-    private String passwordTemp;
     private ProgressDialog progressDialog;
+    private PasswordReset passwordReset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +49,11 @@ public class PasswordUpdate extends AppCompatActivity {
         userPassword = (EditText) findViewById(R.id.user_password);
         userConfirmPassword = (EditText) findViewById(R.id.user_confirm_password);
         passwordUpdateBtn = (Button) findViewById(R.id.btn_update_user_password);
+
+        currentPassword = (EditText) findViewById(R.id.user_current_password);
         errorMsg = (TextView) findViewById(R.id.error_msg);
         errorMsg.setVisibility(View.INVISIBLE);
         setProgressDialog();
-        userPassword.setEnabled(false);
-        userConfirmPassword.setEnabled(false);
-
         getUserObject();
 
         securityOperations = new SecurityOperations();
@@ -90,60 +91,11 @@ public class PasswordUpdate extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit:
-                passwordALertBox();
                 break;
             default:
                 break;
         }
         return true;
-    }
-
-
-    public void enablePasswordFields() {
-
-        userPassword.setEnabled(true);
-        userConfirmPassword.setEnabled(true);
-    }
-
-    public void passwordALertBox() {
-
-
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
-        final EditText edittext = new EditText(getApplicationContext());
-        edittext.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        alertDialogBuilder.setMessage("Enter the password");
-        alertDialogBuilder.setTitle("Verify");
-        alertDialogBuilder.setView(edittext);
-        alertDialogBuilder.setCancelable(false);
-
-
-        alertDialogBuilder.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                        if (securityOperations.comparePassword(edittext.getText().toString(), signUp.getPassword())) {
-                                enablePasswordFields();
-
-                        } else {
-                            edittext.setError("Invalid password");
-                        }
-
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton("Cancle",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-        alertDialogBuilder.show();
     }
 
     private void getUserObject() {
@@ -172,10 +124,14 @@ public class PasswordUpdate extends AppCompatActivity {
         if(userPassword.getText().toString().equals(userConfirmPassword.getText().toString())) {
 
             startProgressDialog();
-            passwordTemp = userPassword.getText().toString();
-            signUp.setPassword(securityOperations.encryptNetworkPassword(userPassword.getText().toString()));
+
+            passwordReset = new PasswordReset();
+            passwordReset.setCurrentPassword(securityOperations.encryptNetworkPassword(currentPassword.getText().toString()));
+            passwordReset.setNewPassword(securityOperations.encryptNetworkPassword(userPassword.getText().toString()));
+            passwordReset.setSignUp(signUp);
+
             String url = getString(R.string.ip_local).concat(getString(R.string.update_user_password));
-            UpdatePassword updatePassword = new UpdatePassword(signUp, url);
+            UpdatePassword updatePassword = new UpdatePassword(passwordReset, url);
             updatePassword.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         }
@@ -204,6 +160,7 @@ public class PasswordUpdate extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
+                        errorMsg.setVisibility(View.INVISIBLE);
                         updatePassswordServerCall();
 
                     }
@@ -241,21 +198,17 @@ public class PasswordUpdate extends AppCompatActivity {
     }
 
     @Subscribe
-    public void getUpdatedPassword(SignUp signUp) {
+    public void getUpdatedPassword(PasswordReset passwordReset) {
         Log.e("in password signup", ""+signUp.getPassword());
         dismissProgressDialog();
-        if(signUp.getViewMessage()==null) {
-
-            Log.e("password signup dismiss", ""+signUp.getPassword());
-            this.signUp.setPassword(securityOperations.encryptNetworkPassword(passwordTemp));
-            storeUserObject();
-            userPassword.setEnabled(false);
-            userConfirmPassword.setEnabled(false);
+        if(passwordReset.getViewMsg().equals(getString(R.string.verify_account_success))) {
 
             Toast.makeText(getApplicationContext(), "Password updated successfully",
                     Toast.LENGTH_LONG).show();
+            errorMsg.setVisibility(View.INVISIBLE);
 
         }else{
+            errorMsg.setVisibility(View.VISIBLE);
             Toast.makeText(getApplicationContext(), "Error, please retry",
                     Toast.LENGTH_LONG).show();
         }

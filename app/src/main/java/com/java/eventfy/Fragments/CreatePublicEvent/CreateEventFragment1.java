@@ -382,8 +382,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public Events createEentObject() {
 
-
-
         if(signUp!=null) {
             eventObj.setEventName(eventName.getText().toString());
             eventObj.setEventDescription(eventDescription.getText().toString());
@@ -482,8 +480,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
 
     @Subscribe
-    public void setBitmapToNull(double d) {
-        Log.e("sending to null", "++++++++++++++++++++++++");
+    public void setBitmapToNull(Boolean flag) {
+        Log.e("sending to ", "++++++++++++++++++++++++ "+flag);
         this.eventImageBm = null;
         eventObj.setEventImageUrl("default");
     }
@@ -529,7 +527,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 dismissProgressDialog();
             } else if (event.getEventId() != -1) {
 
-                EventBusService.getInstance().unregister(this);
+               // EventBusService.getInstance().unregister(this);
                 Toast.makeText(getActivity(), "Event created", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
                 intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
@@ -540,7 +538,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             }
         }else if(event.getViewMessage() == null && event.getEventId() != -1)
         {
-            EventBusService.getInstance().unregister(this);
+           // EventBusService.getInstance().unregister(this);
             Toast.makeText(getActivity(), "Event created", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
             intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
@@ -558,7 +556,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         {
             //Success
 
-            EventBusService.getInstance().unregister(this);
+           // EventBusService.getInstance().unregister(this);
             Toast.makeText(getActivity(), "Event Updated", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
             intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), editEvent.getEvents());

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.PasswordReset;
 import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
@@ -19,25 +19,25 @@ import org.springframework.web.client.RestTemplate;
  */
 
 public class UpdatePassword extends AsyncTask<Void, Void, Void>  {
-    private SignUp signUp;
+    private PasswordReset passwordReset;
     private String url;
     private String result;
 
-    public UpdatePassword(SignUp signUp, String url) {
-        this.signUp = signUp;
+    public UpdatePassword(PasswordReset passwordReset, String url) {
+        this.passwordReset = passwordReset;
         this.url = url;
     }
 
     @Override
     protected Void doInBackground(Void... strings) {
 
-      //   try {
+        try {
 
         Log.e(" url ", url);
 
         Gson gson = new Gson();
 
-        Log.e(" obj :  ", gson.toJson(signUp));
+        Log.e(" obj :  ", gson.toJson(passwordReset));
 
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -45,17 +45,18 @@ public class UpdatePassword extends AsyncTask<Void, Void, Void>  {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
+        HttpEntity<PasswordReset> request = new HttpEntity<>(passwordReset, headers);
 
-        ResponseEntity<SignUp> rateResponse = restTemplate.postForEntity(url, request, SignUp.class);
+        ResponseEntity<PasswordReset> rateResponse = restTemplate.postForEntity(url, request, PasswordReset.class);
 
-        signUp = rateResponse.getBody();
+        passwordReset = rateResponse.getBody();
 
+        }catch (Exception e)
+        {
+            Log.e("exception : ", ""+e.getStackTrace());
 
-//        }catch (Exception e)
-//        {
-//            Log.e("exception : ", ""+e.getStackTrace());
-//        }
+            passwordReset.setViewMsg("Error");
+        }
         return null;
     }
 
@@ -63,10 +64,6 @@ public class UpdatePassword extends AsyncTask<Void, Void, Void>  {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        if(signUp==null) {
-            signUp = new SignUp();
-            signUp.setViewMessage("unsuccessful");
-        }
-        EventBusService.getInstance().post(signUp);
+        EventBusService.getInstance().post(passwordReset);
     }
 }

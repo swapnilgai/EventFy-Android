@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class VerifyAccount implements Serializable {
     private String viewMsg;
     private SignUp signUp;
+    private String activityName;
 
     public SignUp getSignUp() {
         return signUp;
@@ -26,6 +27,14 @@ public class VerifyAccount implements Serializable {
 
     public void setViewMsg(String viewMsg) {
         this.viewMsg = viewMsg;
+    }
+
+    public String getActivityName() {
+        return activityName;
+    }
+
+    public void setActivityName(String activityName) {
+        this.activityName = activityName;
     }
 }
 

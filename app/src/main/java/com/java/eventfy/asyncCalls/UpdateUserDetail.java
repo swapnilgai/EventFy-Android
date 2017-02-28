@@ -32,7 +32,7 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... strings) {
 
-       // try {
+        try {
 
         Log.e(" url ", url);
 
@@ -53,10 +53,10 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
 
         Log.e("obj after : ", g.toJson(signUp));
 
-//        }catch (Exception e)
-//        {
-//            Log.e("exception : ", ""+e.getStackTrace());
-//        }
+        }catch (Exception e)
+        {
+            Log.e("exception : ", ""+e.getStackTrace());
+        }
         return null;
     }
 

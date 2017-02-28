@@ -3,9 +3,8 @@ package com.java.eventfy.asyncCalls;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.utils.CleanEntityObjects;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,38 +29,25 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... strings) {
 
-        signUp.setPassword(null);
-        signUp.setVerificationCode(null);
-        signUp.setUserId(null);
-        signUp.setComments(null);
-        signUp.setEvents(null);
-        signUp.setNotificationDetails(null);
-        signUp.setLocation(null);
+       try {
+           signUp = CleanEntityObjects.getInstance().clearSignUpObject(signUp);
 
+           RestTemplate restTemplate = new RestTemplate(true);
+           restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            String str = mapper.writeValueAsString(signUp);
-            Log.e("token is ","&&&&&& :: "+str);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+           HttpHeaders headers = new HttpHeaders();
+           headers.setContentType(MediaType.APPLICATION_JSON);
 
-        Log.e("url ", ""+url);
+           HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
 
+           ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
+           result = rateResponse.getBody();
 
-        RestTemplate restTemplate = new RestTemplate(true);
-        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+       }catch (Exception e){
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
-
-        ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
-        result = rateResponse.getBody();
-
+       }
         return null;
+
 
     }
 

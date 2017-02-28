@@ -30,6 +30,7 @@ import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.Home;
 import com.java.eventfy.R;
+import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.DeviceDimensions;
 import com.java.eventfy.utils.OnLocationEnableClickListner;
 import com.squareup.picasso.Picasso;
@@ -166,11 +167,11 @@ import static com.java.eventfy.R.string.edited;
                   Picasso.with(holder.itemView.getContext())
                           .load(event.getEventImageUrl())
                           .resize((DeviceDimensions.deviceWeidth+100), DeviceDimensions.deviceHeight/3)
-                          .placeholder(R.drawable.img_placeholder)
+                          .placeholder(R.drawable.logo)
                           .into(((ResultHolder) holder).eventImage);
 
                 ((ResultHolder)holder).eventName.setText(event.getEventName());
-                ((ResultHolder)holder).eventLocation.setText(event.getLocation().getName());
+                ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom(), event.getDateTime().getTimeZone()));
 
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());

@@ -31,6 +31,7 @@ import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.NotificationId;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.UserAccount.UpdateAccount;
+import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.Fragments.Notification;
@@ -77,10 +78,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Gson g = new Gson();
        // Log.e("object is : ", "????? : "+g.toJson(signUp));
 
-        Intent in = getIntent();
 
-        if(in.getSerializableExtra("user")!=null )
-        {
+        if(signUp.getNotificationId()!= null && signUp.getNotificationId().getRegId()!=null) {
             registerDeviceForNotification();
         }
 
@@ -108,7 +107,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         userName.setText(signUp.getUserName());
 
-        setNavigationDrawerUserData();
+        setNavigationDrawerUserData(signUp);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
@@ -123,7 +122,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         setupTabIcons();
     }
 
-    public void setNavigationDrawerUserData(){
+    public void setNavigationDrawerUserData(SignUp signUp){
 
         if(signUp.getImageUrl()!=null && signUp.getImageUrl().equals("default"))
             userImage.setImageResource(R.drawable.user_image);
@@ -291,7 +290,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     protected void onPause() {
         super.onPause();
         stopService(new Intent(this, com.java.eventfy.Services.GPSTracker.class));
-        //EventBusService.getInstance().unregister(this);
     }
 
     @Override
@@ -315,7 +313,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         String url = getString(R.string.ip_local)+getString(R.string.register_notification_detail);
         UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url);
         updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        EventBusService.getInstance().unregister(this);
     }
 
     public void deviceDimensions() {
@@ -355,11 +352,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
 
-        Log.e("string before ", "((((: "+json);
-
-        json = gson.toJson(signUp);
-
         Log.e("string after ", "((((: "+json);
+        editor.putString(getString(R.string.userObject), json);
+
+        editor.commit();
+    }
+
+
+    public void storeUserObject(SignUp signUp)
+    {
+
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+        editor = mPrefs.edit();
+
+        Gson gson = new Gson();
+        String json = gson.toJson(signUp);
+
         editor.putString(getString(R.string.userObject), json);
 
         editor.commit();
@@ -370,18 +378,45 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if(signUp == null)
             getUserObject();
 
-        signUp.setImageUrl(updateAccount.getSignUp().getImageUrl());
-        signUp.setUserName(updateAccount.getSignUp().getUserName());
-        setNavigationDrawerUserData();
+        if (updateAccount.getSignUp().getViewMessage() == null) {
+            setNavigationDrawerUserData(signUp);
+            storeUserObject(signUp);
+        }
     }
 
 
-    @Subscribe
-    public void getLocation(LocationNearby locationNearby) {
+    // verified account object return from server
 
-        if(signUp.getLocation() ==null){
-            location  = new Location();
-        }else {
+    @Subscribe
+    public void getUserObject(VerifyAccount verifyAccount ) {
+//        if (verifyAccount.getViewMsg() != null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_success))) {
+//            {
+//                signUp.setIsVerified("true");
+//                storeUserObject(signUp);
+//            }
+//        }
+
+        if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
+        }
+        else{
+
+            if(signUp==null)
+                 getUserObject();
+
+            signUp.setIsVerified("true");
+
+            storeUserObject(signUp);
+        }
+
+
+    }
+
+    @Subscribe
+    public void getLocation (LocationNearby locationNearby){
+
+        if (signUp.getLocation() == null) {
+            location = new Location();
+        } else {
             location = signUp.getLocation();
             location.setDistance(signUp.getLocation().getDistance());
         }
@@ -390,7 +425,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         this.signUp.setLocation(location);
 
-     //   storeUserObject(editor);
+        //   storeUserObject(editor);
     }
 
 }

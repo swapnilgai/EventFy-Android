@@ -10,6 +10,7 @@ public class PasswordReset {
 
     private String userId;
     private String accessCode;
+    private String currentPassword;
     private String newPassword;
     private String viewMsg;
     private SignUp signUp;
@@ -23,6 +24,13 @@ public class PasswordReset {
         this.signUp = signUp;
     }
 
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
+    }
 
     public String getViewMsg() {
         return viewMsg;

@@ -81,6 +81,7 @@ public class CreatePublicEvent extends AppCompatActivity {
         signUp = getUserObject();
 
 
+
         if(event == null && signUp.getIsVerified().equals("false")){
             // Call from create event
                setErrorMessageToVerifyAccount();
@@ -106,6 +107,7 @@ public class CreatePublicEvent extends AppCompatActivity {
                     public void onClick(DialogInterface arg0, int arg1) {
 
                         VerifyAccount verifyAccount = new VerifyAccount();
+                        verifyAccount.setActivityName(getString(R.string.activity_CreatePublicEvent));
                         verifyAccount.setSignUp(signUp);
                         EventBusService.getInstance().unregister(this);
                         Intent intent = new Intent(CreatePublicEvent.this, VerifySignUp.class);
@@ -184,8 +186,10 @@ public class CreatePublicEvent extends AppCompatActivity {
                                 eventImageIV.setImageResource(R.drawable.logo);
                                 eventImageBM = null;
                                 // sending fake object to avoid over writing of image after removal
-                                double d = 2.0;
-                                EventBusService.getInstance().post(d);
+                                Boolean fakeObjectFlag= true;
+
+                                Log.e("sending fake obhect ", " : "+fakeObjectFlag);
+                                EventBusService.getInstance().post(fakeObjectFlag);
                                 break;
                             case R.id.replace_profile_pic:
                                 //handle menu2 click
@@ -215,7 +219,7 @@ public class CreatePublicEvent extends AppCompatActivity {
 
 
                                 // EventBusService.getInstance().post(imageViewEntity);
-                                EventBusService.getInstance().unregister(this);
+                                //EventBusService.getInstance().unregister(this);
 
                                 break;
 
