@@ -44,6 +44,7 @@ public class DownloadTask extends AsyncTask<Void, Void, Void> {
             Log.e("download "," MMMMMMM : "+url);
             // Fetching the data from web service
             data = UrlOperationsForDirection.getInstance().downloadUrl(url);
+
         }catch(Exception e){
             Log.e("Background Task "," MMMMMMM : "+e.toString());
         }

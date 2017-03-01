@@ -11,7 +11,6 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -34,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
 import com.java.eventfy.Entity.Events;
@@ -44,7 +42,6 @@ import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
-import com.java.eventfy.asyncCalls.DownloadTask;
 import com.java.eventfy.utils.CustomViewPager;
 import com.java.eventfy.utils.ImagePicker;
 import com.soundcloud.android.crop.Crop;
@@ -394,11 +391,6 @@ public class CreatePublicEvent extends AppCompatActivity {
             Intent intent = new Intent(CreatePublicEvent.this, EventInfoPublic.class);
             intent.putExtra(getString(R.string.event_for_eventinfo), createEvent.getEvents());
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            getUserObject();
-            DownloadTask downloadTask = new DownloadTask(new LatLng(signUp.getLocation().getLatitude(), signUp.getLocation().getLongitude()),
-                    new LatLng(createEvent.getEvents().getLocation().getLatitude(), createEvent.getEvents().getLocation().getLongitude()), createEvent.getEvents());
-            // Start downloading json data from Google Directions API
-            downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             finish();
             startActivity(intent);
         }

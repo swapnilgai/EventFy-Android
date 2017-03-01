@@ -194,17 +194,18 @@ public class VerifySignUp extends AppCompatActivity {
     public void getUserObject(SignUp signUp)
     {
         dismissProgressDialog();
-        if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_success)))
+        if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(signUp.getToken()))
         {
             Intent intent = new Intent(this, Home.class);
             intent.putExtra("user", signUp);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            finish();
             startActivity(intent);
         }
         else if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_fail))){
             invalidVerificationCodeLink.setVisibility(View.VISIBLE);
         }
-        else if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_fail))){
+        else if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_server_error))){
             toastMsg("Server error, please try again later");
         }
     }
@@ -226,14 +227,18 @@ public void resendVcodeStatus(String result)
     public void resendVcodeStatus(VerifyAccount verifyAccount) {
         dismissProgressDialog();
 
-        if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
-            toastMsg("Error while verifying account");
-            invalidVerificationCodeLink.setVisibility(View.VISIBLE);
-        }
-        else{
+        if(verifyAccount.getViewMsg().equals(signUp.getToken())){
             toastMsg("Congratulations, you'r account successfully updated");
             finish();
         }
+        else if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
+            toastMsg("Error while verifying account");
+            invalidVerificationCodeLink.setVisibility(View.VISIBLE);
+        }
+        else if (verifyAccount.getViewMsg().equals(getString(R.string.verify_account_server_error))){
+            toastMsg("Server error, please try again later");
+        }
+
     }
 
 

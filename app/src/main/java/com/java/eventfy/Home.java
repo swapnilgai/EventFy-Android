@@ -364,12 +364,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     {
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
-        signUp.setLocation(location);
-        Gson gson = new Gson();
-        String json = gson.toJson(signUp);
-        editor.putString(getString(R.string.userObject), json);
-        editor.commit();
-        Log.e("user object ", " LLLLLLL "+json);
+        if(signUp!=null && signUp.getUserId()!=null && signUp.getToken()!=null){
+            signUp.setLocation(location);
+            Gson gson = new Gson();
+            String json = gson.toJson(signUp);
+            editor.putString(getString(R.string.userObject), json);
+            editor.commit();
+            Log.e("user object ", " LLLLLLL "+json);
+    }
     }
 
 

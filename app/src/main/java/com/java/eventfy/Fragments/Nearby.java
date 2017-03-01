@@ -109,6 +109,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         transaction.commit();
 
         createLoadingObj();
+        createNoDataObj();
 
         getUserObject();
 
@@ -325,15 +326,16 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(true);
 
-            if(nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data))
+            if(nearbyEventData.getEventsList().get(0).getViewMessage()!=null && (nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data))
                     || nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_loading))
-                    || nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_connection_error))) {
+                    || nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_connection_error)))) {
 
                 this.eventsList = nearbyEventData.getEventsList();
                 bindAdapter(adapter, this.eventsList);
             }
             else{
                 for(Events events : nearbyEventData.getEventsList()){
+                    removeNoDataOrLoadingObj();
                 DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
                         new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
                     // Start downloading json data from Google Directions API
@@ -350,6 +352,12 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             //TODO apply logic for event bot in reach (event created in pune should not show up in nearby)
 
             removeNoDataOrLoadingObj();
+            getUserObject();
+            Log.e(" in create event ", " **************************************************************** ");
+            DownloadTask downloadTask = new DownloadTask(new LatLng(signUp.getLocation().getLatitude(), signUp.getLocation().getLongitude()),
+                    new LatLng(createEvent.getEvents().getLocation().getLatitude(), createEvent.getEvents().getLocation().getLongitude()), createEvent.getEvents());
+            // Start downloading json data from Google Directions API
+            downloadTask.execute();
 
           //  eventsList.add(createEvent.getEvents());
         }
@@ -580,14 +588,14 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         Log.e("getting away onject : ", ""+awayObj.getDistance());
         Log.e("event list size before : ", ""+eventsList.size());
+        Log.e("event list size before : ", " ******* : "+eventsList.contains(awayObj) );
 
         if(!eventsList.contains(awayObj) && awayObj.getDistance()!=null && awayObj.getDistance().length()>=1) {
             awayObj.getEvents().setEventAwayDistanve(awayObj.getDistance());
             awayObj.getEvents().setEventAwayDuration(awayObj.getDuration());
             eventsList.add(awayObj.getEvents());
             bindAdapter(adapter, this.eventsList);
-            adapter.notifyDataSetChanged();
-        }else if( awayObj.getDistance()==null || awayObj.getDistance().length()<=1){
+        }else if( awayObj.getDistance()==null){
 
             if(eventsList.contains(awayObj.getEvents()))
                 eventsList.remove(awayObj.getEvents());
@@ -598,6 +606,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             bindAdapter(adapter, this.eventsList);
         }
         Log.e("event list size after : ", ""+eventsList.size());
+        Gson g = new Gson();
+        Log.e("event list size after : ", ""+g.toJson(eventsList.get(0)));
     }
 
 

@@ -57,6 +57,7 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
         createEvent.setViewMsg(event.getViewMessage());
         event.setViewMessage(null);
         createEvent.setEvents(event);
+        Log.e("sending event : ", " 888888888888888888888888888888888888888 ");
         EventBusService.getInstance().post(createEvent);
     }
 }
