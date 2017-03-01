@@ -124,7 +124,7 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
         if(signUp!=null && Url!=null)
         {
             signUp.setImageUrl(Url);
-            UpdateUserDetail updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserImage);
+            UpdateUserDetail updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserImage, context);
             updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (signUp!=null){
             signUp.setViewMessage("unsuccessfull");

@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.facebook.CallbackManager;
 import com.facebook.CallbackManager.Factory;
 import com.facebook.FacebookCallback;
@@ -39,16 +40,12 @@ import com.java.eventfy.asyncCalls.SignUpAction;
 import com.java.eventfy.utils.SecurityOperations;
 
 import org.greenrobot.eventbus.Subscribe;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class Login extends AppCompatActivity  {
 
@@ -64,6 +61,11 @@ public class Login extends AppCompatActivity  {
     private String passwordTemp;
     private SecurityOperations securityOperations;
     private ProgressDialog progressDialog;
+    private RobotoTextView invalidUsernamePasswordMsg;
+
+    public ProgressDialog getProgressDialog() {
+            return progressDialog;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,43 +77,9 @@ public class Login extends AppCompatActivity  {
 
         setProgressDialog();
 
-
-        Log.e("My time zone is : ", ""+TimeZone.getDefault().getID());
-        DateTime utc = new DateTime(DateTimeZone.UTC);
-        DateTimeZone fromTimeZone  = DateTimeZone.forID(TimeZone.getDefault().getID());
-
-        DateTime losAngelesDateTime = utc.toDateTime(fromTimeZone);
-
-        Log.e("My current date  ", ""+losAngelesDateTime);
-
-
-        final DateTimeZone toTimeZone = DateTimeZone.forID("Europe/Paris");
-        final DateTime dateTime = new DateTime(losAngelesDateTime, toTimeZone);
-
-
-        Log.e("time in india ", ""+dateTime);
-
-
-        DateTime.Property pDoW = losAngelesDateTime.dayOfWeek();
-        String strTF = pDoW.getAsText(Locale.ENGLISH);
-
-
-//
-//        Log.e("My current time is :::", ""+ strTF);
-//
-//        DateTime.Property pDoW = losAngelesDateTime.dayOfWeek();
-//        String strTF = pDoW.getAsText(Locale.ENGLISH);
-
-
-
-        Log.e("My current time is :::", ""+ strTF);
-
-
-
         if(getUserObject()!=null){
             redirectToHomeActivity();
         }
-
 
         fbLoginBt = (LoginButton) findViewById(R.id.facebook_login_button);
         fbLoginBt.setReadPermissions("email");
@@ -129,6 +97,7 @@ public class Login extends AppCompatActivity  {
         loginButton = (Button) findViewById(R.id.btn_login);
         passwordText = (EditText) findViewById(R.id.input_password);
         forgotPasswordLink  = (TextView) findViewById(R.id.link_reset_password);
+        invalidUsernamePasswordMsg  = (RobotoTextView) findViewById(R.id.invalid_username_password);
 
         passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -342,12 +311,14 @@ public class Login extends AppCompatActivity  {
 
     private void serverCallFbLogin(SignUp signUp) {
 
+        invalidUsernamePasswordMsg.setVisibility(View.GONE);
         String url = getString(R.string.ip_local)+getString(R.string.login_action_facebook);
         SignUpAction loginAction = new SignUpAction(signUp,url);
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void serverCallLogin(User user) {
 
+        invalidUsernamePasswordMsg.setVisibility(View.GONE);
         passwordTemp = user.getPassword();
         securityOperations = new SecurityOperations();
         user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
@@ -360,7 +331,7 @@ public class Login extends AppCompatActivity  {
     public void getUserObject(SignUp signUp)
     {
         dismissProgressDialog();
-        if(signUp!=null && signUp.getToken()!=null)
+        if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.login_success)))
         {
             EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, Home.class);
@@ -369,8 +340,12 @@ public class Login extends AppCompatActivity  {
             intent.putExtra("user", signUp);
             startActivity(intent);
         }
-        else {
+        else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.login_fail))){
             Toast.makeText(Login.this, "Inavlid Username/ Password", Toast.LENGTH_LONG).show();
+            invalidUsernamePasswordMsg.setVisibility(View.VISIBLE);
+        }
+        else{
+            Toast.makeText(Login.this, "Server error, please try again", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -401,13 +376,5 @@ public class Login extends AppCompatActivity  {
         return json;
     }
 
-    public static void convertTimeZones(final String fromTimeZoneString,
-                                        final String toTimeZoneString, final String fromDateTime) {
-        final DateTimeZone fromTimeZone = DateTimeZone.forID(fromTimeZoneString);
-        final DateTimeZone toTimeZone = DateTimeZone.forID(toTimeZoneString);
-        final DateTime dateTime = new DateTime(fromDateTime, fromTimeZone);
-
-
-    }
 }
 

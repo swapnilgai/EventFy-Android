@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.UserAccount.PasswordReset;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -24,7 +23,6 @@ public class ResetPasswordAction extends AsyncTask<Void, Void, Void> {
     private String url;
     private PasswordReset passwordReset;
     private PasswordReset passwordResetTemp;
-    private SignUp signUp;
 
     public ResetPasswordAction(PasswordReset passwordReset, String url) {
         this.url = url;
@@ -64,13 +62,9 @@ public class ResetPasswordAction extends AsyncTask<Void, Void, Void> {
 
         Gson g = new Gson();
 
-
-        if(passwordResetTemp!=null && passwordResetTemp.getSignUp()!=null && passwordResetTemp.getSignUp().getToken()!=null) {
-            Log.e("obj : ", ""+g.toJson(passwordResetTemp));
+        if(passwordResetTemp!=null) {
             EventBusService.getInstance().post(passwordResetTemp);
         }else{
-            passwordReset.setSignUp(null);
-            passwordReset.setViewMsg(passwordResetTemp.getViewMsg());
             EventBusService.getInstance().post(passwordReset);
         }
     }

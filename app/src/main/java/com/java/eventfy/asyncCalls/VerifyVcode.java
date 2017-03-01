@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
@@ -20,10 +21,12 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
     private SignUp signUp;
     private String url;
     private String result;
+    private VerifyAccount verifyAccount;
 
     public VerifyVcode(SignUp signUp, String url) {
         this.signUp = signUp;
         this.url = url;
+        verifyAccount = new VerifyAccount();
     }
 
     @Override
@@ -43,9 +46,10 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
             ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
             result = rateResponse.getBody();
 
+            signUp.setViewMessage(result);
+
         }catch (Exception e)
         {
-
         }
         return null;
 
@@ -54,8 +58,7 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(!(result!=null && result.equals(signUp.getToken())))
-            signUp.setVerificationCode(null);
+
             // send to signup activity
             EventBusService.getInstance().post(signUp);
     }

@@ -14,11 +14,16 @@
 
 
     <!-- Web servises url -->
-    <string name="ip_local">http://192.168.0.6:8080/EventFy</string>
-    <string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>
+    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
+    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
 
-    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
-    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
+    <!--<string name="ip_local">http://10.67.70.107:8080/EventFy</string>-->
+    <!--<string name="ip_localhost">http://10.67.70.107:8080/EventFy</string>-->
+
+
+    <!---->
+    <string name="ip_local">https://eventfy.herokuapp.com</string>
+    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -108,21 +113,6 @@
     <string name="resend_vcode">Did not received code? Click to resend"</string>
     <!--  End  -->
 
-    <!-- Search place autocomplete button -->
-       <string name="place_details">
-    <![CDATA[
-        <b>%1$s</b>
-        <br/>
-        <i>Place Id: %2$s</i>
-        <br/>
-        Address: %3$s
-        <br/>
-        Phone: %4$s
-        <br/>
-        Website: %5$s
-    ]]>
-    </string>
-
     <string-array name="visiblity_miles_arrays">
         <item>1</item>
         <item>2</item>
@@ -211,6 +201,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="or">OR</string>
+    <string name="invalid_username_password">OR</string>
     <string name="login_text">LOGIN</string>
     <string name="no_account">No account yet? Create one</string>
     <string name="forgot_password">Forget password?</string>
@@ -227,10 +218,35 @@
     <string name="verify_account">verify_account</string>
     <string name="verify_account_success">verify_account_success</string>
     <string name="verify_account_fail">verify_account_fail</string>
+    <string name="verify_account_server_error">verify_account_server_error</string>
 
     <string name="signup_success">signup_success</string>
     <string name="signup_account_already_present">signup_account_already_present</string>
     <string name="signup_server_error">signup_server_error</string>
+
+    <string name="create_event_success">create_event_success</string>
+    <string name="create_event_fail">create_event_fail</string>
+    <string name="create_event_server_error">create_event_server_error</string>
+
+    <string name="verification_code_generate_success">verification_code_generate_success</string>
+    <string name="verification_code_generate_fail">verification_code_generate_fail</string>
+    <string name="verification_code_generate_server_error">verification_code_generate_server_error</string>
+
+    <string name="user_account_update_success">user_account_update_success</string>
+    <string name="user_account_update_fail">user_account_update_fail</string>
+    <string name="user_account_update_server_error">user_account_update_server_error</string>
+
+    <string name="reset_password_success">reset_password_success</string>
+    <string name="reset_password_fail">reset_password_fail</string>
+    <string name="reset_password_server_error">reset_password_server_error</string>
+
+    <string name="access_code_generation_success">access_code_generation_success</string>
+    <string name="access_code_generation_fail">access_code_generation_fail</string>
+    <string name="access_code_generation_error">access_code_generation_error</string>
+
+    <string name="login_success">login_success</string>
+    <string name="login_fail">login_fail</string>
+    <string name="login_server_error">login_server_error</string>
 
     <!-- Activity names -->
 

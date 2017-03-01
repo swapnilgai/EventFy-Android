@@ -1,5 +1,6 @@
 package com.java.eventfy.asyncCalls;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -7,6 +8,7 @@ import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.UserAccount.UpdateAccount;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.R;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,10 +25,12 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
     private SignUp signUp;
     private String url;
     private String result;
+    private Context context;
 
-    public UpdateUserDetail(SignUp signUp, String url) {
+    public UpdateUserDetail(SignUp signUp, String url, Context context) {
         this.signUp = signUp;
         this.url = url;
+        this.context = context;
     }
 
     @Override
@@ -65,7 +69,7 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
         if(signUp==null) {
             signUp = new SignUp();
-            signUp.setViewMessage("unsuccessfull");
+            signUp.setViewMessage(context.getString(R.string.user_account_update_server_error));
         }
         UpdateAccount updateAccount = new UpdateAccount();
         updateAccount.setSignUp(signUp);

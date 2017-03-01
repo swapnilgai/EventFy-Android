@@ -125,10 +125,6 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         createProgressDialog();
 
-        Log.e("admin user id = ", ""+event.getAdmin().getUserId());
-
-        Log.e("user id = ", ""+signUp.getUserId());
-
         if(!signUp.getUserId().equals(event.getAdmin().getUserId()))
             adminOptionLayout.setVisibility(View.GONE);
         else{

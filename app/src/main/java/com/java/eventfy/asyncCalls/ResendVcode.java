@@ -6,7 +6,6 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
-import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -62,8 +61,6 @@ public class ResendVcode extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(result == null)
-            result = signUp.getToken();
-        EventBusService.getInstance().post(result);
+       // EventBusService.getInstance().post(result);
     }
 }

@@ -128,7 +128,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private CircleButton currentLocationBtn;
     private SignUp signUp;
     private TextView eventLocationTv;
-    private  String flag;
     private Location eventLocation = new Location();
     private ViewPager viewPager;
     private Button cancleBtn;
@@ -373,7 +372,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 final Place place = places.get(0);
                 if(place!=null) {
                     getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
-                    setUpMarker();
+                    //setUpMarker();
                 }
                 places.release();
             }
@@ -539,12 +538,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         }else if(event.getViewMessage() == null && event.getEventId() != -1)
         {
            // EventBusService.getInstance().unregister(this);
-            Toast.makeText(getActivity(), "Event created", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
-            intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            view.getContext().startActivity(intent);
-
         }
     }
 
@@ -589,6 +582,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         Log.e("location lat : ", ""+latitude);
         Log.e("location lon : ", ""+longitude);
 
+
+        eventLocation.setLatitude(latitude);
+        eventLocation.setLongitude(longitude);
+
+        eventObj.setLocation(eventLocation);
+        locationMapViewLinearLayout.setVisibility(View.VISIBLE);
+        locationInfoLinearLayout.setVisibility(View.VISIBLE);
+        locationEditTextLinearLayout.setVisibility(View.GONE);
+
+        setUpMarker();
+
         try {
             addresses = gcd.getFromLocation(latitude, longitude, 1);
         } catch (IOException e) {
@@ -604,18 +608,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 }
             }
 
-            eventLocation.setLatitude(latitude);
-            eventLocation.setLongitude(longitude);
-            eventLocation.setName(outputAddress);
-            eventObj.setLocation(eventLocation);
-            locationMapViewLinearLayout.setVisibility(View.VISIBLE);
-            locationInfoLinearLayout.setVisibility(View.VISIBLE);
-            locationEditTextLinearLayout.setVisibility(View.GONE);
             eventLocationTv.setText(outputAddress);
             mAutocompleteView.setText(outputAddress);
             eventLocationTv.setText(outputAddress);
-            setUpMarker();
-
+            eventLocation.setName(outputAddress);
         }
         else
             Toast.makeText(getActivity(),"Enable to get you address, please Re-enter",Toast.LENGTH_SHORT).show();
@@ -669,8 +665,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         progressDialog.dismiss();
     }
     public void setUpMarker() {
+
+        Log.e("location lat M : ", ""+eventObj.getLocation().getLatitude());
+        Log.e("location lon M : ", ""+eventObj.getLocation().getLongitude());
+
+
         int radius = getZoonValue(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
         mapView.setVisibility(View.VISIBLE);
+
+
 
         LatLng myLaLn = new LatLng(eventObj.getLocation().getLatitude(), eventObj.getLocation().getLongitude());
 

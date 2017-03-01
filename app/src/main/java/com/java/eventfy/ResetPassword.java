@@ -107,30 +107,31 @@ public class ResetPassword extends AppCompatActivity {
 
     @Subscribe
     public void getPasswordResetObj(PasswordReset passwordReset){
-        if(passwordReset.getSignUp()!=null && passwordReset.getSignUp().getToken()!=null){
-            // TODO apply login logic to show home screen
 
-            EventBusService.getInstance().unregister(this);
-            Intent intent = new Intent(this, Home.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra("user", passwordReset.getSignUp());
-            startActivity(intent);
+        if(passwordReset.getViewMsg()!= null) {
+            if (passwordReset.getViewMsg().equals(getString(R.string.reset_password_success))) {
+                // TODO apply login logic to show home screen
+                EventBusService.getInstance().unregister(this);
+                Intent intent = new Intent(this, Home.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("user", passwordReset.getSignUp());
+                startActivity(intent);
 
-        }else if(passwordReset.getViewMsg()!= null && passwordReset.getViewMsg().equals("Success")){
-            accessCodeLinearLayout.setVisibility(View.GONE);
-            passwordResetLinearLayout.setVisibility(View.VISIBLE);
-        }
-        else if(passwordReset.getViewMsg()!= null && passwordReset.getViewMsg().equals("No Account")){
+            } else if (passwordReset.getViewMsg().equals(getString(R.string.access_code_generation_success))) {
+                accessCodeLinearLayout.setVisibility(View.GONE);
+                passwordResetLinearLayout.setVisibility(View.VISIBLE);
+            } else if (passwordReset.getViewMsg().equals(getString(R.string.access_code_generation_fail))) {
                 Toast.makeText(ResetPassword.this, "Account not present, please signup to start", Toast.LENGTH_LONG).show();
                 signUpLink.setVisibility(View.VISIBLE);
-        }
-        else if(passwordReset.getViewMsg()!= null && passwordReset.getViewMsg().equals("Error")){
-            Toast.makeText(ResetPassword.this, "Error, please try again", Toast.LENGTH_LONG).show();
-        }
-        else if(passwordReset.getViewMsg()!= null && passwordReset.getViewMsg().equals("Wrong Code")){
-            Toast.makeText(ResetPassword.this, "Wrong code, please try again", Toast.LENGTH_LONG).show();
-        }
+            } else if ((passwordReset.getViewMsg().equals(R.string.access_code_generation_error)
+                    || passwordReset.getViewMsg().equals(R.string.reset_password_server_error))) {
 
+                Toast.makeText(ResetPassword.this, "Server error, please try again", Toast.LENGTH_LONG).show();
+
+            } else if (passwordReset.getViewMsg().equals(R.string.reset_password_fail)) {
+                Toast.makeText(ResetPassword.this, "Wrong code, please try again", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override

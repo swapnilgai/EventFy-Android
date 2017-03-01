@@ -66,6 +66,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private SecurityOperations securityOperations;
     private Location location;
     private SharedPreferences.Editor editor;
+    private Location userLoccation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +79,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Gson g = new Gson();
        // Log.e("object is : ", "????? : "+g.toJson(signUp));
 
-
+        userLoccation = new Location();
         if(signUp.getNotificationId()!= null && signUp.getNotificationId().getRegId()!=null) {
             registerDeviceForNotification();
         }
@@ -359,6 +360,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
 
+    public void storeUserLocation(Location location)
+    {
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        signUp.setLocation(location);
+        Gson gson = new Gson();
+        String json = gson.toJson(signUp);
+        editor.putString(getString(R.string.userObject), json);
+        editor.commit();
+        Log.e("user object ", " LLLLLLL "+json);
+    }
+
+
     public void storeUserObject(SignUp signUp)
     {
 
@@ -375,15 +389,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Subscribe
     public void getUserObject(UpdateAccount updateAccount ) {
-        if(signUp == null)
-            getUserObject();
 
-        if (updateAccount.getSignUp().getViewMessage() == null) {
-            setNavigationDrawerUserData(signUp);
-            storeUserObject(signUp);
+        if (updateAccount.getSignUp().getViewMessage().equals(R.string.user_account_update_success)) {
+            setNavigationDrawerUserData(updateAccount.getSignUp());
+            storeUserObject(updateAccount.getSignUp());
         }
     }
-
 
     // verified account object return from server
 
@@ -413,19 +424,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Subscribe
     public void getLocation (LocationNearby locationNearby){
+        Log.e("Location in nearby : ", " LLLLLLL "+locationNearby );
 
-        if (signUp.getLocation() == null) {
-            location = new Location();
-        } else {
-            location = signUp.getLocation();
-            location.setDistance(signUp.getLocation().getDistance());
-        }
-        location.setLatitude(locationNearby.getLocation().getLatitude());
-        location.setLongitude(locationNearby.getLocation().getLongitude());
+        userLoccation.setLongitude(locationNearby.getLocation().getLongitude());
+        userLoccation.setLatitude(locationNearby.getLocation().getLatitude());
+        userLoccation.setDistance(signUp.getVisibilityMiles());
 
-        this.signUp.setLocation(location);
-
-        //   storeUserObject(editor);
+        storeUserLocation(userLoccation);
     }
 
 }

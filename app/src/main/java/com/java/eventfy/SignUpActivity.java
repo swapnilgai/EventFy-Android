@@ -168,6 +168,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.signup_server_error))){
             toastMsg("Error at server, please try again");
     }
+        signUp.setViewMessage(null);
         this.signUp = signUp;
     }
 

@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.Entity.VerificationCode;
@@ -36,6 +36,7 @@ public class VerifySignUp extends AppCompatActivity {
     private TextView resendVcodelink;
     private VerifyAccount verifyAccount;
     private TextView skipLink;
+    private RobotoTextView invalidVerificationCodeLink;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,9 @@ public class VerifySignUp extends AppCompatActivity {
         resendVcodelink = (TextView) findViewById(R.id.link_resend_vcode);
 
         skipLink = (TextView) findViewById(R.id.link_skip_verification);
+
+        invalidVerificationCodeLink = (RobotoTextView) findViewById(R.id.link_invalid_verification_code);
+
         mCodeSendButton.setEnabled(true);
 
         if(verifyAccount!=null){
@@ -189,26 +193,33 @@ public class VerifySignUp extends AppCompatActivity {
     @Subscribe
     public void getUserObject(SignUp signUp)
     {
-        Log.e("in verifysignup signup ", "&&&&&&&");
         dismissProgressDialog();
-        if(signUp.getVerificationCode()!=null)
+        if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_success)))
         {
             Intent intent = new Intent(this, Home.class);
             intent.putExtra("user", signUp);
-
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
-        else{
-            Toast.makeText(getApplicationContext(), "Inavlid Verification Code", Toast.LENGTH_LONG);
+        else if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_fail))){
+            invalidVerificationCodeLink.setVisibility(View.VISIBLE);
+        }
+        else if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_fail))){
+            toastMsg("Server error, please try again later");
         }
     }
     //From resend asyncall
 @Subscribe
 public void resendVcodeStatus(String result)
 {
-    Log.e("in verifysignup string ", "&&&&&&&");
-        dismissProgressDialog();
+    dismissProgressDialog();
+    if(result.equals(getString(R.string.verification_code_generate_success)))
+        toastMsg("Verification code has been sent successfully");
+    else if(result.equals(getString(R.string.verification_code_generate_fail))){
+        invalidVerificationCodeLink.setVisibility(View.VISIBLE);
+    }
+    else if(result.equals(getString(R.string.verification_code_generate_server_error)))
+        toastMsg("Server error, please try again later");
 }
 
     @Subscribe
@@ -217,6 +228,7 @@ public void resendVcodeStatus(String result)
 
         if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
             toastMsg("Error while verifying account");
+            invalidVerificationCodeLink.setVisibility(View.VISIBLE);
         }
         else{
             toastMsg("Congratulations, you'r account successfully updated");
@@ -232,6 +244,7 @@ public void resendVcodeStatus(String result)
 
     private void serverCall(SignUp signUp) {
         setProgressDialog();
+        invalidVerificationCodeLink.setVisibility(View.INVISIBLE);
         String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
         VerifyVcode verifyVcode = new VerifyVcode(signUp,url);
         verifyVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -239,6 +252,8 @@ public void resendVcodeStatus(String result)
     private void serverCallToResendVcode(SignUp signUp) {
         if(verifyAccount==null)
             setProgressDialog();
+        invalidVerificationCodeLink.setVisibility(View.INVISIBLE);
+
         String url = getString(R.string.ip_local)+getString(R.string.verification_code_get);
         ResendVcode resendVcode = new ResendVcode(signUp,url);
         resendVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -246,6 +261,8 @@ public void resendVcodeStatus(String result)
 
     private void serverCallToVerifyAccount(VerifyAccount verifyAccount) {
         setProgressDialog();
+        invalidVerificationCodeLink.setVisibility(View.INVISIBLE);
+
         String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
         VerifyMyAccount verifyMyAccount = new VerifyMyAccount(verifyAccount,url, getApplicationContext());
         verifyMyAccount.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

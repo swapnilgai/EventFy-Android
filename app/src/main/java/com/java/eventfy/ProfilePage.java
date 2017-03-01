@@ -381,10 +381,7 @@ public class ProfilePage extends AppCompatActivity {
     public void getUserObject(UpdateAccount updateAccount) {
         SignUp signUp = updateAccount.getSignUp();
 
-        if(signUp.getViewMessage() == null) {
-             mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
-             editor = mPrefs.edit();
-
+        if(signUp.getViewMessage().equals(R.string.user_account_update_success)) {
             if(signUp.getIsVerified().equals("false")){
                 verifyUserAccount.setImageResource(R.drawable.not_verified);
             }
@@ -395,8 +392,11 @@ public class ProfilePage extends AppCompatActivity {
             dismissProgressDialog();
             toastMsg("Updated successfully");
 
-        }else{
-            toastMsg("Error, please try again");
+        }else if(signUp.getViewMessage().equals(R.string.user_account_update_fail)){
+            toastMsg("Error, please check user detail");
+        }
+        else if(signUp.getViewMessage().equals(R.string.user_account_update_server_error)){
+            toastMsg("Server error, please try again later");
         }
     }
 
@@ -408,7 +408,7 @@ public class ProfilePage extends AppCompatActivity {
             UploadImage uploadImage = new UploadImage(urlForUpdateUserData, signUp, eventImageBM);
             uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }else {
-            updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserData);
+            updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserData, getApplicationContext());
             updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }

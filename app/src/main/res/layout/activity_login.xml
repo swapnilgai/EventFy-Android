@@ -70,6 +70,16 @@
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/invalid_username_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:text="@string/or"
+            android:textColor="@color/colorErrorRed"
+            android:textSize="13sp" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login"
             android:layout_width="match_parent"

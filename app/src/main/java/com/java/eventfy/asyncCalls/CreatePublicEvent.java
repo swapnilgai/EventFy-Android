@@ -3,9 +3,8 @@ package com.java.eventfy.asyncCalls;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -23,6 +22,7 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
 
     private String url;
     private Events event;
+
    // private String flag;
 
 
@@ -46,7 +46,6 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
 
             Log.e(" event Obj before:  ", new Gson().toJson(event));
         }catch (Exception e){
-            Log.e(" ((((((  ", " in exception ****** ");
         }
         return null;
     }
@@ -54,19 +53,10 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        Log.e(" &&& ", "eventis "+event.getEventId());
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            String str = mapper.writeValueAsString(event);
-            Log.e("event object post ","&&&&&& :: "+str);
-
-            // signUp.getEvents().get(0).setEventId(-1);
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        EventBusService.getInstance().post(event);
+        CreateEvent createEvent = new CreateEvent();
+        createEvent.setViewMsg(event.getViewMessage());
+        event.setViewMessage(null);
+        createEvent.setEvents(event);
+        EventBusService.getInstance().post(createEvent);
     }
 }
