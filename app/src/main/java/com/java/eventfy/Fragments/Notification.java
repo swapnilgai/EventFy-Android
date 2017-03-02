@@ -82,6 +82,7 @@ public class Notification extends Fragment {
         createLoadingObj();
         Log.e("notification list ", "**** "+notificationList.size());
 
+        removeNoData();
         if(notificationList==null) {
             addLoading();
             setverCallToGetNotification();
@@ -94,6 +95,7 @@ public class Notification extends Fragment {
         else{
             swipeRefreshLayoutNotification.setEnabled(true);
             swipeRefreshLayoutNotification.setRefreshing(false);
+
         }
         bindAdapter(adapterNotification, notificationList);
         // Initialize SwipeRefreshLayout
@@ -110,6 +112,12 @@ public class Notification extends Fragment {
         });
         super.onSaveInstanceState(savedInstanceState);
         return view;
+    }
+
+    public void removeNoData(){
+        if(notificationList.get(0).getViewMessage()!=null && notificationList.get(0).getViewMessage().equals(getString(R.string.home_no_data))){
+            notificationList.remove(0);
+        }
     }
 
     public void setverCallToGetNotification() {

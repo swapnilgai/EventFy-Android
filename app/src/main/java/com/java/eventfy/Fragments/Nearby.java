@@ -35,6 +35,7 @@ import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
+import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
@@ -116,6 +117,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
+
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
@@ -126,7 +128,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
-        addLoading();
         bindAdapter(adapter, eventsList);
 
         // Initialize SwipeRefreshLayout
@@ -217,7 +218,11 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         if(!gps.canGetLocation()) {
             presentNoLocationView();
+        }else{
+
+            addLoading();
         }
+        bindAdapter(adapter, eventsList);
     }
 
 
@@ -232,7 +237,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         events.setViewMessage(getContext().getString(R.string.home_no_location));
         eventsList.add(events);
 
-        bindAdapter(adapter, eventsList);
         stopServices();
     }
 
@@ -261,9 +265,13 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                 }
             }
 
-            if(index!=-1 && originalEvent!=null)
-                updateEditedEvent(originalEvent, editEvent.getEvents(), index);
+//            if(index!=-1 && originalEvent!=null)
+//                updateEditedEvent(originalEvent, editEvent.getEvents(), index);
 
+            DownloadTask downloadTask = new DownloadTask(new LatLng(signUp.getLocation().getLatitude(), signUp.getLocation().getLongitude()),
+                    new LatLng(editEvent.getEvents().getLocation().getLatitude(), editEvent.getEvents().getLocation().getLongitude()), editEvent.getEvents());
+            // Start downloading json data from Google Directions API
+            downloadTask.execute();
             // int index = getEventIndex(editEvent.getEvents());
 
         }
@@ -274,15 +282,10 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
     @UiThread
-    public void updateEditedEvent(Events originalEvents, Events editedEvent, int index) {
+    public void updateEditedEvent(Events editedEvent, int index) {
 
         editedEvent.setViewMessage(null);
-        Log.e("adapter Size a l :  : ",""+eventsList.size());
         eventsList.set(index, editedEvent);
-        Log.e("index :  : ",""+index);
-
-        Log.e("adapter Size a :  : ",""+eventsList.size());
-
         bindAdapter(adapter, this.eventsList);
 
         adapter.notifyDataSetChanged();
@@ -353,7 +356,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
             removeNoDataOrLoadingObj();
             getUserObject();
-            Log.e(" in create event ", " **************************************************************** ");
             DownloadTask downloadTask = new DownloadTask(new LatLng(signUp.getLocation().getLatitude(), signUp.getLocation().getLongitude()),
                     new LatLng(createEvent.getEvents().getLocation().getLatitude(), createEvent.getEvents().getLocation().getLongitude()), createEvent.getEvents());
             // Start downloading json data from Google Directions API
@@ -364,8 +366,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     }
     @Subscribe
-    public void getEventAfterUnregistratation(Events events)
+    public void getEventAfterUnregistratation(RegisterEvent registerEvent)
     {
+       Events events =    registerEvent.getEvents();
         int index = -1;
         Events changedEvent = null;
         // Remove user from event to reflect icon for RSVP button
@@ -436,6 +439,17 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         super.onResume();
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
+
+        Log.e("in resume neatrby : ", "  *******************************  ");
+
+        Log.e("gps: ", "  *******************************  "+gps);
+
+        if(gps!= null && eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location))){
+            removeAll();
+            getLocationAndInitServices();
+
+            Log.e("in resume neatrby : ", "  in  *******************************  ");
+        }
     }
 
     @Override
@@ -590,12 +604,17 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         Log.e("event list size before : ", ""+eventsList.size());
         Log.e("event list size before : ", " ******* : "+eventsList.contains(awayObj) );
 
-        if(!eventsList.contains(awayObj) && awayObj.getDistance()!=null && awayObj.getDistance().length()>=1) {
+        if(!eventsList.contains(awayObj.getEvents()) && awayObj.getDistance()!=null && awayObj.getDistance().length()>=1) {
             awayObj.getEvents().setEventAwayDistanve(awayObj.getDistance());
             awayObj.getEvents().setEventAwayDuration(awayObj.getDuration());
             eventsList.add(awayObj.getEvents());
             bindAdapter(adapter, this.eventsList);
-        }else if( awayObj.getDistance()==null){
+        }
+        else if(eventsList.contains(awayObj.getEvents()) &&  awayObj.getDistance()!=null){
+            int index = getEventIndex(awayObj.getEvents());
+            updateEditedEvent(awayObj.getEvents(),index);
+        }
+        else if( awayObj.getDistance()==null){
 
             if(eventsList.contains(awayObj.getEvents()))
                 eventsList.remove(awayObj.getEvents());

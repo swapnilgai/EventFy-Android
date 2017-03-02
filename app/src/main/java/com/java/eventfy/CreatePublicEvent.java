@@ -37,11 +37,13 @@ import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
+import com.java.eventfy.Entity.LocationSudoEntity.LocationPublicEvent;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1;
 import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
+import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.utils.CustomViewPager;
 import com.java.eventfy.utils.ImagePicker;
 import com.soundcloud.android.crop.Crop;
@@ -327,6 +329,9 @@ public class CreatePublicEvent extends AppCompatActivity {
         } else if (requestCode == Crop.REQUEST_CROP) {
             handleCrop(resultCode, data, dest);
         }
+        else if(requestCode==0){
+            startService();
+        }
 
     }
 
@@ -407,6 +412,14 @@ public class CreatePublicEvent extends AppCompatActivity {
         return  gson.fromJson(json, SignUp.class);
     }
 
+    public void startService() {
+
+        GPSTracker gpsTracker = new GPSTracker(this, new LocationPublicEvent());
+
+        if(!gpsTracker.canGetLocation()) {
+            createEventFragment1.enableGpsPopUpOption();
+        }
+    }
 }
 
 

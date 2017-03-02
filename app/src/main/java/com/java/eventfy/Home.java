@@ -76,11 +76,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         getUserObject();
 
-        Gson g = new Gson();
-       // Log.e("object is : ", "????? : "+g.toJson(signUp));
-
         userLoccation = new Location();
-        if(signUp.getNotificationId()!= null && signUp.getNotificationId().getRegId()!=null) {
+        if(getNotificationId() == null) {
             registerDeviceForNotification();
         }
 
@@ -310,11 +307,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Subscribe
     public void getNotificationDetail(NotificationId notificationId)
     {
-        signUp.setNotificationId(notificationId);
-        String url = getString(R.string.ip_local)+getString(R.string.register_notification_detail);
-        UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url);
-        updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if(notificationId.getViewMessage().equals(getString(R.string.notification_id_gcm_register_success))){
+            String url = getString(R.string.ip_local)+getString(R.string.register_notification_detail);
+            UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url, getApplicationContext());
+            updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }else if(notificationId.getViewMessage().equals(getString(R.string.notification_id_server_register_success))){
+            storeNotificationId(notificationId);
+        }
     }
+
 
     public void deviceDimensions() {
         Display display = getWindowManager().getDefaultDisplay();
@@ -357,6 +358,27 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         editor.putString(getString(R.string.userObject), json);
 
         editor.commit();
+
+        if(signUp.getNotificationId()!=null)
+            storeNotificationId(signUp.getNotificationId());
+    }
+
+    public void storeNotificationId(NotificationId notificationId){
+        Log.e("in put notification id ", " [[[[ "+notificationId );
+
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.notofocationId), MODE_PRIVATE);
+        editor = mPrefs.edit();
+        editor.putString(getString(R.string.notofocationId), notificationId.getRegId());
+        editor.commit();
+    }
+
+    public String getNotificationId(){
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.notofocationId), MODE_PRIVATE);
+
+        String json = mPrefs.getString(getString(R.string.notofocationId), "");
+
+        Log.e("in get notification id ", " [[[[ "+json);
+        return json;
     }
 
 
@@ -387,6 +409,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         editor.putString(getString(R.string.userObject), json);
 
         editor.commit();
+
     }
 
     @Subscribe

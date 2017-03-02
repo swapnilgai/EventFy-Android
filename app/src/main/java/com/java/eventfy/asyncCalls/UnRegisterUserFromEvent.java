@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -57,13 +58,16 @@ public class UnRegisterUserFromEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(events==null) {
-            Events events = new Events();
-            events.setViewMessage(context.getString(R.string.home_no_data));
-        }
-        events.setDecesion(context.getString(R.string.not_attending));
+        RegisterEvent registerEvent = new RegisterEvent();
 
-        EventBusService.getInstance().post(events);
+        if(events==null) {
+            registerEvent.setDecesion(context.getString(R.string.event_register_server_error));
+        }else{
+            registerEvent.setDecesion(events.getDecesion());
+        }
+
+        registerEvent.setEvents(events);
+        EventBusService.getInstance().post(registerEvent);
 
         // calls getEventAfterUnregistratation() in NearBy, Invited
     }

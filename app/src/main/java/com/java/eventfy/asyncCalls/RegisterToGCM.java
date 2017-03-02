@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.java.eventfy.Entity.NotificationId;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.R;
 
 import java.io.IOException;
 
@@ -56,7 +57,9 @@ public class RegisterToGCM  extends AsyncTask<Void, Void, Void> {
             notificationId = new NotificationId();
             notificationId.setRegId(regid);
             // send to Home activity
+            notificationId.setViewMessage(context.getString(R.string.notification_id_gcm_register_success));
             EventBusService.getInstance().post(notificationId);
+
         }
 
     }

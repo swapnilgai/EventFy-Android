@@ -84,8 +84,12 @@
     <string name="invisible_event_btn">MAKE EVENT INVISIBLE</string>
     <string name="visible_event_btn">MAKE EVENT VISIBLE</string>
 
-    <string name="attending">Attending</string>
-    <string name="not_attending">Not Attending</string>
+    <string name="event_attending">event_attending</string>
+    <string name="event_not_attending">event_not_attending</string>
+    <string name="event_admin">event_admin</string>
+    <string name="event_register_server_error">event_register_server_error</string>
+
+
     <!--Home page view strings end-->
 
 
@@ -101,6 +105,7 @@
     <string name="create_event_flag">nearby_flag</string>
     <!--  User SharedPreferences data  -->
     <string name="userObject">userObject</string>
+    <string name="notofocationId">notofocationId</string>
 
     <string name="userName">userName</string>
     <string name="token">token</string>
@@ -247,6 +252,12 @@
     <string name="login_success">login_success</string>
     <string name="login_fail">login_fail</string>
     <string name="login_server_error">login_server_error</string>
+
+    <string name="notification_id_gcm_register_success">notification_id_gcm_register_success</string>
+    <string name="notification_id_server_register_success">notification_id_server_register_success</string>
+    <string name="notification_id_server_register_fail">notification_id_server_register_fail</string>
+    <string name="notification_id_server_register_server_error">notification_id_server_register_server_error</string>
+
 
     <!-- Activity names -->
 

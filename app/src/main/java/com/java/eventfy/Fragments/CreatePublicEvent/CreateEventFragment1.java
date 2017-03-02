@@ -1,11 +1,15 @@
 package com.java.eventfy.Fragments.CreatePublicEvent;
 
 
+import android.Manifest;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Address;
@@ -13,6 +17,7 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -20,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -75,7 +81,6 @@ import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -281,7 +286,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
               //  currentLocationBtn.setEnabled(false);
-                startService();
+                setLoading();
+                enableGpsPopUp();
                 // setting flag to avoid nearby and remote server call
               //  EventBusService.getInstance().post(getString(R.string.create_event_flag));
             }
@@ -310,8 +316,66 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
 
 
+    public void enableGpsPopUp()
+    {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
 
-        @Override
+        }else{
+            startService();
+        }
+
+    }
+
+
+    public void enableGpsPopUpOption(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        builder.setTitle("Enable GPS");
+        builder.setMessage("Please enable GPS");
+        builder.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
+            }
+        });
+        builder.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    startService();
+                } else {
+                    toastMsg("Error, Unable to get yout location");
+                }
+                return;
+            }
+            case 2: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    enableGpsPopUpOption();
+                } else {
+                    toastMsg("Error, Unable to get yout location");
+                }
+            }
+        }
+    }
+
+
+    @Override
         public void onStart() {
             super.onStart();
             if (mGoogleApiClient != null)
@@ -347,8 +411,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                         .getPlaceById(mGoogleApiClient, placeId);
                 placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-                Toast.makeText(getContext(), "Clicked: " + primaryText,
-                        Toast.LENGTH_SHORT).show();
+
             }
         };
 
@@ -367,17 +430,31 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     // Request did not complete successfully
                     places.release();
                     return;
+                }else{
+                    final Place place = places.get(0);
+                    if(place!=null) {
+
+                        getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
+                        if(eventObj.getLocation()==null)
+                            eventObj.setLocation(eventLocation);
+                        eventObj.getLocation().setName(String.valueOf(place.getAddress()));
+
+                        //setUpMarker();
+                    }
+                    places.release();
                 }
                 // Get the Place object from the buffer.
-                final Place place = places.get(0);
-                if(place!=null) {
-                    getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
-                    //setUpMarker();
-                }
-                places.release();
             }
         };
 
+public void setLoading(){
+    currentLocationBtn.setImageResource(R.drawable.icon_loading);
+    ObjectAnimator animator = ObjectAnimator.ofFloat(currentLocationBtn, "rotation", 0, 360);
+    animator.setRepeatCount(ValueAnimator.INFINITE);
+    animator.setInterpolator(new LinearInterpolator());
+    animator.setDuration(1000);
+    animator.start();
+}
 
     public Events createEentObject() {
 
@@ -480,7 +557,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     @Subscribe
     public void setBitmapToNull(Boolean flag) {
-        Log.e("sending to ", "++++++++++++++++++++++++ "+flag);
         this.eventImageBm = null;
         eventObj.setEventImageUrl("default");
     }
@@ -568,8 +644,11 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Subscribe
     public void getUserCurrentLocation(LocationPublicEvent locationPublicEvent) {
 
+        Log.e("location received : ", "         "+locationPublicEvent.getLocation());
         if (locationPublicEvent instanceof  LocationPublicEvent && locationPublicEvent.getLocation()!=null){
             getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.GPSTracker.class));
+            if(eventObj.getLocation()!=null)
+             eventObj.getLocation().setName(null);
             getAddressFromLatLang(locationPublicEvent.getLocation().getLatitude(), locationPublicEvent.getLocation().getLongitude());
 
         }
@@ -577,44 +656,76 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
 
     public void getAddressFromLatLang(double latitude, double longitude) {
-        Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
-        List<Address> addresses = null;
-        Log.e("location lat : ", ""+latitude);
-        Log.e("location lon : ", ""+longitude);
-
 
         eventLocation.setLatitude(latitude);
         eventLocation.setLongitude(longitude);
 
+        new AsyncTask<LatLng, Void, List<Address>>()
+        {
+            @Override
+            protected List<Address> doInBackground(LatLng... latLan)
+            {
+                try
+                {
+                    Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+                    List<Address> addresses = gcd.getFromLocation(latLan[0].latitude, latLan[0].longitude, 1);
+                    if (addresses.size() > 0)
+                        return addresses;
+
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                    // log exception or do whatever you want to do with it!
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(List<Address> addresses)
+            {
+
+                String outputAddress = "";
+
+                if (addresses!= null && addresses.size() > 0) {
+
+                    Log.e("in 1 ", " @@@@@ ");
+                    for(Address address : addresses) {
+
+                        for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                            outputAddress += " " + address.getAddressLine(i);
+                        }
+                    }
+                    setLocationOnMap(outputAddress);
+
+                }
+                else if(eventObj.getLocation()!=null && eventObj.getLocation().getName()!=null){
+                    setLocationOnMap(eventObj.getLocation().getName());
+                    Log.e("in 2 ", " @@@@@ ");
+                }
+                else {
+                    Log.e("in 3 ", " @@@@@ ");
+                    Toast.makeText(getActivity(), "Enable to get you address, please Re-enter", Toast.LENGTH_SHORT).show();
+                }
+
+                // do whatever you want/need to do with the address found
+                // remember to check first that it's not null
+            }
+        }.execute(new LatLng(latitude, longitude));
+
+    }
+
+    public void setLocationOnMap(String outputAddress){
+
+        eventLocationTv.setText(outputAddress);
+        mAutocompleteView.setText(outputAddress);
+        eventLocationTv.setText(outputAddress);
+        eventLocation.setName(outputAddress);
         eventObj.setLocation(eventLocation);
         locationMapViewLinearLayout.setVisibility(View.VISIBLE);
         locationInfoLinearLayout.setVisibility(View.VISIBLE);
         locationEditTextLinearLayout.setVisibility(View.GONE);
-
         setUpMarker();
-
-        try {
-            addresses = gcd.getFromLocation(latitude, longitude, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String outputAddress = "";
-        if (addresses!= null && addresses.size() > 0) {
-
-            for(Address address : addresses) {
-
-                for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    outputAddress += " " + address.getAddressLine(i);
-                }
-            }
-
-            eventLocationTv.setText(outputAddress);
-            mAutocompleteView.setText(outputAddress);
-            eventLocationTv.setText(outputAddress);
-            eventLocation.setName(outputAddress);
-        }
-        else
-            Toast.makeText(getActivity(),"Enable to get you address, please Re-enter",Toast.LENGTH_SHORT).show();
     }
 
     public void uploadImage()
@@ -925,7 +1036,16 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
 
     public void startService() {
+
         GPSTracker gpsTracker = new GPSTracker(getContext(), new LocationPublicEvent());
+
+        if(!gpsTracker.canGetLocation()) {
+            enableGpsPopUpOption();
+        }
+    }
+
+    public void toastMsg(String msg){
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     public void stopService() {

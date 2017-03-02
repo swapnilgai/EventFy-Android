@@ -1,5 +1,7 @@
 package com.java.eventfy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
@@ -10,6 +12,16 @@ public class NotificationId implements Serializable {
     private int id;
 
     private String regId;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String viewMessage;
+
+    public String getViewMessage() {
+        return viewMessage;
+    }
+
+    public void setViewMessage(String viewMessage) {
+        this.viewMessage = viewMessage;
+    }
 
     public String getRegId() {
         return regId;
@@ -18,4 +30,5 @@ public class NotificationId implements Serializable {
     public void setRegId(String regId) {
         this.regId = regId;
     }
+
 }

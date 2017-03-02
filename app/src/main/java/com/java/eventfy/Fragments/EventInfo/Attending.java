@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -153,50 +154,52 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     }
 
     @Subscribe
-    public void getEnrolledUserForEvent(Events events)
+    public void getEnrolledUserForEvent(RegisterEvent registerEvent)
     {
-        signUp = getUserObject();
-        viewPager.setCurrentItem(1, true);
-        if(userList.get(0).getViewMessage()!=null &&
-                (userList.get(0).getViewMessage().equals(getString(R.string.home_loading))
-                || userList.get(0).getViewMessage().equals(getString(R.string.home_no_data))))
-            userList.remove(0);
+        Events events = registerEvent.getEvents();
 
-        if(events.getDecesion()!=null && events.getDecesion().equals(getString(R.string.attending))) {
-            userList.add(0, signUp);
-        }
-        else if(events.getDecesion()!=null  && events.getDecesion().equals(getString(R.string.not_attending))){
-            int index =-1;
-            for(SignUp user: userList) {
-                Log.e("Get User Id : ", " ^^^^^ "+signUp.getUserId());
-                Log.e("userlist Id : ", " ^^^^^ "+user);
-               if (signUp.getUserId() == user.getUserId())
-                   Log.e("removing before event ", " ^^^^^ "+userList.size());
-                    index = userList.indexOf(user);
-                    break;
-           }
+        if(registerEvent.getDecesion()==null){
+            signUp = getUserObject();
+            viewPager.setCurrentItem(1, true);
+            if(userList.get(0).getViewMessage()!=null &&
+                    (userList.get(0).getViewMessage().equals(getString(R.string.home_loading))
+                    || userList.get(0).getViewMessage().equals(getString(R.string.home_no_data))))
+                userList.remove(0);
 
-            if(index!=-1) {
-                userList.remove(index);
-                adapter.notifyItemRemoved(index);
+            if(events.getDecesion()!=null && events.getDecesion().equals(getString(R.string.event_attending))) {
+                userList.add(0, signUp);
             }
-        }
+            else if(events.getDecesion()!=null  && events.getDecesion().equals(getString(R.string.event_not_attending))){
+                int index =-1;
+                for(SignUp user: userList) {
 
-        // removing no user tag
-        if( userList.size()>=2 && userList.get(1).getViewMessage()!=null &&
-                (  userList.get(1).getViewMessage().equals(getString(R.string.home_loading))
-                || userList.get(1).getViewMessage().equals(getString(R.string.home_no_data))))
-            userList.remove(1);
+                   if (signUp.getUserId() == user.getUserId())
+                        index = userList.indexOf(user);
+                        break;
+               }
 
-        // all element removed all no on attening view
-        if(userList.size()<=0) {
-            SignUp signUpTemp = new SignUp();
-            signUpTemp.setViewMessage(context.getString(R.string.home_no_data));
-            userList.add(signUpTemp);
-        }
-        Log.e("size is ", "rsvp : "+userList.size());
-            bindAdapter(userList);
+                if(index!=-1) {
+                    userList.remove(index);
+                    adapter.notifyItemRemoved(index);
+                }
+            }
 
+            // removing no user tag
+            if( userList.size()>=2 && userList.get(1).getViewMessage()!=null &&
+                    (  userList.get(1).getViewMessage().equals(getString(R.string.home_loading))
+                    || userList.get(1).getViewMessage().equals(getString(R.string.home_no_data))))
+                userList.remove(1);
+
+            // all element removed all no on attening view
+            if(userList.size()<=0) {
+                SignUp signUpTemp = new SignUp();
+                signUpTemp.setViewMessage(context.getString(R.string.home_no_data));
+                userList.add(signUpTemp);
+            }
+            Log.e("size is ", "rsvp : "+userList.size());
+                bindAdapter(userList);
+
+    }
     }
 
     public void displayUsers()

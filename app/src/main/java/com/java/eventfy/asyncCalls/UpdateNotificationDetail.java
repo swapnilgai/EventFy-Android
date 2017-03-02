@@ -1,9 +1,11 @@
 package com.java.eventfy.asyncCalls;
 
+import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.R;
 import com.java.eventfy.utils.CleanEntityObjects;
 
 import org.springframework.http.HttpEntity;
@@ -20,10 +22,13 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
     private SignUp signUp;
     private String url;
     private String result;
+    private Context context;
 
-    public UpdateNotificationDetail(SignUp signUp, String url) {
+
+    public UpdateNotificationDetail(SignUp signUp, String url, Context context) {
         this.signUp = signUp;
         this.url = url;
+        this.context = context;
     }
 
     @Override
@@ -44,16 +49,21 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
            result = rateResponse.getBody();
 
        }catch (Exception e){
-
+            result = null;
        }
         return null;
-
-
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-       Log.e("data store success", ""+result);
+
+        if(result == null)
+          signUp.getNotificationId().setViewMessage(context.getString(R.string.notification_id_server_register_success));
+        else
+            signUp.getNotificationId().setViewMessage(result);
+
+        EventBusService.getInstance().post(signUp.getNotificationId());
+
     }
 }

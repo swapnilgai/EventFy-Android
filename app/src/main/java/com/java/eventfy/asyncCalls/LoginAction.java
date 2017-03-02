@@ -39,7 +39,7 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
         Log.e(" url ", url);
 
         Gson gson = new Gson();
-        Log.e("Obj : ", ""+gson);
+        Log.e("Obj : ", ""+gson.toJson(login));
 
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -48,6 +48,7 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<User> request = new HttpEntity<>(login, headers);
+
 
         try {
             ResponseEntity<SignUp> rateResponse = restTemplate.postForEntity(url, request, SignUp.class);
