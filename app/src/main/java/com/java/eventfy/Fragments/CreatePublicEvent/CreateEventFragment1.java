@@ -37,8 +37,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -137,8 +135,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private ViewPager viewPager;
     private Button cancleBtn;
     private String url;
-
-
+    private  ObjectAnimator animator;
+    private LinearLayout gettingLocationLinearlayout;
+    private CircleButton cancelLocationLoadingBtn;
+    private CircleButton loadingLoactionBtn;
 
 
     @Override
@@ -151,8 +151,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         // To check if it is crate new event or edit existing event
         eventObj = ((Events) getActivity().getIntent().getSerializableExtra(String.valueOf(getString(R.string.event_to_edit_eventinfo))));
-
-        Log.e("event obj ", " !!!!!!! "+eventType);
 
         EventBusService.getInstance().register(this);
         viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
@@ -182,6 +180,13 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         eventLocationTv  = (TextView) view.findViewById(R.id.event_location_text_view);
 
+        gettingLocationLinearlayout = (LinearLayout) view.findViewById(R.id.getting_location_linear_layout);
+
+        cancelLocationLoadingBtn = (CircleButton) view.findViewById(R.id.cancel_location_loading);
+
+        loadingLoactionBtn = (CircleButton) view.findViewById(R.id.loading_location_btn);
+
+
         createProgressDialog();
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
@@ -204,7 +209,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         cancleBtn = (Button) view.findViewById(R.id.public_cancle);
 
-        Log.e("event Tupe : ", " ppppppp "+eventType);
         if(eventObj==null) {
             eventObj = new Events();
             eventObj.setViewMessage("temp");
@@ -284,24 +288,24 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         currentLocationBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                // datePickerDialog.setVibrate(isVibrate());
-              //  currentLocationBtn.setEnabled(false);
-                setLoading();
+
                 enableGpsPopUp();
-                // setting flag to avoid nearby and remote server call
-              //  EventBusService.getInstance().post(getString(R.string.create_event_flag));
             }
         });
 
         editLocationBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                locationInfoLinearLayout.setVisibility(View.GONE);
-                locationEditTextLinearLayout.setVisibility(View.VISIBLE);
+              editLocationViewOperations();
             }
         });
 
-
-
+        cancelLocationLoadingBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                stopLocationService();
+                setLoadingLocationInVisible();
+                eventObj.setLocation(null);
+            }
+        });
 
         MapsInitializer.initialize(getActivity());
 
@@ -314,7 +318,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         return view;
     }
-
 
     public void enableGpsPopUp()
     {
@@ -434,11 +437,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     final Place place = places.get(0);
                     if(place!=null) {
 
-                        getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
-                        if(eventObj.getLocation()==null)
+                        if(eventObj.getLocation()==null){
                             eventObj.setLocation(eventLocation);
                         eventObj.getLocation().setName(String.valueOf(place.getAddress()));
 
+                        setLoading();
+                        getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
+                        setMapInVisible();
+                        setAutoCompleteTextViewInVisible();
+                        }
                         //setUpMarker();
                     }
                     places.release();
@@ -447,14 +454,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             }
         };
 
-public void setLoading(){
-    currentLocationBtn.setImageResource(R.drawable.icon_loading);
-    ObjectAnimator animator = ObjectAnimator.ofFloat(currentLocationBtn, "rotation", 0, 360);
-    animator.setRepeatCount(ValueAnimator.INFINITE);
-    animator.setInterpolator(new LinearInterpolator());
-    animator.setDuration(1000);
-    animator.start();
-}
+
 
     public Events createEentObject() {
 
@@ -575,19 +575,6 @@ public void setLoading(){
 
         eventObj.setAdmin(signUp);
 
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            String str = mapper.writeValueAsString(eventObj);
-            Log.e("event object ","&&&&&& :: "+str);
-
-            // signUp.getEvents().get(0).setEventId(-1);
-
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-
           CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
           createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -648,9 +635,14 @@ public void setLoading(){
         if (locationPublicEvent instanceof  LocationPublicEvent && locationPublicEvent.getLocation()!=null){
             getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.GPSTracker.class));
             if(eventObj.getLocation()!=null)
-             eventObj.getLocation().setName(null);
-            getAddressFromLatLang(locationPublicEvent.getLocation().getLatitude(), locationPublicEvent.getLocation().getLongitude());
+                eventObj.getLocation().setName(null);
+                getAddressFromLatLang(locationPublicEvent.getLocation().getLatitude(), locationPublicEvent.getLocation().getLongitude());
 
+        }else{
+
+            setLocationInfoTextViewVisible();
+            setLoadingLocationInVisible();
+            produceErrorMessageOnLocationNotFound();
         }
     }
 
@@ -696,23 +688,63 @@ public void setLoading(){
                             outputAddress += " " + address.getAddressLine(i);
                         }
                     }
+                    eventObj.getLocation().setName(outputAddress);
                     setLocationOnMap(outputAddress);
+                    setAutoCompleteTextViewInVisible();
+                    setMapVisible();
+                    setUpMarker();
+                    setLocationInfoTextViewVisible();
 
                 }
                 else if(eventObj.getLocation()!=null && eventObj.getLocation().getName()!=null){
+                    setAutoCompleteTextViewInVisible();
+                    setMapVisible();
+                    setUpMarker();
+                    setLocationInfoTextViewVisible();
+                    Log.e("in 2 ", " @@@@@  "+eventObj.getLocation().getName());
                     setLocationOnMap(eventObj.getLocation().getName());
-                    Log.e("in 2 ", " @@@@@ ");
+
                 }
                 else {
                     Log.e("in 3 ", " @@@@@ ");
-                    Toast.makeText(getActivity(), "Enable to get you address, please Re-enter", Toast.LENGTH_SHORT).show();
+                    produceErrorMessageOnLocationNotFound();
+                    setLoadingLocationInVisible();
+                    eventObj.setLocation(null);
                 }
-
                 // do whatever you want/need to do with the address found
                 // remember to check first that it's not null
+                setLoadingLocationInVisible();
             }
         }.execute(new LatLng(latitude, longitude));
 
+    }
+
+    public void produceErrorMessageOnLocationNotFound(){
+
+        eventObj.setLocation(null);
+        mAutocompleteView.setText(null);
+        editLocationViewOperations();
+        setMapInVisible();
+        setAutoCompleteTextViewVisible();
+        setLocationInfoTextViewInVisible();
+        Toast.makeText(getActivity(), "Enable to get you address, please Re-enter", Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void setLoading(){
+        gettingLocationLinearlayout.setVisibility(View.VISIBLE);
+        animator = ObjectAnimator.ofFloat(loadingLoactionBtn, "rotation", 0, 360);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(1000);
+        animator.start();
+    }
+
+
+    public void stopLocationService(){
+        stopService();
+        setMapInVisible();
+        setAutoCompleteTextViewVisible();
     }
 
     public void setLocationOnMap(String outputAddress){
@@ -720,13 +752,54 @@ public void setLoading(){
         eventLocationTv.setText(outputAddress);
         mAutocompleteView.setText(outputAddress);
         eventLocationTv.setText(outputAddress);
-        eventLocation.setName(outputAddress);
         eventObj.setLocation(eventLocation);
-        locationMapViewLinearLayout.setVisibility(View.VISIBLE);
-        locationInfoLinearLayout.setVisibility(View.VISIBLE);
-        locationEditTextLinearLayout.setVisibility(View.GONE);
-        setUpMarker();
     }
+
+    public void setMapVisible(){
+
+        locationMapViewLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void setMapInVisible(){
+        locationMapViewLinearLayout.setVisibility(View.GONE);
+
+    }
+
+    public void setAutoCompleteTextViewInVisible(){
+
+        locationEditTextLinearLayout.setVisibility(View.GONE);
+    }
+    public void setAutoCompleteTextViewVisible(){
+        locationEditTextLinearLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void setLocationInfoTextViewVisible(){
+        locationInfoLinearLayout.setVisibility(View.VISIBLE);
+    }
+    public void setLocationInfoTextViewInVisible(){
+        locationInfoLinearLayout.setVisibility(View.GONE);
+    }
+
+    public void setEditButtonDrawable(){
+        editLocationBtn.setImageResource(R.drawable.ic_create_black_24dp);
+        animator.cancel();
+    }
+
+
+    public void setLoadingLocationVisible(){
+        gettingLocationLinearlayout.setVisibility(View.VISIBLE);
+    }
+
+    public void setLoadingLocationInVisible(){
+        gettingLocationLinearlayout.setVisibility(View.GONE);
+    }
+
+    public void editLocationViewOperations(){
+        eventLocationTv.setText(null);
+        locationInfoLinearLayout.setVisibility(View.GONE);
+        locationEditTextLinearLayout.setVisibility(View.VISIBLE);
+    }
+
 
     public void uploadImage()
     {
@@ -776,15 +849,8 @@ public void setLoading(){
         progressDialog.dismiss();
     }
     public void setUpMarker() {
-
-        Log.e("location lat M : ", ""+eventObj.getLocation().getLatitude());
-        Log.e("location lon M : ", ""+eventObj.getLocation().getLongitude());
-
-
         int radius = getZoonValue(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
         mapView.setVisibility(View.VISIBLE);
-
-
 
         LatLng myLaLn = new LatLng(eventObj.getLocation().getLatitude(), eventObj.getLocation().getLongitude());
 
@@ -1041,6 +1107,11 @@ public void setLoading(){
 
         if(!gpsTracker.canGetLocation()) {
             enableGpsPopUpOption();
+        }else{
+            setLoading();
+            setLoadingLocationVisible();
+            setMapInVisible();
+            setAutoCompleteTextViewInVisible();
         }
     }
 
@@ -1051,8 +1122,4 @@ public void setLoading(){
     public void stopService() {
         getActivity().stopService(new Intent(getActivity(),com.java.eventfy.Services.GPSTracker.class));
     }
-
-
-
-
 }
