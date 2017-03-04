@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
+            android:layout_marginLeft="8dp"
             android:orientation="vertical">
 
             <com.devspark.robototextview.widget.RobotoTextView
@@ -31,105 +32,148 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:gravity="center"
                 android:text="Event Name"
-                android:textSize="24sp"
+                android:textSize="25sp"
+                android:typeface="serif"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="8dp"
-                android:background="@color/date_picker_view_animator" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/event_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                android:textSize="12dp"
+                android:textColor="@color/transparent_black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=", "
+                    android:textSize="12dp"
+                    android:textColor="@color/transparent_black" />
+
+            <com.devspark.robototextview.widget.RobotoTextView
+                android:id="@+id/event_capacity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="2dp"
+                android:text="38 people"
+                android:textSize="12dp"
+                android:textColor="@color/transparent_black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:id="@+id/event_date_from"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:gravity="center"
-                    android:text="12-Nov-2017 at 8:30 AM"
+                    android:text="Sat, Mar 3 at 8:30 AM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="14sp" />
-
-
+                    android:textSize="15sp" />
                 <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:gravity="center"
-                    android:text="To"
+                    android:text="-"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:textSize="12sp" />
-
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:id="@+id/event_date_to"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="12-Nov-2017 at 8:30 AM"
+                    android:text="Sat, Mar 3 at 8:30 AM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
-            <View
+
+            <TextView
+                android:id="@+id/event_day_left"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@color/date_picker_view_animator" />
+                android:layout_height="wrap_content"
+                android:text="38 people"
+                android:textSize="12dp"
+                android:textColor="@color/transparent_black" />
+
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="8dp"
 
-
+            android:background="@color/date_picker_view_animator" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4.5dp"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/location_info_linear_layout"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_gravity="center_horizontal|bottom"
-                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:layout_marginBottom="2dp">
+
+                android:layout_marginBottom="1dp">
+
+
+<LinearLayout
+    android:layout_width="0dip"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="8dp"
+    android:layout_weight="1.18">
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/event_location_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:gravity="center_vertical"
+                    android:inputType="textMultiLine"
+                    android:maxLines="2"
+                    android:paddingRight="8dp"
+                    android:text="Location xyzdhkfb vdsgvf g shbdh fh sh fbdshbf dbdsvg fvdgsvf"
+                    android:textSize="14.8sp"  />
 
 
                 <com.devspark.robototextview.widget.RobotoTextView
-                    android:id="@+id/event_location_text_view"
-                    android:layout_width="0dp"
+                    android:id="@+id/event_visibility_miles"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:gravity="center_vertical"
-                    android:inputType="textMultiLine"
-                    android:textAlignment="center"
-                    android:lines="@android:integer/config_longAnimTime"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:text="location xyzdhkfb dhsbfvdsvfgvdsgvfg vdsgvf gdsvg fvdgsvf"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="20 Miles visible from origin"
+                    android:textSize="12dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/transparent_black" />
 
+    </LinearLayout>
                 <at.markushi.ui.CircleButton
                     android:id="@+id/btnSelectImageFromDevice"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="bottom"
-                    android:padding="10dp"
+                    android:layout_gravity="center"
+                    android:padding="8dp"
                     android:src="@drawable/ic_location_on_black_18dp"
-                    app:cb_color="@android:color/white"
+                    app:cb_color="#d3d3d3"
                     app:cb_pressedRingWidth="5dp" />
             </LinearLayout>
 
@@ -137,12 +181,17 @@
             <LinearLayout
                 android:id="@+id/location_map_view_linear_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginRight="13dp"
+                android:background="#d3d3d3"
+                >
 
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/location_map_view"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp" />
+                    android:layout_height="150dp"
+                    android:padding="1dp"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -150,12 +199,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:layout_marginTop="3dp"
                 android:paddingTop="7dp"
-                android:paddingLeft="70dp"
-                android:paddingRight="40dp"
+                android:paddingLeft="6dp"
                 android:paddingBottom="4dp"
                 android:orientation="horizontal">
+
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="20dp"
@@ -172,9 +220,9 @@
                     android:id="@+id/map_view_event_info_event_away_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="6dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
+                    android:paddingLeft="10dp"
                     android:text="2 Mile"
                     android:textColor="#6c7880"
                     android:textSize="12sp" />
@@ -195,40 +243,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="0.2dp"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="1"
+                    android:paddingLeft="10dp"
                     android:text="30 min"
                     android:textColor="#6c7880"
                     android:textSize="12sp" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:background="@color/date_picker_view_animator" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@color/date_picker_view_animator" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingLeft="11dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:text="Event Details"
+                android:text="Details"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="15sp"
+                />
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/event_description"
@@ -239,41 +288,40 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/date_picker_view_animator" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="16dp"
+            android:paddingLeft="11dp"
             android:paddingRight="16dp">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="8dp"
-                android:background="@color/date_picker_view_animator" />
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:text="Admin"
-                android:textStyle="bold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 />
 
             <LinearLayout
+                android:id="@+id/liner_layout_navigate_admin_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/admin_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/img_placeholder" />
+                    android:src="@drawable/user_image" />
 
                 <LinearLayout
                     android:layout_width="0dip"
@@ -288,13 +336,15 @@
                         android:layout_marginRight="8dp"
                         android:layout_weight="1"
                         android:orientation="vertical"
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:paddingLeft="8dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingTop="6dp">
+                         >
 
                             <TextView
                                 android:id="@+id/admin_name"
@@ -303,8 +353,8 @@
                                 android:layout_marginRight="4dp"
                                 android:text="User Name"
                                 android:textColor="#000000"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:textSize="14sp"
+                               />
 
                             <at.markushi.ui.CircleButton
                                 android:id="@+id/user_status_mode"
@@ -319,157 +369,30 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lines="1"
-                            android:paddingTop="5dp"
+                            android:paddingTop="1dp"
                             android:text="user status"
+                            android:textStyle="italic"
                             android:textColor="#6c7880"
                             android:textSize="14sp" />
 
                     </LinearLayout>
 
 
-                    <at.markushi.ui.CircleButton
-                        android:id="@+id/navigate_admin_profile"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:src="@drawable/ic_navigate_next_white_24dp"
-                        app:cb_color="@color/colorPrimary"
-                        app:cb_pressedRingWidth="5dip" />
+                    <!--<at.markushi.ui.CircleButton-->
+                        <!--android:id="@+id/navigate_admin_profile"-->
+                        <!--android:layout_width="36dp"-->
+                        <!--android:layout_height="36dp"-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:gravity="center"-->
+                        <!--android:src="@drawable/ic_navigate_next_white_24dp"-->
+                        <!--app:cb_color="@color/colorPrimary"-->
+                        <!--app:cb_pressedRingWidth="5dip" />-->
                 </LinearLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/date_picker_view_animator" />
         </LinearLayout>
 
-        <com.devspark.robototextview.widget.RobotoTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Other"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="8dp"
-            android:paddingLeft="18dp"
-            android:paddingRight="16dp"
-            >
-
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:orientation="vertical">
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Visibility Radius: "
-                    android:textColor="@color/transparent_black"
-                    android:textSize="11dp"
-                     />
-
-                <TextView
-                    android:id="@+id/event_visibility_miles"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
-                    android:text="20 Miles"
-                    android:textSize="15dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/transparent_black" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="8dp"
-                android:background="@color/date_picker_view_animator" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Capacity: "
-                    android:textColor="@color/transparent_black"
-                    android:textSize="11dp"
-                    />
-
-                <TextView
-                    android:id="@+id/event_capacity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
-                    android:text="38 people"
-                    android:textSize="15dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/transparent_black" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@color/date_picker_view_animator" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Visibility Radius: "
-                    android:textColor="@color/transparent_black"
-                    android:textSize="11dp"
-                    />
-
-                <TextView
-                    android:id="@+id/event_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
-                    android:text="Type"
-                    android:textSize="15dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/transparent_black" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@color/date_picker_view_animator" />
-
-            </LinearLayout>
-        </LinearLayout>
 
 
         <LinearLayout
@@ -477,10 +400,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:gravity="center"
             android:orientation="vertical"
             >
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/date_picker_view_animator" />
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/event_invisible"
                 android:layout_width="match_parent"

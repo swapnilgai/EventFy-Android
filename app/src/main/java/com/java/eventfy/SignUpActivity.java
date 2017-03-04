@@ -17,6 +17,7 @@ import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.SignUpAction;
+import com.java.eventfy.utils.DateTimeStringOperations;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -32,7 +33,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     private TextView dobtext;
     private Button signupButton;
     private TextView loginLink;
-    private SignUp signUp;
+    private SignUp signUp = new SignUp();
     public static final String DATEPICKER_TAG = "datepicker";
     private ProgressDialog progressDialog;
 
@@ -99,15 +100,15 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
 
         if(validate())
         {
-            signUp = createSignUpObjectFromFormDetail();
-            serverCall(signUp);
-            setProgressDialog();
+                signUp = createSignUpObjectFromFormDetail();
+                serverCall(signUp);
+                setProgressDialog();
         }
     }
 
 
     public SignUp createSignUpObjectFromFormDetail(){
-        SignUp signUp = new SignUp();
+
         signUp.setUserId(emailText.getText().toString());
         signUp.setPassword(passwordText.getText().toString());
         signUp.setIsVerified("false");
@@ -115,8 +116,12 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signUp.setImageUrl("default");
         signUp.setDob(dobtext.getText().toString());
         signUp.setUserName(nameText.getText().toString());
+        signUp.setVisibilityMiles(10);
         return signUp;
     }
+
+
+
 
     private boolean isVibrate() {
         return false;
@@ -133,8 +138,11 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         Log.e("date time ; ", ""+dobtext);
 
-        dobtext.setText(year + "-" + month + "-" + day);
+        String date = year + "-" + month + "-" + day;
 
+        signUp.setDob(date);
+
+        dobtext.setText(DateTimeStringOperations.getInstance().getDateString(date));
     }
 
     @Override
@@ -187,8 +195,8 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
             nameText.setError(null);
         }
 
-        if (dob.isEmpty()){
-            dobtext.setError("Enter a valid Date of Birth");
+        if (dob.isEmpty() && DateTimeStringOperations.getInstance().checkUSerIs18Plus(dob)){
+            dobtext.setError("Minimum age to SignUp is 18");
             valid = false;}
         else
         { dobtext.setError(null);}

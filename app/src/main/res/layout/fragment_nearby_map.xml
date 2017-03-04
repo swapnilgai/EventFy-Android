@@ -29,8 +29,8 @@
                 android:orientation="horizontal"
                 android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp"
                 android:visibility="gone"
+                android:paddingRight="16dp"
                 android:paddingTop="4dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -73,7 +73,8 @@
                         android:id="@+id/map_view_event_info_event_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
+                        android:inputType="textImeMultiLine"
+                        android:maxLines="2"
                         android:text="Event Location duabshdfb asd basbdhabb"
                         android:textColor="@color/cardview_dark_background"
                         android:textSize="14sp"

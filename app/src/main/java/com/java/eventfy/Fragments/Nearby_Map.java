@@ -157,7 +157,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         if(signUp.getImageUrl().equals("default")){
         image = null;
-        setUserOnMap(signUp.getLocation());
         }else {
 
             GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
@@ -373,15 +372,24 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 updateEventinfo(0);
                 eventInfoLinearLayout.setVisibility(View.VISIBLE);
                 eventSearchLinearLayout.setVisibility(View.GONE);
-            }else if(!nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
+            }else if(nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
             {
-                getUserObject();
-                setUserOnMap(nearbyEventData.getLocation());
-                googelMapSetting(nearbyEventData.getLocation());
-                eventInfoLinearLayout.setVisibility(View.GONE);
-                eventSearchLinearLayout.setVisibility(View.VISIBLE);
-                eventSearchMiles.setProgress(signUp.getVisibilityMiles());
-                eventVisibilityRadius.setText(signUp.getVisibilityMiles());
+                Gson g = new Gson();
+
+                Log.e(" ", " location object ::::  "+g.toJson(nearbyEventData.getLocation()));
+
+                if(nearbyEventData.getLocation()!=null && nearbyEventData.getLocation().getLongitude()!= 0.0 && nearbyEventData.getLocation().getLatitude()!= 0.0){
+                    getUserObject();
+                    Log.e(" ", " user object ::::  "+g.toJson(signUp));
+                    if(signUp!=null){
+                        setUserOnMap(nearbyEventData.getLocation());
+                        googelMapSetting(nearbyEventData.getLocation());
+                        eventInfoLinearLayout.setVisibility(View.GONE);
+                        eventSearchLinearLayout.setVisibility(View.VISIBLE);
+                        eventSearchMiles.setProgress(signUp.getVisibilityMiles());
+                        eventVisibilityRadius.setText(signUp.getVisibilityMiles());
+                    }
+                }
             }
         }
 
@@ -402,8 +410,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             locationObj.setLongitude(loaLocationNearby.getLocation().getLongitude());
             locationObj.setLatitude(loaLocationNearby.getLocation().getLatitude());
             locationObj.setDistance(signUp.getVisibilityMiles());
-
-            setUserOnMap(locationObj);
         }
     }
 

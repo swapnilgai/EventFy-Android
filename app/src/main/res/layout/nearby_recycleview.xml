@@ -21,9 +21,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="86dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingTop="4dp"
+        android:paddingBottom="5dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:orientation="vertical">
@@ -60,8 +61,11 @@
             android:id="@+id/event_info_event_away_distance_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="1dp"
+            android:gravity="center_horizontal"
+            android:paddingRight="14dp"
             android:orientation="horizontal">
+
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="20dp"
@@ -80,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
                 android:layout_marginTop="3dp"
-                android:layout_weight="1"
                 android:text="2 Mile"
+                android:layout_weight="1"
                 android:textColor="#6c7880"
                 android:textSize="12sp" />
 
@@ -90,6 +94,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="left"
                 android:elevation="20dp"
+
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_directions_car_black_24dp"
@@ -102,12 +107,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="0.2dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="3dp"
                 android:layout_weight="1"
+                android:layout_marginTop="3dp"
                 android:text="30 min"
                 android:textColor="#6c7880"
                 android:textSize="12sp" />
-
+</LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

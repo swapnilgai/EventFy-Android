@@ -44,15 +44,12 @@ import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.asyncCalls.DeleteEvent;
 import com.java.eventfy.asyncCalls.EditEventSrverCall;
 import com.java.eventfy.utils.DateTimeStringOperations;
-import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import at.markushi.ui.CircleButton;
 
 import static com.java.eventfy.R.id.admin_image;
 
@@ -75,16 +72,19 @@ public class About extends Fragment implements OnMapReadyCallback {
     private ImageView adminImage;
     private RobotoTextView eventLocation;
     private TextView eventVisiblityMiles;
-    private TextView eventCapacity;
+    private RobotoTextView eventCapacity;
     private RobotoTextView eventDateTimeFrom;
     private RobotoTextView eventDateTimeTo;
     private Button deleteEvent;
     private Button editEvent;
     private ProgressDialog progressDialog;
-    private CircleButton navigateAdminProfile;
+    private LinearLayout navigateAdminProfileLinearLayout;
     private LinearLayout adminOptionLayout;
     private Context context;
     private Button eventInvisible;
+    private RobotoTextView eventAwayDistance;
+    private RobotoTextView eventAwayDuration;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -104,16 +104,17 @@ public class About extends Fragment implements OnMapReadyCallback {
         adminName = (TextView) view.findViewById(R.id.admin_name);
         adminStatus = (TextView) view.findViewById(R.id.admin_status);
         adminImage = (ImageView) view.findViewById(admin_image);
-        navigateAdminProfile = (CircleButton) view.findViewById(R.id.navigate_admin_profile);
         eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
         eventVisiblityMiles = (TextView) view.findViewById(R.id.event_visibility_miles);
-        eventCapacity = (TextView) view.findViewById(R.id.event_capacity);
+        eventCapacity = (RobotoTextView) view.findViewById(R.id.event_capacity);
         eventDateTimeFrom  = (RobotoTextView) view.findViewById(R.id.event_date_from);
         eventDateTimeTo  = (RobotoTextView) view.findViewById(R.id.event_date_to);
         eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
         adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
-
+        navigateAdminProfileLinearLayout = (LinearLayout) view.findViewById(R.id.liner_layout_navigate_admin_profile);
         deleteEvent = (Button) view.findViewById(R.id.event_delete);
+        eventAwayDistance = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
+        eventAwayDuration= (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
 
         editEvent= (Button) view.findViewById(R.id.event_edit);
 
@@ -164,7 +165,7 @@ public class About extends Fragment implements OnMapReadyCallback {
         });
 
 
-        navigateAdminProfile.setOnClickListener(new OnClickListener() {
+        navigateAdminProfileLinearLayout.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -181,17 +182,25 @@ public class About extends Fragment implements OnMapReadyCallback {
 
          eventName.setText(event.getEventName());
          adminName.setText(event.getAdmin().getUserName());
+
+        if(event.getAdmin().getStatus()==null)
+            adminStatus.setText("No status");
+        else
          adminStatus.setText(event.getAdmin().getStatus());
+
          evengtType.setText(event.getEventCategory());
 
-        eventVisiblityMiles.setText(event.getEventVisiblityMile() + " Miles");
+        eventVisiblityMiles.setText(event.getEventVisiblityMile() + " Miles visible from origin");
 
-        eventCapacity.setText(event.getEventCapacity()+ " People");
+        eventAwayDistance.setText(event.getEventAwayDistanve());
+
+        eventAwayDuration.setText(event.getEventAwayDuration());
+
+        eventCapacity.setText(event.getEventCapacity()+ " People can attend");
         Picasso.with(getContext())
                 .load(event.getAdmin().getImageUrl())
                 .resize(50, 50)
-                .transform(new RoundedCornersTransformCommentAuthor())
-                .placeholder(R.drawable.ic_perm_identity_white_24dp)
+                .placeholder(R.drawable.user_image)
                 .into(adminImage);
 
         eventDescription.setText(event.getEventDescription());

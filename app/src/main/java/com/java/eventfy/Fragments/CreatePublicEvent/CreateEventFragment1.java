@@ -680,7 +680,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 String outputAddress = "";
 
                 if (addresses!= null && addresses.size() > 0) {
-
                     Log.e("in 1 ", " @@@@@ ");
                     for(Address address : addresses) {
 
@@ -703,7 +702,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     setLocationInfoTextViewVisible();
                     Log.e("in 2 ", " @@@@@  "+eventObj.getLocation().getName());
                     setLocationOnMap(eventObj.getLocation().getName());
-
                 }
                 else {
                     Log.e("in 3 ", " @@@@@ ");

@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeParser;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by swapnil on 2/25/17.
@@ -35,7 +36,21 @@ public class DateTimeStringOperations {
         pDoW = dateTime.monthOfYear();
         String month = pDoW.getAsText(Locale.ENGLISH);
 
-        String dateTimeStr = day+", "+month+" - "+dateTime.getDayOfMonth()+" - "+dateTime.getYear();
+        String dateTimeStr = day.substring(0,3)+", "+month.substring(0,3)+" "+dateTime.getDayOfMonth()+" "+dateTime.getYear()+
+                " at "+dateTime.getHourOfDay()+":"+dateTime.getMinuteOfHour();
+
+        return dateTimeStr;
+
+    }
+
+
+    public String getDateString(String dateStr){
+        DateTime dateTime = convertStringToDateTimeObj(dateStr);
+
+        DateTime.Property pDoW = dateTime.monthOfYear();
+        String month = pDoW.getAsText(Locale.ENGLISH);
+
+        String dateTimeStr = month.substring(0,3)+", "+dateTime.getDayOfMonth()+" "+dateTime.getYear();
 
         return dateTimeStr;
 
@@ -44,12 +59,13 @@ public class DateTimeStringOperations {
 
     public DateTime convertStringToDateTime(String date, String timeZone){
         DateTimeParser[] parsers = {
-                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm").getParser(),
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
-                DateTimeFormat.forPattern("MM/dd/yyyy HH:mm").getParser(),
-                DateTimeFormat.forPattern("yyyy/MM/dd HH:mm").getParser()
+                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm a").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm a").getParser(),
+                DateTimeFormat.forPattern("MM/dd/yyyy HH:mm a").getParser(),
+                DateTimeFormat.forPattern("yyyy/MM/dd HH:mm a").getParser(),
+                DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
         };
-
 
 
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
@@ -61,17 +77,33 @@ public class DateTimeStringOperations {
 
     }
 
+    public boolean checkUSerIs18Plus(String userDob){
+
+
+        org.joda.time.DateTime dateTimeNow = new org.joda.time.DateTime(DateTimeZone.forID(TimeZone.getDefault().getID()));
+        dateTimeNow = dateTimeNow.plusYears(-18);
+        org.joda.time.DateTime userDobDateTime = convertStringToDateTime(userDob, TimeZone.getDefault().getID());
+
+        boolean b = true;
+        if(dateTimeNow.isBefore(userDobDateTime)){
+            b= false;}
+        else
+        b = true;
+
+        return b;
+    }
 
     public String convertStringToDateTime(String dateTime){
 
         DateTimeParser[] parsers = {
-                DateTimeFormat.forPattern("yyyy-MM-dd- HH:mm").getParser()
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
         };
 
         DateTime dTime = new DateTime();
 
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                .appendPattern("yyyy-MM-dd HH:mm")
+                .append(null, parsers)
                 .toFormatter()
                 .withZone(dTime.getZone());
 
@@ -82,6 +114,30 @@ public class DateTimeStringOperations {
         Log.e("date obj = ", "  :   "+date);
 
         return date.toString();
+    }
+
+
+    public DateTime convertStringToDateTimeObj(String dateTime){
+
+        DateTimeParser[] parsers = {
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
+        };
+
+        DateTime dTime = new DateTime();
+
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .append(null, parsers)
+                .toFormatter()
+                .withZone(dTime.getZone());
+
+        dTime =  formatter.parseDateTime(dateTime);
+
+        Date date =  dTime.toDate();
+
+        Log.e("date obj = ", "  :   "+date);
+
+        return dTime;
     }
 
 

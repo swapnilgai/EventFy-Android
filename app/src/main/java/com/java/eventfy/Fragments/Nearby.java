@@ -314,7 +314,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         if(locationNearby instanceof LocationNearby) {
             this.locationNearby = locationNearby;
-            latLng = new LatLng(locationNearby.getLocation().getLatitude(), locationNearby.getLocation().getLongitude());
             fragment_switch_button.setVisibility(View.GONE);
             stopServices();
             getNearbEventServerCall();
@@ -325,7 +324,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     public void receiveEvents(NearbyEventData nearbyEventData)
     {
         if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
-            fragment_switch_button.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(true);
 
@@ -335,10 +333,14 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
                 this.eventsList = nearbyEventData.getEventsList();
                 bindAdapter(adapter, this.eventsList);
+                if(nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data)) &&
+                        nearbyEventData.getLocation()!=null && nearbyEventData.getLocation().getLongitude()!= 0.0 && nearbyEventData.getLocation().getLatitude()!= 0.0){
+                    fragment_switch_button.setVisibility(View.VISIBLE);
+                }
             }
             else{
+                removeNoDataOrLoadingObj();
                 for(Events events : nearbyEventData.getEventsList()){
-                    removeNoDataOrLoadingObj();
                 DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
                         new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
                     // Start downloading json data from Google Directions API
@@ -421,9 +423,11 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     // ****** ASYNC CALL
     private void getNearbEventServerCall(){
 
+        latLng = new LatLng(locationNearby.getLocation().getLatitude(), locationNearby.getLocation().getLongitude());
         Location location = new Location();
         location.setLatitude(latLng.latitude);
         location.setLongitude(latLng.longitude);
+
         location.setDistance(signUp.getVisibilityMiles());
         SignUp tempSignUp = new SignUp();
         tempSignUp.setLocation(location);
@@ -439,16 +443,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         super.onResume();
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
-
-        Log.e("in resume neatrby : ", "  *******************************  ");
-
-        Log.e("gps: ", "  *******************************  "+gps);
-
-        if(gps!= null && eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location))){
+        if(gps!= null && eventsList.get(0).getViewMessage()!=null && eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location))){
             removeAll();
             getLocationAndInitServices();
-
-            Log.e("in resume neatrby : ", "  in  *******************************  ");
         }
     }
 
@@ -574,9 +571,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     public void updateUserLocation(int visibilityMileValue) {
         removeAll();
-        addLoading();
         bindAdapter(adapter, eventsList);
-
         signUp.setVisibilityMiles(visibilityMileValue);
         initServices();
 
@@ -587,12 +582,14 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         if(eventsList.get(0).getViewMessage()!=null)
             if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
-                    eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_data)))
+                    eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_data)) ||
+                    eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
                 eventsList.remove(0);
 
         if(eventsList.size()>1 && eventsList.get(1).getViewMessage()!=null)
             if(eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_location)) ||
-                    eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_data)))
+                    eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_data)) ||
+                    eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
 
                 eventsList.remove(1);
     }
@@ -600,15 +597,12 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     @Subscribe
     public void getAwayObjectforEvent(Away awayObj) {
 
-        Log.e("getting away onject : ", ""+awayObj.getDistance());
-        Log.e("event list size before : ", ""+eventsList.size());
-        Log.e("event list size before : ", " ******* : "+eventsList.contains(awayObj) );
-
         if(!eventsList.contains(awayObj.getEvents()) && awayObj.getDistance()!=null && awayObj.getDistance().length()>=1) {
             awayObj.getEvents().setEventAwayDistanve(awayObj.getDistance());
             awayObj.getEvents().setEventAwayDuration(awayObj.getDuration());
             eventsList.add(awayObj.getEvents());
             bindAdapter(adapter, this.eventsList);
+            fragment_switch_button.setVisibility(View.VISIBLE);
         }
         else if(eventsList.contains(awayObj.getEvents()) &&  awayObj.getDistance()!=null){
             int index = getEventIndex(awayObj.getEvents());
