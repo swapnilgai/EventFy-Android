@@ -140,14 +140,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
             final  AddComment addComment = getItem(position);
             final Comments comment = addComment.getComment();
 
-            Gson g  = new Gson();
-
-            Log.e("comment obj : ", g.toJson(comment));
-
-            Log.e("user image url : ", comment.getUser().getImageUrl());
-
-
-            if(!comment.getImageUrl().equals("default"))
+            if(!comment.getUser().getImageUrl().equals("default"))
                 Picasso.with(getApplicationContext()).load(comment.getUser().getImageUrl())
                         .resize(45, 45)
                         .into(((ResultHolder) holder).autherImage, new Callback() {
@@ -191,8 +184,6 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
             }
 
 
-
-
             ((ResultHolder) holder).autherName.setText(comment.getUser().getUserName());
 
 
@@ -202,8 +193,6 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                     //handle menu2 click
                     addComment.setViewMsg(context.getString(R.string.comment_add_posting));
                     addComment.getComment().setViewMessage(context.getString(R.string.comment_add_posting));
-                    Gson g = new Gson();
-                    Log.e("retry : ", g.toJson(addComment.getComment()));
 
                   //  EventBusService.getInstance().post(addComment);
                     String urlForComment = context.getString(R.string.ip_local) + context.getString(R.string.add_comment_in_event);

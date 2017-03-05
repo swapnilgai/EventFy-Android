@@ -81,6 +81,16 @@
                 android:inputType="textCapWords|date" />
         </android.support.design.widget.TextInputLayout>
 
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:id="@+id/link_dob_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingBottom="8dp"
+               android:visibility="gone"
+            android:text="@string/already_a_member"
+            android:textColor="@color/colorErrorRed"
+            android:textSize="16sp" />
         <!-- Signup Button -->
 
         <android.support.v7.widget.AppCompatButton

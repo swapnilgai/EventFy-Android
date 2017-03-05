@@ -82,6 +82,7 @@
     <string name="invisible_event">Event will no longer visible to new or unregister users</string>
 
     <string name="invisible_event_btn">MAKE EVENT INVISIBLE</string>
+    <string name="check_in_button">Check In</string>
     <string name="visible_event_btn">MAKE EVENT VISIBLE</string>
 
     <string name="event_attending">event_attending</string>
@@ -216,7 +217,7 @@
     <string name="date_of_birth">Date Of Birth</string>
     <string name="create_account">Create Account</string>
     <string name="already_a_member">Already a member? Login</string>
-
+    <string name="minimum_age">Minimum age to create account is 13</string>
 
     <!-- view messages -->
 

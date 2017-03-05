@@ -107,6 +107,8 @@ public class ImageFullScreenMode extends AppCompatActivity {
                     .fit()
                     .into(imageView);
 
+        }else if(imageViewObj.getImageUrl()!=null && imageViewObj.getImageUrl().equals("default") ){
+            imageView.setImageResource(R.drawable.user_image);
         }
         else if(imageViewObj.getBitmapByteArray()!=null){
             Bitmap imageBitmap =  BitmapFactory.decodeByteArray(imageViewObj.getBitmapByteArray(), 0, imageViewObj.getBitmapByteArray().length);

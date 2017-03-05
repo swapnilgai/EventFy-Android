@@ -323,7 +323,7 @@ public class Login extends AppCompatActivity  {
         securityOperations = new SecurityOperations();
         user.setPassword(securityOperations.encryptNetworkPassword(user.getPassword()));
         String url = getString(R.string.ip_local)+getString(R.string.login);
-        LoginAction loginAction = new LoginAction(user,url);
+        LoginAction loginAction = new LoginAction(user,url, getApplicationContext());
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

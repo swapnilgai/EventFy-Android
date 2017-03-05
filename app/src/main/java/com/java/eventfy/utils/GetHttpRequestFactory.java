@@ -1,13 +1,14 @@
 package com.java.eventfy.utils;
 
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by swapnil on 3/1/17.
  */
-public class GetHttpRequestFactory  {
+public class GetHttpRequestFactory extends RestTemplate {
 
-    private HttpComponentsClientHttpRequestFactory factory;
+    private SimpleClientHttpRequestFactory factory;
 
     private static GetHttpRequestFactory ourInstance = new GetHttpRequestFactory();
 
@@ -16,12 +17,12 @@ public class GetHttpRequestFactory  {
     }
 
     private GetHttpRequestFactory() {
-        factory =  new HttpComponentsClientHttpRequestFactory();
+        factory =  new SimpleClientHttpRequestFactory();
         factory.setReadTimeout(2000);
         factory.setConnectTimeout(2000);
     }
 
-    public HttpComponentsClientHttpRequestFactory getRequestFactory(){
+    public SimpleClientHttpRequestFactory getRequestFactory(){
         return factory;
     }
 }

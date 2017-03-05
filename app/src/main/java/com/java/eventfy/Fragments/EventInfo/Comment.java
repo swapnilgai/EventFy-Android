@@ -144,42 +144,45 @@ public class Comment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Comments commentTemp = new Comments();
-
-                urlForComment = getString(R.string.ip_local) + getString(R.string.add_comment_in_event);
-
-                commentTemp.setUser(signUp);
-
-                Events eventTemp = new Events();
-                SignUp signUpTemp = new SignUp();
-
-                eventTemp.setEventId(event.getEventId());
-                eventTemp.setEventID(event.getEventID());
-
-                signUpTemp.setUserName(signUp.getUserName());
-                signUpTemp.setUserId(signUp.getUserId());
-                signUpTemp.setToken(signUp.getToken());
-
-                commentTemp.setEvents(eventTemp);
-                commentTemp.setUser(signUpTemp);
-
-                addLoadingAtStrat();
-                linearLayoutManager.scrollToPosition(0);
 
                 String commentText = commentTextEditText.getText().toString();
+
+                if(commentText.isEmpty() && commentText!=null && commentText.length()>0) {
+                    Comments commentTemp = new Comments();
+
+                    urlForComment = getString(R.string.ip_local) + getString(R.string.add_comment_in_event);
+
+                    commentTemp.setUser(signUp);
+
+                    Events eventTemp = new Events();
+                    SignUp signUpTemp = new SignUp();
+
+                    eventTemp.setEventId(event.getEventId());
+                    eventTemp.setEventID(event.getEventID());
+
+                    signUpTemp.setUserName(signUp.getUserName());
+                    signUpTemp.setUserId(signUp.getUserId());
+                    signUpTemp.setToken(signUp.getToken());
+
+                    commentTemp.setEvents(eventTemp);
+                    commentTemp.setUser(signUpTemp);
+
+
+                    addLoadingAtStrat();
+                    linearLayoutManager.scrollToPosition(0);
 
 
                     commentTemp.setCommentText(commentText);
                     commentTemp.setEventId(event.getEventId());
                     commentTemp.setIsImage("false");
 
-                AddComment addComment = new AddComment();
-                addComment.setViewMsg(getString(R.string.comment_add_posting));
-                addComment.setComment(commentTemp);
+                    AddComment addComment = new AddComment();
+                    addComment.setViewMsg(getString(R.string.comment_add_posting));
+                    addComment.setComment(commentTemp);
 
                     postUsersComment = new PostUsersComment(urlForComment, addComment, getContext());
                     postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+                }
 
                 // bindAdapter(commentsList);
             }

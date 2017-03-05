@@ -1,5 +1,7 @@
 package com.java.eventfy;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,6 +30,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -37,6 +40,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
@@ -45,6 +49,7 @@ import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.asyncCalls.UpdateUserDetail;
 import com.java.eventfy.asyncCalls.UploadImage;
+import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.ImagePicker;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Callback;
@@ -82,13 +87,15 @@ public class ProfilePage extends AppCompatActivity {
     private  SharedPreferences mPrefs;
     private SharedPreferences.Editor editor;
     private TextView userVisibilityMilesTextView;
+    private RobotoTextView dobErrorMsg;
+    private  ObjectAnimator animator;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
         getUserObject();
-        setProgressDialog();
         EventBusService.getInstance().register(this);
 
         userVisibilityMode = (RadioGroup) findViewById(R.id.user_visibility_mode);
@@ -105,6 +112,7 @@ public class ProfilePage extends AppCompatActivity {
         visibilityModeDoNotDisturb = (RadioButton) findViewById(R.id.user_donotdisturb);
         linearLayoutStatus.setEnabled(false);
         saveButton = (Button) findViewById(R.id.btn_save_user_profile);
+        dobErrorMsg = (RobotoTextView) findViewById(R.id.link_dob_error);
 
         userVisibilityMilesTextView = (TextView) findViewById(R.id.user_visibility_miles_text_view);
 
@@ -133,8 +141,11 @@ public class ProfilePage extends AppCompatActivity {
         saveButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                getUpdatedUserData();
-                serverCallToUpdateUserDetail();
+
+                if(validate()){
+                    getUpdatedUserData();
+                    serverCallToUpdateUserDetail();
+                }
             }
         });
 
@@ -403,6 +414,7 @@ public class ProfilePage extends AppCompatActivity {
 
     public void serverCallToUpdateUserDetail() {
         startProgressDialog();
+        dobErrorMsg.setVisibility(View.GONE);
         String urlForUpdateUserData = getString(R.string.ip_local) + getString(R.string.upda_user);
         if(eventImageBM!=null){
             UploadImage uploadImage = new UploadImage(urlForUpdateUserData, signUp, eventImageBM);
@@ -414,21 +426,26 @@ public class ProfilePage extends AppCompatActivity {
     }
 
 
-    public void setProgressDialog() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Updating...");
-        progressDialog.setCancelable(false);
-    }
+//    public void setProgressDialog() {
+//        progressDialog = new ProgressDialog(this);
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.setMessage("Updating...");
+//        progressDialog.setCancelable(false);
+//    }
 
     public void startProgressDialog() {
-        progressDialog.show();
+        animator = ObjectAnimator.ofFloat(saveButton, "rotation", 0, 360);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(1000);
+        animator.start();
     }
 
 
-    public void dismissProgressDialog()
-    {
-        progressDialog.dismiss();
+    public void dismissProgressDialog() {
+        animator.cancel();
+        saveButton.setText("Update");
+        saveButton.setBackgroundResource(0);
     }
 
     public void verifyAccountPopUpBox(){
@@ -506,6 +523,7 @@ public class ProfilePage extends AppCompatActivity {
             verifyUserAccount.setImageResource(R.drawable.verified);
             toastMsg("Profile updated successfully");
         }
+        dobErrorMsg.setVisibility(View.GONE);
     }
 
 
@@ -570,4 +588,49 @@ public class ProfilePage extends AppCompatActivity {
         super.onPause();
        // EventBusService.getInstance().unregister(this);
     }
+
+    public boolean validate() {
+        boolean valid = true;
+
+        signUp.setStatus(usetStatus.getText().toString());
+
+        signUp.setUserName(usetName.getText().toString());
+
+        signUp.setUserId(usetEmail.getText().toString());
+
+        signUp.setDob(usetDob.getText().toString());
+
+        signUp.setVisibilityMiles(userVisibilityMiles.getProgress());
+
+        if (usetStatus.getText().toString().isEmpty()) {
+            usetStatus.setError("Status cant be empty");
+            valid = false;
+        } else {
+            usetStatus.setError(null);
+        }
+        if (usetDob.getText().toString().isEmpty() || !DateTimeStringOperations.getInstance().checkUSerIs18Plus(signUp.getDob())){
+
+            if(usetDob.getText().toString().isEmpty()){
+                usetDob.setText("Date of birth cant be empty");
+            }
+
+            dobErrorMsg.setVisibility(View.VISIBLE);
+            usetDob.setError("Minimum age to SignUp is 13");
+            valid = false;
+        }
+        else {
+            usetDob.setError(null);
+            dobErrorMsg.setVisibility(View.GONE);
+        }
+
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(usetEmail.getText().toString()).matches()) {
+            usetEmail.setError(null);
+
+        } else {
+            usetEmail.setError("Enter a valid email address");
+            valid = false;
+        }
+        return valid;
+    }
+
 }

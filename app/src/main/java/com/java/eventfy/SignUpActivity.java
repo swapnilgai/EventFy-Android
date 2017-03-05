@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.devspark.robototextview.widget.RobotoTextView;
 import com.fourmob.datetimepicker.date.DatePickerDialog;
 import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.java.eventfy.Entity.SignUp;
@@ -36,6 +37,8 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     private SignUp signUp = new SignUp();
     public static final String DATEPICKER_TAG = "datepicker";
     private ProgressDialog progressDialog;
+    private String dobString;
+    private RobotoTextView dobErrorMsg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signupButton =(Button) findViewById(R.id.btn_signup);
         loginLink = (TextView) findViewById(R.id.link_login);
 
+        dobErrorMsg = (RobotoTextView) findViewById(R.id.link_dob_error);
 
         if(signUp!=null)
             signupButton.setText("Update");
@@ -62,18 +66,8 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
             @Override
             public void onClick(View v) {
                 SignUp signUpTemp = createSignUpObjectFromFormDetail();
-
-                if(signUp!=null
-                        && signUpTemp.getUserName().equals(signUp.getUserName())
-                        && signUpTemp.getDob().equals(signUp.getDob())
-                        && signUpTemp.getUserId().equals(signUp.getUserId())
-                        && signUpTemp.getPassword().equals(signUp.getPassword()))
-                {
-                    EventBusService.getInstance().post(signUp);
-                }
-                else {
                     signupAction();
-                }
+
             }
         });
 
@@ -114,7 +108,6 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signUp.setIsVerified("false");
         signUp.setIsFacebook("false");
         signUp.setImageUrl("default");
-        signUp.setDob(dobtext.getText().toString());
         signUp.setUserName(nameText.getText().toString());
         signUp.setVisibilityMiles(10);
         return signUp;
@@ -138,11 +131,15 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         Log.e("date time ; ", ""+dobtext);
 
-        String date = year + "-" + month + "-" + day;
+        dobString = year + "-" + month + "-" + day;
 
-        signUp.setDob(date);
+        signUp.setDob(dobString);
 
-        dobtext.setText(DateTimeStringOperations.getInstance().getDateString(date));
+        dobErrorMsg.setText(getString(R.string.minimum_age));
+
+        dobErrorMsg.setVisibility(View.GONE);
+
+        dobtext.setText(DateTimeStringOperations.getInstance().getDateString(dobString));
     }
 
     @Override
@@ -186,7 +183,6 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         String name = nameText.getText().toString();
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
-        String dob = dobtext.getText().toString();
 
         if (name.isEmpty() || name.length() < 3 ) {
             nameText.setError("at least 3 characters");
@@ -194,12 +190,21 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         } else {
             nameText.setError(null);
         }
+        Log.e("date of b : ", " "+signUp.getDob());
+        if (signUp.getDob()!= null && signUp.getDob().length()>0 && !DateTimeStringOperations.getInstance().checkUSerIs18Plus(signUp.getDob())){
 
-        if (dob.isEmpty() && DateTimeStringOperations.getInstance().checkUSerIs18Plus(dob)){
-            dobtext.setError("Minimum age to SignUp is 18");
-            valid = false;}
-        else
-        { dobtext.setError(null);}
+            if(signUp.getDob()==null){
+                dobErrorMsg.setText("Date of birth cant be empty");
+            }
+
+            dobErrorMsg.setVisibility(View.VISIBLE);
+            dobtext.setError("Minimum age to SignUp is 13");
+            valid = false;
+        }
+        else {
+            dobtext.setError(null);
+            dobErrorMsg.setVisibility(View.GONE);
+        }
 
 
         if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {

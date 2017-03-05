@@ -59,10 +59,10 @@ public class DateTimeStringOperations {
 
     public DateTime convertStringToDateTime(String date, String timeZone){
         DateTimeParser[] parsers = {
-                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm a").getParser(),
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm a").getParser(),
-                DateTimeFormat.forPattern("MM/dd/yyyy HH:mm a").getParser(),
-                DateTimeFormat.forPattern("yyyy/MM/dd HH:mm a").getParser(),
+                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("MM/dd/yyyy HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy/MM/dd HH:mm").getParser(),
                 DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
                 DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
         };
@@ -81,15 +81,17 @@ public class DateTimeStringOperations {
 
 
         org.joda.time.DateTime dateTimeNow = new org.joda.time.DateTime(DateTimeZone.forID(TimeZone.getDefault().getID()));
-        dateTimeNow = dateTimeNow.plusYears(-18);
+        dateTimeNow = dateTimeNow.plusYears(-13);
         org.joda.time.DateTime userDobDateTime = convertStringToDateTime(userDob, TimeZone.getDefault().getID());
 
         boolean b = true;
         if(dateTimeNow.isBefore(userDobDateTime)){
-            b= false;}
+            b= false;
+        }
         else
         b = true;
 
+        Log.e("user is 13+ ", " ********* "+b);
         return b;
     }
 

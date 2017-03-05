@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.UiThread;
 import android.support.design.widget.FloatingActionButton;
@@ -44,6 +45,7 @@ import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.Services.GPSTracker;
+import com.java.eventfy.SplashScreen;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
 import com.java.eventfy.asyncCalls.DownloadTask;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
@@ -171,6 +173,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         initServices();
         //
+
         super.onSaveInstanceState(savedInstanceState);
         return view;
     }
@@ -221,6 +224,19 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         }else{
 
             addLoading();
+
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//
+//                    if(locationNearby == null){
+//                        stopServices();
+//                        //TODO add unable to get location please try again/ restart device
+//                    }
+//                }
+//            }, 60000);
+
+
         }
         bindAdapter(adapter, eventsList);
     }

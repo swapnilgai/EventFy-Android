@@ -779,8 +779,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
 
     public void setEditButtonDrawable(){
-        editLocationBtn.setImageResource(R.drawable.ic_create_black_24dp);
         animator.cancel();
+        editLocationBtn.setImageResource(R.drawable.ic_create_black_24dp);
     }
 
 
@@ -1005,10 +1005,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         endDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeTo(), eventObj.getDateTime().getTimeZone()));
         eventCapacity.setText(eventObj.getEventCapacity());
 
-
-        Log.e("event type : ", ""+eventObj.getEventType());
-        Log.e("event visiblity: ", ""+eventObj.getEventVisiblityMile());
-
         int index = -1;
         if(eventObj.getEventCategory()!=null) {
             //index = getIndexOfSpinerItem(getStringArray(R.array.category_arrays), eventObj.getEventCategory());
@@ -1041,8 +1037,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public int getIndexOfSpinerItem( int[] androidStrings , int item) {
         int i = -1 ;
-        Log.e("itemp  : ", ""+item);
-        Log.e("array len  : ", ""+androidStrings.length);
 
         for(i=0 ; i<androidStrings.length; i++)
             if(androidStrings[i] == item)
