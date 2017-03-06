@@ -272,7 +272,7 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     public void setUpMarker()
     {
-        int zoomVal = Integer.parseInt(event.getEventVisiblityMile());
+        int zoomVal = 14;
         zoomVal = getZoonValue(zoomVal);
         myLaLn = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
 
