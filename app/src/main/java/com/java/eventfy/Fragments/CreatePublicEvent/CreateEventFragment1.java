@@ -140,7 +140,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private CircleButton cancelLocationLoadingBtn;
     private CircleButton loadingLoactionBtn;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

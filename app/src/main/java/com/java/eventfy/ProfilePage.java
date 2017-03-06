@@ -33,6 +33,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -89,7 +90,8 @@ public class ProfilePage extends AppCompatActivity {
     private TextView userVisibilityMilesTextView;
     private RobotoTextView dobErrorMsg;
     private  ObjectAnimator animator;
-
+    private LinearLayout updateProfileLinearLayout;
+    private ImageView loadingImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +122,9 @@ public class ProfilePage extends AppCompatActivity {
 
         verifyUserAccount = (CircleButton) findViewById(R.id.verify_user_account_btn);
 
+        updateProfileLinearLayout = (LinearLayout) findViewById(R.id.updating_profile_linear_layout);
+
+        loadingImage = (ImageView) findViewById(R.id.loadingImage);
 
         final Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -391,7 +396,8 @@ public class ProfilePage extends AppCompatActivity {
     @Subscribe
     public void getUserObject(UpdateAccount updateAccount) {
         SignUp signUp = updateAccount.getSignUp();
-
+        dismissProgressDialog();
+        Log.e("acccount update : ", " ******** "+signUp.getViewMessage());
         if(signUp.getViewMessage().equals(R.string.user_account_update_success)) {
             if(signUp.getIsVerified().equals("false")){
                 verifyUserAccount.setImageResource(R.drawable.not_verified);
@@ -400,7 +406,6 @@ public class ProfilePage extends AppCompatActivity {
                 verifyUserAccount.setImageResource(R.drawable.verified);
             }
             setUserData(signUp);
-            dismissProgressDialog();
             toastMsg("Updated successfully");
 
         }else if(signUp.getViewMessage().equals(R.string.user_account_update_fail)){
@@ -434,7 +439,9 @@ public class ProfilePage extends AppCompatActivity {
 //    }
 
     public void startProgressDialog() {
-        animator = ObjectAnimator.ofFloat(saveButton, "rotation", 0, 360);
+        saveButton.setVisibility(View.GONE);
+        updateProfileLinearLayout.setVisibility(View.VISIBLE);
+        animator = ObjectAnimator.ofFloat(loadingImage, "rotation", 0, 360);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setInterpolator(new LinearInterpolator());
         animator.setDuration(1000);
@@ -444,8 +451,10 @@ public class ProfilePage extends AppCompatActivity {
 
     public void dismissProgressDialog() {
         animator.cancel();
-        saveButton.setText("Update");
-        saveButton.setBackgroundResource(0);
+        updateProfileLinearLayout.setVisibility(View.GONE);
+        saveButton.setVisibility(View.VISIBLE);
+
+
     }
 
     public void verifyAccountPopUpBox(){

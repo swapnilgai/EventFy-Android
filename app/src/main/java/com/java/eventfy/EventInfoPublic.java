@@ -20,7 +20,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
@@ -41,6 +43,10 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import at.markushi.ui.CircleButton;
+
+import static com.java.eventfy.R.id.commentText;
+
 /**
  * Created by swapnil on 10/11/16.
  */
@@ -52,6 +58,11 @@ public class EventInfoPublic extends AppCompatActivity {
     private FloatingActionButton rsvpForEventBtn;
     private SignUp signUp;
     private ProgressDialog progressDialog;
+    private EditText commentTextEditText;
+    private CircleButton btnCommentSend;
+    private CircleButton selectImageFromDevice;
+    private Comment commentFragment;
+    private LinearLayout commentBoxLinearLayout;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -87,6 +98,11 @@ public class EventInfoPublic extends AppCompatActivity {
             this.signUp = getUserObject();
 
             eventImage = (ImageView) findViewById(R.id.event_image);
+            commentTextEditText = (EditText) findViewById(commentText);
+            btnCommentSend = (CircleButton) findViewById(R.id.btnCommentSend);
+            selectImageFromDevice = (CircleButton) findViewById(R.id.btnSelectImageFromDevice);
+            commentBoxLinearLayout = (LinearLayout) findViewById(R.id.comment_box_linear_layout);
+
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
             if(event.getDecesion().equals(getString(R.string.event_admin))){
                   rsvpForEventBtn.setVisibility(View.GONE);
@@ -128,6 +144,30 @@ public class EventInfoPublic extends AppCompatActivity {
                     onBackPressed();
                 }
             });
+
+            btnCommentSend.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    // bindAdapter(commentsList);
+
+            Log.e(" text comment ", ""+commentTextEditText.getText().toString().isEmpty());
+                    if(!commentTextEditText.getText().toString().isEmpty())
+                         commentFragment.onClickCommentSend(commentTextEditText.getText().toString());
+                    else
+                        commentTextEditText.setError("Comment cant be empty");
+                }
+            });
+
+            selectImageFromDevice.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    commentFragment.onSelectImage();
+                }
+            });
+
+
         }
     }
 
@@ -148,6 +188,25 @@ public class EventInfoPublic extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager) {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                super.onTabSelected(tab);
+                // tab.getIcon().setAlpha(255);
+                if(tab.getPosition() == 1)
+                    commentBoxLinearLayout.setVisibility(View.VISIBLE);
+                else
+                    commentBoxLinearLayout.setVisibility(View.GONE);
+
+            }
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                super.onTabUnselected(tab);
+                //   tab.getIcon().setAlpha(127);
+            }
+        });
+
     }
 
     private void setupToolbar() {
@@ -160,7 +219,7 @@ public class EventInfoPublic extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
 
         About about_fragment = new About();
-        Comment comments_fragment = new Comment();
+        commentFragment = new Comment();
         Attending attendance_fragment = new Attending();
 
 
@@ -168,7 +227,7 @@ public class EventInfoPublic extends AppCompatActivity {
         bundle.putSerializable(getString(R.string.event_for_eventinfo), event);
 
         about_fragment.setArguments(bundle);
-        comments_fragment.setArguments(bundle);
+        commentFragment.setArguments(bundle);
         attendance_fragment.setArguments(bundle);
 
 
@@ -176,7 +235,7 @@ public class EventInfoPublic extends AppCompatActivity {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(about_fragment, "About");
-        adapter.addFrag(comments_fragment, "Comments");
+        adapter.addFrag(commentFragment, "Comments");
         adapter.addFrag(attendance_fragment, "Attendees");
 
         viewPager.setOffscreenPageLimit(2);

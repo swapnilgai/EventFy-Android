@@ -400,11 +400,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void storeUserObject(SignUp signUp)
     {
 
+        Log.e("Storing user object1 : ", "     "+signUp.getViewMessage());
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         editor = mPrefs.edit();
 
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
+
+        Log.e("Storing user object2 : ", "     "+json);
 
         editor.putString(getString(R.string.userObject), json);
 
@@ -414,9 +417,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Subscribe
     public void getUserObject(UpdateAccount updateAccount ) {
-
-        if (updateAccount.getSignUp().getViewMessage().equals(R.string.user_account_update_success)) {
+        if (updateAccount.getSignUp().getViewMessage().equals(getString(R.string.user_account_update_success))) {
             setNavigationDrawerUserData(updateAccount.getSignUp());
+            updateAccount.getSignUp().setViewMessage(null);
             storeUserObject(updateAccount.getSignUp());
         }
     }

@@ -22,9 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -53,10 +51,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.markushi.ui.CircleButton;
-
-import static com.java.eventfy.R.id.commentText;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -66,9 +60,7 @@ public class Comment extends Fragment {
     private RecyclerView recyclerView;
     private View view;
 //    private List<Comments> commentsList = new ArrayList<>();
-    private EditText commentTextEditText;
-    private CircleButton btnCommentSend;
-    private CircleButton selectImageFromDevice;
+
     private List<AddComment> addCommentsList = new ArrayList<>();
 
     private boolean loading;
@@ -107,9 +99,7 @@ public class Comment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_comment);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
-        commentTextEditText = (EditText) view.findViewById(commentText);
-        btnCommentSend = (CircleButton) view.findViewById(R.id.btnCommentSend);
-        selectImageFromDevice = (CircleButton) view.findViewById(R.id.btnSelectImageFromDevice);
+
 
         getNearbEventServerCall();
 
@@ -139,65 +129,6 @@ public class Comment extends Fragment {
             }
         });
 
-        btnCommentSend.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-
-                String commentText = commentTextEditText.getText().toString();
-
-                if(commentText.isEmpty() && commentText!=null && commentText.length()>0) {
-                    Comments commentTemp = new Comments();
-
-                    urlForComment = getString(R.string.ip_local) + getString(R.string.add_comment_in_event);
-
-                    commentTemp.setUser(signUp);
-
-                    Events eventTemp = new Events();
-                    SignUp signUpTemp = new SignUp();
-
-                    eventTemp.setEventId(event.getEventId());
-                    eventTemp.setEventID(event.getEventID());
-
-                    signUpTemp.setUserName(signUp.getUserName());
-                    signUpTemp.setUserId(signUp.getUserId());
-                    signUpTemp.setToken(signUp.getToken());
-
-                    commentTemp.setEvents(eventTemp);
-                    commentTemp.setUser(signUpTemp);
-
-
-                    addLoadingAtStrat();
-                    linearLayoutManager.scrollToPosition(0);
-
-
-                    commentTemp.setCommentText(commentText);
-                    commentTemp.setEventId(event.getEventId());
-                    commentTemp.setIsImage("false");
-
-                    AddComment addComment = new AddComment();
-                    addComment.setViewMsg(getString(R.string.comment_add_posting));
-                    addComment.setComment(commentTemp);
-
-                    postUsersComment = new PostUsersComment(urlForComment, addComment, getContext());
-                    postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
-                // bindAdapter(commentsList);
-            }
-        });
-        selectImageFromDevice.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent chooseImageIntent = ImagePicker.getPickImageIntent(context);
-                startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
-            }
-        });
-
-
-
         if (addCommentsList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             // tvEmptyView.setVisibility(View.VISIBLE);
@@ -224,6 +155,55 @@ public class Comment extends Fragment {
         });
 
         return view;
+    }
+
+
+    public void onSelectImage(){
+        Intent chooseImageIntent = ImagePicker.getPickImageIntent(context);
+        startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+    }
+
+
+    public void onClickCommentSend( String commentText){
+
+        if(commentText.isEmpty() && commentText!=null && commentText.length()>0) {
+            Comments commentTemp = new Comments();
+
+            urlForComment = getString(R.string.ip_local) + getString(R.string.add_comment_in_event);
+
+            commentTemp.setUser(signUp);
+
+            Events eventTemp = new Events();
+            SignUp signUpTemp = new SignUp();
+
+            eventTemp.setEventId(event.getEventId());
+            eventTemp.setEventID(event.getEventID());
+
+            signUpTemp.setUserName(signUp.getUserName());
+            signUpTemp.setUserId(signUp.getUserId());
+            signUpTemp.setToken(signUp.getToken());
+
+            commentTemp.setEvents(eventTemp);
+            commentTemp.setUser(signUpTemp);
+
+
+            addLoadingAtStrat();
+            linearLayoutManager.scrollToPosition(0);
+
+
+            commentTemp.setCommentText(commentText);
+            commentTemp.setEventId(event.getEventId());
+            commentTemp.setIsImage("false");
+
+            AddComment addComment = new AddComment();
+            addComment.setViewMsg(getString(R.string.comment_add_posting));
+            addComment.setComment(commentTemp);
+
+            postUsersComment = new PostUsersComment(urlForComment, addComment, getContext());
+            postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+
     }
 
     public void removeALl() {

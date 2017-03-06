@@ -46,6 +46,7 @@ import com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment2;
 import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.utils.CustomViewPager;
 import com.java.eventfy.utils.ImagePicker;
+import com.java.eventfy.utils.OnCommentClickListener;
 import com.soundcloud.android.crop.Crop;
 import com.squareup.picasso.Picasso;
 
@@ -57,7 +58,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreatePublicEvent extends AppCompatActivity {
+public class CreatePublicEvent extends AppCompatActivity implements OnCommentClickListener {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -73,6 +74,9 @@ public class CreatePublicEvent extends AppCompatActivity {
     private SignUp signUp;
     private CreateEventFragment1 createEventFragment1;
     private  CreateEventFragment2 createEventFragment2;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +98,9 @@ public class CreatePublicEvent extends AppCompatActivity {
                setErrorMessageToVerifyAccount();
         }else {
             mapCofigData();
+
         }
+
     }
 
     public void setErrorMessageToVerifyAccount(){
@@ -284,6 +290,16 @@ public class CreatePublicEvent extends AppCompatActivity {
         }
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(0);
+    }
+
+    @Override
+    public void onSelectImageIconClick() {
+
+    }
+
+    @Override
+    public void onPostCommentIconClick() {
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
