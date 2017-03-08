@@ -33,6 +33,7 @@ import com.java.eventfy.Entity.NotificationDetail;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.Fragments.EventInfo.About;
+import com.java.eventfy.Fragments.EventInfo.About_Facebook;
 import com.java.eventfy.Fragments.EventInfo.Attending;
 import com.java.eventfy.Fragments.EventInfo.Comment;
 import com.java.eventfy.asyncCalls.RsvpUserToEvent;
@@ -83,10 +84,8 @@ public class EventInfoPublic extends AppCompatActivity {
 
         // handel request form notification tab
         if(event==null && notificationDetail!=null) {
-
             // handle 3 cases 1. create, 2. update, 3. delete
             event = notificationDetail.getEvents();
-
         }
         // event is deleted
         if(event == null){
@@ -104,7 +103,7 @@ public class EventInfoPublic extends AppCompatActivity {
             commentBoxLinearLayout = (LinearLayout) findViewById(R.id.comment_box_linear_layout);
 
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
-            if(event.getDecesion().equals(getString(R.string.event_admin))){
+            if(event.getFacebookEventId()==null && event.getDecesion().equals(getString(R.string.event_admin))){
                   rsvpForEventBtn.setVisibility(View.GONE);
             }
 
@@ -218,7 +217,8 @@ public class EventInfoPublic extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
 
-        About about_fragment = new About();
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
         commentFragment = new Comment();
         Attending attendance_fragment = new Attending();
 
@@ -226,19 +226,26 @@ public class EventInfoPublic extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable(getString(R.string.event_for_eventinfo), event);
 
-        about_fragment.setArguments(bundle);
-        commentFragment.setArguments(bundle);
-        attendance_fragment.setArguments(bundle);
+        if(event.getFacebookEventId()!=null){
+            About_Facebook about_fragment = new About_Facebook();
+            adapter.addFrag(about_fragment, "About");
+            about_fragment.setArguments(bundle);
+
+        }else{
+            About about_fragment = new About();
+            commentFragment.setArguments(bundle);
+            attendance_fragment.setArguments(bundle);
+            adapter.addFrag(about_fragment, "About");
+            adapter.addFrag(commentFragment, "Comments");
+            adapter.addFrag(attendance_fragment, "Attendees");
+            about_fragment.setArguments(bundle);
+            viewPager.setOffscreenPageLimit(2);
+        }
 
 
-        Log.e("in main : ", "" + event.getEventName());
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(about_fragment, "About");
-        adapter.addFrag(commentFragment, "Comments");
-        adapter.addFrag(attendance_fragment, "Attendees");
 
-        viewPager.setOffscreenPageLimit(2);
+
         viewPager.setAdapter(adapter);
     }
 

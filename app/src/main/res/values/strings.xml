@@ -12,14 +12,12 @@
     <string name="navigation_drawer_opened">The navigation drawer is opened</string>
     <string name="navigation_drawer_closed">The navigation drawer is closed</string>
 
-
     <!-- Web servises url -->
     <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
     <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
 
     <!--<string name="ip_local">http://10.67.70.107:8080/EventFy</string>-->
     <!--<string name="ip_localhost">http://10.67.70.107:8080/EventFy</string>-->
-
 
     <!---->
     <string name="ip_local">https://eventfy.herokuapp.com</string>
@@ -35,6 +33,7 @@
     <string name="add_event">/webapi/events/add</string>
     <string name="edit_event">/webapi/events/editevent</string>
     <string name="get_nearby_event">/webapi/events/getnearbyevents</string>
+    <string name="get_nearby_facebook_event">/webapi/events/getfacebooknearbyevents</string>
     <string name="reg_gcm_userid">/webapi/notifications/registeruser</string>
     <string name="get_user_for_event">/webapi/comments/getuserforevent</string>
     <string name="get_comment_for_event">/webapi/comments/geteventcomment</string>
@@ -266,5 +265,8 @@
     <string name="activity_CreatePublicEvent">CreatePublicEvent</string>
     <string name="activity_ProfilePage">ProfilePage</string>
 
+    <string name="facebook_event_link">https://www.facebook.com/events/</string>
+    <string name="facebook_venue_link">https://www.facebook.com/</string>
+    <string name="web_view_link">web_view_link</string>
 
 </resources>

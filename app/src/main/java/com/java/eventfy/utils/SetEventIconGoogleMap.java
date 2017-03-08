@@ -21,6 +21,10 @@ public class SetEventIconGoogleMap {
 
     public void setIcon(MarkerOptions markerOptions, Context context, String eventType){
 
+        if (eventType==null)
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.other));
+
+        else
         switch (eventType){
 
             case "Birthday":

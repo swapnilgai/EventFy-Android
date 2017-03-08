@@ -43,6 +43,22 @@ public class DateTimeStringOperations {
 
     }
 
+    public String getDateTimeStringForFb(String dateStr){
+        DateTime dateTime = new DateTime(dateStr);
+
+        DateTime.Property pDoW = dateTime.dayOfWeek();
+        String day = pDoW.getAsText(Locale.ENGLISH);
+
+        pDoW = dateTime.monthOfYear();
+        String month = pDoW.getAsText(Locale.ENGLISH);
+
+        String dateTimeStr = day.substring(0,3)+", "+month.substring(0,3)+" "+dateTime.getDayOfMonth()+" "+dateTime.getYear()+
+                " at "+dateTime.getHourOfDay()+":"+dateTime.getMinuteOfHour();
+
+        return dateTimeStr;
+
+    }
+
 
     public String getDateString(String dateStr){
         DateTime dateTime = convertStringToDateTimeObj(dateStr);
@@ -55,6 +71,8 @@ public class DateTimeStringOperations {
         return dateTimeStr;
 
     }
+
+
 
 
     public DateTime convertStringToDateTime(String date, String timeZone){

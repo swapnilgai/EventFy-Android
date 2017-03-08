@@ -50,6 +50,9 @@ public class Events implements Serializable {
     private String decesion;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    private String facebookEventId;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(DateTime.class)
     private DateTime dateTime;
 
@@ -293,6 +296,14 @@ public class Events implements Serializable {
 
     public void setDecesion(String decesion) {
         this.decesion = decesion;
+    }
+
+    public String getFacebookEventId() {
+        return facebookEventId;
+    }
+
+    public void setFacebookEventId(String facebookEventId) {
+        this.facebookEventId = facebookEventId;
     }
 
 }

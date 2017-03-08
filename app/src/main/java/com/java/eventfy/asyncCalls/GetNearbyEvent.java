@@ -90,14 +90,14 @@ try  {
             eventLst.add(events);
         }
 
-        Gson g = new Gson();
-        for(Events e : eventLst) {
-            Log.e("event is : ", " "+g.toJson(e));
-        }
-
         NearbyEventData nearbyEventData = new NearbyEventData();
         nearbyEventData.setEventsList(eventLst);
         nearbyEventData.setLocation(signUp.getLocation());
+
+//        for(Events e : eventLst) {
+//            Log.e("event nearby ", " >>>>>>>>> "+e.getEventId());
+//
+//        }
         EventBusService.getInstance().post(nearbyEventData);
     }
 }

@@ -171,8 +171,10 @@ import static com.java.eventfy.R.string.edited;
                           .into(((ResultHolder) holder).eventImage);
 
                 ((ResultHolder)holder).eventName.setText(event.getEventName());
+            if(event.getFacebookEventId()==null)
                 ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom(), event.getDateTime().getTimeZone()));
-
+            else
+                ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeStringForFb(event.getDateTime().getDateTimeFrom()));
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());
                 if(milesDistance<4)  // to check if it is walkable distance

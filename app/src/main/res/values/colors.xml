@@ -13,5 +13,5 @@
     <color name="colorSkyBlue">#e2f6ff</color>
     <color name="colorErrorRed">#D43939</color>
     <color name="colorAccentOld">#c8e8ff</color>
-
+    <color name="transparent_white">#7fffffff</color>
 </resources>

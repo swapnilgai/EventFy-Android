@@ -368,6 +368,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
             this.eventLst = nearbyEventData.getEventsList();
             if(eventLst.get(eventLst.size()-1).getViewMessage()==null){
+                setUserOnMap(nearbyEventData.getLocation());
                 initializeMap(nearbyEventData.getLocation());
                 updateEventinfo(0);
                 eventInfoLinearLayout.setVisibility(View.VISIBLE);

@@ -140,6 +140,8 @@
         <!-- Service data block end -->
         <activity android:name=".ResetPassword">
         </activity>
+        <activity android:name=".WebViewActivity">
+        </activity>
     </application>
 
 </manifest>
