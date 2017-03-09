@@ -2,6 +2,7 @@ package com.java.eventfy;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,6 +22,7 @@ public class WebViewActivity extends Activity {
 
         Bundle extras = getIntent().getExtras();
         String url = extras.getString(getString(R.string.web_view_link));
+        Log.e("web url : ", ""+url);
 
         webView.getSettings().setLoadsImagesAutomatically(true);
         webView.getSettings().setJavaScriptEnabled(true);

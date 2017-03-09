@@ -1,12 +1,20 @@
 package com.java.eventfy.Fragments.EventInfo;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,16 +29,21 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
 import com.java.eventfy.WebViewActivity;
 import com.java.eventfy.utils.DateTimeStringOperations;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -48,13 +61,11 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     private Events event;
     private RobotoTextView eventDescription;
     private RobotoTextView eventName;
-    private TextView evengtType;
+    private RobotoTextView evengtType;
+    private RobotoTextView evengtCategory;
     private RobotoTextView eventLocation;
-    private TextView eventVisiblityMiles;
-    private RobotoTextView eventCapacity;
     private RobotoTextView eventDateTimeFrom;
     private RobotoTextView eventDateTimeTo;
-    private ProgressDialog progressDialog;
     private Context context;
     private RobotoTextView eventAwayDistance;
     private RobotoTextView eventAwayDuration;
@@ -62,7 +73,11 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     private RobotoTextView venueName;
     private RobotoTextView venueDetails;
     private Button venueLink;
-
+    private TextView timeFromNow;
+    private Button eventLink;
+    private Location userCurrentLocation;
+    private  SignUp signUp;
+    private Bitmap image;
 
 
     @Override
@@ -74,31 +89,30 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         context = view.getContext();
 
         eventName = (RobotoTextView) view.findViewById(R.id.event_name);
-        evengtType = (TextView) view.findViewById(R.id.event_type);
+        evengtType = (RobotoTextView) view.findViewById(R.id.event_type);
+        evengtCategory = (RobotoTextView) view.findViewById(R.id.event_category);
         eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
-        eventVisiblityMiles = (TextView) view.findViewById(R.id.event_visibility_miles);
-        eventCapacity = (RobotoTextView) view.findViewById(R.id.event_capacity);
+        eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
         eventDateTimeFrom  = (RobotoTextView) view.findViewById(R.id.event_date_from);
         eventDateTimeTo  = (RobotoTextView) view.findViewById(R.id.event_date_to);
         eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
         eventAwayDistance = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
         eventAwayDuration= (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
-
         venueImageView  = (CircleImageView) view.findViewById(R.id.venue_pic);
         venueDetails = (RobotoTextView) view.findViewById(R.id.venue_detail);
         venueLink = (Button) view.findViewById(R.id.venue_link_btn);
         venueName = (RobotoTextView) view.findViewById(R.id.venue_id);
-
-        mapValuesFromEventObject();
-
-        MapsInitializer.initialize(getActivity());
-
+        timeFromNow = (TextView) view.findViewById(R.id.event_day_left);
+        eventLink = (Button) view.findViewById(R.id.event_link);
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
 
+        mapValuesFromEventObject();
+
+        MapsInitializer.initialize(getActivity());
 
         venueLink.setOnClickListener(new OnClickListener() {
 
@@ -106,6 +120,16 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra(context.getString(R.string.web_view_link), getString(R.string.facebook_venue_link)+event.getLocation().getVenueId());
+                context.startActivity(intent);
+            }
+        });
+
+        eventLink.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra(context.getString(R.string.web_view_link), getString(R.string.facebook_event_link)+event.getFacebookEventId());
                 context.startActivity(intent);
             }
         });
@@ -120,15 +144,19 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         venueName.setText(event.getLocation().getVenueName());
         venueDetails.setText(event.getLocation().getVenueDetail());
 
-        evengtType.setText(event.getEventCategory());
+        evengtType.setText(event.getEventType().toUpperCase());
 
-        eventVisiblityMiles.setText(event.getEventVisiblityMile() + " Miles visible from origin");
+        timeFromNow.setText(event.getEventTimeFromNow());
+
+        if(event.getEventCategory() == null)
+            evengtCategory.setText("OTHER");
+        else
+          evengtCategory.setText(event.getEventCategory().toUpperCase());
 
         eventAwayDistance.setText(event.getEventAwayDistanve());
 
         eventAwayDuration.setText(event.getEventAwayDuration());
 
-        eventCapacity.setText(event.getEventCapacity()+ " People can attend");
         Picasso.with(getContext())
                 .load(event.getLocation().getVenueImageUrl())
                 .resize(70, 70)
@@ -142,8 +170,6 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         eventDateTimeFrom.setText(DateTimeStringOperations.getInstance().getDateTimeStringForFb(event.getDateTime().getDateTimeFrom()));
 
         eventDateTimeTo.setText(DateTimeStringOperations.getInstance().getDateTimeStringForFb(event.getDateTime().getDateTimeTo()));
-
-        eventCapacity.setText(event.getEventCapacity());
 
     }
 
@@ -196,14 +222,44 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 
     public void setUpMarker()
     {
-        int zoomVal = 14;
+        int zoomVal = 16;
+
+        getUserObject();
+
+        if(signUp.getLocation()!=null) {
+            if (signUp.getImageUrl().equals("default")) {
+                image = null;
+                setUserOnMap(signUp.getLocation());
+            } else {
+
+                GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
+                getBitmapBytes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+            }
+        }
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().
+                target(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude())).
+                tilt(65).
+                zoom(zoomVal).
+                bearing(30).
+                build();
+
         zoomVal = getZoonValue(zoomVal);
         myLaLn = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_black_18dp));
+        markerOptions.title(event.getEventName());
         googleMap.addMarker(markerOptions);
+
+        googelMapSetting(event.getLocation());
+
+    }
+
+    public void googelMapSetting(Location location) {
 
         //googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
@@ -211,20 +267,41 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         googleMap.getUiSettings().setMapToolbarEnabled(true);
 
+        // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
 
-        Circle circle = googleMap.addCircle(new CircleOptions()
-                .center(myLaLn)
-                .radius(zoomVal*100)
-                .strokeColor(Color.BLUE)
-                .fillColor(getResources().getColor(R.color.colorPrimaryTransparent)));
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
-        // Zoom in, animating the camera.
-        googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomVal), 1000, null);
+        CameraPosition cameraPosition = new CameraPosition.Builder().
+                target(new LatLng(location.getLatitude(), location.getLongitude())).
+                tilt(40).
+                zoom(15).
+                bearing(40).
+                build();
+
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
     }
+
+    public void setUserOnMap(Location location){
+
+        userCurrentLocation = location;
+
+
+        myLaLn = new LatLng(location.getLatitude(), location.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(myLaLn);
+
+        if(image!=null)
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
+        else
+            markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
+
+        markerOptions.title(signUp.getUserName());
+        googleMap.addMarker(markerOptions);
+
+
+    }
+
 
     public int getZoonValue(int zoomVal) {
 
@@ -257,4 +334,74 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 
         return time;
     }
+
+    public void getUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
+
+    private class GetBitmapBytes extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // your background code fetch InputStream
+
+            URL url = null;
+            try {
+                url = new URL(signUp.getImageUrl());
+                image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return  null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void nVoid) {
+            super.onPostExecute(nVoid);
+
+
+            if (image != null) {
+                Log.e("in async after: ", ""+image);
+                image = Bitmap.createScaledBitmap(image, 100, 100, true);
+
+                image = getRoundedRectBitmap(image);
+
+                if (signUp.getLocation() != null)
+                    setUserOnMap(signUp.getLocation());
+            }
+        }
+    }
+
+    public Bitmap getRoundedRectBitmap(Bitmap bitmap) {
+        Bitmap result = null;
+        try {
+            result = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(result);
+
+            int color = 0xff424242;
+            Paint paint = new Paint();
+            Rect rect = new Rect(0, 0, 100, 100);
+
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawCircle(45, 45, 50, paint);
+            paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        } catch (NullPointerException e) {
+        } catch (OutOfMemoryError o) {
+        }
+        return result;
+    }
+
+
 }

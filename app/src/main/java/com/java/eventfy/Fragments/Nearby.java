@@ -338,74 +338,30 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
     @Subscribe
-    public void receiveEvents(NearbyEventData nearbyEventData)
-    {
-        Log.e(" nearby ", " list size : "+eventsList.size());
-        Log.e(" nearby ", " list size nb : "+nearbyEventData.getEventsList().size());
+    public void receiveEvents(NearbyEventData nearbyEventData) {
+        Log.e(" nearby ", " list size : " + eventsList.size());
+        Log.e(" nearby ", " list size nb : " + nearbyEventData.getEventsList().size());
         this.nearbyEventData = nearbyEventData;
 
-        if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
+        if (nearbyEventData.getEventsList() != null && nearbyEventData.getEventsList().size() > 0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(true);
 
-            if(nearbyEventData.getEventsList().get(0).getViewMessage()!=null && (nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data))
+            if (nearbyEventData.getEventsList().get(0).getViewMessage() != null && (nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data))
                     || nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_loading))
                     || nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_connection_error)))) {
-                    removeNoDataOrLoadingObj();
-                    this.eventsList.addAll(nearbyEventData.getEventsList());
+                removeNoDataOrLoadingObj();
+                this.eventsList.addAll(nearbyEventData.getEventsList());
                 bindAdapter(adapter, this.eventsList);
-                if(nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data)) &&
-                        nearbyEventData.getLocation()!=null && nearbyEventData.getLocation().getLongitude()!= 0.0 && nearbyEventData.getLocation().getLatitude()!= 0.0){
+                if (nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data)) &&
+                        nearbyEventData.getLocation() != null && nearbyEventData.getLocation().getLongitude() != 0.0 && nearbyEventData.getLocation().getLatitude() != 0.0) {
                     fragment_switch_button.setVisibility(View.VISIBLE);
                 }
-            }
-            else{
+            } else {
                 removeNoDataOrLoadingObj();
                 this.eventsList = nearbyEventData.getEventsList();
                 bindAdapter(adapter, this.eventsList);
                 fragment_switch_button.setVisibility(View.VISIBLE);
-//                for(Events events : nearbyEventData.getEventsList()){
-//                DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyEventData.getLocation().getLatitude(), nearbyEventData.getLocation().getLongitude()),
-//                        new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
-//                    // Start downloading json data from Google Directions API
-//                    downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//                }
-            }
-        }
-    }
-
-
-    @Subscribe
-    public void receiveEvents(NearbyFacebookEventData nearbyFacebookEventData)
-    {
-        Log.e(" nearby facebook ", " list size : "+eventsList.size());
-        Log.e(" nearby ", " list size fb : "+nearbyFacebookEventData.getEventsList().size());
-        this.nearbyFacebookEventData = nearbyFacebookEventData;
-        if(nearbyFacebookEventData.getEventsList()!=null && nearbyFacebookEventData.getEventsList().size()>0 && nearbyFacebookEventData.getEventsList().get(0) instanceof Events) {
-            swipeRefreshLayout.setRefreshing(false);
-            swipeRefreshLayout.setEnabled(true);
-                  if(checkNoDataOrLoadingCondition(nearbyFacebookEventData.getEventsList())){
-
-
-                if(nearbyEventData!=null && checkNoDataOrLoadingCondition(nearbyEventData.getEventsList()) )
-                {
-                    removeNoDataOrLoadingObj();
-                    this.eventsList.addAll(nearbyFacebookEventData.getEventsList());
-                    bindAdapter(adapter, this.eventsList);
-                    if (nearbyFacebookEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data)) &&
-                            nearbyFacebookEventData.getUserLocation() != null && nearbyFacebookEventData.getUserLocation().getLongitude() != 0.0 && nearbyFacebookEventData.getUserLocation().getLatitude() != 0.0) {
-                        fragment_switch_button.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-            else {
-                removeNoDataOrLoadingObj();
-                for(Events events : nearbyFacebookEventData.getEventsList()){
-                    DownloadTask downloadTask = new DownloadTask(new LatLng(nearbyFacebookEventData.getUserLocation().getLatitude(), nearbyFacebookEventData.getUserLocation().getLongitude()),
-                            new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude()), events);
-                    // Start downloading json data from Google Directions API
-                    downloadTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
             }
         }
     }
@@ -562,13 +518,10 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
-        Log.e("home nearby ", "***** "+json);
     }
 
     public void removeAll() {
-        Log.e("remove all bf", "" +eventsList.size());
         eventsList.removeAll(eventsList);
-
     }
 
     public void createLoadingObj() {
@@ -632,9 +585,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("result code : ", " ------:  "+resultCode);
         switch (requestCode) {
-// Check for the integer request code originally supplied to startResolutionForResult().
             case 0:
                 removeNoDataOrLoadingObj();
 

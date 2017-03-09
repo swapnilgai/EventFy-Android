@@ -203,7 +203,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         CameraPosition cameraPosition = new CameraPosition.Builder().
                 target(new LatLng(location.getLatitude(), location.getLongitude())).
                 tilt(85).
-                zoom(14).
+                zoom(15).
                 bearing(0).
                 build();
 
@@ -520,8 +520,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             URL url = null;
             try {
                 url = new URL(signUp.getImageUrl());
-
-            Log.e("in async: ", ""+url);
                 image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
             } catch (MalformedURLException e) {

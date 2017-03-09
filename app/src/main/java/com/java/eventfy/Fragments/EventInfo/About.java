@@ -29,6 +29,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,6 +38,7 @@ import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
@@ -84,6 +86,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     private Button eventInvisible;
     private RobotoTextView eventAwayDistance;
     private RobotoTextView eventAwayDuration;
+    private RobotoTextView eventTimeFromNow;
 
 
     @Override
@@ -97,7 +100,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         getUserObject();
 
         EventBusService.getInstance().register(this);
-
 
         eventName = (RobotoTextView) view.findViewById(R.id.event_name);
         evengtType = (TextView) view.findViewById(R.id.event_type);
@@ -116,6 +118,7 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventAwayDistance = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
         eventAwayDuration= (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
 
+        eventTimeFromNow  = (RobotoTextView) view.findViewById(R.id.event_day_left);
         editEvent= (Button) view.findViewById(R.id.event_edit);
 
         eventInvisible = (Button) view.findViewById(R.id.event_invisible);
@@ -183,6 +186,7 @@ public class About extends Fragment implements OnMapReadyCallback {
          eventName.setText(event.getEventName());
          adminName.setText(event.getAdmin().getUserName());
 
+        eventTimeFromNow.setText(event.getEventTimeFromNow());
         if(event.getAdmin().getStatus()==null)
             adminStatus.setText("No status");
         else
@@ -210,8 +214,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventDateTimeFrom.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom(), event.getDateTime().getTimeZone()));
 
         eventDateTimeTo.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeTo(), event.getDateTime().getTimeZone()));
-
-         eventCapacity.setText(event.getEventCapacity());
 
         if(event.getEventIsVisible())
             eventInvisible.setText(getString(R.string.visible_event_btn));
@@ -272,13 +274,12 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     public void setUpMarker()
     {
-        int zoomVal = 14;
-        zoomVal = getZoonValue(zoomVal);
+      //  zoomVal = getZoonValue(zoomVal);
         myLaLn = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_black_18dp));
         googleMap.addMarker(markerOptions);
 
         //googleMap.setMyLocationEnabled(true);
@@ -290,17 +291,36 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         Circle circle = googleMap.addCircle(new CircleOptions()
                 .center(myLaLn)
-                .radius(zoomVal*100)
+                .radius(Integer.parseInt(event.getEventVisiblityMile())*100)
                 .strokeColor(Color.BLUE)
                 .fillColor(getResources().getColor(R.color.colorPrimaryTransparent)));
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
-        // Zoom in, animating the camera.
-        googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomVal), 1000, null);
+        googelMapSetting(event.getLocation());
+    }
+
+    public void googelMapSetting(Location location) {
+
+        //googleMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setZoomControlsEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        googleMap.getUiSettings().setMapToolbarEnabled(true);
+
+        // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
+
+
+        CameraPosition cameraPosition = new CameraPosition.Builder().
+                target(new LatLng(location.getLatitude(), location.getLongitude())).
+                tilt(40).
+                zoom(13).
+                bearing(40).
+                build();
+
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
     }
+
+
 
     public int getZoonValue(int zoomVal) {
 

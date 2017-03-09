@@ -112,6 +112,16 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventAwayDistanve;
 
+    public String getEventTimeFromNow() {
+        return eventTimeFromNow;
+    }
+
+    public void setEventTimeFromNow(String eventTimeFromNow) {
+        this.eventTimeFromNow = eventTimeFromNow;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String eventTimeFromNow;
 
     public SignUp getAdmin() {
         return admin;

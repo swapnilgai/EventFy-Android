@@ -36,7 +36,7 @@ public class DateTimeStringOperations {
         pDoW = dateTime.monthOfYear();
         String month = pDoW.getAsText(Locale.ENGLISH);
 
-        String dateTimeStr = day.substring(0,3)+", "+month.substring(0,3)+" "+dateTime.getDayOfMonth()+" "+dateTime.getYear()+
+        String dateTimeStr = day.substring(0,3)+", "+month.substring(0,3)+" "+dateTime.getDayOfMonth()+
                 " at "+dateTime.getHourOfDay()+":"+dateTime.getMinuteOfHour();
 
         return dateTimeStr;

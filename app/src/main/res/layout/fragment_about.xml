@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="7dp">
+                android:layout_marginLeft="6dp">
 
 
                 <com.devspark.robototextview.widget.RobotoTextView
@@ -54,31 +54,36 @@
                     android:layout_height="wrap_content"
                     android:text="Sat, Mar 13 at 8:30 AM"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="14sp" />
-                <!--<com.devspark.robototextview.widget.RobotoTextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="-"-->
-                    <!--android:layout_marginLeft="1dp"-->
-                    <!--android:layout_marginRight="1dp"-->
-                    <!--android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
-                    <!--android:textSize="11sp" />-->
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" - "
+                    android:textStyle="bold"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    android:textSize="15sp" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:id="@+id/event_date_to"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Sat, Mar 23 at 8:30 AM"
+                    android:inputType="textMultiLine"
+                    android:maxLines="2"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textSize="14sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/event_day_left"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="38 people"
-                android:textSize="10dp"
+                android:textSize="11dp"
+                android:layout_marginTop="2dp"
                 android:layout_marginLeft="7dp"
                 android:textColor="@color/transparent_black" />
 
@@ -90,8 +95,6 @@
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp"
                 android:background="@color/date_picker_view_animator" />
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -111,7 +114,6 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_star_rate_black_18dp"
                     app:civ_border_color="@color/transparent_black"
-                    app:civ_border_width="1dp"
                     app:layout_collapseMode="parallax" />
 
                 <com.devspark.robototextview.widget.RobotoTextView
@@ -149,181 +151,32 @@
                     android:textSize="15sp" />
 
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:elevation="20dp"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_star_rate_black_18dp"
-                    app:civ_border_color="@color/transparent_black"
-                    app:civ_border_width="1dp"
-                    app:layout_collapseMode="parallax" />
-
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:id="@+id/event_type_p"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:layout_weight="1"
-                    android:paddingLeft="10dp"
-                    android:text="Birthday"
-                    android:textColor="#6c7880"
-                    android:textSize="15sp" />
-
             </LinearLayout>
-
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="4dp"-->
-                <!--android:paddingLeft="6dp"-->
-                <!--android:paddingBottom="4dp"-->
-                <!--android:orientation="horizontal">-->
-
-
-                <!--<ImageView-->
-                    <!--android:layout_width="25dp"-->
-                    <!--android:layout_height="25dp"-->
-                    <!--android:elevation="20dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:layout_gravity="left"-->
-                    <!--android:foregroundGravity="left"-->
-                    <!--android:fitsSystemWindows="true"-->
-                    <!--android:scaleType="fitCenter"-->
-                    <!--android:src="@drawable/ic_mood_black_24dp"-->
-                    <!--app:layout_collapseMode="parallax" />-->
-
-
-
-                <!--<de.hdodenhof.circleimageview.CircleImageView-->
-                    <!--android:layout_width="25dp"-->
-                    <!--android:layout_height="25dp"-->
-                    <!--android:elevation="20dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:fitsSystemWindows="true"-->
-                    <!--android:scaleType="fitCenter"-->
-                    <!--android:src="@drawable/ic_sentiment_neutral_black_24dp"-->
-                    <!--app:civ_border_color="@color/transparent_black"-->
-                    <!--app:civ_border_width="1dp"-->
-                    <!--app:layout_collapseMode="parallax" />-->
-
-                <!--<de.hdodenhof.circleimageview.CircleImageView-->
-                    <!--android:layout_width="25dp"-->
-                    <!--android:layout_height="25dp"-->
-                    <!--android:elevation="20dp"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:fitsSystemWindows="true"-->
-                    <!--android:scaleType="fitCenter"-->
-                    <!--android:src="@drawable/ic_mood_bad_black_24dp"-->
-                    <!--app:civ_border_color="@color/transparent_black"-->
-                    <!--app:civ_border_width="1dp"-->
-                    <!--app:layout_collapseMode="parallax" />-->
-
-            <!--</LinearLayout>-->
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="1dp"
-                android:layout_marginRight="1dp"
-                android:background="@color/date_picker_view_animator" />
-
-
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="horizontal">-->
-                <!--<com.devspark.robototextview.widget.RobotoTextView-->
-
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Type"-->
-                    <!--android:textSize="12dp"-->
-                    <!--android:textColor="@color/transparent_black" />-->
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text=", "-->
-                    <!--android:textSize="12dp"-->
-                    <!--android:textColor="@color/transparent_black" />-->
-
-                <!--<com.devspark.robototextview.widget.RobotoTextView-->
-
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:paddingLeft="2dp"-->
-                    <!--android:text="38 people"-->
-                    <!--android:textSize="12dp"-->
-                    <!--android:textColor="@color/transparent_black" />-->
-            <!--</LinearLayout>-->
         </LinearLayout>
 
-        <!--<LinearLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="4dp"-->
-            <!--android:paddingTop="7dp"-->
-            <!--android:paddingLeft="6dp"-->
-            <!--android:paddingBottom="4dp"-->
-            <!--android:orientation="horizontal">-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:background="@color/date_picker_view_animator" />
 
-
-            <!--<de.hdodenhof.circleimageview.CircleImageView-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="18dp"-->
-                <!--android:elevation="20dp"-->
-                <!--android:fitsSystemWindows="true"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@drawable/ic_arrow_drop_down_black_18dp"-->
-                <!--app:civ_border_color="@color/transparent_black"-->
-                <!--app:civ_border_width="1dp"-->
-                <!--app:layout_collapseMode="parallax" />-->
-
-            <!--<com.devspark.robototextview.widget.RobotoTextView-->
-                <!--android:id="@+id/event_type"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="3dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:paddingLeft="10dp"-->
-                <!--android:text="2 Mile"-->
-                <!--android:textColor="#6c7880"-->
-                <!--android:textSize="12sp" />-->
-
-            <!--<com.devspark.robototextview.widget.RobotoTextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="0.2dp"-->
-                <!--android:layout_marginTop="3dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:paddingLeft="10dp"-->
-                <!--android:text="30 min"-->
-                <!--android:textColor="#6c7880"-->
-                <!--android:textSize="12sp" />-->
-
-            <!--<de.hdodenhof.circleimageview.CircleImageView-->
-                <!--android:layout_width="20dp"-->
-                <!--android:layout_height="20dp"-->
-                <!--android:layout_gravity="left"-->
-                <!--android:elevation="20dp"-->
-                <!--android:fitsSystemWindows="true"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@drawable/ic_directions_car_black_24dp"-->
-                <!--app:civ_border_color="@color/transparent_black"-->
-                <!--app:layout_collapseMode="parallax" />-->
-
-        <!--</LinearLayout>-->
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textColor="#000000"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -333,40 +186,42 @@
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:paddingLeft="2dp"
-
                 android:layout_marginBottom="1dp">
+
                 <at.markushi.ui.CircleButton
                     android:id="@+id/btnSelectImageFromDevice"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
                     android:padding="8dp"
                     android:src="@drawable/ic_location_on_black_18dp"
                     app:cb_color="#d3d3d3"
                     app:cb_pressedRingWidth="5dp" />
 
-<LinearLayout
+
+                <LinearLayout
     android:layout_width="0dip"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginTop="8dp"
-    android:paddingLeft="10dp"
+    android:paddingLeft="5dp"
     android:layout_weight="1.18">
-                <com.devspark.robototextview.widget.RobotoTextView
-                    android:id="@+id/event_location_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:gravity="center_vertical"
-                    android:inputType="textMultiLine"
-                    android:maxLines="2"
-                    android:paddingRight="8dp"
-                    android:text="Location xyzdhkfb vdsgvf g shbdh fh sh fbdshbf dbdsvg fvdgsvf"
-                    android:textSize="14.8sp"  />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/event_location_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:gravity="bottom"
+        android:inputType="textMultiLine"
+        android:maxLines="2"
+        android:paddingRight="8dp"
+        android:text="Location xyzdhkfb vdsgvf g shbdh fh sh fbdshbf dbdsvg fvdgsvf"
+        android:textSize="14.8sp"  />
 
 
-                <com.devspark.robototextview.widget.RobotoTextView
+    <com.devspark.robototextview.widget.RobotoTextView
                     android:id="@+id/event_visibility_miles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -404,9 +259,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
-                android:paddingTop="7dp"
-                android:paddingLeft="7dp"
-                android:paddingBottom="4dp"
+                android:paddingTop="9dp"
+                android:paddingLeft="8dp"
+                android:paddingBottom="7dp"
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -461,7 +316,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="13dp"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
             android:background="@color/date_picker_view_animator" />
@@ -477,16 +332,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="18dp"
-                    android:layout_gravity="left"
-                    android:padding="2dp"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_short_text_black_24dp"
-                    app:layout_collapseMode="parallax"
-                />
+
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="match_parent"
@@ -514,8 +360,19 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/date_picker_view_animator" />
+
+        <com.devspark.robototextview.widget.RobotoTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="11.5dp"
+            android:text="Admin"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textSize="16sp"
+            />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -523,45 +380,18 @@
             android:paddingLeft="7dp"
             android:paddingRight="16dp">
 
-            <!--<LinearLayout-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<de.hdodenhof.circleimageview.CircleImageView-->
-                    <!--android:layout_width="15dp"-->
-                    <!--android:layout_height="15dp"-->
-                    <!--android:layout_gravity="left"-->
-                    <!--android:elevation="20dp"-->
-                    <!--android:fitsSystemWindows="true"-->
-                    <!--android:scaleType="centerCrop"-->
-                    <!--android:src="@drawable/user_image"-->
-                    <!--app:civ_border_color="@color/transparent_black"-->
-                    <!--app:layout_collapseMode="parallax"-->
-                   <!--/>-->
-
-            <!--<com.devspark.robototextview.widget.RobotoTextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="6dp"-->
-                <!--android:text="Admin"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
-                <!--android:textSize="15sp"-->
-                <!--/>-->
-            <!--</LinearLayout>-->
             <LinearLayout
                 android:id="@+id/liner_layout_navigate_admin_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginLeft="5dp"
                 android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/admin_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="centerCrop"
                     android:src="@drawable/user_image" />
@@ -641,7 +471,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="1dp"
             android:layout_marginRight="1dp"
