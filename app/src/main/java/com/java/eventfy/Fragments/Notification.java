@@ -115,7 +115,8 @@ public class Notification extends Fragment {
     }
 
     public void removeNoData(){
-        if(notificationList.get(0).getViewMessage()!=null && notificationList.get(0).getViewMessage().equals(getString(R.string.home_no_data))){
+
+        if(notificationList!=null && notificationList.size()>1 && notificationList.get(0).getViewMessage()!=null && notificationList.get(0).getViewMessage().equals(getString(R.string.home_no_data))){
             notificationList.remove(0);
         }
     }

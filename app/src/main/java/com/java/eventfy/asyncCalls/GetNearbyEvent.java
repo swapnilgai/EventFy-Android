@@ -66,7 +66,6 @@ try  {
             Events[] event = response.getBody();
 
             eventLst = new LinkedList<Events>(Arrays.asList(event));
-            Log.e("event size : ", " 8888888 " + eventLst.size());
         }catch (Exception e){
 
         }
@@ -77,6 +76,9 @@ try  {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
+
+//        Log.e("event size : ", " 8888888 " + eventLst.size());
+
 
         if(eventLst!=null)
             for(Events obj : eventLst) {
@@ -94,10 +96,6 @@ try  {
         nearbyEventData.setEventsList(eventLst);
         nearbyEventData.setLocation(signUp.getLocation());
 
-//        for(Events e : eventLst) {
-//            Log.e("event nearby ", " >>>>>>>>> "+e.getEventId());
-//
-//        }
         EventBusService.getInstance().post(nearbyEventData);
     }
 }

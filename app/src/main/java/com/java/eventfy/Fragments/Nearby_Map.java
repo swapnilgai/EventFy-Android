@@ -6,14 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -57,9 +55,6 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,10 +99,12 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private SetEventIconGoogleMap setEventIconGoogleMap;
     private void initializeMap(Location location) {
         setUpMarker(location);
+
     }
 
     public void setUserOnMap(Location location){
 
+        googleMap.clear();
         userCurrentLocation = location;
 
         if(userMarker !=null)
@@ -118,10 +115,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
 
-        if(image!=null)
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
-        else
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
 
         markerOptions.title(signUp.getUserName());
         userMarker =  googleMap.addMarker(markerOptions);
@@ -155,23 +149,14 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         googelMapSetting(location);
 
-        if(signUp.getImageUrl().equals("default")){
         image = null;
-        }else {
-
-            GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
-            getBitmapBytes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
 
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
-                Log.e("onclick event Called ", ""+marker);
                 int index = -1;
                 for(int i=0; i<markerArr.length; i++) {
-
-
                      if (markerArr[i].equals(marker)){
                             index = i;
                          break;
@@ -219,9 +204,9 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         googleMap.addCircle(circleOptions);
     }
 
-
     public void updateEventinfo(int index)  {
         indexForOnclickEvent = index;
+        if(eventAddress!=null)
         eventAddress.setText(eventLst.get(index).getLocation().getName().toString());
 
         this.index = index;
@@ -236,12 +221,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         }
 
 
-        Away away = eventAwayMapping.get(eventLst.get(index).getEventId());
-        if(away!=null){
-            eventDistance.setText(away.getDistance());
-            eventDuration.setText(away.getDuration());
-        }
-
+            eventDistance.setText(eventLst.get(index).getEventAwayDistanve());
+            eventDuration.setText(eventLst.get(index).getEventAwayDuration());
 
         eventInfoLinearLayout.setOnClickListener(new OnClickListener() {
             @Override
@@ -258,8 +239,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 }else {
                     mActivity.startActivity(intent);
                 }
-
-            }
+        }
         });
     }
 
@@ -414,15 +394,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
-    @Subscribe
-    public void getAwayObjectforEvent(Away awayObj) {
-
-        eventAwayMapping.put(awayObj.getEvents().getEventId(),awayObj);
-        updateAwayOnUi(awayObj);
-    }
-
-
     public void updateAwayOnUi(Away awayObj){
 
         if(eventLst.get(index).getEventId() == awayObj.getEvents().getEventId()){
@@ -496,56 +467,11 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 else if(userCurrentLocation!=null) {
                      signUp.setLocation(userCurrentLocation);
                  }
-
-
-                if(signUp.getLocation()!=null && !signUp.getImageUrl().equals("default")){
-                GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
-                getBitmapBytes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-                else if(signUp.getImageUrl().equals("default")){
-                    image = null;
                     setUserOnMap(signUp.getLocation());
-                }
+
             }
         }
 
-    }
-
-    private class GetBitmapBytes extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // your background code fetch InputStream
-
-            URL url = null;
-            try {
-                url = new URL(signUp.getImageUrl());
-                image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return  null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Void nVoid) {
-            super.onPostExecute(nVoid);
-
-
-            if (image != null) {
-                Log.e("in async after: ", ""+image);
-                image = Bitmap.createScaledBitmap(image, 100, 100, true);
-
-                image = getRoundedRectBitmap(image);
-
-                if (signUp.getLocation() != null)
-                    setUserOnMap(signUp.getLocation());
-            }
-        }
     }
 
 }

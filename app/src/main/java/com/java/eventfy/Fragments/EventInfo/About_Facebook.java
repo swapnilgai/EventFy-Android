@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -14,7 +13,6 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -31,6 +30,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
@@ -46,6 +47,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -77,7 +80,7 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     private Button eventLink;
     private Location userCurrentLocation;
     private  SignUp signUp;
-    private Bitmap image;
+    private List<Marker> markerLst = new LinkedList<Marker>();
 
 
     @Override
@@ -226,34 +229,29 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 
         getUserObject();
 
-        if(signUp.getLocation()!=null) {
-            if (signUp.getImageUrl().equals("default")) {
-                image = null;
-                setUserOnMap(signUp.getLocation());
-            } else {
 
-                GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
-                getBitmapBytes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            if (signUp.getImageUrl().equals("default")) {
+//                image = null;
+//
+//            } else {
+//
+//              //  GetBitmapBytes getBitmapBytes = new GetBitmapBytes();
+//              //  getBitmapBytes.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//
+//            }
 
-            }
-        }
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().
-                target(new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude())).
-                tilt(65).
-                zoom(zoomVal).
-                bearing(30).
-                build();
 
-        zoomVal = getZoonValue(zoomVal);
         myLaLn = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
-//        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_black_18dp));
         markerOptions.title(event.getEventName());
-        googleMap.addMarker(markerOptions);
+        markerLst.add(googleMap.addMarker(markerOptions));
+
+         if(signUp.getLocation()!=null)
+             setUserOnMap(signUp.getLocation());
 
         googelMapSetting(event.getLocation());
 
@@ -269,15 +267,23 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 
         // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
 
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markerLst) {
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
 
         CameraPosition cameraPosition = new CameraPosition.Builder().
                 target(new LatLng(location.getLatitude(), location.getLongitude())).
-                tilt(40).
-                zoom(15).
+                tilt(45).
                 bearing(40).
                 build();
 
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 150);
+        CameraUpdate cu1 = CameraUpdateFactory.newCameraPosition(cameraPosition);
+
+        googleMap.animateCamera(cu1);
+        googleMap.moveCamera(cu);
 
     }
 
@@ -291,13 +297,13 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
 
-        if(image!=null)
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
-        else
+//        if(image!=null)
+//            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
+//        else
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
 
         markerOptions.title(signUp.getUserName());
-        googleMap.addMarker(markerOptions);
+        markerLst.add(googleMap.addMarker(markerOptions));
 
 
     }
@@ -352,7 +358,7 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
             URL url = null;
             try {
                 url = new URL(signUp.getImageUrl());
-                image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+              //  image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -368,15 +374,15 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
             super.onPostExecute(nVoid);
 
 
-            if (image != null) {
-                Log.e("in async after: ", ""+image);
-                image = Bitmap.createScaledBitmap(image, 100, 100, true);
-
-                image = getRoundedRectBitmap(image);
-
-                if (signUp.getLocation() != null)
-                    setUserOnMap(signUp.getLocation());
-            }
+//            if (image != null) {
+//                Log.e("in async after: ", ""+image);
+//                image = Bitmap.createScaledBitmap(image, 100, 100, true);
+//
+//                image = getRoundedRectBitmap(image);
+//
+//                if (signUp.getLocation() != null)
+//                    setUserOnMap(signUp.getLocation());
+//            }
         }
     }
 

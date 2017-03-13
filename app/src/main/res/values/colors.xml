@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#125688</color>
-    <color name="colorPrimaryDark">#125699</color>
+    <color name="colorPrimary">#ee2788d5</color>
+    <color name="colorPrimaryDark">#f00d7ad1</color>
     <color name="colorPrimaryTransparent">#80125688</color>
     <color name="colorBlackTransparent">#99000000</color>
     <color name="textColorPrimary">#FFFFFF</color>
@@ -11,7 +11,7 @@
     <color name="colorActiveGreen">#00db28</color>
     <color name="colorDoNotDisturbYellow">#ffaa00</color>
     <color name="colorSkyBlue">#e2f6ff</color>
-    <color name="colorErrorRed">#D43939</color>
+    <color name="colorErrorRed">#000000</color>
     <color name="colorAccentOld">#c8e8ff</color>
     <color name="transparent_white">#7fffffff</color>
 </resources>

@@ -103,7 +103,7 @@ public class EventInfoPublic extends AppCompatActivity {
             commentBoxLinearLayout = (LinearLayout) findViewById(R.id.comment_box_linear_layout);
 
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
-            if(event.getFacebookEventId()==null && event.getDecesion().equals(getString(R.string.event_admin))){
+            if(event.getFacebookEventId()==null && event.getDecesion()!=null && event.getDecesion().equals(getString(R.string.event_admin))){
                   rsvpForEventBtn.setVisibility(View.GONE);
             }
 

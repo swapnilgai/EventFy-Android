@@ -12,8 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -57,6 +55,12 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.code.geocoder.Geocoder;
+import com.google.code.geocoder.GeocoderRequestBuilder;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderRequest;
+import com.google.code.geocoder.model.GeocoderResult;
+import com.google.code.geocoder.model.GeocoderStatus;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.Events;
@@ -80,8 +84,6 @@ import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import at.markushi.ui.CircleButton;
@@ -210,6 +212,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         if(eventObj==null) {
             eventObj = new Events();
+            eventObj.setLocation(eventLocation);
             eventObj.setViewMessage("temp");
             eventObj.setEventCategory(eventType);
             cancleBtn.setVisibility(View.GONE);
@@ -436,16 +439,18 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     final Place place = places.get(0);
                     if(place!=null) {
 
-                        if(eventObj.getLocation()==null){
                             eventObj.setLocation(eventLocation);
-                        eventObj.getLocation().setName(String.valueOf(place.getAddress()));
+                            eventObj.getLocation().setName(String.valueOf(place.getAddress()));
+                            eventObj.getLocation().setLatitude( place.getLatLng().latitude);
+                            eventObj.getLocation().setLongitude( place.getLatLng().longitude);
+                        //setLoading();
+                       // getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
 
-                        setLoading();
-                        getAddressFromLatLang(place.getLatLng().latitude, place.getLatLng().longitude);
                         setMapInVisible();
                         setAutoCompleteTextViewInVisible();
-                        }
-                        //setUpMarker();
+                        setLocationInfoTextViewVisible();
+                        setUpMarker();
+                        setLocationOnMap(String.valueOf(place.getAddress()));
                     }
                     places.release();
                 }
@@ -528,14 +533,10 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         if(viewToIdentifyTimePicker.getId() == R.id.public_event_start_date) {
             startDate.append(time);
             dateTimeFrom = dateTimeFrom+" "+hourString+":"+minuteString;
-
-          //  Log.e("start Date: ", ""+convertStringToDateTime(dateTimeFrom));
-
         }
         else {
             endDate.append(time);
             dateTimeTo = dateTimeTo + " "+hourString+":"+minuteString;
-          //  Log.e("start date: ", ""+convertStringToDateTime(dateTimeTo));
         }
     }
 
@@ -610,7 +611,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         if(editEvent.getViewMsg()==null)
         {
             //Success
-
            // EventBusService.getInstance().unregister(this);
             Toast.makeText(getActivity(), "Event Updated", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
@@ -624,7 +624,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     @Subscribe
@@ -648,20 +647,37 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public void getAddressFromLatLang(double latitude, double longitude) {
 
-        eventLocation.setLatitude(latitude);
-        eventLocation.setLongitude(longitude);
-
-        new AsyncTask<LatLng, Void, List<Address>>()
+        new AsyncTask<LatLng, Void, String>()
         {
             @Override
-            protected List<Address> doInBackground(LatLng... latLan)
+            protected String  doInBackground(LatLng... latLan)
             {
                 try
                 {
-                    Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
-                    List<Address> addresses = gcd.getFromLocation(latLan[0].latitude, latLan[0].longitude, 1);
-                    if (addresses.size() > 0)
-                        return addresses;
+                    GeocoderRequest geocoderRequest;
+                    Geocoder geocoder = new Geocoder();
+                    geocoderRequest =  new GeocoderRequestBuilder().setLocation
+                            (new com.google.code.geocoder.model.LatLng(String.valueOf(latLan[0].latitude), String.valueOf(latLan[0].longitude)))
+                            .setLanguage("en").getGeocoderRequest();
+
+                    Log.e("BDHFSBFBDHSBFH BDSHBFHBSD ", "HDSBFYBDBF");
+                    GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+                    if (geocoderResponse != null) {
+                        if (geocoderResponse.getStatus() == GeocoderStatus.OK) {
+                            if (!geocoderResponse.getResults().isEmpty()) {
+                                GeocoderResult geocoderResult = // Get the first result
+                                        geocoderResponse.getResults().iterator().next();
+                                String resultAddr = geocoderResult.getFormattedAddress();
+                                if(resultAddr!= null && resultAddr.length() > 0)
+                                {
+                                    eventObj.getLocation().setLatitude(latLan[0].latitude);
+                                    eventObj.getLocation().setLongitude(latLan[0].longitude);
+
+                                }
+                                return resultAddr;
+                            }
+                        }
+                    }
 
                 }
                 catch (Exception ex)
@@ -673,26 +689,17 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             }
 
             @Override
-            protected void onPostExecute(List<Address> addresses)
+            protected void onPostExecute(String addresses)
             {
 
-                String outputAddress = "";
-
-                if (addresses!= null && addresses.size() > 0) {
-                    Log.e("in 1 ", " @@@@@ ");
-                    for(Address address : addresses) {
-
-                        for(int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                            outputAddress += " " + address.getAddressLine(i);
-                        }
-                    }
-                    eventObj.getLocation().setName(outputAddress);
-                    setLocationOnMap(outputAddress);
+                if (addresses!= null && addresses.length() > 0) {
+                    Log.e("in 1 ", " @@@@@ "+addresses);
+                    eventObj.getLocation().setName(addresses);
+                    setLocationOnMap(addresses);
                     setAutoCompleteTextViewInVisible();
                     setMapVisible();
                     setUpMarker();
                     setLocationInfoTextViewVisible();
-
                 }
                 else if(eventObj.getLocation()!=null && eventObj.getLocation().getName()!=null){
                     setAutoCompleteTextViewInVisible();
@@ -706,7 +713,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     Log.e("in 3 ", " @@@@@ ");
                     produceErrorMessageOnLocationNotFound();
                     setLoadingLocationInVisible();
-                    eventObj.setLocation(null);
+                    eventObj.getLocation().setName(null);
                 }
                 // do whatever you want/need to do with the address found
                 // remember to check first that it's not null
@@ -851,6 +858,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         LatLng myLaLn = new LatLng(eventObj.getLocation().getLatitude(), eventObj.getLocation().getLongitude());
 
+        Log.e("seting map ", "  ************************* "+eventObj.getLocation().getLatitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -874,7 +882,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         // Zoom in, animating the camera.
         googleMap.animateCamera(CameraUpdateFactory.zoomIn());
         // Zoom out to zoom level 10, animating with a duration of 2 seconds.
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(16), 2000, null);
 
         googleMap.getUiSettings().setScrollGesturesEnabled(false);
 

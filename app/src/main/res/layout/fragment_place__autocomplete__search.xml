@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+     android:background="@color/white"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="32dp"
+        android:paddingTop="15dp"
+        android:background="@color/white"
         android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/advantage_nearby"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,289 +26,243 @@
             android:orientation="vertical">
 
 
-            <android.support.v7.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="10dp"
-                card_view:cardPreventCornerOverlap="true">
-
+                android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/location_map_view_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    >
 
-                    <LinearLayout
-                        android:id="@+id/location_map_view_linear_layout"
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/location_map_view"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp">
-
-                        <com.google.android.gms.maps.MapView
-                            android:id="@+id/location_map_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="140dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/location_edit_text_linear_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/autocomplete_places"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="4dp"
-                            android:layout_marginRight="4dp"
-                            android:background="@android:color/transparent"
-                            android:hint="Enter Address"
-                            android:inputType="textMultiLine"
-                            android:maxLines="1"
-                            android:paddingBottom="11dp"
-                            android:paddingLeft="5dp"
-                            android:paddingTop="18dp"
-                            android:scrollbars="vertical" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/location_info_linear_layout"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|bottom"
-                        android:layout_marginBottom="4dp"
-                        android:gravity="bottom"
-                        android:orientation="horizontal"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp">
-
-                        <at.markushi.ui.CircleButton
-                            android:id="@+id/btnSelectImageFromDevice"
-                            android:layout_width="35dip"
-                            android:layout_height="35dip"
-                            android:layout_gravity="bottom"
-                            android:layout_marginRight="8dp"
-                            android:gravity="center"
-                            android:padding="2dp"
-                            android:src="@drawable/ic_location_on_black_18dp"
-
-                            app:cb_color="@color/white"
-                            app:cb_pressedRingWidth="5dip" />
-
-
-                        <com.devspark.robototextview.widget.RobotoTextView
-                            android:id="@+id/event_location_text_view"
-                            android:layout_width="0dip"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
-                            android:layout_weight="1.0"
-                            android:gravity="fill_vertical"
-                            android:inputType="textMultiLine"
-                            android:paddingRight="4dp"
-                            android:paddingTop="10dp"
-                            android:text="location"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <at.markushi.ui.CircleButton
-                            android:id="@+id/edit_location_btn"
-                            android:layout_width="45dip"
-                            android:layout_height="36dip"
-                            android:layout_gravity="bottom"
-                            android:gravity="bottom"
-                            android:padding="2dp"
-                            android:src="@drawable/ic_create_black_24dp"
-                            app:cb_color="@color/white"
-                            app:cb_pressedRingWidth="5dp" />
-
-                    </LinearLayout>
+                        android:layout_height="140dp" />
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="10dp"
-                android:padding="20dp"
-                card_view:cardPreventCornerOverlap="true">
-
-                <com.devspark.robototextview.widget.RobotoTextView
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="12dp"
-                    android:text="Date/Time (Optional)" />
+                    android:layout_height="2dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginLeft="1dp"
+                    android:layout_marginRight="1dp"
+                    android:background="@color/date_picker_view_animator" />
+                <LinearLayout
+                    android:id="@+id/location_edit_text_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autocomplete_places"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginRight="10dp"
+                        android:hint="Enter Address"
+                        android:inputType="textMultiLine"
+                        android:maxLines="2"
+                        android:background="@android:color/transparent"
+                        android:paddingBottom="10dp"
+                        android:paddingLeft="5dp"
+                        android:paddingTop="14dp"
+                        android:scrollbars="vertical" />
+
+                </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:id="@+id/location_info_linear_layout"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginBottom="4dp"
+                    android:gravity="bottom"
                     android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
-
-                    <android.support.design.widget.TextInputLayout
-
-                        android:layout_width="0dip"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1.0">
-
-                        <com.devspark.robototextview.widget.RobotoEditText
-                            android:id="@+id/remote_event_start_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_weight="1.0"
-                            android:clickable="true"
-                            android:focusable="false"
-                            android:hint="Start"
-                            android:inputType="textCapWords|date"
-                            android:singleLine="true"
-                            android:textColor="@color/colorPrimaryDark" />
-                    </android.support.design.widget.TextInputLayout>
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp">
 
                     <at.markushi.ui.CircleButton
-                        android:layout_width="20dip"
-                        android:layout_height="20dip"
+                        android:id="@+id/btnSelectImageFromDevice"
+                        android:layout_width="35dip"
+                        android:layout_height="35dip"
                         android:layout_gravity="bottom"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginRight="5dp"
-                        android:src="@drawable/places_ic_clear"
+                        android:layout_marginRight="8dp"
+                        android:gravity="center"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_location_on_black_18dp"
+
                         app:cb_color="@color/white"
                         app:cb_pressedRingWidth="5dip" />
 
 
-                    <!--<android.support.design.widget.TextInputLayout-->
-                    <!--android:layout_width="0dip"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1.0"-->
-                    <!--android:layout_margin="3dp"-->
-                    <!--&gt;-->
-
-                    <!--<com.devspark.robototextview.widget.RobotoEditText-->
-                    <!--android:id="@+id/remote_event_start_time"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1.0"-->
-                    <!--android:layout_gravity="center_horizontal"-->
-                    <!--android:hint="Start"-->
-                    <!--android:clickable="true"-->
-                    <!--android:focusable="false"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:inputType="textCapWords|date"-->
-                    <!--android:textColor="@color/colorPrimaryDark"-->
-                    <!--/>-->
-                    <!--</android.support.design.widget.TextInputLayout>-->
-                    <!--<at.markushi.ui.CircleButton-->
-                    <!--android:layout_width="15dip"-->
-                    <!--android:layout_height="15dip"-->
-                    <!--android:layout_gravity="bottom"-->
-                    <!--android:layout_marginBottom="15dp"-->
-                    <!--android:layout_marginRight="5dp"-->
-                    <!--android:src="@drawable/places_ic_clear"-->
-                    <!--app:cb_color="@color/white"-->
-                    <!--app:cb_pressedRingWidth="5dip" />-->
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"
-                card_view:cardPreventCornerOverlap="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp">
-
-                    <android.support.design.widget.TextInputLayout
-
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:id="@+id/event_location_text_view"
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
-                        android:layout_margin="3dp"
+                        android:layout_marginBottom="2dp"
                         android:layout_weight="1.0"
-
-                        android:textAlignment="center">
-
-                        <com.devspark.robototextview.widget.RobotoEditText
-                            android:id="@+id/remote_event_end_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="2dp"
-                            android:layout_weight="1.0"
-                            android:clickable="true"
-                            android:focusable="false"
-                            android:hint="End Date"
-                            android:inputType="textCapWords|date"
-                            android:singleLine="true"
-                            android:textAlignment="center"
-                            android:textColor="@color/colorPrimaryDark" />
-                    </android.support.design.widget.TextInputLayout>
+                        android:gravity="fill_vertical"
+                        android:inputType="textMultiLine"
+                        android:paddingRight="4dp"
+                        android:paddingTop="10dp"
+                        android:text="location"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <at.markushi.ui.CircleButton
-                        android:layout_width="20dip"
-                        android:layout_height="20dip"
+                        android:id="@+id/edit_location_btn"
+                        android:layout_width="45dip"
+                        android:layout_height="36dip"
                         android:layout_gravity="bottom"
+                        android:gravity="bottom"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_create_black_24dp"
+                        app:cb_color="@color/white"
+                        app:cb_pressedRingWidth="5dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@color/date_picker_view_animator" />
+                <!--<com.devspark.robototextview.widget.RobotoTextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="14dp"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:text="Date/Time (Optional)" />-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                >
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/enter_date_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingLeft="90dp"
+                    android:paddingRight="50dp"
+                    android:layout_gravity="center"
+                    android:foregroundGravity="center"
+                    android:background="@drawable/content_main2_button_color"
+                    android:drawableLeft="@drawable/ic_date_time_white"
+                    android:textAlignment="center"
+                    android:gravity="center"
+                    android:text="Enter Date/Time"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="gone"
+    >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp">
+
+
+                    <com.devspark.robototextview.widget.RobotoEditText
+                        android:id="@+id/remote_event_start_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="Start"
+                        android:editable="false"
+                        android:paddingLeft="8dp"
+                        android:layout_weight="1.0"
+                        android:textColor="@color/transparent_black"
+                        android:textColorHint="@color/transparent_black"
+                        android:textSize="20dp" />
+
+                    <at.markushi.ui.CircleButton
+                        android:layout_width="25dip"
+                        android:layout_height="50dip"
+                        android:layout_gravity="center"
                         android:layout_marginBottom="15dp"
                         android:layout_marginRight="5dp"
                         android:src="@drawable/places_ic_clear"
                         app:cb_color="@color/white"
                         app:cb_pressedRingWidth="5dip" />
 
-                    <!--<android.support.design.widget.TextInputLayout-->
-                    <!--android:layout_width="0dip"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1.0"-->
-                    <!--android:layout_margin="3dp"-->
-                    <!--&gt;-->
+                </LinearLayout>
 
-                    <!--<com.devspark.robototextview.widget.RobotoEditText-->
-                    <!--android:id="@+id/remote_event_end_time"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1.0"-->
-                    <!--android:layout_gravity="center_horizontal"-->
-                    <!--android:hint="End Time"-->
-                    <!--android:clickable="true"-->
-                    <!--android:focusable="false"-->
-                    <!--android:singleLine="true"-->
-                    <!--android:inputType="textCapWords|date"-->
-                    <!--android:textColor="@color/colorPrimaryDark"-->
-                    <!--/>-->
-                    <!--</android.support.design.widget.TextInputLayout>-->
-                    <!--<at.markushi.ui.CircleButton-->
-                    <!--android:layout_width="15dip"-->
-                    <!--android:layout_height="15dip"-->
-                    <!--android:layout_gravity="bottom"-->
-                    <!--android:layout_marginBottom="15dp"-->
-                    <!--android:layout_marginRight="5dp"-->
-                    <!--android:src="@drawable/places_ic_clear"-->
-                    <!--app:cb_color="@color/white"-->
-                    <!--app:cb_pressedRingWidth="5dip" />-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="2dp">
+
+                    <com.devspark.robototextview.widget.RobotoEditText
+                        android:id="@+id/remote_event_end_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="10dp"
+                        android:paddingLeft="8dp"
+                        android:editable="false"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/edit_text_border"
+                        android:hint="End"
+                        android:inputType="numberSigned"
+                        android:layout_weight="1.0"
+                        android:textColor="@color/transparent_black"
+                        android:textColorHint="@color/transparent_black"
+                        android:textSize="20dp" />
+
+                    <at.markushi.ui.CircleButton
+                        android:layout_width="25dip"
+                        android:layout_height="50dip"
+                        android:layout_gravity="top"
+                        android:layout_marginRight="5dp"
+                        android:src="@drawable/places_ic_clear"
+                        app:cb_color="@color/white"
+                        app:cb_pressedRingWidth="5dip" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+</LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@color/date_picker_view_animator" />
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="match_parent"
@@ -353,48 +312,26 @@
                     android:id="@+id/remote_event_visibliry_miles_text"
                     android:layout_width="40dp"
                     android:layout_height="25dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginRight="10dp"
                     android:src="@drawable/places_ic_clear"
                     android:text="10"
                     android:textSize="20dp"
                     android:textStyle="bold" />
-
-
-                <!--<SeekBar-->
-                <!--android:id="@+id/remote_event_visibliry_miles"-->
-                <!--android:layout_width="200dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:hint="End Date"-->
-                <!--android:layout_marginBottom="2dp"-->
-                <!--android:layout_weight="1.0"-->
-                <!--android:clickable="true"-->
-                <!--android:textAlignment="center"-->
-                <!--android:focusable="false"-->
-                <!--android:singleLine="true"-->
-                <!--android:inputType="textCapWords|date"-->
-                <!--android:textColor="@color/colorPrimaryDark"-->
-                <!--/>-->
-
-                <!--<com.devspark.robototextview.widget.RobotoTextView-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:textAlignment="center"-->
-                <!--android:textSize="20dp"-->
-
-                <!--android:text="10"/>-->
-
             </LinearLayout>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@color/date_picker_view_animator" />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/remote_search"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
             android:layout_marginTop="0dp"
@@ -405,4 +342,4 @@
 
 
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
