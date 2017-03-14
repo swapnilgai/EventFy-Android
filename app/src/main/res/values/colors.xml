@@ -14,4 +14,9 @@
     <color name="colorErrorRed">#000000</color>
     <color name="colorAccentOld">#c8e8ff</color>
     <color name="transparent_white">#7fffffff</color>
+    <color name="white">#ffffff</color>
+    <color name="map_transperant">#D3F9F9F9</color>
+
+
+
 </resources>
