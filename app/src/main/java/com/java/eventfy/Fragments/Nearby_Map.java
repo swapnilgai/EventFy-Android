@@ -96,7 +96,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private NearbyMapSearch nearbyMapSearch;
     private List<Marker> markerLst = new LinkedList<Marker>();
 
-
     private SetEventIconGoogleMap setEventIconGoogleMap;
     private void initializeMap(Location location) {
         setUpMarker(location);
@@ -120,7 +119,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         markerOptions.title(signUp.getUserName());
         userMarker =  googleMap.addMarker(markerOptions);
-
+        markerLst.add(userMarker);
 
     }
 
@@ -202,8 +201,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 for (Marker marker : markerLst) {
                     builder.include(marker.getPosition());
                 }
-                LatLngBounds bounds = builder.build();
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+                   LatLngBounds bounds = builder.build();
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
 
             }
         });

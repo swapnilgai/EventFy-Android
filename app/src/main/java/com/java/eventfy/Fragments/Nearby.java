@@ -633,7 +633,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     @Subscribe
     public void getAwayObjectforEvent(Away awayObj) {
 
-        Log.e("event list Size : ", " //////////// "+eventsList.size());
         if(!eventsList.contains(awayObj.getEvents()) && awayObj.getDistance()!=null && awayObj.getDistance().length()>=1) {
             awayObj.getEvents().setEventAwayDistanve(awayObj.getDistance());
             awayObj.getEvents().setEventAwayDuration(awayObj.getDuration());
