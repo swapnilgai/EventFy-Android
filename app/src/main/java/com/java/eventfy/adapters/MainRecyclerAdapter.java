@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,6 +28,7 @@ import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.Fragments.Nearby;
 import com.java.eventfy.Home;
+import com.java.eventfy.MyEvents;
 import com.java.eventfy.R;
 import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.DeviceDimensions;
@@ -54,9 +54,11 @@ import static com.java.eventfy.R.string.edited;
     private OnLocationEnableClickListner onLocationEnableClickListner;
     private Nearby nearby;
     private SignUp signUp;
+    private String activityName;
 
-    public MainRecyclerAdapter( Context context) {
+    public MainRecyclerAdapter( Context context, String activityName) {
         this.context = context;
+        this.activityName = activityName;
     }
 
     public void setOnLocationEnableClickListner(OnLocationEnableClickListner onLocationEnableClickListner) {
@@ -73,7 +75,6 @@ import static com.java.eventfy.R.string.edited;
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewHolder v;
-        Log.e("", "view type : "+viewType);
         if(viewType == VIEW_DATA)
             v = new ResultHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.nearby_recycleview,
                     parent, false));
@@ -145,8 +146,13 @@ import static com.java.eventfy.R.string.edited;
                     public void onClick(View v) {
                         View sharedView = ((ResultHolder) holder).eventImage;
                         String transitionName = "event_transition";
-                        Activity mActivity = ((Home) context);
-                        Intent intent = new Intent(mActivity, EventInfoPublic.class);
+                        Activity mActivity = null;
+                        if(activityName.equals(context.getString(R.string.activity_Home)))
+                            mActivity = ((Home) context);
+                        else if(activityName.equals(context.getString(R.string.activity_MyEvents))){
+                            mActivity = ((MyEvents) context);
+                        }
+                            Intent intent = new Intent(mActivity, EventInfoPublic.class);
                         intent.putExtra(context.getString(R.string.event_for_eventinfo), event);
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -174,7 +180,9 @@ import static com.java.eventfy.R.string.edited;
             if(event.getFacebookEventId()==null)
                 ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom(), event.getDateTime().getTimeZone()));
             else
-                ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeStringForFb(event.getDateTime().getDateTimeFrom()));
+               // ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom(), event.getDateTime().getTimeZone()));
+
+            ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeStringForFb(event.getDateTime().getDateTimeFrom()));
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());
                 if(milesDistance<4)  // to check if it is walkable distance
@@ -192,6 +200,10 @@ import static com.java.eventfy.R.string.edited;
 
 
                     ((ResultHolder)holder).eventAwayLinearLayout.setVisibility(View.VISIBLE);
+
+
+            if(event.getFacebookEventId()==null)
+                ((ResultHolder)holder).eventSourceImage.setImageResource(R.drawable.logo);
 
                 //Log.e("height : ", ""+ Math.abs(DeviceDimensions.deviceHeight/3));
                // Log.e("weidth : ", ""+DeviceDimensions.deviceWeidth);
@@ -215,7 +227,8 @@ import static com.java.eventfy.R.string.edited;
         RobotoTextView eventMileAwayDuration;
         @Bind(R.id.event_info_event_away_distance_linear_layout)
         LinearLayout eventAwayLinearLayout;
-
+        @Bind(R.id.event_source_image)
+        ImageView eventSourceImage;
         public ResultHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -227,9 +240,7 @@ import static com.java.eventfy.R.string.edited;
         ImageView progressBar;
         public ProgressBarHolder(View itemView) {
             super(itemView);
-
             progressBar = (ImageView) itemView.findViewById(R.id.loadingImage);
-
         }
     }
 
@@ -271,7 +282,6 @@ import static com.java.eventfy.R.string.edited;
         if(eventTemp!=null)
         {
 
-            Log.e("adapter data ", " indexxx : "+eventTemp.getViewMessage());
             if(eventTemp.getViewMessage() == null )
                 return VIEW_DATA;
             else if(eventTemp.getViewMessage().equals(edited)) {

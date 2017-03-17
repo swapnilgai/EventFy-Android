@@ -65,9 +65,11 @@ public class Public extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_public, container, false);
+        getUserObject();
+        EventBusService.getInstance().register(this);
         getNearbEventServerCall();
         //if(!EventBusService.getInstance().isRegistered(this))
-        EventBusService.getInstance().register(this);
+
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
@@ -77,7 +79,7 @@ public class Public extends Fragment {
         floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item3);
 
-        adapter = new MainRecyclerAdapter(getContext());
+       // adapter = new MainRecyclerAdapter(getContext());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -173,9 +175,10 @@ public class Public extends Fragment {
         EventBusService.getInstance().unregister(this);
     }
 
+
     public void getUserObject()
     {
-        SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");

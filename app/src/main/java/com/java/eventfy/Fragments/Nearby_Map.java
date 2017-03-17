@@ -15,13 +15,13 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -32,10 +32,10 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -56,6 +56,7 @@ import com.squareup.picasso.Picasso;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -83,7 +84,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private RobotoTextView eventDuration;
     private RobotoTextView eventDistance;
     private int indexForOnclickEvent;
-     private Marker [] markerArr;
     private SignUp signUp;
     private HashMap<Integer, Away> eventAwayMapping;
     private int index;
@@ -91,9 +91,10 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private SeekBar eventSearchMiles;
     private TextView eventVisibilityRadius;
     private Button eventSearch;
-    private LinearLayout eventSearchLinearLayout;
-    private LinearLayout eventInfoLinearLayout;
+    private CardView eventSearchLinearLayout;
+    private CardView eventInfoLinearLayout;
     private NearbyMapSearch nearbyMapSearch;
+    private List<Marker> markerLst = new LinkedList<Marker>();
 
 
     private SetEventIconGoogleMap setEventIconGoogleMap;
@@ -130,7 +131,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
        // googleMap.clear();
         signUp.setLocation(location);
 
-        markerArr = new Marker[eventLst.size()];
 
         setEventIconGoogleMap = SetEventIconGoogleMap.getInstance();
         for(Events events : eventLst) {
@@ -143,7 +143,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
             setEventIconGoogleMap.setIcon(markerOptions, getContext(), events.getEventCategory());
-            markerArr[index] = googleMap.addMarker(markerOptions);
+            markerLst.add(googleMap.addMarker(markerOptions));
             index++;
         }
 
@@ -155,17 +155,9 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
-                int index = -1;
-                for(int i=0; i<markerArr.length; i++) {
-                     if (markerArr[i].equals(marker)){
-                            index = i;
-                         break;
-                     }
-                }
-                if(index != -1){
-                    Log.e("index ", ""+index);
+                if(markerLst.contains(marker)){
 
-                    updateEventinfo(index);
+                    updateEventinfo(markerLst.indexOf(marker));
 
                 }
                 return false;
@@ -185,22 +177,38 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
 
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().
-                target(new LatLng(location.getLatitude(), location.getLongitude())).
-                tilt(85).
-                zoom(15).
-                bearing(0).
-                build();
+//        CameraPosition cameraPosition = new CameraPosition.Builder().
+//                target(new LatLng(location.getLatitude(), location.getLongitude())).
+//                tilt(85).
+//                zoom(15).
+//                bearing(0).
+//                build();
+//
+//        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
 
         CircleOptions circleOptions = new CircleOptions()
                 .center(myLaLn)
                 .radius(5*1000)
                 .strokeWidth(2)
                 .strokeColor(Color.BLUE);
-        // Supported formats are: #RRGGBB #AARRGGBB
-        //   #AA is the alpha, or amount of transparency
+
+
+        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (Marker marker : markerLst) {
+                    builder.include(marker.getPosition());
+                }
+                LatLngBounds bounds = builder.build();
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
+
+            }
+        });
+
+
         googleMap.addCircle(circleOptions);
     }
 
@@ -263,8 +271,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         eventSearchMiles = (SeekBar) view.findViewById(R.id.nearby_map_view_event_visibility_miles);
         eventVisibilityRadius = (TextView) view.findViewById(R.id.nearby_map_view_visibility_miles_radius);
         eventSearch = (Button) view.findViewById(R.id.nearby_map_view_event_search_btn);
-        eventSearchLinearLayout = (LinearLayout) view.findViewById(R.id.nearby_map_view_filter_linear_layout);
-        eventInfoLinearLayout = (LinearLayout) view.findViewById(R.id.nearby_map_view_event_info_linear_layout);
+        eventSearchLinearLayout = (CardView) view.findViewById(R.id.nearby_map_view_filter_card_view);
+        eventInfoLinearLayout = (CardView) view.findViewById(R.id.nearby_map_view_event_info_card_view);
         nearbyMapSearch = new NearbyMapSearch();
 
         eventSearchMiles.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){

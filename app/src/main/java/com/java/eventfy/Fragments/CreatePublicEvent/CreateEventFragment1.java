@@ -137,7 +137,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private ViewPager viewPager;
     private Button cancleBtn;
     private String url;
-    private  ObjectAnimator animator;
+    private ObjectAnimator animator;
     private LinearLayout gettingLocationLinearlayout;
     private CircleButton cancelLocationLoadingBtn;
     private CircleButton loadingLoactionBtn;
@@ -294,6 +294,13 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 enableGpsPopUp();
             }
         });
+        eventsVolatile.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+
+                dialogBoxVolatile();
+            }
+        });
+
 
         editLocationBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
@@ -659,8 +666,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     geocoderRequest =  new GeocoderRequestBuilder().setLocation
                             (new com.google.code.geocoder.model.LatLng(String.valueOf(latLan[0].latitude), String.valueOf(latLan[0].longitude)))
                             .setLanguage("en").getGeocoderRequest();
-
-                    Log.e("BDHFSBFBDHSBFH BDSHBFHBSD ", "HDSBFYBDBF");
                     GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
                     if (geocoderResponse != null) {
                         if (geocoderResponse.getStatus() == GeocoderStatus.OK) {
@@ -1014,7 +1019,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         int index = -1;
         if(eventObj.getEventCategory()!=null) {
-            //index = getIndexOfSpinerItem(getStringArray(R.array.category_arrays), eventObj.getEventCategory());
+            index = getIndexOfSpinerItemCategory(getResources().getStringArray(R.array.category_arrays), eventObj.getEventCategory());
             Log.e("category index : ", ""+index);
             evenrCategory.setSelection(index);
         }
@@ -1052,6 +1057,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         return i;
     }
 
+    public int getIndexOfSpinerItemCategory( String [] androidStrings , String item) {
+        int i = -1 ;
+
+        for(i=0 ; i<androidStrings.length; i++)
+            if(androidStrings[i] == item)
+                return i;
+
+        return i;
+    }
     public void dialogBox() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -1079,6 +1093,29 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
+
+    public void dialogBoxVolatile() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle("Volatile");
+
+        alertDialogBuilder.setMessage("This functionality will delete event automatically once event finish");
+
+        alertDialogBuilder.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
+
+
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
 
     public void startProgressDialog(String message) {
         progressDialog.setMessage(message);

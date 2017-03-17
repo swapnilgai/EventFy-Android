@@ -80,7 +80,7 @@ public class Private extends Fragment {
         floatingActionButton2 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) view.findViewById(R.id.material_design_floating_action_menu_item3);
 
-        adapter = new MainRecyclerAdapter(getContext());
+        //adapter = new MainRecyclerAdapter(getContext());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));

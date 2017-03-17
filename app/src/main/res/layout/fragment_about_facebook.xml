@@ -449,6 +449,26 @@
             android:paddingRight="16dp">
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/date_picker_view_animator" />
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_margin="14dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/content_main2_button_color"
+            android:text="@string/check_in_button"
+            android:textColor="@color/white" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/date_picker_view_animator" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/event_link"
@@ -457,7 +477,7 @@
             android:layout_margin="14dp"
             android:layout_weight="1.0"
             android:background="@drawable/content_main2_button_color"
-            android:text="@string/check_in_button"
+            android:text="@string/read_more"
             android:textColor="@color/white" />
 
     </LinearLayout>

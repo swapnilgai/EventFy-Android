@@ -26,7 +26,7 @@
         <item name="android:popupBackground">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.Dark" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
@@ -69,6 +69,10 @@
         <item name="colorAccent">@color/common_google_signin_btn_text_light_focused</item>
         <!--<item name="colorControlNormal">@color/Color Name</item>-->
         <!--<item name="colorControlActivated">@color/Color Name</item>-->
+    </style>
+
+    <style name="temp" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_material_light_1</item>
     </style>
 
 </resources>

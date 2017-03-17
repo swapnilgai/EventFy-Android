@@ -84,12 +84,11 @@ public class Remot extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_remot);
 
         createLoadingObj();
-        adapter = new MainRecyclerAdapter(getContext());
+        adapter = new MainRecyclerAdapter(getContext(), getString(R.string.activity_Home));
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
-
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

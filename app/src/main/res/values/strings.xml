@@ -13,15 +13,15 @@
     <string name="navigation_drawer_closed">The navigation drawer is closed</string>
 
     <!-- Web servises url -->
-    <string name="ip_local">http://192.168.0.6:8080/EventFy</string>
-    <string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>
+    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
+    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
 
     <!--<string name="ip_local">http://10.67.70.107:8080/EventFy</string>-->
     <!--<string name="ip_localhost">http://10.67.70.107:8080/EventFy</string>-->
 
     <!---->
-    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
-    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
+    <string name="ip_local">https://eventfy.herokuapp.com</string>
+    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -50,6 +50,9 @@
     <string name="delete_event">/webapi/events/deleteevent</string>
     <string name="remote_events">/webapi/events/getremoteevents</string>
     <string name="update_user_password">/webapi/signup/updatepassword</string>
+    <string name="user_event">/webapi/events/getuserevent</string>
+
+
 
     <string name="upda_user">/webapi/signup/updateuser</string>
 
@@ -82,6 +85,7 @@
 
     <string name="invisible_event_btn">MAKE EVENT INVISIBLE</string>
     <string name="check_in_button">Check In</string>
+    <string name="read_more">Read More</string>
     <string name="visible_event_btn">MAKE EVENT VISIBLE</string>
 
     <string name="event_attending">event_attending</string>
@@ -253,6 +257,10 @@
     <string name="login_fail">login_fail</string>
     <string name="login_server_error">login_server_error</string>
 
+    <string name="wish_list_update_success">wish_list_update_success</string>
+    <string name="wish_list_update_fail">wish_list_update_fail</string>
+    <string name="wish_list_update_server_error">wish_list_update_server_error</string>
+
     <string name="notification_id_gcm_register_success">notification_id_gcm_register_success</string>
     <string name="notification_id_server_register_success">notification_id_server_register_success</string>
     <string name="notification_id_server_register_fail">notification_id_server_register_fail</string>
@@ -264,9 +272,20 @@
     <string name="activity_Home">Home</string>
     <string name="activity_CreatePublicEvent">CreatePublicEvent</string>
     <string name="activity_ProfilePage">ProfilePage</string>
+    <string name="activity_MyAccount">MyAccount</string>
+    <string name="activity_MyEvents">MyEvents</string>
 
     <string name="facebook_event_link">https://www.facebook.com/events/</string>
     <string name="facebook_venue_link">https://www.facebook.com/</string>
     <string name="web_view_link">web_view_link</string>
+
+
+    <string name="player_error">Error initializing YouTube player: %s</string>
+    <string name="seek_to">Jump To</string>
+    <string name="seek_to_hint">Seconds</string>
+
+    <string name="my_event_no_data">my_event_no_data</string>
+    <string name="my_event_server_error">my_event_server_error</string>
+
 
 </resources>

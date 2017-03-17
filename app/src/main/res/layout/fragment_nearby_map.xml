@@ -3,35 +3,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
               android:background="#d3d3d3"
-    android:orientation="vertical">
+              android:orientation="vertical">
 
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
     <com.google.android.gms.maps.MapView
         android:id="@+id/nearby_map"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/nearby_map_view_event_info_linear_layout">
-
+        android:layout_height="match_parent"
+      />
 
 
         <android.support.v7.widget.CardView
+            android:id="@+id/nearby_map_view_event_info_card_view"
             android:layout_width="match_parent"
-            android:layout_height="95dp"
-            android:elevation="10dp">
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_margin="10dp"
+            app:cardCornerRadius="20dp"
+            android:elevation="10dp"
+            android:layout_alignParentBottom="true"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
                 android:orientation="horizontal"
-                android:paddingBottom="4dp"
+                android:paddingBottom="7dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="4dp">
+                android:paddingTop="7dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/map_view_event_info_image_view"
@@ -136,19 +141,16 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/nearby_map_view_filter_linear_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:background="#d3d3d3">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/nearby_map_view_filter_card_view"
             android:layout_width="match_parent"
             android:layout_height="180dp"
-            android:elevation="10dp">
+            app:cardCornerRadius="20dp"
+            android:layout_margin="10dp"
+            android:visibility="gone"
+            android:elevation="10dp"
+            android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -204,7 +206,6 @@
         </LinearLayout>
 
         </android.support.v7.widget.CardView>
-    </LinearLayout>
-
+</RelativeLayout>
 
 </LinearLayout>

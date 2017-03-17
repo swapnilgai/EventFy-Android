@@ -162,6 +162,7 @@
                 android:textColor="#6c7880"
                 android:textSize="12sp" />
             <ImageView
+                android:id="@+id/event_source_image"
                 android:layout_width="19dp"
                 android:layout_height="18dp"
                 android:elevation="20dp"

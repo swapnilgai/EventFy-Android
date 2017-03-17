@@ -16,6 +16,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
@@ -67,6 +69,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private Location location;
     private SharedPreferences.Editor editor;
     private Location userLoccation;
+    private Nearby nearbyFragment;
+    private  double scrollPositionNearBy =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +96,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-
+        setupViewPager(viewPager);
         Log.e("user image ", ""+userImage);
 
         View headerLayout =
@@ -112,12 +116,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.setDrawerListener(toggle);
         navigationView.setNavigationItemSelectedListener(this);
 
-        setupViewPager(viewPager);
+
         tabLayout.setupWithViewPager(viewPager);
         deviceDimensions();
         //initServices();
         toggle.syncState();
         setupTabIcons();
+
+
+//        Intent intent = new Intent(this, StreetView.class);
+//        startActivity(intent);
+
     }
 
     public void setNavigationDrawerUserData(SignUp signUp){
@@ -184,7 +193,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private void setupViewPager(ViewPager viewPager) {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new Nearby(), "Nearby");
+        nearbyFragment = new Nearby();
+        adapter.addFrag(nearbyFragment, "Nearby");
         adapter.addFrag(new Remot(), "Remot");
         adapter.addFrag(new Notification(), "Notification");
         viewPager.setAdapter(adapter);
@@ -460,5 +470,61 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         storeUserLocation(userLoccation);
     }
+
+     public void setListnerToFabAndToolbar(){
+
+
+         nearbyFragment.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)  nearbyFragment.recyclerView.getLayoutManager();
+
+             @Override
+             public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+               //  scrollPositionNearBy = linearLayoutManager.findFirstVisibleItemPosition();
+                // Log.e("fragggggg SS: ", "  dx:  "+linearLayoutManager.findFirstVisibleItemPosition());
+               //  Log.e("fragggggg Y: ", "  dx:  "+recyclerView.computeVerticalScrollOffset());
+                 int currentFirstVisible = linearLayoutManager.findFirstVisibleItemPosition();
+                         //recyclerView.computeVerticalScrollOffset();
+
+                         //=linearLayoutManager.findFirstVisibleItemPosition();
+                // Log.e("RecyclerView 1 : ", ": "+recyclerView.computeVerticalScrollOffset());
+                 Log.e("RecyclerView 2 : ", ":  "+scrollPositionNearBy);
+
+
+                 if(currentFirstVisible > scrollPositionNearBy){
+                     Log.e("RecyclerView scrolled: ", "scroll down!");
+                     nearbyFragment.fragment_switch_button.hide();
+                  //   toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
+//                     tabLayout.animate().translationY(-tabLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
+                    // if(toolbar.isShown())
+                     //   toolbar.setVisibility(View.GONE);
+
+                 }
+                 else if(currentFirstVisible<scrollPositionNearBy){
+                     Log.e("RecyclerView scrolled: ", "scroll up!");
+                     nearbyFragment.fragment_switch_button.show();
+                   //  toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                //     tabLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                    // if(!toolbar.isShown())
+                     //   toolbar.setVisibility(View.VISIBLE);
+
+                 }
+                 scrollPositionNearBy = currentFirstVisible;
+
+//                 if(scrollPositionNearBy<recyclerView.computeVerticalScrollOffset()){
+
+//                     scrollPositionNearBy = recyclerView.computeVerticalScrollOffset();
+//                 }else if(scrollPositionNearBy>recyclerView.computeVerticalScrollOffset()-800){
+
+//                     scrollPositionNearBy = recyclerView.computeVerticalScrollOffset()-800;
+//                 }
+
+             }
+
+             @Override
+             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                 super.onScrollStateChanged(recyclerView, newState);
+             }
+         });
+     }
 
 }

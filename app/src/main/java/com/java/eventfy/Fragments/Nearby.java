@@ -43,6 +43,7 @@ import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.Search.NearbyMapSearch;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.Home;
 import com.java.eventfy.R;
 import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
@@ -58,8 +59,8 @@ import java.util.List;
 public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private MainRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView recyclerView;
-    private FloatingActionButton fragment_switch_button;
+    public RecyclerView recyclerView;
+    public FloatingActionButton fragment_switch_button;
     private FragmentTransaction transaction;
     private FragmentManager manager;
     private Fragment nearby_map;
@@ -124,7 +125,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
-        adapter = new MainRecyclerAdapter(getContext());
+        adapter = new MainRecyclerAdapter(getContext(), getString(R.string.activity_Home));
         adapter.setOnLocationEnableClickListner(this);
         adapter.setFragment(this);
 
@@ -173,6 +174,10 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
 
         initServices();
+
+
+        ((Home)getActivity()).setListnerToFabAndToolbar();
+
         //
 
         super.onSaveInstanceState(savedInstanceState);

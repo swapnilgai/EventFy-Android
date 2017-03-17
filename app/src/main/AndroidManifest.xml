@@ -142,6 +142,14 @@
         </activity>
         <activity android:name=".WebViewActivity">
         </activity>
+        <activity android:name=".StreetView"
+               >
+
+        </activity>
+        <activity android:name=".YouTubeMediaPlayActivity"
+                  android:theme="@style/Theme.AppCompat.Dialog.Alert"
+                  >
+        </activity>
     </application>
 
 </manifest>

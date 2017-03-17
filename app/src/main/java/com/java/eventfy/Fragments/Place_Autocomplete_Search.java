@@ -543,7 +543,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
          googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         }
-
     }
 
     public static void convertTimeZones(final String fromTimeZoneString,
@@ -551,7 +550,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         final DateTimeZone fromTimeZone = DateTimeZone.forID(fromTimeZoneString);
         final DateTimeZone toTimeZone = DateTimeZone.forID(toTimeZoneString);
         final DateTime dateTime = new DateTime(fromDateTime, fromTimeZone);
-
     }
 
     @Override
