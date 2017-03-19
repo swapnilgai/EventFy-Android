@@ -201,7 +201,6 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
                                 // sending fake object to avoid over writing of image after removal
                                 Boolean fakeObjectFlag= true;
 
-                                Log.e("sending fake obhect ", " : "+fakeObjectFlag);
                                 EventBusService.getInstance().post(fakeObjectFlag);
                                 break;
                             case R.id.replace_profile_pic:

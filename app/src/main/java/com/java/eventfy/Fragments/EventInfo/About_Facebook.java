@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
@@ -38,6 +39,7 @@ import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.R;
+import com.java.eventfy.StreetView;
 import com.java.eventfy.WebViewActivity;
 import com.java.eventfy.utils.DateTimeStringOperations;
 import com.squareup.picasso.Picasso;
@@ -80,6 +82,7 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     private Button eventLink;
     private Location userCurrentLocation;
     private  SignUp signUp;
+    private LinearLayout streetViewLinearLayout;
     private List<Marker> markerLst = new LinkedList<Marker>();
 
 
@@ -107,6 +110,7 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         venueName = (RobotoTextView) view.findViewById(R.id.venue_id);
         timeFromNow = (TextView) view.findViewById(R.id.event_day_left);
         eventLink = (Button) view.findViewById(R.id.event_link);
+        streetViewLinearLayout = (LinearLayout) view.findViewById(R.id.street_view);
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
         mapView.onCreate(savedInstanceState);
@@ -136,6 +140,17 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
                 context.startActivity(intent);
             }
         });
+
+        streetViewLinearLayout.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), StreetView.class);
+                intent.putExtra(context.getString(R.string.event_object_for_street_view), event);
+                context.startActivity(intent);
+            }
+        });
+
 
         return view;
     }

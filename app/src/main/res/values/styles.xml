@@ -76,4 +76,12 @@
         <item name="colorPrimary">@color/primary_material_light_1</item>
     </style>
 
+    <style name="Theme.Transparent" parent="Base.Animation.AppCompat.Dialog">
+
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <!--<item name="android:backgroundDimEnabled">true</item>-->
+        <!--<item name="android:backgroundDimAmount">0.3</item>-->
+
+    </style>
+
 </resources>

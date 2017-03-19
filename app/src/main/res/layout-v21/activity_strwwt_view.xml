@@ -15,27 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:gravity="top"
-            app:layout_collapseMode="parallax"
-            android:background="@color/colorPrimaryDark"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:titleMarginTop="15dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent_black"
-            android:text="Present nearest street view within the 1000 meter"
-            android:textSize="15sp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textColor="@color/white"
-            android:layout_alignParentBottom="true"
-            />
 
         <com.google.android.gms.maps.StreetViewPanoramaView
             android:id="@+id/steet_view_panorama"
@@ -44,6 +24,46 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:gravity="top"
+            app:layout_collapseMode="parallax"
+            app:popupTheme="@style/AppTheme.Dark"
+            app:titleMarginTop="15dp" />
+
+        <TextView
+            android:id="@+id/view_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent_black"
+            android:text="Nearest street view within the 1000 meters"
+            android:textSize="15sp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/white"
+            android:layout_alignParentBottom="true"
+            />
+
+        <TextView
+            android:id="@+id/no_street_view_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/map_transperant"
+            android:text="Unfortunately, this event do not have street view"
+            android:textSize="18sp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:paddingLeft="10dp"
+            android:visibility="gone"
+            android:textColor="@color/colorBlackTransparent"
+            android:layout_centerInParent="true"
+            />
+
 
     </RelativeLayout>
 

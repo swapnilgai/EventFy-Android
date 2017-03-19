@@ -10,20 +10,28 @@
     android:background="@android:color/white"
     android:orientation="vertical">
 
-
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="2dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true">
+
 
     <ImageView
         android:id="@+id/event_image"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:transitionName="event_transition"
@@ -33,9 +41,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:paddingTop="0.5dp"
-            android:paddingBottom="0.5dp"
+            android:layout_alignParentTop="true"
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp"
             android:background="#AA575656"
             android:orientation="vertical">
 
@@ -60,7 +68,7 @@
                    android:id="@+id/event_location"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:layout_marginTop="2dp"
+                   android:layout_margin="8dp"
                    android:text="Event Location"
                    android:textStyle="bold"
                    android:textColor="@color/white"
@@ -69,8 +77,7 @@
                    android:id="@+id/event_time_from_now"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:layout_marginTop="1dp"
-                   android:layout_marginBottom="1dp"
+                   android:layout_marginLeft="8dp"
                    android:text="Event Location"
                    android:textColor="@color/white"
                    android:textSize="11sp" />
@@ -82,17 +89,13 @@
         </LinearLayout>
 
 
-
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="4dp"
-        android:paddingBottom="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+      android:padding="8dp"
         android:orientation="vertical">
 
         <com.devspark.robototextview.widget.RobotoTextView
@@ -102,7 +105,7 @@
             android:text="Event Name"
             android:textStyle="bold"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="16.5sp" />
+            android:textSize="18sp" />
 
 
         <View
@@ -117,8 +120,9 @@
             android:id="@+id/event_info_event_away_distance_linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:gravity="center_horizontal"
+            android:layout_marginRight="8dp"
+            android:layout_gravity="bottom"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
 
@@ -138,18 +142,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginRight="16dp"
                 android:text="2 Mile"
-                android:layout_weight="1"
                 android:textColor="#6c7880"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="left"
                 android:elevation="20dp"
-
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_directions_car_black_24dp"
@@ -160,18 +162,17 @@
                 android:id="@+id/map_view_event_info_event_away_duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0.2dp"
                 android:layout_marginLeft="8dp"
-                android:layout_weight="1"
-                android:layout_marginTop="3dp"
+                android:layout_marginRight="16dp"
                 android:text="30 min"
                 android:textColor="#6c7880"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
             <ImageView
                 android:id="@+id/event_source_image"
-                android:layout_width="19dp"
-                android:layout_height="18dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:elevation="20dp"
+                android:layout_gravity="center"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/com_facebook_button_icon_blue"
@@ -179,5 +180,7 @@
 
         </LinearLayout>
         </LinearLayout>
+    </LinearLayout>
     </android.support.v7.widget.CardView>
+
 </LinearLayout>
