@@ -26,12 +26,14 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.devspark.robototextview.widget.RobotoTextView;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -146,7 +148,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             index++;
         }
 
-        googelMapSetting(location);
+        googleMapSetting(location);
 
         image = null;
 
@@ -164,8 +166,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         });
 
     }
-
-    public void googelMapSetting(Location location) {
+    public void googleMapSetting(Location location) {
 
         //googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
@@ -175,41 +176,38 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
 
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markerLst) {
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
 
-//        CameraPosition cameraPosition = new CameraPosition.Builder().
-//                target(new LatLng(location.getLatitude(), location.getLongitude())).
-//                tilt(85).
-//                zoom(15).
-//                bearing(0).
-//                build();
-//
-//        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        CameraPosition cameraPosition = new CameraPosition.Builder().
+                target(new LatLng(location.getLatitude(), location.getLongitude())).
+                tilt(45).
+                bearing(40).
+                zoom(15).
+                build();
 
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+        CameraUpdate cu1 = CameraUpdateFactory.newCameraPosition(cameraPosition);
 
+        googleMap.animateCamera(cu1);
+        googleMap.moveCamera(cu);
 
         CircleOptions circleOptions = new CircleOptions()
                 .center(myLaLn)
-                .radius(5*1000)
+                .radius(signUp.getVisibilityMiles()*1690)
                 .strokeWidth(2)
                 .strokeColor(Color.BLUE);
 
 
-        googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
-            @Override
-            public void onMapLoaded() {
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                for (Marker marker : markerLst) {
-                    builder.include(marker.getPosition());
-                }
-                   LatLngBounds bounds = builder.build();
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 0));
-
-            }
-        });
-
-
         googleMap.addCircle(circleOptions);
+
     }
+
+
+
 
     public void updateEventinfo(int index)  {
         indexForOnclickEvent = index;
@@ -371,7 +369,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                     Log.e(" ", " user object ::::  "+g.toJson(signUp));
                     if(signUp!=null){
                         setUserOnMap(nearbyEventData.getLocation());
-                        googelMapSetting(nearbyEventData.getLocation());
+                        googleMapSetting(nearbyEventData.getLocation());
                         eventInfoLinearLayout.setVisibility(View.GONE);
                         eventSearchLinearLayout.setVisibility(View.VISIBLE);
                         eventSearchMiles.setProgress(signUp.getVisibilityMiles());

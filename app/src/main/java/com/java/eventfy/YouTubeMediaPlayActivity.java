@@ -23,6 +23,7 @@ public class YouTubeMediaPlayActivity extends YouTubeBaseActivity implements You
 
         youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         youTubeView.initialize(Config.YOUTUBE_API_KEY, this);
+        this.setFinishOnTouchOutside(true);
     }
 
     @Override

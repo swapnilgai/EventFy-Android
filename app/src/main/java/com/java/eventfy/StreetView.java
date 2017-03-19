@@ -78,14 +78,7 @@ public class StreetView extends AppCompatActivity implements OnStreetViewPanoram
 
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
-
-
-
-
-
         this.streetViewPanorama = streetViewPanorama;
-
-
         //  Intent intent = new Intent(this, YouTubeMediaPlayActivity.class);
        // startActivity(intent);
     }

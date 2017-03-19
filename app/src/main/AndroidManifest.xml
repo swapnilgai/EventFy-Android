@@ -142,13 +142,12 @@
         </activity>
         <activity android:name=".WebViewActivity">
         </activity>
-        <activity android:name=".StreetView"
-
-               >
-
+        <activity android:name=".StreetView">
         </activity>
         <activity android:name=".YouTubeMediaPlayActivity"
-                  >
+            android:theme="@style/Theme.AppCompat.Dialog.MinWidth">
+        </activity>
+        <activity android:name=".EventVideo">
         </activity>
     </application>
 

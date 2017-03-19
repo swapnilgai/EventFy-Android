@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -96,7 +95,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     private Place place;
     protected GoogleApiClient mGoogleApiClient;
     private TextView eventLocationTextView;
-    private ImageButton mapFullScreen;
+    private CircleButton mapFullScreen;
     private Events eventObj = new Events();
     private PlaceAutocompleteAdapter mAdapter;
     private LinearLayout remoteViewDetail;
@@ -149,7 +148,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
         locationInfo.setVisibility(View.GONE);
 
-        mapFullScreen = (ImageButton) view.findViewById(R.id.map_view_full_mode);
+        mapFullScreen = (CircleButton) view.findViewById(R.id.map_view_full_mode);
 
         searchBtn = (Button) view.findViewById(R.id.remote_search_map);
         remoteEeventVisibliryMilesText = (TextView) view.findViewById(R.id.remote_event_visibliry_miles_text);

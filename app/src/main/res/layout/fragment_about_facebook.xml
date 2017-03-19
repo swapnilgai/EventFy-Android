@@ -185,7 +185,6 @@
                         app:layout_collapseMode="parallax" />
 
                     <com.devspark.robototextview.widget.RobotoTextView
-                        android:id="@+id/street_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="0.2dp"
@@ -209,6 +208,23 @@
                 android:background="@color/date_picker_view_animator" />
         </LinearLayout>
 
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:layout_margin="14dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/content_main2_button_color"
+            android:text="@string/check_in_button"
+            android:textColor="@color/white" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/date_picker_view_animator" />
         <com.devspark.robototextview.widget.RobotoTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -525,21 +541,7 @@
             android:textColor="@color/white" />
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="12dp"
-            android:background="@color/date_picker_view_animator" />
 
-        <android.support.v7.widget.AppCompatButton
-            android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:layout_margin="14dp"
-            android:layout_weight="1.0"
-            android:background="@drawable/content_main2_button_color"
-            android:text="@string/check_in_button"
-            android:textColor="@color/white" />
     </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

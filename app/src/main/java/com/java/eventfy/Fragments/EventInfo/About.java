@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.robototextview.widget.RobotoTextView;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -30,9 +30,9 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
@@ -42,7 +42,9 @@ import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
+import com.java.eventfy.StreetView;
 import com.java.eventfy.ViewerProfilePage;
+import com.java.eventfy.YouTubeMediaPlayActivity;
 import com.java.eventfy.asyncCalls.DeleteEvent;
 import com.java.eventfy.asyncCalls.EditEventSrverCall;
 import com.java.eventfy.utils.DateTimeStringOperations;
@@ -52,6 +54,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.java.eventfy.R.id.admin_image;
 
@@ -87,6 +91,10 @@ public class About extends Fragment implements OnMapReadyCallback {
     private RobotoTextView eventAwayDistance;
     private RobotoTextView eventAwayDuration;
     private RobotoTextView eventTimeFromNow;
+    private LinearLayout videoLinearLayout;
+    private List<Marker> markerLst = new LinkedList<Marker>();
+    private LinearLayout streetViewLinearLayout;
+
 
 
     @Override
@@ -117,11 +125,13 @@ public class About extends Fragment implements OnMapReadyCallback {
         deleteEvent = (Button) view.findViewById(R.id.event_delete);
         eventAwayDistance = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
         eventAwayDuration= (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
+        streetViewLinearLayout = (LinearLayout) view.findViewById(R.id.street_view);
 
         eventTimeFromNow  = (RobotoTextView) view.findViewById(R.id.event_day_left);
         editEvent= (Button) view.findViewById(R.id.event_edit);
 
         eventInvisible = (Button) view.findViewById(R.id.event_invisible);
+        videoLinearLayout = (LinearLayout) view.findViewById(R.id.video_linar_layout);
 
         mapValuesFromEventObject();
 
@@ -177,6 +187,29 @@ public class About extends Fragment implements OnMapReadyCallback {
                 context.startActivity(intent);
             }
         });
+
+
+        videoLinearLayout.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), YouTubeMediaPlayActivity.class);
+                intent.putExtra(context.getString(R.string.signup_object_viewe_profile), event.getAdmin());
+                context.startActivity(intent);
+            }
+        });
+
+        streetViewLinearLayout.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), StreetView.class);
+                intent.putExtra(context.getString(R.string.event_object_for_street_view), event);
+                context.startActivity(intent);
+            }
+        });
+
+
         return view;
     }
 
@@ -192,7 +225,7 @@ public class About extends Fragment implements OnMapReadyCallback {
         else
          adminStatus.setText(event.getAdmin().getStatus());
 
-         evengtType.setText(event.getEventCategory());
+//         evengtType.setText(event.getEventCategory());
 
         eventVisiblityMiles.setText(event.getEventVisiblityMile() + " Miles visible from origin");
 
@@ -200,7 +233,7 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         eventAwayDuration.setText(event.getEventAwayDuration());
 
-        eventCapacity.setText(event.getEventCapacity()+ " People can attend");
+        eventCapacity.setText(event.getEventCapacity()+ " Seats");
         Picasso.with(getContext())
                 .load(event.getAdmin().getImageUrl())
                 .resize(50, 50)
@@ -274,31 +307,40 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     public void setUpMarker()
     {
-      //  zoomVal = getZoonValue(zoomVal);
+
         myLaLn = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_flag_black_18dp));
-        googleMap.addMarker(markerOptions);
+        markerOptions.title(event.getEventName());
+        markerLst.add(googleMap.addMarker(markerOptions));
 
-        //googleMap.setMyLocationEnabled(true);
-        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-        googleMap.getUiSettings().setMapToolbarEnabled(true);
+        if(signUp.getLocation()!=null)
+            setUserOnMap(signUp.getLocation());
 
+        googleMapSetting(event.getLocation());
 
-        Circle circle = googleMap.addCircle(new CircleOptions()
-                .center(myLaLn)
-                .radius(Integer.parseInt(event.getEventVisiblityMile())*100)
-                .strokeColor(Color.BLUE)
-                .fillColor(getResources().getColor(R.color.colorPrimaryTransparent)));
-
-        googelMapSetting(event.getLocation());
     }
 
-    public void googelMapSetting(Location location) {
+
+
+    public void setUserOnMap(Location location){
+
+        myLaLn = new LatLng(location.getLatitude(), location.getLongitude());
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(myLaLn);
+
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
+
+        markerOptions.title(signUp.getUserName());
+        markerLst.add(googleMap.addMarker(markerOptions));
+
+
+    }
+
+    public void googleMapSetting(Location location) {
 
         //googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
@@ -308,18 +350,25 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         // googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
 
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (Marker marker : markerLst) {
+            builder.include(marker.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
 
         CameraPosition cameraPosition = new CameraPosition.Builder().
                 target(new LatLng(location.getLatitude(), location.getLongitude())).
-                tilt(40).
-                zoom(13).
+                tilt(45).
                 bearing(40).
                 build();
 
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 150);
+        CameraUpdate cu1 = CameraUpdateFactory.newCameraPosition(cameraPosition);
+
+        googleMap.animateCamera(cu1);
+        googleMap.moveCamera(cu);
 
     }
-
 
 
     public int getZoonValue(int zoomVal) {
