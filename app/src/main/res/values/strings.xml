@@ -13,15 +13,15 @@
     <string name="navigation_drawer_closed">The navigation drawer is closed</string>
 
     <!-- Web servises url -->
-    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
-    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
+    <string name="ip_local">http://192.168.0.6:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>
 
     <!--<string name="ip_local">http://10.67.70.107:8080/EventFy</string>-->
     <!--<string name="ip_localhost">http://10.67.70.107:8080/EventFy</string>-->
 
     <!---->
-    <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
+    <!--<string name="ip_local">https://eventfy.herokuapp.com</string>-->
+    <!--<string name="ip_localhost">https://eventfy.herokuapp.com</string>-->
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -31,6 +31,8 @@
     <string name="verification_check">/webapi/signup/checkverificationcode</string>
     <string name="title_activity_maps">Map</string>
     <string name="add_event">/webapi/events/add</string>
+    <string name="add_event_to_wishlist">/webapi/events/addeventtomywishlist</string>
+    <string name="remove_event_from_wishlist">/webapi/events/removeeventfromwishlist</string>
     <string name="edit_event">/webapi/events/editevent</string>
     <string name="get_nearby_event">/webapi/events/getnearbyevents</string>
     <string name="get_nearby_facebook_event">/webapi/events/getfacebooknearbyevents</string>
@@ -85,7 +87,7 @@
     <string name="invisible_event_btn">INVISIBLE</string>
     <string name="check_in_button">Check In</string>
     <string name="read_more">Read More</string>
-    <string name="visible_event_btn">MAKE EVENT VISIBLE</string>
+    <string name="visible_event_btn">VISIBLE</string>
 
     <string name="event_attending">event_attending</string>
     <string name="event_not_attending">event_not_attending</string>
@@ -267,7 +269,6 @@
     <string name="notification_id_server_register_fail">notification_id_server_register_fail</string>
     <string name="notification_id_server_register_server_error">notification_id_server_register_server_error</string>
 
-
     <!-- Activity names -->
 
     <string name="activity_Home">Home</string>
@@ -288,5 +289,10 @@
     <string name="my_event_no_data">my_event_no_data</string>
     <string name="my_event_server_error">my_event_server_error</string>
 
+    <string name="add_event_to_wish_list_btn_text">ADD TO WISHLIST</string>
+    <string name="remove_event_to_wish_list_btn_text">REMOVE FROM WISHLIST</string>
+
+    <string name="remove_wish_list_success">remove_wish_list_success</string>
+    <string name="remove_wish_list_fail">remove_wish_list_fail</string>
 
 </resources>

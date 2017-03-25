@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,14 +36,21 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
+import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.R;
 import com.java.eventfy.StreetView;
 import com.java.eventfy.WebViewActivity;
+import com.java.eventfy.asyncCalls.AddToWishList;
+import com.java.eventfy.asyncCalls.RemoveFromWishList;
 import com.java.eventfy.utils.DateTimeStringOperations;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -80,6 +88,7 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     private Button venueLink;
     private TextView timeFromNow;
     private Button eventLink;
+    private Button addToWishListBtn;
     private Location userCurrentLocation;
     private  SignUp signUp;
     private LinearLayout streetViewLinearLayout;
@@ -111,6 +120,7 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         timeFromNow = (TextView) view.findViewById(R.id.event_day_left);
         eventLink = (Button) view.findViewById(R.id.event_link);
         streetViewLinearLayout = (LinearLayout) view.findViewById(R.id.street_view);
+        addToWishListBtn = (Button) view.findViewById(R.id.add_wishlist_btn);
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
         mapView.onCreate(savedInstanceState);
@@ -151,10 +161,48 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        addToWishListBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(" Clicked : ", " Clicked : ");
+
+
+                if(addToWishListBtn.getText().equals(getString(R.string.add_event_to_wish_list_btn_text))) {
+                    addToWishListBtn.setText(getString(R.string.remove_event_to_wish_list_btn_text));
+                    ((EventInfoPublic)getActivity()).makeAlarmButtonVisible();
+                    event.setNotifyMe(true);
+                }else{
+                    addToWishListBtn.setText(getString(R.string.add_event_to_wish_list_btn_text));
+                    ((EventInfoPublic)getActivity()).makeAlarmButtonInVisible();
+                    event.setNotifyMe(false);
+                }
+            }
+
+        });
+
 
         return view;
     }
 
+    public void serverCallToAddToWishList(){
+        List<Events> eventsList = new LinkedList<>();
+        eventsList.add(event);
+        signUp.setEvents(eventsList);
+        String url = getString(R.string.ip_local)+getString(R.string.add_event_to_wishlist);
+        AddToWishList addToWishList = new AddToWishList(url, signUp, getContext());
+        addToWishList.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
+    public void serverCallToRemoveFromWishList(){
+        List<Events> eventsList = new LinkedList<>();
+        eventsList.add(event);
+        signUp.setEvents(eventsList);
+        String url = getString(R.string.ip_local)+getString(R.string.remove_event_from_wishlist);
+        RemoveFromWishList removeFromWishList = new RemoveFromWishList(url, signUp, getContext());
+        removeFromWishList.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
 
     public void mapValuesFromEventObject() {
 
@@ -170,6 +218,11 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
             evengtCategory.setText("OTHER");
         else
           evengtCategory.setText(event.getEventCategory().toUpperCase());
+
+        if(event.getDecesion().equals(getString(R.string.event_attending)))
+            addToWishListBtn.setText(getString(R.string.remove_event_to_wish_list_btn_text));
+        else
+            addToWishListBtn.setText(getString(R.string.add_event_to_wish_list_btn_text));
 
         eventAwayDistance.setText(event.getEventAwayDistanve());
 
@@ -200,6 +253,15 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     @Override
     public void onPause() {
         super.onPause();
+
+        if(addToWishListBtn.getText().equals(getString(R.string.remove_event_to_wish_list_btn_text))
+                && event.getDecesion().equals(getString(R.string.event_not_attending))) {
+            serverCallToAddToWishList();
+        }else if (addToWishListBtn.getText().equals(getString(R.string.add_event_to_wish_list_btn_text))
+                && event.getDecesion().equals(getString(R.string.event_attending))){
+           serverCallToRemoveFromWishList();
+        }
+
         // googleMap.clear();
     }
 
@@ -324,19 +386,6 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     }
 
 
-    public int getZoonValue(int zoomVal) {
-
-        if(zoomVal<20)
-            return 10;
-        else if(zoomVal >20 && zoomVal<30)
-            return 8;
-        else if(zoomVal >30 && zoomVal<40)
-            return 6;
-        else if(zoomVal >40 && zoomVal<50)
-            return 5;
-        else return 10;
-    }
-
     public String convertTimeInTwelve(String time) {
         try {
             char timeArray[] = time.toCharArray();
@@ -424,7 +473,59 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         return result;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        if(event.getEventDescription().equals(getString(R.string.event_not_attending))
+//                && addToWishListBtn.getText().equals(getString(R.string.add_event_to_wish_list_btn_text))){
+//            serverCallToAddToWishList();
+//        }
+//        else if(event.getEventDescription().equals(getString(R.string.event_attending))
+//                && addToWishListBtn.getText().equals(getString(R.string.remove_event_to_wish_list_btn_text))){
+//
+//        }
+    }
 
+    @Subscribe
+    public void getWishListEvent(AddToWishListEvent addToWishListEvent) {
+        Events events = addToWishListEvent.getEvent();
+        int index = -1;
+        Events changedEvent = null;
+
+        if (events.getEventId() == event.getEventId() &&
+                (addToWishListEvent.getViewMessage().equals(getString(R.string.wish_list_update_fail)) || addToWishListEvent.getViewMessage().equals(getString(R.string.home_connection_error)))) {
+            setWishList(events);
+        }
+
+        else{
+            //TODO Toast error message
+
+        }
+    }
+
+
+    @Subscribe
+    public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
+        Events events = removeFromWishListEntity.getEvent();
+        int index = -1;
+        Events changedEvent = null;
+
+        if (events.getEventId() == event.getEventId() &&
+                (removeFromWishListEntity.getViewMessage().equals(getString(R.string.remove_wish_list_fail)) || removeFromWishListEntity.getViewMessage().equals(getString(R.string.home_connection_error)))) {
+            setWishList(events);
+        }else{
+            //TODO Toast error message
+
+        }
+    }
+
+    public void setWishList(Events event){
+        if(event.getEventDescription().equals(getString(R.string.event_attending)))
+            addToWishListBtn.setBackgroundResource(R.drawable.ic_add_wishlist);
+        else
+            addToWishListBtn.setBackgroundResource(R.drawable.ic_remove_wishlist);
+
+    }
 
 
 

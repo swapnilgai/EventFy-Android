@@ -53,6 +53,9 @@ public class Events implements Serializable {
     private String facebookEventId;
 
     @JsonIgnoreProperties(ignoreUnknown = true)
+    private boolean notifyMe;
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(DateTime.class)
     private DateTime dateTime;
 
@@ -315,5 +318,13 @@ public class Events implements Serializable {
     public void setFacebookEventId(String facebookEventId) {
         this.facebookEventId = facebookEventId;
     }
+    public boolean getNotifyMe() {
+        return notifyMe;
+    }
+
+    public void setNotifyMe(boolean notifyMe) {
+        this.notifyMe = notifyMe;
+    }
+
 
 }

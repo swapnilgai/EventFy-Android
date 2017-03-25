@@ -261,7 +261,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         createBtn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
-                createEentObject();
+                createEventObject();
                 if(createBtn.getText().equals("Save")) {
                     if(validate()) {
                         dialogBox();
@@ -467,7 +467,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
 
 
-    public Events createEentObject() {
+    public Events createEventObject() {
 
         if(signUp!=null) {
             eventObj.setEventName(eventName.getText().toString());
@@ -589,7 +589,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Subscribe
     public void getCreatedEventFromServer(Events event)
     {
-        Log.e(" in create  ", "eventis "+event);
         if (event.getViewMessage()!=null && !event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))) {
             dismissProgressDialog();
             if (progressDialog != null && progressDialog.isShowing()) {
@@ -636,7 +635,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Subscribe
     public void getUserCurrentLocation(LocationPublicEvent locationPublicEvent) {
 
-        Log.e("location received : ", "         "+locationPublicEvent.getLocation());
         if (locationPublicEvent instanceof  LocationPublicEvent && locationPublicEvent.getLocation()!=null){
             getActivity().stopService(new Intent(getActivity(), com.java.eventfy.Services.GPSTracker.class));
             if(eventObj.getLocation()!=null)
@@ -698,7 +696,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             {
 
                 if (addresses!= null && addresses.length() > 0) {
-                    Log.e("in 1 ", " @@@@@ "+addresses);
                     eventObj.getLocation().setName(addresses);
                     setLocationOnMap(addresses);
                     setAutoCompleteTextViewInVisible();
@@ -711,11 +708,9 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     setMapVisible();
                     setUpMarker();
                     setLocationInfoTextViewVisible();
-                    Log.e("in 2 ", " @@@@@  "+eventObj.getLocation().getName());
                     setLocationOnMap(eventObj.getLocation().getName());
                 }
                 else {
-                    Log.e("in 3 ", " @@@@@ ");
                     produceErrorMessageOnLocationNotFound();
                     setLoadingLocationInVisible();
                     eventObj.getLocation().setName(null);

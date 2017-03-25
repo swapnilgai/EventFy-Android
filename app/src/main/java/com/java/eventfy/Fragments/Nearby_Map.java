@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
@@ -35,7 +34,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -128,7 +126,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void setUpMarker(Location location)
     {
 
-        int index =0;
        // googleMap.clear();
         signUp.setLocation(location);
 
@@ -145,17 +142,16 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
             setEventIconGoogleMap.setIcon(markerOptions, getContext(), events.getEventCategory());
             markerLst.add(googleMap.addMarker(markerOptions));
-            index++;
         }
 
-        googleMapSetting(location);
-
-        image = null;
 
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
+
+                Log.e("marker ;  ", " "+markerLst.contains(marker));
+                Log.e("marker index ;  ", " "+markerLst.indexOf(marker));
                 if(markerLst.contains(marker)){
 
                     updateEventinfo(markerLst.indexOf(marker));
@@ -164,6 +160,12 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 return false;
             }
         });
+
+
+        googleMapSetting(location);
+
+        image = null;
+
 
     }
     public void googleMapSetting(Location location) {
@@ -194,15 +196,15 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         googleMap.animateCamera(cu1);
         googleMap.moveCamera(cu);
-
-        CircleOptions circleOptions = new CircleOptions()
-                .center(myLaLn)
-                .radius(signUp.getVisibilityMiles()*1690)
-                .strokeWidth(2)
-                .strokeColor(Color.BLUE);
-
-
-        googleMap.addCircle(circleOptions);
+//
+//        CircleOptions circleOptions = new CircleOptions()
+//                .center(myLaLn)
+//                .radius(signUp.getVisibilityMiles()*1690)
+//                .strokeWidth(2)
+//                .strokeColor(Color.BLUE);
+//
+//
+//        googleMap.addCircle(circleOptions);
 
     }
 
@@ -210,6 +212,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
 
     public void updateEventinfo(int index)  {
+        Log.e("index: ", "index :::: "+index);
         indexForOnclickEvent = index;
         if(eventAddress!=null)
         eventAddress.setText(eventLst.get(index).getLocation().getName().toString());

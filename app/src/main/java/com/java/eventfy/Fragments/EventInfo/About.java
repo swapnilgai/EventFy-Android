@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,6 +56,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import at.markushi.ui.CircleButton;
+
 import static com.java.eventfy.R.id.admin_image;
 
 /**
@@ -81,13 +82,15 @@ public class About extends Fragment implements OnMapReadyCallback {
     private RobotoTextView eventCapacity;
     private RobotoTextView eventDateTimeFrom;
     private RobotoTextView eventDateTimeTo;
-    private Button deleteEvent;
-    private Button editEvent;
+    private LinearLayout deleteEvent;
+    private LinearLayout editEvent;
     private ProgressDialog progressDialog;
     private LinearLayout navigateAdminProfileLinearLayout;
     private LinearLayout adminOptionLayout;
     private Context context;
-    private Button eventInvisible;
+    private TextView eventInvisibleTextVew;
+    private CircleButton eventInvisibleBtn;
+    private LinearLayout eventInvisibleLinearLayout;
     private RobotoTextView eventAwayDistance;
     private RobotoTextView eventAwayDuration;
     private RobotoTextView eventTimeFromNow;
@@ -122,15 +125,18 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
         adminOptionLayout = (LinearLayout) view.findViewById(R.id.linear_layout_with_admin_options);
         navigateAdminProfileLinearLayout = (LinearLayout) view.findViewById(R.id.liner_layout_navigate_admin_profile);
-        deleteEvent = (Button) view.findViewById(R.id.event_delete);
+        deleteEvent = (LinearLayout) view.findViewById(R.id.event_delete);
         eventAwayDistance = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
         eventAwayDuration= (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
         streetViewLinearLayout = (LinearLayout) view.findViewById(R.id.street_view);
 
         eventTimeFromNow  = (RobotoTextView) view.findViewById(R.id.event_day_left);
-        editEvent= (Button) view.findViewById(R.id.event_edit);
+        editEvent = (LinearLayout) view.findViewById(R.id.event_edit);
 
-        eventInvisible = (Button) view.findViewById(R.id.event_invisible);
+        eventInvisibleTextVew = (TextView) view.findViewById(R.id.event_invisible_text_view);
+        eventInvisibleBtn = (CircleButton) view.findViewById(R.id.event_invisible_btn);
+        eventInvisibleLinearLayout = (LinearLayout) view.findViewById(R.id.event_invisible_linear_layout);
+
         videoLinearLayout = (LinearLayout) view.findViewById(R.id.video_linar_layout);
 
         mapValuesFromEventObject();
@@ -159,7 +165,7 @@ public class About extends Fragment implements OnMapReadyCallback {
         });
 
 
-        eventInvisible.setOnClickListener(new OnClickListener() {
+        eventInvisibleLinearLayout.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -248,11 +254,14 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         eventDateTimeTo.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeTo(), event.getDateTime().getTimeZone()));
 
-        if(event.getEventIsVisible())
-            eventInvisible.setText(getString(R.string.visible_event_btn));
+        if(event.getEventIsVisible()){
+            eventInvisibleTextVew.setText(getString(R.string.visible_event_btn));
+            eventInvisibleBtn.setImageResource(R.drawable.ic_event_invisible);
+            eventInvisibleLinearLayout.setBackgroundResource(R.color.com_facebook_button_background_color_disabled);
+        }
         else
-            eventInvisible.setText(getString(R.string.invisible_event_btn));
-
+            eventInvisibleTextVew.setText(getString(R.string.invisible_event_btn));
+              eventInvisibleBtn.setImageResource(R.drawable.ic_event_visible);
     }
 
     @Override

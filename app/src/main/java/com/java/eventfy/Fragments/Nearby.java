@@ -31,12 +31,14 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Away;
+import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
 import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyFacebookEventData;
 import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
+import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
@@ -264,7 +266,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     private void stopServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-        Log.e("in stop ser : ", " **** ");
         getActivity().stopService(new Intent(getContext(), com.java.eventfy.Services.GPSTracker.class));
     }
 
@@ -668,5 +669,60 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         fragment_switch_button.setVisibility(View.GONE);
         updateUserLocation(nearbyMapSearch.getVisibilityMiles());
     }
+
+    @Subscribe
+    public void getWishListEvent(AddToWishListEvent addToWishListEvent) {
+        Events events = addToWishListEvent.getEvent();
+        int index = -1;
+        Events changedEvent = null;
+
+        if (addToWishListEvent.getViewMessage().equals(getString(R.string.wish_list_update_success)) && eventsList!=null) {
+            for (Events e : eventsList) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventsList.indexOf(e);
+                   // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                Log.e("index   :  ", ""+index);
+                Log.e("index   :  ", ""+addToWishListEvent.getEvent().getDecesion());
+
+                eventsList.set(index, addToWishListEvent.getEvent());
+                bindAdapter(adapter, eventsList);
+
+            }
+        }else{
+            //TODO Toast error message
+
+            toastMsg("Error, while updating Wish List");
+        }
+    }
+
+    public void toastMsg(String msg){
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
+    public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
+        Events events = removeFromWishListEntity.getEvent();
+        Events changedEvent = null;
+
+        if (removeFromWishListEntity.getViewMessage().equals(getString(R.string.remove_wish_list_success)) && eventsList!=null) {
+            {
+             if(eventsList.contains(events)){
+                events.setViewMessage(null);
+                eventsList.set(eventsList.indexOf(events), removeFromWishListEntity.getEvent());
+                bindAdapter(adapter, eventsList);
+             }
+            }
+        }else{
+            //TODO Toast error message
+            toastMsg("Error, while removing event from Wish List");
+        }
+    }
+
+
 }
 

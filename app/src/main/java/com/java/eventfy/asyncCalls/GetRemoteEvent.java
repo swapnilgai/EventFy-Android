@@ -58,7 +58,6 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
             Events[] event = response.getBody();
 
             eventLst = new LinkedList<Events>(Arrays.asList(event));
-            Log.e("event size : ", " 8888888 " + eventLst.size());
         }catch (Exception e)
         {}
 

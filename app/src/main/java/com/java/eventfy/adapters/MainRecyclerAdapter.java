@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +32,6 @@ import com.java.eventfy.Home;
 import com.java.eventfy.MyEvents;
 import com.java.eventfy.R;
 import com.java.eventfy.utils.DateTimeStringOperations;
-import com.java.eventfy.utils.DeviceDimensions;
 import com.java.eventfy.utils.OnLocationEnableClickListner;
 import com.squareup.picasso.Picasso;
 
@@ -116,7 +116,6 @@ import static com.java.eventfy.R.string.edited;
                 @Override
                 public void onClick(View v) {
                     // Doesn't do anything, but need Click Listener to get that sweet Ripple
-
                     nearby.updateUserLocation(((NoDataHolder)holder).visibilityMiles.getProgress());
                 }
             });
@@ -164,15 +163,10 @@ import static com.java.eventfy.R.string.edited;
                     }
                 });
 
-                /*LayoutParams parms = new LayoutParams(Math.abs(DeviceDimensions.deviceWeidth-90),Math.abs(DeviceDimensions.deviceHeight/3));
-                 parms.setMargins(45, 16, 0 , 16);
-
-                ((ResultHolder) holder).eventImage.setLayoutParams(parms);*/
-
 
                   Picasso.with(holder.itemView.getContext())
                           .load(event.getEventImageUrl())
-                          .resize((DeviceDimensions.deviceWeidth+100), DeviceDimensions.deviceHeight/3)
+                          .fit()
                           .placeholder(R.drawable.logo)
                           .into(((ResultHolder) holder).eventImage);
 
@@ -202,11 +196,11 @@ import static com.java.eventfy.R.string.edited;
                     ((ResultHolder)holder).eventAwayLinearLayout.setVisibility(View.VISIBLE);
 
 
+            Log.e("fcaeboo id : ",  event.getEventId()+" : "+event.getFacebookEventId());
             if(event.getFacebookEventId()==null)
                 ((ResultHolder)holder).eventSourceImage.setImageResource(R.drawable.logo);
 
-                //Log.e("height : ", ""+ Math.abs(DeviceDimensions.deviceHeight/3));
-               // Log.e("weidth : ", ""+DeviceDimensions.deviceWeidth);
+            ((ResultHolder)holder).eventTimeFromNow.setText(event.getEventTimeFromNow());
 
         }
     }
@@ -229,6 +223,9 @@ import static com.java.eventfy.R.string.edited;
         LinearLayout eventAwayLinearLayout;
         @Bind(R.id.event_source_image)
         ImageView eventSourceImage;
+        @Bind(R.id.event_time_from_now)
+        RobotoTextView eventTimeFromNow;
+
         public ResultHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -286,7 +283,6 @@ import static com.java.eventfy.R.string.edited;
                 return VIEW_DATA;
             else if(eventTemp.getViewMessage().equals(edited)) {
                 return VIEW_DATA;
-
             }
             else if(eventTemp.getViewMessage().equals(context.getString(R.string.home_no_location)))
                 return VIEW_NOLOCATION;

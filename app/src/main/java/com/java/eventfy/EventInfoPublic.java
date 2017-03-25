@@ -13,6 +13,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -103,9 +104,18 @@ public class EventInfoPublic extends AppCompatActivity {
             commentBoxLinearLayout = (LinearLayout) findViewById(R.id.comment_box_linear_layout);
 
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
-            if(event.getFacebookEventId()==null && event.getDecesion()!=null && event.getDecesion().equals(getString(R.string.event_admin))){
-                  rsvpForEventBtn.setVisibility(View.GONE);
+
+            Log.e(event.getNotifyMe()+" :  ", "    :   "+event.getDecesion());
+            if(event.getDecesion().equals(getString(R.string.event_not_attending))){
+                rsvpForEventBtn.setVisibility(View.GONE);
+            }else{
+
+                if(event.getNotifyMe())
+                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_on));
+                else
+                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_off));
             }
+
 
             if (event.getEventImageUrl()==null || event.getEventImageUrl().equals("default"))
                 eventImage.setImageResource(R.drawable.logo);
@@ -123,7 +133,14 @@ public class EventInfoPublic extends AppCompatActivity {
 
                 @Override
                 public void onClick(View v) {
-                    dialogBox();
+                   // dialogBox();
+
+                    if (rsvpForEventBtn.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notification_on).getConstantState())){
+                        //Do your work here
+                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_off));
+                    }else{
+                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_on));
+                    }
                 }
             });
             setupToolbar();
@@ -148,9 +165,7 @@ public class EventInfoPublic extends AppCompatActivity {
 
                 @Override
                 public void onClick(View v) {
-                    // bindAdapter(commentsList);
 
-            Log.e(" text comment ", ""+commentTextEditText.getText().toString().isEmpty());
                     if(!commentTextEditText.getText().toString().isEmpty())
                          commentFragment.onClickCommentSend(commentTextEditText.getText().toString());
                     else
@@ -386,10 +401,10 @@ public class EventInfoPublic extends AppCompatActivity {
        if(!registerEvent.getDecesion().equals(getString(R.string.event_register_server_error)) &&
                !events.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2)))
         {
-        if(events.getDecesion().equals(getString(R.string.event_attending)))
-            rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
-        else if(events.getDecesion().equals(getString(R.string.event_not_attending)))
-             rsvpForEventBtn.setImageResource(R.drawable.fab_add);
+//        if(events.getDecesion().equals(getString(R.string.event_attending)))
+//            rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
+//        else if(events.getDecesion().equals(getString(R.string.event_not_attending)))
+//             rsvpForEventBtn.setImageResource(R.drawable.fab_add);
 
             this.event.setDecesion(events.getDecesion());
         }
@@ -441,6 +456,13 @@ public class EventInfoPublic extends AppCompatActivity {
         super.onResume();
         if(!EventBusService.getInstance().isRegistered(this))
         EventBusService.getInstance().register(this);
+    }
+
+    public void makeAlarmButtonVisible(){
+        rsvpForEventBtn.setVisibility(View.VISIBLE);
+    }
+    public void makeAlarmButtonInVisible(){
+        rsvpForEventBtn.setVisibility(View.GONE);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.java.eventfy;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,10 +19,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -123,10 +127,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         toggle.syncState();
         setupTabIcons();
 
-
-//        Intent intent = new Intent(this, StreetView.class);
-//        startActivity(intent);
-
     }
 
     public void setNavigationDrawerUserData(SignUp signUp){
@@ -162,6 +162,52 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 //
 //        this.startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
 //    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+
+            getMenuInflater().inflate(R.menu.homemenu, menu);
+
+
+            SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+
+            SearchView search = (SearchView) menu.findItem(R.id.search_home).getActionView();
+
+           // search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+
+            search.setOnQueryTextListener(new OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String query) {
+
+                    // loadHistory(query);
+
+                    return true;
+
+                }
+
+            });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit:
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
 
     /**
      * Adding custom view to tab
@@ -526,5 +572,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
              }
          });
      }
+
+
+
+
 
 }
