@@ -28,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -173,9 +174,32 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
-            SearchView search = (SearchView) menu.findItem(R.id.search_home).getActionView();
+           final SearchView search = (SearchView) menu.findItem(R.id.search_home).getActionView();
 
            // search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+
+        // Get the search close button image view
+        ImageView closeButton = (ImageView)search.findViewById(R.id.search_close_btn);
+
+        // Set on click listener
+        closeButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //Find EditText view
+                Log.e("close clicked ","(((((((");
+                //Clear the text from EditText view
+
+//                //Clear query
+                search.setQuery("", false);
+//                //Collapse the action view
+                search.onActionViewCollapsed();
+//                //Collapse the search widget
+                //search.collapseActionView();
+            }
+        });
+
+
 
             search.setOnQueryTextListener(new OnQueryTextListener() {
 
@@ -186,7 +210,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
                 @Override
                 public boolean onQueryTextChange(String query) {
-
                     // loadHistory(query);
 
                     return true;
@@ -532,12 +555,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                          //recyclerView.computeVerticalScrollOffset();
 
                          //=linearLayoutManager.findFirstVisibleItemPosition();
-                // Log.e("RecyclerView 1 : ", ": "+recyclerView.computeVerticalScrollOffset());
-                 Log.e("RecyclerView 2 : ", ":  "+scrollPositionNearBy);
-
-
                  if(currentFirstVisible > scrollPositionNearBy){
-                     Log.e("RecyclerView scrolled: ", "scroll down!");
                      nearbyFragment.fragment_switch_button.hide();
                   //   toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
 //                     tabLayout.animate().translationY(-tabLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
@@ -546,7 +564,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
                  }
                  else if(currentFirstVisible<scrollPositionNearBy){
-                     Log.e("RecyclerView scrolled: ", "scroll up!");
                      nearbyFragment.fragment_switch_button.show();
                    //  toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
                 //     tabLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();

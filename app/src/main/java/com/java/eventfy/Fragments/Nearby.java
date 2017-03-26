@@ -708,14 +708,22 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
         Events events = removeFromWishListEntity.getEvent();
         Events changedEvent = null;
-
+        int index = -1;
         if (removeFromWishListEntity.getViewMessage().equals(getString(R.string.remove_wish_list_success)) && eventsList!=null) {
-            {
-             if(eventsList.contains(events)){
+            for (Events e : eventsList) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventsList.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
                 events.setViewMessage(null);
-                eventsList.set(eventsList.indexOf(events), removeFromWishListEntity.getEvent());
+                Log.e("index   :  ", ""+index);
+
+                eventsList.set(index, events);
                 bindAdapter(adapter, eventsList);
-             }
+
             }
         }else{
             //TODO Toast error message

@@ -62,6 +62,8 @@ public class RemoveFromWishList extends AsyncTask<Void, Void, Void> {
             ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
             result = rateResponse.getBody();
 
+            Log.e("rsult :::::: ", result);
+
         //}catch (Exception e) {
           //   removeFromWishListEntity = new RemoveFromWishListEntity();
         //}
@@ -78,6 +80,10 @@ public class RemoveFromWishList extends AsyncTask<Void, Void, Void> {
         if(events==null) {
             events = new Events();
             events.setViewMessage(context.getString(R.string.remove_wish_list_fail));
+        }
+
+        if(result.equals(context.getString(R.string.remove_wish_list_success))){
+            events.setDecesion(context.getString(R.string.event_not_attending));
         }
         removeFromWishListEntity.setEvent(events);
         removeFromWishListEntity.setViewMessage(result);

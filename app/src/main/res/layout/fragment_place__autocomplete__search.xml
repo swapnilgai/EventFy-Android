@@ -34,22 +34,75 @@
                    />
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_weight="1.0"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="55dp"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1.0"
+                        android:textAlignment="center">
+
+                        <SeekBar
+                            android:id="@+id/remote_event_visibliry_miles"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="2dp"
+                            android:layout_weight="1.0"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:hint="End Date"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:inputType="textCapWords|date"
+                            android:max="40"
+                            android:progress="1"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:id="@+id/remote_event_visibliry_miles_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="8dp"
+                        android:src="@drawable/places_ic_clear"
+                        android:text="10 miles"
+                        android:textSize="16sp"
+                        android:gravity="center"
+                         />
+                </LinearLayout>
+
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:orientation="horizontal"
+                    android:layout_marginLeft="15dp"
                     android:gravity="center">
-                        <at.markushi.ui.CircleButton
-                            android:id="@+id/map_view_full_mode"
-                            android:layout_width="55dp"
-                            android:layout_height="45dp"
-                            android:paddingLeft="2dp"
-                            android:paddingRight="2dp"
-                            android:src="@drawable/ic_global_holo"
-                            app:cb_color="@color/map_transperant"
-                            android:scaleType="fitXY"
-                            />
+                    <at.markushi.ui.CircleButton
+                        android:id="@+id/map_view_full_mode"
+                        android:layout_width="55dp"
+                        android:layout_height="45dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:src="@drawable/ic_global_holo"
+                        app:cb_color="@color/map_transperant"
+                        android:scaleType="fitXY"
+                        />
 
                 </LinearLayout>
 
@@ -73,6 +126,10 @@
                         android:textColor="@color/white" />
 
                 </LinearLayout>
+
+
+
+
 
                 <LinearLayout
                     android:id="@+id/remote_view_details"
@@ -100,85 +157,110 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:id="@+id/location_edit_text_linear_layout"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/white"
-                            android:orientation="horizontal">
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:background="@color/map_transperant"
+                            >
+
+                            <ImageView
+                                android:id="@+id/imgSearch1"
+                                android:layout_width="wrap_content"
+                                android:scaleType="fitCenter"
+                                android:layout_height="23dp"
+                                android:paddingLeft="5dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_search_holo" />
+
 
                             <AutoCompleteTextView
                                 android:id="@+id/autocomplete_places"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:hint="Enter Address"
                                 android:inputType="textMultiLine"
-                                android:maxLines="2"
-                                android:drawableLeft="@drawable/ic_search_holo"
+                                android:maxLines="3"
                                 android:gravity="center_vertical"
-                                android:textSize="18dp"
+                                android:textSize="16sp"
                                 android:background="@android:color/transparent"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                                android:paddingBottom="10dp"
-                                android:paddingLeft="10dp"
-                                android:paddingTop="10.7dp"
-                                android:drawablePadding="16dp"
-                                android:scrollbars="vertical" />
+                                android:paddingLeft="45dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:paddingRight="40dp"
+                                android:scrollbars="vertical"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"/>
 
-                        </LinearLayout>
+                            <ImageView
+                                android:id="@+id/clear_autocomplete_text_view_btn"
+                                android:layout_width="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:scaleType="fitCenter"
+                                android:layout_height="23dp"
+                                android:layout_centerVertical="true"
+                                android:paddingRight="8dp"
+                                android:src="@drawable/places_ic_clear" />
+
+
+                        </RelativeLayout>
                     </android.support.v7.widget.CardView>
+
                         <android.support.v7.widget.CardView
-                            android:elevation="10dp"
+                            android:elevation="20dp"
                             android:background="@color/map_transperant"
                             app:cardCornerRadius="2dp"
-                            app:cardBackgroundColor="@color/white"
+                            app:cardBackgroundColor="@color/map_transperant"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                        <LinearLayout
-                            android:id="@+id/location_info_linear_layout"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal|bottom"
-                            android:gravity="top"
-                            android:orientation="horizontal"
-                            android:paddingLeft="10dp"
-                            android:paddingRight="4dp"
-                            android:paddingTop="8dp"
-                            android:paddingBottom="8dp">
 
-                            <com.devspark.robototextview.widget.RobotoTextView
-                                android:id="@+id/event_location_text_view"
-                                android:layout_width="0dip"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1.0"
-                                android:gravity="fill_vertical"
-                                android:inputType="textMultiLine"
-                                android:paddingRight="4dp"
-                                android:text="location"
-                                android:textSize="19dp"
-                                android:drawablePadding="16dp"
-                                android:drawableLeft="@drawable/ic_location_holo"
-                                android:textStyle="bold" />
-
-                            <at.markushi.ui.CircleButton
-                                android:id="@+id/edit_location_btn"
+                            <RelativeLayout
+                                android:id="@+id/location_info_linear_layout"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="bottom"
-                                android:gravity="bottom"
-                                android:padding="4dp"
-                                android:layout_marginRight="8dp"
-                                android:layout_marginLeft="4dp"
-                                android:src="@drawable/ic_edit_holo"
-                                app:cb_color="@color/white"
-                                app:cb_pressedRingWidth="5dp" />
+                                android:layout_height="wrap_content"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+                                android:background="@color/map_transperant"
+                                >
 
-                        </LinearLayout>
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:scaleType="fitCenter"
+                                    android:layout_height="23dp"
+                                    android:paddingLeft="5dp"
+                                    android:layout_alignParentLeft="true"
+                                    android:layout_centerVertical="true"
+                                    android:src="@drawable/ic_location_holo" />
 
+                                <com.devspark.robototextview.widget.RobotoTextView
+                                    android:id="@+id/event_location_text_view"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="textMultiLine"
+                                    android:text="location"
+                                    android:textSize="16sp"
+                                    android:paddingRight="40dp"
+                                    android:paddingLeft="45dp"/>
 
+                                <ImageView
+                                    android:id="@+id/edit_location_btn"
+                                    android:layout_width="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:scaleType="fitCenter"
+                                    android:layout_height="23dp"
+                                    android:layout_centerVertical="true"
+                                    android:paddingRight="8dp"
+                                    android:src="@drawable/ic_edit_holo" />
 
-</android.support.v7.widget.CardView>
+                            </RelativeLayout>
+                        </android.support.v7.widget.CardView>
+
                         <at.markushi.ui.CircleButton
                             android:layout_width="50dp"
                             android:layout_height="35dp"
@@ -189,9 +271,9 @@
 
                         <android.support.v7.widget.CardView
                             android:elevation="10dp"
-                            android:background="@color/map_transperant"
+                            android:background="@color/transparent_white"
                             app:cardCornerRadius="2dp"
-                            app:cardBackgroundColor="@color/white"
+                            android:visibility="gone"
                             android:layout_marginBottom="15dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -202,7 +284,6 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:paddingTop="8dp"
-                            android:paddingBottom="8dp"
                             >
 
                             <com.devspark.robototextview.widget.RobotoEditText
@@ -213,15 +294,13 @@
                                 android:editable="false"
                                 android:layout_gravity="center"
                                 android:gravity="center_vertical"
-                                android:textSize="18dp"
+                                android:textSize="16sp"
                                 android:background="@android:color/transparent"
-
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:drawableLeft="@drawable/ic_calender_holo"
                                 android:drawablePadding="16dp"
-                                android:paddingBottom="10dp"
-                                android:paddingLeft="10dp"
-                                android:paddingTop="10.7dp"/>
+                                android:paddingLeft="8dp"
+                                />
 
                             <View
                                 android:layout_width="match_parent"
@@ -235,100 +314,16 @@
                     android:layout_height="wrap_content"
                       android:orientation="vertical"
                     >
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:drawablePadding="16dp"
-                            android:paddingLeft="10dp"
-                            android:paddingTop="8dp"
-                            >
-
-                        <at.markushi.ui.CircleButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="bottom"
-                            android:gravity="bottom"
-                            android:src="@drawable/ic_driving_radious_holo"
-                            app:cb_color="@color/map_transperant"
-                            app:cb_pressedRingWidth="5dp" />
-
-
-                        <com.devspark.robototextview.widget.RobotoTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="14sp"
-                            android:paddingBottom="10dp"
-                            android:paddingLeft="16dp"
-                            android:paddingTop="10.7dp"
-                            android:text="Driving Distance(Miles)"
-                            android:textColor="@android:color/tertiary_text_dark"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-
-                            />
-
-                            </LinearLayout>
-                        <!--<com.devspark.robototextview.widget.RobotoTextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:textColor="#000000"-->
-                            <!--android:textSize="11sp"-->
-                            <!--android:layout_marginTop="3dp"-->
-                            <!--android:layout_marginBottom="8dp"-->
-                            <!--android:layout_marginLeft="13dp"-->
-                            <!--android:text="Search events in radius(miles) from selected location"-->
-                            <!--/>-->
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="7dp"
-                            android:layout_weight="1.0"
-                            android:orientation="horizontal">
-
-                            <android.support.design.widget.TextInputLayout
-
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="3dp"
-                                android:layout_weight="1.0"
-
-                                android:textAlignment="center">
-
-                                <SeekBar
-                                    android:id="@+id/remote_event_visibliry_miles"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_marginBottom="2dp"
-                                    android:layout_weight="1.0"
-                                    android:clickable="true"
-                                    android:focusable="false"
-                                    android:hint="End Date"
-                                    android:inputType="textCapWords|date"
-                                    android:max="100"
-                                    android:progress="10"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/colorPrimaryDark" />
-                            </android.support.design.widget.TextInputLayout>
-
-                            <com.devspark.robototextview.widget.RobotoTextView
-                                android:id="@+id/remote_event_visibliry_miles_text"
-                                android:layout_width="40dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="8dp"
-                                android:src="@drawable/places_ic_clear"
-                                android:text="10"
-                                android:textSize="20dp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
                         </LinearLayout>
                      </LinearLayout>
 </android.support.v7.widget.CardView>
                     </LinearLayout>
 
+
+
                 </LinearLayout>
+
+
             </RelativeLayout>
             </LinearLayout>
 </LinearLayout>

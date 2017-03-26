@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +41,8 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -66,6 +70,7 @@ import java.util.Locale;
 import at.markushi.ui.CircleButton;
 
 import static com.java.eventfy.Fragments.CreatePublicEvent.CreateEventFragment1.TIMEPICKER_TAG;
+import static com.java.eventfy.R.id.location_info_linear_layout;
 import static com.java.eventfy.SignUpActivity.DATEPICKER_TAG;
 
 /**
@@ -80,12 +85,11 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     private MapView mapView;
     private GetRemoteEvent getRemoteEvent;
     private View view;
-
     private EditText startDate;
     private TextView locationText;
-    private CircleButton editLocation;
-    private LinearLayout locationInfo;
-    private LinearLayout locationEditInfo;
+    private ImageView editLocation;
+    private RelativeLayout locationInfo;
+    private RelativeLayout locationEditInfo;
     private LinearLayout locationMapViewLinearLayout;
     private TextView remoteEeventVisibliryMilesText;
     private SeekBar visiblityMiles;
@@ -104,6 +108,11 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     private TimePickerDialog timePickerDialogStart;
     private Button searchBtnMap;
     private Marker locationMarker;
+    private ImageView clearAutoComplete;
+    private Circle circle;
+    private LatLng myLatLag;
+
+
 
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
             new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
@@ -131,11 +140,11 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
         locationText = (TextView) view.findViewById(R.id.event_location_text_view);
 
-        editLocation= (CircleButton) view.findViewById(R.id.edit_location_btn);
+        editLocation= (ImageView) view.findViewById(R.id.edit_location_btn);
 
-        locationInfo = (LinearLayout) view.findViewById(R.id.location_info_linear_layout);
+        locationInfo = (RelativeLayout) view.findViewById(location_info_linear_layout);
 
-        locationEditInfo = (LinearLayout) view.findViewById(R.id.location_edit_text_linear_layout);
+        locationEditInfo = (RelativeLayout) view.findViewById(R.id.location_edit_text_linear_layout);
 
         locationMapViewLinearLayout = (LinearLayout) view.findViewById(R.id.location_map_view_linear_layout);
 
@@ -145,6 +154,8 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
         remoteViewDetail = (LinearLayout) view.findViewById(R.id.remote_view_details);
         //locationMapViewLinearLayout.setVisibility(View.GONE);
+
+        clearAutoComplete = (ImageView) view.findViewById(R.id.clear_autocomplete_text_view_btn);
 
         locationInfo.setVisibility(View.GONE);
 
@@ -171,7 +182,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         datePickerDialogStart = DatePickerDialog.newInstance(this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), false);
         timePickerDialogStart = TimePickerDialog.newInstance(this, calendar.get(Calendar.HOUR_OF_DAY) ,calendar.get(Calendar.MINUTE), false, false);
 
-         startDate = (EditText) view.findViewById(R.id.remote_event_start_date);
+        startDate = (EditText) view.findViewById(R.id.remote_event_start_date);
         visiblityMiles = (SeekBar) view.findViewById(R.id.remote_event_visibliry_miles);
         searchBtn = (Button) view.findViewById(R.id.remote_search);
 
@@ -187,6 +198,14 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
             }
 
+        });
+
+        clearAutoComplete.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                mAutocompleteView.setText(null);
+                myLatLag = null;
+                googleMap.clear();
+            }
         });
 
         editLocation.setOnClickListener(new OnClickListener() {
@@ -229,8 +248,15 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
                 // TODO Auto-generated method stub
                 visiblityMilesVal = progress;
 
-                remoteEeventVisibliryMilesText.setText(String.valueOf(visiblityMilesVal));
+                if(myLatLag!=null) {
+                    circle.setRadius(progress * 1610);
+                    googleMap.animateCamera( CameraUpdateFactory.zoomTo(getZoomLevel(circle)));
 
+                }
+                if(visiblityMilesVal>1)
+                    remoteEeventVisibliryMilesText.setText(String.valueOf(visiblityMilesVal)+ " miles");
+                else
+                    remoteEeventVisibliryMilesText.setText(String.valueOf(visiblityMilesVal)+ " mile");
             }
 
             @Override
@@ -243,7 +269,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
                 // TODO Auto-generated method stub
             }
         });
-
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -468,9 +493,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         this.signUp = gson.fromJson(json, SignUp.class);
     }
 
-
-
-
     @Override
     public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute) {
         String hourString = hourOfDay < 10 ? "0" + hourOfDay : "" + hourOfDay;
@@ -505,16 +527,23 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     public void setUpMarker(double latitude, double longitude) {
         mapView.setVisibility(View.VISIBLE);
 
-        LatLng myLaLn = new LatLng(latitude, longitude);
+        myLatLag = new LatLng(latitude, longitude);
 
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(myLaLn);
+        markerOptions.position(myLatLag);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         googleMap.clear();
         locationMarker =  googleMap.addMarker(markerOptions);
-        googelMapSetting(latitude,  longitude);
+
         locationInfo.setVisibility(View.VISIBLE);
         locationEditInfo.setVisibility(View.GONE);
+
+        circle = googleMap.addCircle(new CircleOptions()
+                .center(myLatLag)
+                .fillColor(R.color.colorPrimaryExtraTransparent)
+                .radius(visiblityMilesVal*1610));
+        googelMapSetting(latitude,  longitude);
+
     }
 
 
@@ -524,20 +553,17 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         googelMapSetting(0, 0);
         googleMap.setOnMapClickListener(this);
         googleMap.setOnMapLongClickListener(this);
+        googleMap.getUiSettings().setScrollGesturesEnabled(false);
+        googleMap.getUiSettings().setZoomControlsEnabled(false);
     }
 
     public void googelMapSetting(double latitude, double longitude) {
-
-        //googleMap.setMyLocationEnabled(true);
-//        googleMap.getUiSettings().setCompassEnabled(true);
-        googleMap.getUiSettings().setZoomControlsEnabled(true);
-        googleMap.getUiSettings().setAllGesturesEnabled(true);
 
         if(latitude != 0.0 && longitude!=0.0)
         {
             CameraPosition cameraPosition = new CameraPosition.Builder().
                 target(new LatLng(latitude, longitude)).
-                zoom(16).
+                zoom( getZoomLevel(circle)).
                 build();
 
          googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -561,4 +587,14 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         setUpMarker(point.latitude, point.longitude);
     }
 
+
+    public int getZoomLevel(Circle circle) {
+        int zoomLevel = 10;
+        if (circle != null){
+            double radius = circle.getRadius();
+            double scale = radius / 500;
+            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
+    }
 }

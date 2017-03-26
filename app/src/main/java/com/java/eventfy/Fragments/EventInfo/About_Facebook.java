@@ -13,7 +13,6 @@ import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -43,6 +43,7 @@ import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.R;
+import com.java.eventfy.Services.AlarmReceiver;
 import com.java.eventfy.StreetView;
 import com.java.eventfy.WebViewActivity;
 import com.java.eventfy.asyncCalls.AddToWishList;
@@ -51,16 +52,20 @@ import com.java.eventfy.utils.DateTimeStringOperations;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -164,9 +169,6 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         addToWishListBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e(" Clicked : ", " Clicked : ");
-
-
                 if(addToWishListBtn.getText().equals(getString(R.string.add_event_to_wish_list_btn_text))) {
                     addToWishListBtn.setText(getString(R.string.remove_event_to_wish_list_btn_text));
                     ((EventInfoPublic)getActivity()).makeAlarmButtonVisible();
@@ -527,6 +529,26 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 
     }
 
+    public void saveReminder(){
 
+        // Creating Reminder
+        Calendar mCalendar = Calendar.getInstance();
+        //org.joda.time.DateTime dateTime = DateTimeStringOperations.getInstance().convertStringToDateTimeObj(event.getDateTime().getDateTimeFrom());
+        // Set up calender for creating the notification
 
+        org.joda.time.DateTime dateTime = new DateTime();
+
+        mCalendar.set(Calendar.MONTH, dateTime.getMonthOfYear()-1);
+        mCalendar.set(Calendar.YEAR, dateTime.getYear());
+        mCalendar.set(Calendar.DAY_OF_MONTH, dateTime.getDayOfMonth());
+        mCalendar.set(Calendar.HOUR_OF_DAY, dateTime.getHourOfDay());
+        mCalendar.set(Calendar.MINUTE, dateTime.getMinuteOfHour()+2);
+        mCalendar.set(Calendar.SECOND, dateTime.getSecondOfMinute());
+
+        new AlarmReceiver().setAlarm(getApplicationContext(), mCalendar, 0, event);
+
+        // Create toast to confirm new reminder
+        Toast.makeText(getApplicationContext(), "Saved",
+                Toast.LENGTH_SHORT).show();
+    }
 }
