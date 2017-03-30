@@ -100,19 +100,19 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
 
                 }
             });
-                ((ResultHolder)holder).notificationTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Doesn't do anything, but need Click Listener to get that sweet Ripple
-                        Events events = notification.getEvents();
-                        notificationOnClickEvent(events);
-//                        if(events==null)
-//                            dialogBox(notification);
-//                        else{
-//                            notificationOnClickEvent(events);
-//                        }
-                    }
-                });
+//                ((ResultHolder)holder).notificationTime.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // Doesn't do anything, but need Click Listener to get that sweet Ripple
+//                        Events events = notification.getEvents();
+//                        notificationOnClickEvent(events);
+////                        if(events==null)
+////                            dialogBox(notification);
+////                        else{
+////                            notificationOnClickEvent(events);
+////                        }
+//                    }
+//                });
                 ((ResultHolder)holder).notificationMessage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -141,8 +141,8 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
                     ((ResultHolder)holder).notificationImage.setImageResource(R.drawable.logo);
                 }
 
-                ((ResultHolder)holder).notificationTitle.setText("  "+notification.getNotificationTitle());
-                ((ResultHolder)holder).notificationTime.setText(notification.getNotificationTime());
+                ((ResultHolder)holder).notificationTitle.setText(notification.getNotificationTitle());
+               // ((ResultHolder)holder).notificationTime.setText(notification.getNotificationTime());
                 ((ResultHolder)holder).notificationMessage.setText(notification.getNotificationMessage());
 
                 // calculate distance from current location
@@ -165,7 +165,7 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
         LinearLayout notificationLinearLayout;
         ImageView notificationImage;
         RobotoTextView notificationTitle;
-        RobotoTextView notificationTime;
+       // RobotoTextView notificationTime;
         RobotoTextView notificationMessage;
 
 
@@ -174,7 +174,7 @@ public class NotificationRecyclerAdapter extends ArrayRecyclerAdapter<Notificati
             notificationLinearLayout = (LinearLayout) itemView.findViewById(R.id.notification_linear_layout);
             notificationImage = (ImageView) itemView.findViewById(R.id.notification_image);
             notificationTitle = (RobotoTextView) itemView.findViewById(R.id.notification_title);
-            notificationTime  = (RobotoTextView) itemView.findViewById(R.id.notification_time);
+          //  notificationTime  = (RobotoTextView) itemView.findViewById(R.id.notification_time);
             notificationMessage = (RobotoTextView) itemView.findViewById(R.id.notification_message);
         }
     }

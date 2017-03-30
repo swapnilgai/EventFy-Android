@@ -213,7 +213,7 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="or">OR</string>
-    <string name="invalid_username_password">OR</string>
+    <string name="invalid_username_password">Username/Password do not match</string>
     <string name="login_text">LOGIN</string>
     <string name="no_account">No account yet? Create one</string>
     <string name="forgot_password">Forget password?</string>

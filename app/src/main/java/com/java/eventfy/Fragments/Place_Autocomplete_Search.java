@@ -520,7 +520,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
             startDate.setText(year + "-" + month + "-" + day);
             timePickerDialogStart.setCloseOnSingleTapMinute(isCloseOnSingleTapDay());
             timePickerDialogStart.show(getFragmentManager(), TIMEPICKER_TAG);
-
     }
 
 

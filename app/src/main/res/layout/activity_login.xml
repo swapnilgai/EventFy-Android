@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
+        android:layout_gravity="center"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
         android:paddingLeft="24dp"
@@ -76,7 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="16dp"
-            android:text="@string/or"
+            android:text="@string/invalid_username_password"
+            android:visibility="gone"
             android:textColor="@color/colorErrorRed"
             android:textSize="13sp" />
 

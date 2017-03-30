@@ -132,9 +132,6 @@ import static com.java.eventfy.R.string.edited;
 
                 }
             });
-
-
-
         }
         else {
 
@@ -179,7 +176,6 @@ import static com.java.eventfy.R.string.edited;
             ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeStringForFb(event.getDateTime().getDateTimeFrom()));
                 // calculate distance from current location
                 double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());
-                if(milesDistance<4)  // to check if it is walkable distance
                // ((ResultHolder)holder).eventMileAway.setText(String.valueOf(milesDistance));
 
                 if(event.getEventAwayDuration()!= null)
@@ -192,11 +188,8 @@ import static com.java.eventfy.R.string.edited;
                 else
                     ((ResultHolder)holder).eventMileAwayDuration.setText("");
 
-
                     ((ResultHolder)holder).eventAwayLinearLayout.setVisibility(View.VISIBLE);
 
-
-            Log.e("fcaeboo id : ",  event.getEventId()+" : "+event.getFacebookEventId());
             if(event.getFacebookEventId()==null)
                 ((ResultHolder)holder).eventSourceImage.setImageResource(R.drawable.logo);
 

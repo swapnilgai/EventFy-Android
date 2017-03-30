@@ -30,6 +30,7 @@
             android:layout_margin="8dp"
             app:cardCornerRadius="2dp"
             android:elevation="10dp"
+            android:visibility="gone"
             android:layout_alignParentTop="true"
             >
 
@@ -149,65 +150,82 @@
         <android.support.v7.widget.CardView
             android:id="@+id/nearby_map_view_filter_card_view"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             app:cardCornerRadius="2dp"
             android:layout_margin="8dp"
-            android:visibility="gone"
-            android:elevation="10dp"
-            android:layout_alignParentTop="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="2dp"
+            android:elevation="50dp"
             >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="visibility Redious (Miles)"
-                android:textSize="15sp"
-                android:layout_marginBottom="10dp"
-                />
-
-            <TextView
-                android:id="@+id/nearby_map_view_visibility_miles_radius"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="10"
-                android:layout_marginBottom="15dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                />
-
-            <SeekBar
-                android:id="@+id/nearby_map_view_event_visibility_miles"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="35dp"
-                android:layout_marginRight="35dp"
-                android:layout_marginBottom="10dp"
-                />
-
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/nearby_map_view_event_search_btn"
-                android:layout_width="120dp"
-                android:layout_height="37dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:drawableLeft="@drawable/places_ic_search"
-                android:background="@drawable/content_main2_button_color"
-                android:text="Search"
-                android:layout_marginTop="3dp"
+                android:orientation="vertical"
                 android:layout_gravity="center"
-                android:textColor="@color/white" />
-        </LinearLayout>
+                android:gravity="center"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:layout_alignParentTop="true"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <android.support.design.widget.TextInputLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.0"
+                        android:textAlignment="center">
+
+                        <SeekBar
+                            android:id="@+id/nearby_map_view_event_visibility_miles"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="2dp"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:hint="End Date"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            android:inputType="textCapWords|date"
+                            android:max="40"
+                            android:progress="1"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryDark" />
+                    </android.support.design.widget.TextInputLayout>
+
+                    <com.devspark.robototextview.widget.RobotoTextView
+                        android:id="@+id/nearby_map_view_visibility_miles_radius"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="8dp"
+                        android:src="@drawable/places_ic_clear"
+                        android:text="10 miles"
+                        android:textSize="16sp"
+                        android:gravity="center"
+
+                        />
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/nearby_map_view_event_search_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="37dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingLeft="60dp"
+                    android:paddingRight="60dp"
+                    android:background="@drawable/content_main2_button_color"
+                    android:text="Search"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white" />
+            </LinearLayout>
 
         </android.support.v7.widget.CardView>
 </RelativeLayout>

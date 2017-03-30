@@ -45,9 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginLeft="6dp">
-
 
                 <com.devspark.robototextview.widget.RobotoTextView
                     android:id="@+id/event_date_from"
@@ -83,8 +82,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="38 people"
-                android:textSize="11dp"
-                android:layout_marginTop="2dp"
+                android:textSize="13dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginLeft="7dp"
                 android:textColor="@color/transparent_black" />
 
@@ -96,7 +95,6 @@
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp"
                 android:background="@color/date_picker_view_animator" />
-
 
 
             <LinearLayout
@@ -118,7 +116,6 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:elevation="20dp"
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_local_play_black_18dp"
@@ -132,7 +129,7 @@
                         android:layout_marginTop="3dp"
                         android:text="Birthday"
                         android:textColor="#6c7880"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -158,11 +155,10 @@
                         android:id="@+id/event_capacity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="0.2dp"
                         android:layout_marginTop="3dp"
                         android:text="30 people"
                         android:textColor="#6c7880"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
 
@@ -180,7 +176,6 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:elevation="20dp"
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_street_view"
@@ -190,11 +185,10 @@
                     <com.devspark.robototextview.widget.RobotoTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="0.2dp"
                         android:layout_marginTop="3dp"
                         android:text="Street View"
                         android:textColor="#6c7880"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/video_linar_layout"
@@ -203,6 +197,7 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_weight="1"
+                    android:paddingRight="5dp"
                     android:layout_gravity="center"
                     >
 
@@ -210,7 +205,6 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:elevation="20dp"
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_video_library"

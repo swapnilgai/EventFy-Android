@@ -61,13 +61,14 @@
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
             >
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:gravity="top"
                 android:paddingBottom="8dp"
-                android:paddingTop="16dp"
-                android:text="From"
+                android:paddingTop="12dp"
+                android:textSize="12sp"
+                android:text="Start Date and Time"
                />
 
 
@@ -82,13 +83,11 @@
                     android:singleLine="true"
                     android:textSize="16sp"
                     android:layout_weight="1"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="4dp"
                     android:inputType="textCapWords|date"
                     android:background="@android:color/transparent"
                     android:textColor="@color/common_google_signin_btn_text_light_focused"
                     />
-
-
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -96,33 +95,43 @@
             android:layout_margin="5dp"
             android:background="@color/place_autocomplete_separator" />
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="5dp">
-
-            <android.support.design.widget.TextInputLayout
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            >
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:paddingTop="7dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp">
-                <com.devspark.robototextview.widget.RobotoEditText
-                    android:id="@+id/public_event_end_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:hint="End Date and Time"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:paddingLeft="5dp"
-                    android:singleLine="true"
-                    android:paddingTop="12dp"
-                    android:background="@android:color/transparent"
-                    android:textColor="@color/common_google_signin_btn_text_light_focused"
-                    />
-            </android.support.design.widget.TextInputLayout>
+                android:gravity="top"
+                android:paddingBottom="8dp"
+                android:paddingTop="12dp"
+                android:textSize="12sp"
+                android:text="End Date and Time"
+                />
+
+
+            <com.devspark.robototextview.widget.RobotoEditText
+                android:id="@+id/public_event_end_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:hint="mm/DD/yyyy"
+                android:clickable="true"
+                android:focusable="false"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:paddingBottom="4dp"
+                android:inputType="textCapWords|date"
+                android:background="@android:color/transparent"
+                android:textColor="@color/common_google_signin_btn_text_light_focused"
+                />
+
+
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -140,28 +149,33 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="9dp">
+            android:orientation="vertical"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            >
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_height="wrap_content"
-                android:paddingTop="7dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp">
+                android:layout_width="match_parent"
+                android:gravity="top"
+                android:textSize="12sp"
+                android:paddingBottom="8dp"
+                android:paddingTop="12dp"
+                android:text="Description"
+                android:id="@+id/textView"/>
 
-                <com.devspark.robototextview.widget.RobotoEditText
+
+            <com.devspark.robototextview.widget.RobotoEditText
                     android:id="@+id/public_event_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Event Description"
-                    android:paddingLeft="5dp"
                     android:inputType="textMultiLine"
-                    android:paddingTop="12dp"
-                    android:layout_marginBottom="12dp"
+                    android:textSize="16sp"
+                    android:layout_weight="1"
+                    android:paddingBottom="8dp"
                     android:background="@android:color/transparent"
                     android:textColor="@color/common_google_signin_btn_text_light_focused" />
-            </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
 
@@ -176,48 +190,54 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginTop="8dp"
-
             android:layout_gravity="center">
 
-            <android.support.design.widget.TextInputLayout
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_width="0dip"
-                android:layout_weight="1.0"
-                android:layout_marginRight="15dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp">
+                android:orientation="vertical"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:layout_weight="1"
+                >
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:gravity="top"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="12dp"
+                    android:textSize="12sp"
+                    android:text="Capacity"
+                    />
+
 
                 <com.devspark.robototextview.widget.RobotoEditText
                     android:id="@+id/public_event_capacity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:paddingLeft="5dp"
-                    android:hint="Capacity"
-                    android:singleLine="true"
-                    android:inputType="number"
-                    android:paddingTop="12dp"
+                    android:hint="Event Description"
+                    android:inputType="textMultiLine"
+                    android:textSize="16sp"
+                    android:layout_weight="1"
+                    android:paddingBottom="8dp"
                     android:background="@android:color/transparent"
-                    android:layout_marginBottom="9dp"
-                    android:textColor="@color/common_google_signin_btn_text_light_focused"/>
-
-            </android.support.design.widget.TextInputLayout>
+                    android:textColor="@color/common_google_signin_btn_text_light_focused" />
+            </LinearLayout>
 
             <View
-                android:layout_width="2dp"
+                android:layout_width="1dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5dp"
-                android:background="@color/common_google_signin_btn_text_light_focused" />
+                android:background="@color/transparent_black" />
 
             <CheckBox android:id="@+id/public_events_volatile"
                       android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="volatile"
-                      android:textSize="20dp"
-                      android:layout_marginBottom="4dp"
+                      android:text="Volatile"
+                      android:textSize="16sp"
                       android:paddingRight="12dp"
-                      android:layout_gravity="bottom"/>
+                      android:textColor="@color/common_google_signin_btn_text_light_focused"
+            android:layout_gravity="center"/>
         </LinearLayout>
 
         <!--</android.support.v7.widget.CardView>-->
@@ -232,19 +252,12 @@
             android:background="@color/place_autocomplete_separator" />
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Category"
-            android:textSize="13sp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="12dp"/>
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="8dp"
             android:orientation="vertical">
 
             <!--<RelativeLayout-->
@@ -286,17 +299,16 @@
             <com.toptoche.searchablespinnerlibrary.SearchableSpinner
                 android:id="@+id/public_event_category"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="12dp"
                 android:layout_marginRight="12dp"
-                android:layout_marginTop="12dp"
                 android:spinnerMode="dropdown"
                 android:background="@android:color/transparent"
                 android:entries="@array/category_arrays"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
+                android:textColor="@color/common_google_signin_btn_text_light_focused"
                 app:hintText="Category"/>
 
             <!--</RelativeLayout>-->
@@ -335,7 +347,7 @@
                 <LinearLayout
                     android:id="@+id/location_edit_text_linear_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
 
@@ -344,7 +356,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginTop="2dp"
-                        android:layout_marginBottom="9dp">
+                        >
 
                         <AutoCompleteTextView
                             android:id="@+id/create_public_event_autocomplete_places"
@@ -358,10 +370,10 @@
                             android:layout_marginRight="10dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:paddingTop="20dp"
-
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
                             android:hint="Enter Address"
-                            android:singleLine="true" />
+                             />
                         <!--<View-->
                         <!--android:layout_width="3dp"-->
                         <!--android:layout_height="fill_parent"-->
@@ -371,11 +383,10 @@
 
                         <at.markushi.ui.CircleButton
                             android:id="@+id/create_event_current_location"
-                            android:layout_width="50dip"
-                            android:layout_height="50dip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dip"
                             android:layout_gravity="bottom"
                             android:gravity="bottom"
-                            android:padding="9dp"
                             android:layout_marginBottom="6dp"
                             android:layout_marginRight="5dp"
                             app:cb_color="@color/white"
@@ -385,26 +396,26 @@
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/location_info_linear_layout"
-                    android:layout_width="fill_parent"
-                    android:layout_height="60dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
                     android:paddingLeft="4dp"
                     android:paddingRight="4dp"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal|bottom"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="5dp">
+                    android:layout_gravity="center_horizontal"
+                    android:paddingBottom="4dp"
+                    android:paddingTop="4dp"
+                    >
 
                     <at.markushi.ui.CircleButton
                         android:id="@+id/btnSelectImageFromDevice"
-                        android:layout_width="50dip"
-                        android:layout_height="50dip"
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="bottom"
                         android:gravity="bottom"
                         android:layout_marginBottom="6dp"
                         android:layout_marginRight="5dp"
                         android:src="@drawable/ic_location_on_black_18dp"
-                        android:padding="9dp"
                         app:cb_color="@color/white"
                         app:cb_pressedRingWidth="5dip" />
 
@@ -415,14 +426,12 @@
                         android:layout_height="wrap_content"
                         android:lines="@android:integer/config_longAnimTime"
                         android:layout_weight="1.0"
-                        android:paddingTop="10dp"
-                        android:gravity="fill_vertical"
-                        android:textSize="15dp"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:inputType="textMultiLine"
                         android:text="location xyz"
                         android:paddingLeft="2dp"
-                        android:paddingBottom="10dp"
                         android:paddingRight="4dp"/>
                     <!--<View-->
                     <!--android:layout_width="2dp"-->
@@ -433,14 +442,10 @@
 
                     <at.markushi.ui.CircleButton
                         android:id="@+id/edit_location_btn"
-                        android:layout_width="50dip"
-                        android:layout_height="50dip"
-                        android:layout_gravity="bottom"
-                        android:gravity="bottom"
-                        android:layout_marginBottom="6dp"
+                        android:layout_width="40dip"
+                        android:layout_height="wrap_content"
                         android:layout_marginRight="5dp"
                         android:src="@drawable/ic_create_black_24dp"
-                        android:padding="2dp"
                         app:cb_color="@color/white"
                         app:cb_pressedRingWidth="5dip" />
 
@@ -516,10 +521,17 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Visibility Miles"
+            android:text="Driving Distance"
             android:textSize="13sp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Notify users within driving distance form the event location"
+            android:textSize="10sp"
+            android:layout_marginLeft="15dp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -535,7 +547,7 @@
                 android:paddingRight="7dp"
                 android:layout_marginRight="12dp"
                 android:layout_marginLeft="12dp"
-                android:layout_weight=".28"
+                android:layout_weight="1"
                 android:layout_marginBottom="18dp"
                 android:background="@drawable/spinner_border"
                 android:orientation="horizontal">

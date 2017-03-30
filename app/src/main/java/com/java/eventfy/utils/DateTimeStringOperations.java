@@ -36,6 +36,22 @@ public class DateTimeStringOperations {
         pDoW = dateTime.monthOfYear();
         String month = pDoW.getAsText(Locale.ENGLISH);
 
+        int hour = dateTime.getHourOfDay();
+
+        String amOrPm = null;
+        if(hour==12)
+            amOrPm = "PM";
+        else if(hour == 24){
+            hour = 12;
+            amOrPm = "AM";
+        }
+        else if(hour>13){
+            hour = hour%12;
+            amOrPm = "PM";
+        }
+        else
+            amOrPm = "AM";
+
         String dateTimeStr = day.substring(0,3)+", "+month.substring(0,3)+" "+dateTime.getDayOfMonth()+
                 " at "+dateTime.getHourOfDay()+":"+dateTime.getMinuteOfHour();
 
@@ -52,8 +68,24 @@ public class DateTimeStringOperations {
         pDoW = dateTime.monthOfYear();
         String month = pDoW.getAsText(Locale.ENGLISH);
 
-        String dateTimeStr = day.substring(0,3)+", "+month.substring(0,3)+" "+dateTime.getDayOfMonth()+" "+dateTime.getYear()+
-                " at "+dateTime.getHourOfDay()+":"+dateTime.getMinuteOfHour();
+        int hour = dateTime.getHourOfDay();
+
+        String amOrPm = null;
+        if(hour==12)
+            amOrPm = "PM";
+        else if(hour == 24){
+            hour = 12;
+            amOrPm = "AM";
+        }
+        else if(hour>13){
+            hour = hour%12;
+            amOrPm = "PM";
+        }
+        else
+            amOrPm = "AM";
+
+        String dateTimeStr = day.substring(0,3)+", "+month.substring(0,3)+" "+dateTime.getDayOfMonth()+
+                " at "+hour+":"+dateTime.getMinuteOfHour()+" "+amOrPm;
 
         return dateTimeStr;
 

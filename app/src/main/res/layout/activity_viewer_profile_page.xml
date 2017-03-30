@@ -24,88 +24,97 @@
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
         android:clipToPadding="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_alignParentStart="true">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="16dp"
+            >
 
             <ImageView
                 android:id="@+id/user_profile_pic"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/circular_user_image"
+                android:background="@drawable/user_image"
                 android:elevation="10dp"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:transitionName="profile_pic_transition"
                 app:layout_collapseMode="parallax" />
 
-            <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_margin="16dp"
+                android:paddingTop="16dp">
+
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="10dp"
                 android:text="Status "
-                android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:textStyle="bold"/>
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/user_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
                 android:maxLines="3"
                 android:text="User's status"
                 android:textColor="@color/transparent_black"
-                android:textSize="16sp" />
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:background="@color/date_picker_view_animator"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="10dp"
                 android:text="Personal Information "
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
                 android:text="User Name"
                 android:textColor="@color/transparent_black"
-                android:textSize="16sp" />
+                android:textSize="13sp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:background="@color/date_picker_view_animator"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
 
-            <TextView
+            <com.devspark.robototextview.widget.RobotoTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="10dp"
                 android:text="Visibility"
                 android:textStyle="bold"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
 
                 <TextView
                     android:id="@+id/visibility_mode"
@@ -113,18 +122,24 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_camera_enhance_black_24dp"
                     android:text="Visible"
-                    android:textSize="16sp" />
+                    android:textSize="13sp" />
 
 
                 <at.markushi.ui.CircleButton
                     android:id="@+id/visibility_mode_btn"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="4dp"
                     app:cb_color="@color/colorActiveGreen" />
             </LinearLayout>
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:background="@color/date_picker_view_animator"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"/>
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.Away;
 import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
 import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
@@ -288,15 +287,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                 }
             }
 
-//            if(index!=-1 && originalEvent!=null)
-//                updateEditedEvent(originalEvent, editEvent.getEvents(), index);
-
-            DownloadTask downloadTask = new DownloadTask(new LatLng(signUp.getLocation().getLatitude(), signUp.getLocation().getLongitude()),
-                    new LatLng(editEvent.getEvents().getLocation().getLatitude(), editEvent.getEvents().getLocation().getLongitude()), editEvent.getEvents());
-            // Start downloading json data from Google Directions API
-            downloadTask.execute();
-            // int index = getEventIndex(editEvent.getEvents());
-
+            if(index!=-1 && originalEvent!=null)
+                updateEditedEvent(editEvent.getEvents(), index);
         }
         else{
             //fail
@@ -411,10 +403,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             if(e.getEventId() == events.getEventId()) {
                 index = eventsList.indexOf(e);
                 changedEvent =  e;
-                //Log.e("index of event ", "index* "+index);
-                //Log.e("eventid of event ", "index* "+e.getEventId());
                 e.setDecesion(events.getDecesion());
-                Log.e("decesion of event ", "index* "+e.getDecesion());
                 break;
             }
         }
@@ -446,7 +435,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     public void removeEvent(Events e) {
 
         int index = this.eventsList.indexOf(e);
-        //e.setDecesion(events.getDecesion());
         adapter.remove(e);
         this.eventsList.remove(index);
         adapter.notifyItemRemoved(index);
@@ -468,11 +456,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
         getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag), getContext());
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
-//        String urlFacebook = getString(R.string.ip_local) + getString(R.string.get_nearby_facebook_event);
-//        GetNearbyFacebookEvents getNearbyFacebookEvents = new GetNearbyFacebookEvents(urlFacebook, tempSignUp, getString(R.string.nearby_flag), getContext());
-//        getNearbyFacebookEvents.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
@@ -630,34 +613,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                     eventsList.remove(1);
         }
     }
-
-    @Subscribe
-    public void getAwayObjectforEvent(Away awayObj) {
-
-        if(!eventsList.contains(awayObj.getEvents()) && awayObj.getDistance()!=null && awayObj.getDistance().length()>=1) {
-            awayObj.getEvents().setEventAwayDistanve(awayObj.getDistance());
-            awayObj.getEvents().setEventAwayDuration(awayObj.getDuration());
-            Log.e("event name : ", ""+awayObj.getEvents().getEventName());
-            eventsList.add(awayObj.getEvents());
-            bindAdapter(adapter, this.eventsList);
-            fragment_switch_button.setVisibility(View.VISIBLE);
-        }
-        else if(eventsList.contains(awayObj.getEvents()) &&  awayObj.getDistance()!=null){
-            int index = getEventIndex(awayObj.getEvents());
-            updateEditedEvent(awayObj.getEvents(),index);
-        }
-        else if( awayObj.getDistance()==null){
-
-            if(eventsList.contains(awayObj.getEvents()))
-                eventsList.remove(awayObj.getEvents());
-
-            if(eventsList.size()<=0)
-                addNoData();
-
-            bindAdapter(adapter, this.eventsList);
-        }
-    }
-
 
     @Subscribe
     public void getSearchCriteriaFromMap(NearbyMapSearch nearbyMapSearch) {

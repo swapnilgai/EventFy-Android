@@ -1,6 +1,7 @@
 package com.java.eventfy.Fragments.EventInfo;
 
 
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -97,7 +99,9 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     private Location userCurrentLocation;
     private  SignUp signUp;
     private LinearLayout streetViewLinearLayout;
+    private LinearLayout detailLinearLayout;
     private List<Marker> markerLst = new LinkedList<Marker>();
+    private boolean isTextViewClicked;
 
 
     @Override
@@ -112,7 +116,6 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         evengtType = (RobotoTextView) view.findViewById(R.id.event_type);
         evengtCategory = (RobotoTextView) view.findViewById(R.id.event_category);
         eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
-        eventLocation = (RobotoTextView) view.findViewById(R.id.event_location_text_view);
         eventDateTimeFrom  = (RobotoTextView) view.findViewById(R.id.event_date_from);
         eventDateTimeTo  = (RobotoTextView) view.findViewById(R.id.event_date_to);
         eventDescription = (RobotoTextView) view.findViewById(R.id.event_description);
@@ -126,6 +129,7 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         eventLink = (Button) view.findViewById(R.id.event_link);
         streetViewLinearLayout = (LinearLayout) view.findViewById(R.id.street_view);
         addToWishListBtn = (Button) view.findViewById(R.id.add_wishlist_btn);
+        detailLinearLayout = (LinearLayout) view.findViewById(R.id.detail_linear_layout);
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
         mapView.onCreate(savedInstanceState);
@@ -180,6 +184,68 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
                 }
             }
 
+        });
+
+        eventDescription.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isTextViewClicked){
+                    eventDescription.setMaxLines(2);
+                    isTextViewClicked = false;
+                } else {
+                    eventDescription.setMaxLines(Integer.MAX_VALUE);
+                    isTextViewClicked = true;
+                }
+            }
+        });
+
+        detailLinearLayout.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isTextViewClicked){
+                    eventDescription.setMaxLines(2);
+                    isTextViewClicked = false;
+                } else {
+                    eventDescription.setMaxLines(Integer.MAX_VALUE);
+                    isTextViewClicked = true;
+                }
+            }
+        });
+
+        eventDescription.setOnLongClickListener(new OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                // TODO Auto-generated method stub
+                ClipboardManager cm = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(eventDescription.getText());
+                Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        eventLocation.setOnLongClickListener(new OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                // TODO Auto-generated method stub
+                ClipboardManager cm = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(eventDescription.getText());
+                Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+
+        eventName.setOnLongClickListener(new OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                // TODO Auto-generated method stub
+                ClipboardManager cm = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(eventDescription.getText());
+                Toast.makeText(context, "Copied to clipboard", Toast.LENGTH_SHORT).show();
+                return true;
+            }
         });
 
 
