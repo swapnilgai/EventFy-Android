@@ -44,7 +44,6 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
                     restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
             event = rateResponse.getBody();
 
-            Log.e(" event Obj before:  ", new Gson().toJson(event));
         }catch (Exception e){
         }
         return null;

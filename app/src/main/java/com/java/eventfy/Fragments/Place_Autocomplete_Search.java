@@ -3,7 +3,6 @@ package com.java.eventfy.Fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,13 +47,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Filter.Filter;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.asyncCalls.GetRemoteEvent;
-import com.java.eventfy.utils.DateTimeStringOperations;
 import com.java.eventfy.utils.PlaceAutocompleteAdapter;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
@@ -64,8 +64,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
+import java.util.TimeZone;
 
 import at.markushi.ui.CircleButton;
 
@@ -111,8 +110,9 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     private ImageView clearAutoComplete;
     private Circle circle;
     private LatLng myLatLag;
-
-
+    private Location locationSelected = new Location();
+    private RemoteEventData remoteEventData = new RemoteEventData();
+    private Filter filter = new Filter();
 
     private static final LatLngBounds BOUNDS_GREATER_SYDNEY = new LatLngBounds(
             new LatLng(-34.041458, 150.790100), new LatLng(-33.682247, 151.383362));
@@ -184,7 +184,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
         startDate = (EditText) view.findViewById(R.id.remote_event_start_date);
         visiblityMiles = (SeekBar) view.findViewById(R.id.remote_event_visibliry_miles);
-        searchBtn = (Button) view.findViewById(R.id.remote_search);
 
         getUserObject();
 
@@ -270,6 +269,15 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
             }
         });
 
+        searchBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                if(locationSelected.getLatitude()!=0 && locationSelected.getLongitude()!=0){
+                    getRemoteEventServerCall(locationSelected);
+                }
+            }
+
+        });
+
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
         mapView.getMapAsync(this);
@@ -341,10 +349,8 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
             // Get the Place object from the buffer.
             else {
                 place = places.get(0);
-
-                Location location = new Location();
-                location.setLatitude(place.getLatLng().latitude);
-                location.setLongitude(place.getLatLng().longitude);
+                locationSelected.setLatitude(place.getLatLng().latitude);
+                locationSelected.setLongitude(place.getLatLng().longitude);
 
                 eventLocationTextView.setText(mAutocompleteView.getText());
 
@@ -352,7 +358,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
                 //setting url
 
-                eventObj.setLocation(location);
+                eventObj.setLocation(locationSelected);
                 Log.e(TAG, "Place details received: " + place.getLatLng());
             }
             // Format details of the place for display and show it in a TextView.
@@ -395,92 +401,25 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
 
     // ****** ASYNC CALL
-    private void getRemoteEventServerCall(Place place){
-
+    private void getRemoteEventServerCall(Location locationSelected){
 
         eventObj.getLocation().setDistance(visiblityMilesVal);
-        com.java.eventfy.Entity.DateTime dateTime = new  com.java.eventfy.Entity.DateTime();
+        //com.java.eventfy.Entity.DateTime dateTime = new  com.java.eventfy.Entity.DateTime();
 
-        dateTime.setDateTimeFrom(DateTimeStringOperations.getInstance().convertStringToDateTime(startDate.getText().toString()));
+        //        dateTime.setDateTimeFrom(DateTimeStringOperations.getInstance().convertStringToDateTime(startDate.getText().toString()));
 
-        eventObj.setDateTime(dateTime);
+       // eventObj.setDateTime(dateTime);
 
-        signUp.setEventAdmin(eventObj);
+        filter.setTimeZone(TimeZone.getDefault().getID());
+        filter.setLocation(locationSelected);
+        signUp.setFilter(filter);
+        remoteEventData.setSignUp(signUp);
+        remoteEventData.setViewMsg(getContext().getString(R.string.remote_list_requested));
 
         String url = getString(R.string.ip_local) + getString(R.string.remote_events);
-        place = new Place() {
-            @Override
-            public String getId() {
-                return null;
-            }
 
-            @Override
-            public List<Integer> getPlaceTypes() {
-                return null;
-            }
-
-            @Override
-            public CharSequence getAddress() {
-                return null;
-            }
-
-            @Override
-            public Locale getLocale() {
-                return null;
-            }
-
-            @Override
-            public CharSequence getName() {
-                return null;
-            }
-
-            @Override
-            public LatLng getLatLng() {
-                return null;
-            }
-
-            @Override
-            public LatLngBounds getViewport() {
-                return null;
-            }
-
-            @Override
-            public Uri getWebsiteUri() {
-                return null;
-            }
-
-            @Override
-            public CharSequence getPhoneNumber() {
-                return null;
-            }
-
-            @Override
-            public float getRating() {
-                return 0;
-            }
-
-            @Override
-            public int getPriceLevel() {
-                return 0;
-            }
-
-            @Override
-            public CharSequence getAttributions() {
-                return null;
-            }
-
-            @Override
-            public Place freeze() {
-                return null;
-            }
-
-            @Override
-            public boolean isDataValid() {
-                return false;
-            }
-        };
-        EventBusService.getInstance().post(place);
-        getRemoteEvent = new GetRemoteEvent(url, signUp, getContext());
+        EventBusService.getInstance().post(remoteEventData);
+        getRemoteEvent = new GetRemoteEvent(url, remoteEventData, getContext());
         getRemoteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

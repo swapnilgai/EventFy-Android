@@ -20,8 +20,8 @@
     <!--<string name="ip_localhost">http://10.67.70.107:8080/EventFy</string>-->
 
     <!---->
-    <string name="ip_local">https://eventfy.herokuapp.com</string>
-    <string name="ip_localhost">https://eventfy.herokuapp.com</string>
+    <string name="ip_local">https://eventefy.herokuapp.com</string>
+    <string name="ip_localhost">https://eventefy.herokuapp.com</string>
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -81,6 +81,8 @@
     <string name="undo">undo</string>
     <string name="edited">Edited</string>
 
+    <string name="Undefined">Undefined</string>
+
 
     <string name="invisible_event">Event will no longer visible to new or unregister users</string>
 
@@ -110,6 +112,7 @@
     <string name="create_event_flag">nearby_flag</string>
     <!--  User SharedPreferences data  -->
     <string name="userObject">userObject</string>
+    <string name="userObjectRemote">userObjectRemote</string>
     <string name="notofocationId">notofocationId</string>
 
     <string name="userName">userName</string>
@@ -295,7 +298,19 @@
     <string name="remove_wish_list_success">remove_wish_list_success</string>
     <string name="remove_wish_list_fail">remove_wish_list_fail</string>
 
+    <string name="remote_list_success">remote_list_success</string>
+    <string name="remote_list_fail">remote_list_fail</string>
+    <string name="remote_list_requested">remote_list_requested</string>
+    <string name="remote_list_server_error">remote_list_server_error</string>
 
     <string name="alarm_event">alarm_event</string>
 
-    </resources>
+    <string name="event_request_remote">Remote</string>
+    <string name="event_request_nearby">Nearby</string>
+    <string name="event_request_wishlist">Wishlist</string>
+
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+
+
+</resources>

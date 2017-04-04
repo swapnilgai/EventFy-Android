@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.NotificationId;
@@ -395,6 +396,14 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
+    @Subscribe
+    public void getRemotPlaceLatLang(RemoteEventData remoteEventData)
+    {
+        if(remoteEventData.getViewMsg().equals(getString(R.string.remote_list_requested))) {
+                storeRemoteUserObject(remoteEventData.getSignUp());
+        }
+    }
+
 
     public void deviceDimensions() {
         Display display = getWindowManager().getDefaultDisplay();
@@ -492,6 +501,19 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         editor.commit();
 
+    }
+
+
+
+    public void storeRemoteUserObject(SignUp signUp)
+    {
+        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObjectRemote), MODE_PRIVATE);
+        editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(signUp);
+        editor.putString(getString(R.string.userObjectRemote), json);
+
+        editor.commit();
     }
 
     @Subscribe

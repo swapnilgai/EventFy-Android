@@ -46,6 +46,7 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
 
         try {
 
+            Log.e("Comment list is ", ""+new Gson().toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -59,7 +60,7 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
 
             commentList = Arrays.asList(comments);
 
-            Log.e("Comment list is ", ""+commentList.size());
+
         }catch (Exception e){
 
             commentList = new ArrayList<Comments>();

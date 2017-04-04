@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,14 +18,21 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
+import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
+import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
+import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
+import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,7 +51,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     LatLng myLaLn;
     SupportMapFragment supportMapFragmentRemot;
     private String flag;
-
+    private List<Marker> markerList = new LinkedList<Marker>();
 
 
     private void initializeMap() {
@@ -71,7 +79,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLaLn);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            googleMapRemot.addMarker(markerOptions);
+            markerList.add(googleMapRemot.addMarker(markerOptions));
 
             //googleMap.setMyLocationEnabled(true);
             googleMapRemot.getUiSettings().setCompassEnabled(true);
@@ -150,5 +158,109 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     {
         this.myLaLn = place.getLatLng();
         initializeMap();
+    }
+
+    @Subscribe
+    public void getWishListEvent(AddToWishListEvent addToWishListEvent) {
+        Events events = addToWishListEvent.getEvent();
+        int index = -1;
+        Events changedEvent = null;
+
+        if (addToWishListEvent.getViewMessage().equals(getString(R.string.wish_list_update_success)) && eventLst!=null) {
+            for (Events e : eventLst) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventLst.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                eventLst.set(index, addToWishListEvent.getEvent());
+            }
+        }
+    }
+
+
+    @Subscribe
+    public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
+        Events events = removeFromWishListEntity.getEvent();
+        Events changedEvent = null;
+        int index = -1;
+        if (removeFromWishListEntity.getViewMessage().equals(getString(R.string.remove_wish_list_success)) && eventLst!=null) {
+            for (Events e : eventLst) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventLst.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                eventLst.set(index, events);
+            }
+        }
+    }
+
+    @Subscribe
+    public void getDeleteEvent(DeleteEvent deleteEvent)
+    {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+            int index = -1;
+
+            Events temp = null;
+            for(Events e: this.eventLst) {
+                if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
+                   eventLst.remove(index);
+                    markerList.remove(index);
+                }
+            }
+        }
+    }
+
+
+    @Subscribe
+    public void getEventAfterUnregistratation(RegisterEvent registerEvent)
+    {
+        Events events =    registerEvent.getEvents();
+        int index = -1;
+        Events changedEvent = null;
+        // Remove user from event to reflect icon for RSVP button
+        for(Events e: eventLst) {
+            if(e.getEventId() == events.getEventId()) {
+                index = eventLst.indexOf(e);
+                changedEvent =  e;
+                e.setDecesion(events.getDecesion());
+                break;
+            }
+        }
+    }
+
+    @Subscribe
+    public void getEditedEvent(EditEvent editEvent) {
+
+        Events originalEvent = null;
+        if(editEvent.getViewMsg()==null)
+        {
+            //Success
+
+
+            int index = -1;
+            for (Events e : eventLst) {
+                if (e.getEventId() == editEvent.getEvents().getEventId()) {
+                    index = eventLst.indexOf(e);
+                    originalEvent = e;
+                    break;
+                }
+            }
+
+            if(index!=-1 && originalEvent!=null){
+                eventLst.set(index, originalEvent);
+            }
+        }
+        else{
+            //fail
+            Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
+        }
     }
 }

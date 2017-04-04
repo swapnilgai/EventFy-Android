@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -13,12 +12,10 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -37,7 +34,6 @@ import com.java.eventfy.Fragments.EventInfo.About;
 import com.java.eventfy.Fragments.EventInfo.About_Facebook;
 import com.java.eventfy.Fragments.EventInfo.Attending;
 import com.java.eventfy.Fragments.EventInfo.Comment;
-import com.java.eventfy.asyncCalls.RsvpUserToEvent;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -105,16 +101,16 @@ public class EventInfoPublic extends AppCompatActivity {
 
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
 
-            Log.e(event.getNotifyMe()+" :  ", "    :   "+event.getDecesion());
-            if(event.getDecesion().equals(getString(R.string.event_not_attending))){
-                rsvpForEventBtn.setVisibility(View.GONE);
-            }else{
 
-                if(event.getNotifyMe())
-                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_on));
-                else
-                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_off));
-            }
+//            if(event.getDecesion().equals(getString(R.string.event_not_attending))){
+//                rsvpForEventBtn.setVisibility(View.GONE);
+//            }else{
+//
+//                if(event.getNotifyMe())
+//                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_on));
+//                else
+//                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_off));
+//            }
 
 
             if (event.getEventImageUrl()==null || event.getEventImageUrl().equals("default"))
@@ -129,20 +125,20 @@ public class EventInfoPublic extends AppCompatActivity {
 //            if (event.getDecesion().equals(getString(R.string.attending)))
 //                rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
 
-            rsvpForEventBtn.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                   // dialogBox();
-
-                    if (rsvpForEventBtn.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notification_on).getConstantState())){
-                        //Do your work here
-                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_off));
-                    }else{
-                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_on));
-                    }
-                }
-            });
+//            rsvpForEventBtn.setOnClickListener(new OnClickListener() {
+//
+//                @Override
+//                public void onClick(View v) {
+//                   // dialogBox();
+//
+//                    if (rsvpForEventBtn.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notification_on).getConstantState())){
+//                        //Do your work here
+//                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_off));
+//                    }else{
+//                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_on));
+//                    }
+//                }
+//            });
             setupToolbar();
 
             setupViewPager();
@@ -320,41 +316,6 @@ public class EventInfoPublic extends AppCompatActivity {
     }
 
 
-    public void dialogBox() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        if(event !=null && event.getDecesion().equals(getString(R.string.event_attending)))
-            alertDialogBuilder.setMessage("Unregister ?");
-        else if(event !=null && event.getDecesion().equals(getString(R.string.event_not_attending)))
-            alertDialogBuilder.setMessage("Register to event ?");
-
-        alertDialogBuilder.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        startProgressDialog();
-                        if(event.getDecesion().equals(getString(R.string.event_attending)))
-                            serverCallToUnRegister();
-
-
-                        else if(event.getDecesion().equals(getString(R.string.event_not_attending)))
-                            serverCallToRegister();
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
     public void dialogBoxToHandleDelete() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Deleted");
@@ -374,22 +335,7 @@ public class EventInfoPublic extends AppCompatActivity {
     }
 
 
-    public void serverCallToRegister() {
-        String url = getString(R.string.ip_local)+getString(R.string.rspv_user_to_event);
-        ArrayList<Events> eventListTemp = new ArrayList<Events>();
-        eventListTemp.add(event);
-        signUp.setEvents(eventListTemp);
-        RsvpUserToEvent rsvpUserToEvent = new RsvpUserToEvent(url, signUp, getApplicationContext());
-        rsvpUserToEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-    public void serverCallToUnRegister() {
-        String url = getString(R.string.ip_local)+getString(R.string.remove_user_from_event);
-        ArrayList<Events> eventListTemp = new ArrayList<Events>();
-        eventListTemp.add(event);
-        signUp.setEvents(eventListTemp);
-        RsvpUserToEvent rsvpUserToEvent = new RsvpUserToEvent(url, signUp, getApplicationContext());
-        rsvpUserToEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+
 
     @Subscribe
     public void getEventAfterUnRegistratation(RegisterEvent registerEvent)
@@ -397,23 +343,22 @@ public class EventInfoPublic extends AppCompatActivity {
         dismissProgressDialog();
         //TODO add thoast message
         Events events = registerEvent.getEvents();
-
-       if(!registerEvent.getDecesion().equals(getString(R.string.event_register_server_error)) &&
-               !events.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2)))
-        {
-//        if(events.getDecesion().equals(getString(R.string.event_attending)))
-//            rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
-//        else if(events.getDecesion().equals(getString(R.string.event_not_attending)))
-//             rsvpForEventBtn.setImageResource(R.drawable.fab_add);
-
-            this.event.setDecesion(events.getDecesion());
-        }
+//
+//       if(!registerEvent.getDecesion().equals(getString(R.string.event_register_server_error)) &&
+//               !events.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2)))
+//        {
+////        if(events.getDecesion().equals(getString(R.string.event_attending)))
+////            rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
+////        else if(events.getDecesion().equals(getString(R.string.event_not_attending)))
+////             rsvpForEventBtn.setImageResource(R.drawable.fab_add);
+//
+//            this.event.setDecesion(events.getDecesion());
+//        }
     }
 
     @Subscribe
     public void getDeletedEvent(DeleteEvent deleteEvent)
     {
-        Log.e("in event public info ", ""+deleteEvent.getEvents().getViewMessage());
             if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
                 finish();
             }

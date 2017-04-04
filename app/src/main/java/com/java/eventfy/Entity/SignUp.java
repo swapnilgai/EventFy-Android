@@ -2,6 +2,7 @@ package com.java.eventfy.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.java.eventfy.Entity.Filter.Filter;
 import com.java.eventfy.Fragments.EventInfo.Comment;
 
 import java.io.Serializable;
@@ -82,6 +83,27 @@ public class SignUp implements Serializable {
     @JsonView(Events.class)
     private Events eventAdmin;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String  facebookId;
+
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+
+    public Filter getFilter() {
+        return filter;
+    }
+
+    public void setFilter(Filter filter) {
+        this.filter = filter;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private Filter filter;
 
     public String getVisibilityMode() {
         return visibilityMode;

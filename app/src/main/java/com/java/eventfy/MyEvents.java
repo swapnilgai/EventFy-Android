@@ -16,11 +16,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
+import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
+import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
+import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -77,7 +82,7 @@ public class MyEvents extends AppCompatActivity {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container_nearby);
 
         materialDesignFAM = (FloatingActionMenu) findViewById(R.id.material_design_android_floating_action_menu);
-        floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
+//        floatingActionButton1 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item1);
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
         floatingActionButton4 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item4);
@@ -99,12 +104,12 @@ public class MyEvents extends AppCompatActivity {
             }
         });
 
-        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //TODO something when floating action menu first item clicked
-                Log.e("button 1 clicked", "public");
-            }
-        });
+//        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                //TODO something when floating action menu first item clicked
+//                Log.e("button 1 clicked", "public");
+//            }
+//        });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
@@ -231,7 +236,6 @@ public class MyEvents extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-        EventBusService.getInstance().unregister(this);
     }
 
     @Override
@@ -290,5 +294,124 @@ public class MyEvents extends AppCompatActivity {
                     eventsList.remove(1);
         }
     }
+
+    @Subscribe
+    public void getEventAfterUnregistratation(RegisterEvent registerEvent)
+    {
+        Events events =    registerEvent.getEvents();
+        int index = -1;
+        Log.e("my event : ", ""+events.getEventId());
+        // Remove user from event to reflect icon for RSVP button
+        for(Events e: eventsList) {
+            if(e.getEventId() == events.getEventId()) {
+                index = eventsList.indexOf(e);
+                e.setDecesion(events.getDecesion());
+                break;
+            }
+        }
+
+        Log.e("index : ", ""+index);
+        if(index!=-1){
+            events.setViewMessage(null);
+
+            if(registerEvent.getViewMessage().equals(getString(R.string.remove_wish_list_success))){
+                eventsList.remove(index);
+                bindAdapter(adapter, eventsList);
+            }
+
+            else if(registerEvent.getViewMessage().equals(getString(R.string.remove_wish_list_fail))){
+                toastMsg("Error, while un-registering from event");
+            }
+        }
+    }
+    public void toastMsg(String msg){
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
+    public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
+        Events events = removeFromWishListEntity.getEvent();
+        Events changedEvent = null;
+        int index = -1;
+        if (removeFromWishListEntity.getViewMessage().equals(getString(R.string.remove_wish_list_success)) && eventsList!=null) {
+            for (Events e : eventsList) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventsList.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                eventsList.remove(index);
+                bindAdapter(adapter, eventsList);
+            }
+        }else{
+            //TODO Toast error message
+            toastMsg("Error, while removing event from Wish List");
+        }
+    }
+
+    @Subscribe
+    public void getDeleteEvent(DeleteEvent deleteEvent)
+    {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+            int index = -1;
+
+            Events temp = null;
+            for(Events e: this.eventsList) {
+                if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
+                    removeEvent(e);
+                }
+            }
+        }
+    }
+
+    @UiThread
+    public void removeEvent(Events e) {
+
+        int index = this.eventsList.indexOf(e);
+        adapter.remove(e);
+        this.eventsList.remove(index);
+        adapter.notifyItemRemoved(index);
+    }
+
+    @Subscribe
+    public void getEditedEvent(EditEvent editEvent) {
+
+        Events originalEvent = null;
+        if(editEvent.getViewMsg()==null)
+        {
+            //Success
+
+            removeNoDataOrLoadingObj();
+
+            int index = -1;
+            for (Events e : eventsList) {
+                if (e.getEventId() == editEvent.getEvents().getEventId()) {
+                    index = eventsList.indexOf(e);
+                    originalEvent = e;
+                    break;
+                }
+            }
+
+            if(index!=-1 && originalEvent!=null)
+                updateEditedEvent(editEvent.getEvents(), index);
+        }
+        else{
+            //fail
+            Toast.makeText(this, "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @UiThread
+    public void updateEditedEvent(Events editedEvent, int index) {
+
+        editedEvent.setViewMessage(null);
+        eventsList.set(index, editedEvent);
+        bindAdapter(adapter, this.eventsList);
+
+        adapter.notifyDataSetChanged();
+    }
+
 
 }

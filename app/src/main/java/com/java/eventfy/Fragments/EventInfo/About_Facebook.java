@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -263,7 +264,8 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     }
 
     public void serverCallToRemoveFromWishList(){
-        List<Events> eventsList = new LinkedList<>();
+        getUserObject();
+        List<Events> eventsList = new ArrayList<>();
         eventsList.add(event);
         signUp.setEvents(eventsList);
         String url = getString(R.string.ip_local)+getString(R.string.remove_event_from_wishlist);
@@ -372,8 +374,14 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     {
         int zoomVal = 16;
 
-        getUserObject();
-
+        if(event.getEventRequest().equals(getString(R.string.event_request_nearby))){
+            getUserObject();
+            userCurrentLocation = signUp.getLocation();
+        }
+        else if(event.getEventRequest().equals(getString(R.string.event_request_remote))) {
+            getRemoteUserObject();
+            userCurrentLocation = signUp.getFilter().getLocation();
+        }
 
 //            if (signUp.getImageUrl().equals("default")) {
 //                image = null;
@@ -385,8 +393,6 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 //
 //            }
 
-
-
         myLaLn = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongitude());
 
         MarkerOptions markerOptions = new MarkerOptions();
@@ -395,8 +401,11 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         markerOptions.title(event.getEventName());
         markerLst.add(googleMap.addMarker(markerOptions));
 
-         if(signUp.getLocation()!=null)
-             setUserOnMap(signUp.getLocation());
+         if(userCurrentLocation!=null && event.getEventAwayDistanve()!=null)
+             setUserOnMap(userCurrentLocation);
+        else{
+             // TODO invisible away thing
+         }
 
         googelMapSetting(event.getLocation());
 
@@ -478,6 +487,14 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
+
+    public void getRemoteUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObjectRemote), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getString(R.string.userObjectRemote), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
 

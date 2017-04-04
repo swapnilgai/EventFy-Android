@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,17 +14,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.google.android.gms.location.places.Place;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
+import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
+import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
+import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
+import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
@@ -50,7 +57,7 @@ public class Remot extends Fragment {
 
     private FragmentTransaction transaction_remot;
     private FragmentManager manager_remot;
-    private Fragment remot_map;
+    private Fragment remote_map;
     private Fragment search_place;
     private static final String context_id = "22";
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
@@ -58,11 +65,11 @@ public class Remot extends Fragment {
     private String flag;
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
-    List<Events> eventsList = new LinkedList<Events>();
+    private List<Events> eventsList = new LinkedList<Events>();
     private SignUp signUp;
     private Events eventLoadingObj;
-    FloatingActionMenu floatingActionMenu;
-    FloatingActionButton fragment_switch_button_remot, fragment_search_place_button;
+    private FloatingActionMenu floatingActionMenu;
+    private FloatingActionButton fragment_switch_button_remot, fragment_search_place_button;
 
 
     public Remot() {
@@ -112,13 +119,13 @@ public class Remot extends Fragment {
         view.setId(Integer.parseInt(context_id));
 
         floatingActionMenu.setVisibility(View.GONE);
-        remot_map = new Remot_Map();
+        remote_map = new Remot_Map();
         search_place = new Place_Autocomplete_Search();
 
-        transaction_remot.add(Integer.parseInt(context_id), remot_map, "remot_map");
-        transaction_remot.hide(remot_map);
+        transaction_remot.add(Integer.parseInt(context_id), remote_map, "remote_map");
+        transaction_remot.hide(remote_map);
 
-        transaction_remot.add(Integer.parseInt(context_id), search_place, "seearch_place");
+        transaction_remot.add(Integer.parseInt(context_id), search_place, "search_place");
 
         swipeRefreshLayout.setVisibility(View.INVISIBLE);
         transaction_remot.show(search_place);
@@ -129,10 +136,10 @@ public class Remot extends Fragment {
 
         setOnClickListnerForFloatingButton();
 
-        if(latLng==null)
-            setDisableFloatingButton();
-        else
-            getRemotEventsServerCall();
+//        if(latLng==null)
+//            setDisableFloatingButton();
+//        else
+//            getRemotEventsServerCall();
 
         return view;
     }
@@ -140,10 +147,10 @@ public class Remot extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        if(latLng==null)
-            setDisableFloatingButton();
-        else
-            getRemotEventsServerCall();
+//        if(latLng==null)
+//            setDisableFloatingButton();
+//        else
+//            getRemotEventsServerCall();
     }
 
     private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
@@ -162,9 +169,9 @@ public class Remot extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if(remot_map.isHidden()) {
+                if(remote_map.isHidden()) {
                     transaction_remot = manager_remot.beginTransaction();
-                    transaction_remot.show(remot_map);
+                    transaction_remot.show(remote_map);
                     transaction_remot.hide(search_place);
                     transaction_remot.commit();
                     fragment_switch_button_remot.setImageResource(R.drawable.ic_near_me_white_24dp);
@@ -176,7 +183,7 @@ public class Remot extends Fragment {
                     swipeRefreshLayout.setVisibility(View.VISIBLE);
                     transaction_remot = manager_remot.beginTransaction();
                     transaction_remot.hide(search_place);
-                    transaction_remot.hide(remot_map);
+                    transaction_remot.hide(remote_map);
                     transaction_remot.commit();
                     fragment_switch_button_remot.setImageResource(R.drawable.ic_map_white_24dp);
                     floatingActionMenu.close(true);
@@ -190,7 +197,7 @@ public class Remot extends Fragment {
             @Override
             public void onClick(View v) {
                 transaction_remot = manager_remot.beginTransaction();
-                transaction_remot.hide(remot_map);
+                transaction_remot.hide(remote_map);
                 swipeRefreshLayout.setVisibility(View.INVISIBLE);
                 transaction_remot.show(search_place);
                 transaction_remot.commit();
@@ -230,35 +237,36 @@ public class Remot extends Fragment {
     // ***** event bus call
 
     @Subscribe
-    public void receiveEvents(RemoteEventData remoteEventData)
+    public void getRemotPlaceLatLang(RemoteEventData remoteEventData)
     {
-        if(remoteEventData.getEventsList()!=null && remoteEventData.getEventsList().size()>0 && remoteEventData.getEventsList().get(0) instanceof Events) {
-            floatingActionMenu.setVisibility(View.VISIBLE);
-            this.eventsList = remoteEventData.getEventsList();
-            bindAdapter(adapter, this.eventsList);
+        if(remoteEventData.getViewMsg().equals(getString(R.string.remote_list_requested)))
+        {
+            this.latLng = new LatLng(remoteEventData.getSignUp().getFilter().getLocation().getLatitude(),remoteEventData.getSignUp().getFilter().getLocation().getLongitude());
+            removeAll();
+            addLoading();
+            bindAdapter(adapter,eventsList);
+            setEnableFloatingButton();
         }
-
+        else if (remoteEventData.getViewMsg().equals(getString(R.string.remote_list_fail)) || remoteEventData.getViewMsg().equals(getString(R.string.remote_list_server_error)) ) {
+            removeNoDataOrLoadingObj();
+            this.eventsList.addAll(remoteEventData.getEventsList());
+            bindAdapter(adapter, this.eventsList);
+            if (remoteEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data)) &&
+                    remoteEventData.getSignUp().getFilter().getLocation() != null && remoteEventData.getSignUp().getFilter().getLocation().getLongitude() != 0.0
+                    && remoteEventData.getSignUp().getFilter().getLocation().getLatitude() != 0.0) {
+               // fragment_switch_button.setVisibility(View.VISIBLE);
+            }
+        }
+        else if(remoteEventData.getViewMsg().equals(getString(R.string.remote_list_success))){
+            if(remoteEventData.getEventsList()!=null && remoteEventData.getEventsList().size()>0 && remoteEventData.getEventsList().get(0) instanceof Events) {
+                floatingActionMenu.setVisibility(View.VISIBLE);
+                this.eventsList = remoteEventData.getEventsList();
+                bindAdapter(adapter, this.eventsList);
+            }
+        }
     }
 
-    @Subscribe
-    public void setFlag(String flag)
-    {
-        this.flag = flag;
-    }
-    @Subscribe
-    public void getRemotPlaceLatLang(Place place)
-    {
-        this.latLng = place.getLatLng();
-        removeAll();
-        addLoading();
-        bindAdapter(adapter,eventsList);
-        setEnableFloatingButton();
-    }
 
-    @Subscribe
-    public void setFlag(Place place) {
-        addLoading();
-    }
     public void getUserObject()
     {
         SharedPreferences mPrefs = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -282,11 +290,165 @@ public class Remot extends Fragment {
         swipeRefreshLayout.setVisibility(View.VISIBLE);
         transaction_remot = manager_remot.beginTransaction();
         transaction_remot.hide(search_place);
-        transaction_remot.hide(remot_map);
+        transaction_remot.hide(remote_map);
         transaction_remot.commit();
         fragment_switch_button_remot.setImageResource(R.drawable.ic_map_white_24dp);
         eventsList.add(eventLoadingObj);
     }
+
+    @Subscribe
+    public void getEventAfterUnregistratation(RegisterEvent registerEvent)
+    {
+        Events events =    registerEvent.getEvents();
+        int index = -1;
+        Events changedEvent = null;
+        // Remove user from event to reflect icon for RSVP button
+        for(Events e: eventsList) {
+            if(e.getEventId() == events.getEventId()) {
+                index = eventsList.indexOf(e);
+                changedEvent =  e;
+                e.setDecesion(events.getDecesion());
+                break;
+            }
+        }
+//        if(events.getViewMessage().equals(getString(R.string.edited))) {
+//
+//            events.setViewMessage(null);
+//            eventsList.set(index, events);
+//
+//            bindAdapter(adapter, eventsList);
+//        }
+    }
+
+    @Subscribe
+    public void getDeleteEvent(DeleteEvent deleteEvent)
+    {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+            int index = -1;
+
+            Events temp = null;
+            for(Events e: this.eventsList) {
+                if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
+                    removeEvent(e);
+                }
+            }
+        }
+    }
+    @UiThread
+    public void removeEvent(Events e) {
+
+        int index = this.eventsList.indexOf(e);
+        adapter.remove(e);
+        this.eventsList.remove(index);
+        adapter.notifyItemRemoved(index);
+    }
+
+    @Subscribe
+    public void getWishListEvent(AddToWishListEvent addToWishListEvent) {
+        Events events = addToWishListEvent.getEvent();
+        int index = -1;
+        Events changedEvent = null;
+
+        if (addToWishListEvent.getViewMessage().equals(getString(R.string.wish_list_update_success)) && eventsList!=null) {
+            for (Events e : eventsList) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventsList.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                eventsList.set(index, addToWishListEvent.getEvent());
+                bindAdapter(adapter, eventsList);
+            }
+        }
+    }
+
+    public void toastMsg(String msg){
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Subscribe
+    public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
+        Events events = removeFromWishListEntity.getEvent();
+        Events changedEvent = null;
+        int index = -1;
+        if (removeFromWishListEntity.getViewMessage().equals(getString(R.string.remove_wish_list_success)) && eventsList!=null) {
+            for (Events e : eventsList) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventsList.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                Log.e("index   :  ", ""+index);
+
+                eventsList.set(index, events);
+                bindAdapter(adapter, eventsList);
+
+            }
+        }
+    }
+
+    public void removeNoDataOrLoadingObj() {
+
+        if(eventsList.size()>0) {
+            if (eventsList.get(0).getViewMessage() != null)
+                if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
+                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_data)) ||
+                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
+                    eventsList.remove(0);
+
+            if (eventsList.size() > 1 && eventsList.get(1).getViewMessage() != null)
+                if (eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_location)) ||
+                        eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_data)) ||
+                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
+
+                    eventsList.remove(1);
+        }
+    }
+    @Subscribe
+    public void getEditedEvent(EditEvent editEvent) {
+
+        Events originalEvent = null;
+        if(editEvent.getViewMsg()==null)
+        {
+            //Success
+
+            removeNoDataOrLoadingObj();
+
+            int index = -1;
+            for (Events e : eventsList) {
+                if (e.getEventId() == editEvent.getEvents().getEventId()) {
+                    index = eventsList.indexOf(e);
+                    originalEvent = e;
+                    break;
+                }
+            }
+
+            if(index!=-1 && originalEvent!=null)
+                updateEditedEvent(editEvent.getEvents(), index);
+        }
+        else{
+            //fail
+            Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @UiThread
+    public void updateEditedEvent(Events editedEvent, int index) {
+
+        editedEvent.setViewMessage(null);
+        eventsList.set(index, editedEvent);
+        bindAdapter(adapter, this.eventsList);
+
+        adapter.notifyDataSetChanged();
+    }
+
+
+
 }
 
 

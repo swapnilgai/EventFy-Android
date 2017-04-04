@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -46,18 +47,22 @@ import com.java.eventfy.ViewerProfilePage;
 import com.java.eventfy.YouTubeMediaPlayActivity;
 import com.java.eventfy.asyncCalls.DeleteEvent;
 import com.java.eventfy.asyncCalls.EditEventSrverCall;
+import com.java.eventfy.asyncCalls.RsvpUserToEvent;
+import com.java.eventfy.asyncCalls.UnRegisterUserFromEvent;
 import com.java.eventfy.utils.DateTimeStringOperations;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 import at.markushi.ui.CircleButton;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.java.eventfy.R.id.admin_image;
 
 /**
@@ -73,7 +78,6 @@ public class About extends Fragment implements OnMapReadyCallback {
     private Events event;
     private RobotoTextView eventDescription;
     private RobotoTextView eventName;
-    private TextView evengtType;
     private TextView adminName;
     private TextView adminStatus;
     private ImageView adminImage;
@@ -97,7 +101,8 @@ public class About extends Fragment implements OnMapReadyCallback {
     private LinearLayout videoLinearLayout;
     private List<Marker> markerLst = new LinkedList<Marker>();
     private LinearLayout streetViewLinearLayout;
-
+    private CircleButton edit_btn;
+    private Button checkInBtn;
 
 
     @Override
@@ -113,7 +118,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         EventBusService.getInstance().register(this);
 
         eventName = (RobotoTextView) view.findViewById(R.id.event_name);
-        evengtType = (TextView) view.findViewById(R.id.event_type);
         adminName = (TextView) view.findViewById(R.id.admin_name);
         adminStatus = (TextView) view.findViewById(R.id.admin_status);
         adminImage = (ImageView) view.findViewById(admin_image);
@@ -129,10 +133,10 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventAwayDistance = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
         eventAwayDuration= (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
         streetViewLinearLayout = (LinearLayout) view.findViewById(R.id.street_view);
-
+        checkInBtn = (Button) view.findViewById(R.id.check_in_btn);
         eventTimeFromNow  = (RobotoTextView) view.findViewById(R.id.event_day_left);
         editEvent = (LinearLayout) view.findViewById(R.id.event_edit);
-
+        edit_btn = (CircleButton) view.findViewById(R.id.event_edit_btn);
         eventInvisibleTextVew = (TextView) view.findViewById(R.id.event_invisible_text_view);
         eventInvisibleBtn = (CircleButton) view.findViewById(R.id.event_invisible_btn);
         eventInvisibleLinearLayout = (LinearLayout) view.findViewById(R.id.event_invisible_linear_layout);
@@ -145,10 +149,10 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         createProgressDialog();
 
-        if(!signUp.getUserId().equals(event.getAdmin().getUserId()))
-            adminOptionLayout.setVisibility(View.GONE);
-        else{
+        if(signUp.getUserId().equals(event.getAdmin().getUserId()) && event.getDecesion().equals(getString(R.string.event_admin)))
             adminOptionLayout.setVisibility(View.VISIBLE);
+        else{
+            adminOptionLayout.setVisibility(View.GONE);
         }
 
         mapView = (MapView) view.findViewById(R.id.location_map_view);
@@ -172,6 +176,7 @@ public class About extends Fragment implements OnMapReadyCallback {
                 dialogBoxToMakeEventInvisible(getString(R.string.invisible_event), event);
             }
         });
+
         editEvent.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -179,6 +184,17 @@ public class About extends Fragment implements OnMapReadyCallback {
                 Intent intent = new Intent(getActivity(), com.java.eventfy.CreatePublicEvent.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 intent.putExtra(context.getString(R.string.event_to_edit_eventinfo), event);
+                context.startActivity(intent);
+            }
+        });
+
+        edit_btn.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), com.java.eventfy.CreatePublicEvent.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                intent.putExtra(context.getString(R. string.event_to_edit_eventinfo), event);
                 context.startActivity(intent);
             }
         });
@@ -215,10 +231,47 @@ public class About extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        checkInBtn.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                if(checkInBtn.getText().equals(getString(R.string.check_in))) {
+                    checkInBtn.setText(getString(R.string.check_out));
+                  //  ((EventInfoPublic)getActivity()).makeAlarmButtonVisible();
+                  //  event.setNotifyMe(true);
+                }else{
+                    checkInBtn.setText(getString(R.string.check_in));
+                 //   ((EventInfoPublic)getActivity()).makeAlarmButtonInVisible();
+                 //   event.setNotifyMe(false);
+                }
+
+            }
+        });
 
         return view;
     }
 
+    public void serverCallToUnRegister() {
+        String url = getString(R.string.ip_local)+getString(R.string.remove_user_from_event);
+        ArrayList<Events> eventListTemp = new ArrayList<Events>();
+        eventListTemp.add(event);
+        signUp.setEvents(eventListTemp);
+        UnRegisterUserFromEvent unRegisterUserFromEvent = new UnRegisterUserFromEvent(url, signUp, getApplicationContext());
+        unRegisterUserFromEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void serverCallToRegister() {
+        String url = getString(R.string.ip_local)+getString(R.string.rspv_user_to_event);
+        ArrayList<Events> eventListTemp = new ArrayList<Events>();
+        eventListTemp.add(event);
+       // Filter filter = new Filter();
+       // filter.setEvent(event);
+        //signUp.setFilter(filter);
+        signUp.setEvents(eventListTemp);
+        RsvpUserToEvent rsvpUserToEvent = new RsvpUserToEvent(url, signUp, getApplicationContext());
+        rsvpUserToEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
     public void mapValuesFromEventObject() {
 
@@ -262,6 +315,12 @@ public class About extends Fragment implements OnMapReadyCallback {
         else
             eventInvisibleTextVew.setText(getString(R.string.invisible_event_btn));
               eventInvisibleBtn.setImageResource(R.drawable.ic_event_visible);
+
+        if(event.getDecesion().equals(getString(R.string.event_attending)))
+            checkInBtn.setText(getString(R.string.check_out));
+        else
+            checkInBtn.setText(getString(R.string.check_in));
+
     }
 
     @Override
@@ -284,12 +343,16 @@ public class About extends Fragment implements OnMapReadyCallback {
         //googleMap.clear();
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(progressDialog.isShowing())
-            dismissProgressDialog();
+        if(checkInBtn.getText().equals(getString(R.string.check_out))
+                && event.getDecesion().equals(getString(R.string.event_not_attending))) {
+            serverCallToRegister();
+        }else if (checkInBtn.getText().equals(getString(R.string.check_in))
+                && event.getDecesion().equals(getString(R.string.event_attending))){
+            serverCallToUnRegister();
+        }
     }
 
     @Override
@@ -525,7 +588,6 @@ public class About extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void getDeletedOrUndoComment(Comments comments) {
         dismissProgressDialog();
-        dismissProgressDialog();
 
     }
 
@@ -557,7 +619,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         if(editEvent.getViewMsg()==null)
         {
             //Success
-            Log.e("in success : ", " &&&&&&&&&& "+editEvent.getViewMsg());
             event =  editEvent.getEvents();
             mapValuesFromEventObject();
         }
@@ -583,5 +644,6 @@ public class About extends Fragment implements OnMapReadyCallback {
     {
         progressDialog.dismiss();
     }
+
 
 }

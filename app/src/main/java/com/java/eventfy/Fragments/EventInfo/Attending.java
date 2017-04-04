@@ -158,7 +158,8 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     {
         Events events = registerEvent.getEvents();
 
-        if(registerEvent.getDecesion()==null){
+        if(registerEvent.getViewMessage().equals(getString(R.string.wish_list_update_success)) ||
+                registerEvent.getViewMessage().equals(getString(R.string.remove_wish_list_fail))){
             signUp = getUserObject();
             viewPager.setCurrentItem(1, true);
             if(userList.get(0).getViewMessage()!=null &&

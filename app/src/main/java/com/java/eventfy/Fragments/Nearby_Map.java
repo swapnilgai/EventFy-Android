@@ -40,7 +40,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Away;
+import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
+import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
@@ -167,6 +169,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 .center(myLatLag)
                 .fillColor(R.color.colorPrimaryExtraTransparent)
                 .radius(location.getDistance()*1610));
+
 
         CameraPosition cameraPosition = new CameraPosition.Builder().
                 target(new LatLng(location.getLatitude(), location.getLongitude())).
@@ -473,6 +476,48 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
         }
         return zoomLevel;
+    }
+
+    @Subscribe
+    public void getWishListEvent(AddToWishListEvent addToWishListEvent) {
+        Events events = addToWishListEvent.getEvent();
+        int index = -1;
+        Events changedEvent = null;
+
+        if (addToWishListEvent.getViewMessage().equals(getString(R.string.wish_list_update_success)) && eventLst!=null) {
+            for (Events e : eventLst) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventLst.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                eventLst.set(index, addToWishListEvent.getEvent());
+            }
+        }
+    }
+
+
+    @Subscribe
+    public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
+        Events events = removeFromWishListEntity.getEvent();
+        Events changedEvent = null;
+        int index = -1;
+        if (removeFromWishListEntity.getViewMessage().equals(getString(R.string.remove_wish_list_success)) && eventLst!=null) {
+            for (Events e : eventLst) {
+                if (e.getFacebookEventId()!= null && e.getFacebookEventId().equals(events.getFacebookEventId())) {
+                    index = eventLst.indexOf(e);
+                    // e.setDecesion(events.getDecesion());
+                    break;
+                }
+            }
+            if (index!=-1) {
+                events.setViewMessage(null);
+                eventLst.set(index, events);
+            }
+        }
     }
 
 }

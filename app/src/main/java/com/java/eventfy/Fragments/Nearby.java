@@ -48,7 +48,6 @@ import com.java.eventfy.Home;
 import com.java.eventfy.R;
 import com.java.eventfy.Services.GPSTracker;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
-import com.java.eventfy.asyncCalls.DownloadTask;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
 import com.java.eventfy.utils.OnLocationEnableClickListner;
 
@@ -383,12 +382,19 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
             removeNoDataOrLoadingObj();
             getUserObject();
-            DownloadTask downloadTask = new DownloadTask(new LatLng(signUp.getLocation().getLatitude(), signUp.getLocation().getLongitude()),
-                    new LatLng(createEvent.getEvents().getLocation().getLatitude(), createEvent.getEvents().getLocation().getLongitude()), createEvent.getEvents());
-            // Start downloading json data from Google Directions API
-            downloadTask.execute();
 
-          //  eventsList.add(createEvent.getEvents());
+            String []str = createEvent.getEvents().getEventAwayDistanve().split(" ");
+
+            try {
+                Log.e(" MILES ::::  ", ""+Integer.parseInt(str[0]));
+                if(!str[0].equals(getString(R.string.Undefined)) && Integer.parseInt(str[0])<signUp.getVisibilityMiles()){
+                    eventsList.add(0, createEvent.getEvents());
+                    bindAdapter(adapter, eventsList);
+                }
+
+            }catch (Exception e){
+
+            }
         }
 
     }
@@ -402,17 +408,33 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         for(Events e: eventsList) {
             if(e.getEventId() == events.getEventId()) {
                 index = eventsList.indexOf(e);
-                changedEvent =  e;
                 e.setDecesion(events.getDecesion());
                 break;
             }
         }
-        if(events.getViewMessage().equals(getString(R.string.edited))) {
 
-            events.setViewMessage(null);
-            eventsList.set(index, events);
+        Log.e(" view message : ", " IIIIIIII "+registerEvent.getViewMessage());
 
-            bindAdapter(adapter, eventsList);
+        Log.e(" view index : ", " IIIIIIII "+index);
+
+        Log.e("decesion : ", " IIIIIIII "+events.getDecesion());
+
+        if(index!=-1){
+                events.setViewMessage(null);
+
+            if(registerEvent.getViewMessage().equals(getString(R.string.wish_list_update_success))||
+                    registerEvent.getViewMessage().equals(getString(R.string.remove_wish_list_success))){
+                eventsList.set(index, events);
+                bindAdapter(adapter, eventsList);
+            }
+
+            else if(registerEvent.getViewMessage().equals(getString(R.string.wish_list_update_fail)) ||
+                    registerEvent.getViewMessage().equals(getString(R.string.wish_list_update_server_error))){
+                toastMsg("Error, while registering to event");
+            }
+            else if(registerEvent.getViewMessage().equals(getString(R.string.remove_wish_list_fail))){
+                toastMsg("Error, while un-registering from event");
+            }
         }
     }
 
@@ -543,9 +565,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         }else{
             enableGpsPopUpOption();
         }
-
     }
-
 
     public void enableGpsPopUpOption(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

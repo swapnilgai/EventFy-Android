@@ -36,10 +36,10 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        try{
+
             Gson g = new Gson();
 
-            Log.e("comment object is : ", "obj : "+g.toJson(addComment.getComment()));
+           // Log.e("comment object is : ", "obj : "+g.toJson(addComment.getComment()));
 
             addComment.getComment().setViewMessage(null);
 
@@ -51,29 +51,22 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
             ResponseEntity<Comments> response = restTemplate.exchange(url, HttpMethod.POST, request, Comments.class);
 
             comment = response.getBody();
+            Log.e("added comment is : ", "obj : "+new Gson().toJson(comment));
 
 
-        } catch (Exception e)
-        {
-
-        }
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
 
-        if(comment!=null && comment.getDateTime().getDateTimeFrom()!=null){
-            Gson g = new Gson();
-            Log.e("posted comment : ", g.toJson(comment));
 
+
+        if(comment!=null && comment.getDateTime().getDateTimeFrom()!=null){
             addComment.setComment(comment);
             addComment.setViewMsg(context.getString(R.string.comment_add_success));
-
-            Log.e("original comment : ", g.toJson(addComment.getComment()));
         }
         else{
-            Log.e("posting fail", " +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             addComment.setViewMsg(context.getString(R.string.comment_add_fail));
             addComment.getComment().setViewMessage(context.getString(R.string.comment_add_fail));
         }

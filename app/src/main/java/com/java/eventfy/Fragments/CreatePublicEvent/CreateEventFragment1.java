@@ -210,6 +210,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         cancleBtn = (Button) view.findViewById(R.id.public_cancle);
 
+        cancleBtn.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+               getActivity().finish();
+            }
+
+        });
+
+
         if(eventObj==null) {
             eventObj = new Events();
             eventObj.setLocation(eventLocation);
@@ -1016,7 +1025,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         if(eventObj.getEventCategory()!=null) {
             index = getIndexOfSpinerItemCategory(getResources().getStringArray(R.array.category_arrays), eventObj.getEventCategory());
             Log.e("category index : ", ""+index);
-            evenrCategory.setSelection(index);
+            //evenrCategory.setSelection(index);
         }
 
         if(eventObj.getEventVisiblityMile()!=null) {

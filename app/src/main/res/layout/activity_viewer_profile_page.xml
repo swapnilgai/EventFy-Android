@@ -48,7 +48,6 @@
                 android:elevation="10dp"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:transitionName="profile_pic_transition"
                 app:layout_collapseMode="parallax" />
 
             <LinearLayout

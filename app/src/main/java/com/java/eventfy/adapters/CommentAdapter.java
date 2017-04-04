@@ -33,6 +33,7 @@ import com.java.eventfy.Entity.CommentSudoEntity.DeleteComment;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.ImageViewEntity;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.ImageFullScreenMode;
 import com.java.eventfy.R;
@@ -40,15 +41,12 @@ import com.java.eventfy.asyncCalls.DeleteCommentFromEvent;
 import com.java.eventfy.asyncCalls.PostUsersComment;
 import com.java.eventfy.asyncCalls.UploadImage;
 import com.java.eventfy.utils.DateTimeStringOperations;
-import com.java.eventfy.utils.RoundedCornersTransformCommentAuthor;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.java.eventfy.R.id.commentImage;
-import static com.java.eventfy.R.id.imageView;
 
 /**
  * Created by @vitovalov on 30/9/15.
@@ -69,12 +67,15 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
     private OnLoadMoreListener onLoadMoreListener;
     private Context context;
     private Events events;
+    private SignUp signUp;
     private ProgressDialog progressDialog;
 
-    public CommentAdapter(RecyclerView recyclerView, Context context, Events events) {
+    public CommentAdapter(RecyclerView recyclerView, Context context, Events events, SignUp signUp) {
         this.context = context;
 
         this.events = events;
+
+        this.signUp = signUp;
 
         createProgressDialog();
 
@@ -140,6 +141,8 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
             final  AddComment addComment = getItem(position);
             final Comments comment = addComment.getComment();
 
+            Log.e(" comment is : ", " adapter  "+new Gson().toJson(addComment));
+
             if(!comment.getUser().getImageUrl().equals("default"))
                 Picasso.with(getApplicationContext()).load(comment.getUser().getImageUrl())
                         .resize(45, 45)
@@ -151,6 +154,8 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                                 imageDrawable.setCircular(true);
                                 imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
                                 ((ResultHolder) holder).autherImage.setImageDrawable(imageDrawable);
+                                imageBitmap.recycle();
+                                imageBitmap=null;
                             }
                             @Override
                             public void onError() {
@@ -219,8 +224,6 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                         postUsersComment.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
 
-
-
                 }
             });
 
@@ -275,7 +278,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                     ((ResultHolder) holder).commentPostingText.setVisibility(View.GONE);
                 }
             }
-            else{
+            else if(comment.getDateTime().getDateTimeFrom()!=null){
                 ((ResultHolder) holder).commentTime.setText(DateTimeStringOperations.getInstance().getDateTimeString(comment.getDateTime().getDateTimeFrom(), comment.getDateTime().getTimeZone()));
                 ((ResultHolder) holder).commentRetry.setVisibility(View.GONE);
                 ((ResultHolder) holder).commentDiscard.setVisibility(View.GONE);
@@ -291,7 +294,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                     PopupMenu popup = new PopupMenu(context, ((ResultHolder) holder).buttonViewOption);
                     //inflating menu from xml resource
 
-                    if (events.getAdmin().getUserId().equals(comment.getUser().getUserId()))
+                    if (signUp.getUserId().equals(comment.getUser().getUserId()))
                         popup.inflate(R.menu.commentadminmenu);
                     else
                         popup.inflate(R.menu.commentmenu);
@@ -421,7 +424,6 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
             super(itemView);
 
             commentDateText = (TextView) itemView.findViewById(R.id.commentDateText);
-
         }
     }
 
@@ -434,8 +436,8 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
             super(itemView);
 
             noDataIv = (ImageView) itemView.findViewById(R.id.comment_no_data_image_view);
-            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
-            noDataIv.setColorFilter(context.getColor(R.color.colorPrimary));
+            noDataIv.setColorFilter(R.color.colorPrimary);
+            noDataIv.setColorFilter(R.color.colorPrimary);
             setLoaded();
         }
     }
@@ -449,7 +451,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
             super(itemView);
 
             networErrorIv = (ImageView) itemView.findViewById(R.id.network_error_image_view);
-            networErrorIv.setColorFilter(context.getColor(R.color.colorPrimary));
+            networErrorIv.setColorFilter(R.color.colorPrimary);
             setLoaded();
         }
     }

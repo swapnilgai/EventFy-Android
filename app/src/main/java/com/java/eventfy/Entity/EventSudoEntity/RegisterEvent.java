@@ -10,13 +10,23 @@ public class RegisterEvent {
     private Events events;
     private String decision;
 
-    public String getDecesion() {
+    public String getViewMessage() {
+        return viewMessage;
+    }
+
+    public void setViewMessage(String viewMessage) {
+        this.viewMessage = viewMessage;
+    }
+
+    public String getDecision() {
         return decision;
     }
 
-    public void setDecesion(String decesion) {
-        this.decision = decesion;
+    public void setDecision(String decision) {
+        this.decision = decision;
     }
+
+    private String viewMessage;
 
     public Events getEvents() {
         return events;

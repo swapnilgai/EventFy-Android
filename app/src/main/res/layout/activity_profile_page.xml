@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#d3d3d3">
+    android:background="@color/white">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -12,26 +12,25 @@
         android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:titleTextColor="@android:color/white"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:theme="@style/ToolbarStyle" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat"
+        />
 
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="?attr/actionBarSize"
         android:clipToPadding="false"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_below="@+id/my_toolbar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="12dp"
-            android:background="@color/com_facebook_button_login_silver_background_color_pressed"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -55,10 +54,9 @@
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
 
-                <TextView
+                <com.devspark.robototextview.widget.RobotoTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
                     android:layout_marginLeft="8dp"
                     android:text=" Status "
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
@@ -66,52 +64,52 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
-                app:cardUseCompatPadding="true">
+
 
                 <LinearLayout
                     android:id="@+id/linear_layout_status"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|bottom"
-                    android:layout_marginTop="4dp"
                     android:background="@color/cardview_light_background"
                     android:orientation="horizontal"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp">
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp">
 
 
-                    <EditText
+                    <com.devspark.robototextview.widget.RobotoEditText
                         android:id="@+id/user_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Status"
                         android:inputType="textMultiLine"
                         android:maxLines="3"
+                        android:textSize="16sp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="8dp"
+                        android:layout_marginLeft="4dp"
                         android:text="User's status"
+                        android:background="@android:color/transparent"
                         android:textColor="@color/transparent_black"
                         android:textColorHint="@color/colorPrimaryDark" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/date_picker_view_animator" />
             <!-- Personal info -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-
                 >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
                     android:layout_marginLeft="8dp"
                     android:text=" Personal Information "
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
@@ -120,23 +118,16 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
-                app:cardUseCompatPadding="true">
+
 
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|bottom"
-                    android:layout_marginTop="4dp"
                     android:background="@color/cardview_light_background"
                     android:orientation="vertical"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="5dp">
+                    android:paddingLeft="8dp"
+                    >
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -144,13 +135,18 @@
                         android:layout_marginBottom="8dp"
                         android:layout_marginTop="8dp">
 
-                        <EditText
+                        <com.devspark.robototextview.widget.RobotoEditText
                             android:id="@+id/user_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="User Name"
                             android:inputType="text"
                             android:text="User Name"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="4dp"
+                            android:layout_marginLeft="4dp"
+                            android:textSize="16sp"
+                            android:background="@android:color/transparent"
                             android:textColor="@color/transparent_black"
                             android:textColorHint="@color/colorPrimaryDark" />
                     </android.support.design.widget.TextInputLayout>
@@ -165,16 +161,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:layout_marginTop="16dp"
                         android:layout_weight="4.0">
 
-                        <EditText
+                        <com.devspark.robototextview.widget.RobotoEditText
                             android:id="@+id/user_id"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="Email"
                             android:inputType="text"
                             android:text="Email"
+                            android:textSize="16sp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="4dp"
+                            android:layout_marginLeft="4dp"
+                            android:background="@android:color/transparent"
                             android:textColor="@color/transparent_black"
                             android:textColorHint="@color/colorPrimaryDark" />
                     </android.support.design.widget.TextInputLayout>
@@ -198,29 +198,35 @@
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"
-
                         >
 
 
-                        <EditText
+                        <com.devspark.robototextview.widget.RobotoEditText
                             android:id="@+id/user_dob"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Date of Birth(MM/DD/YYYY)"
                             android:inputType="text"
                             android:text="03/28/1992"
+                            android:paddingTop="8dp"
+                            android:textSize="16sp"
+                            android:layout_marginLeft="4dp"
+                            android:background="@android:color/transparent"
                             android:textColor="@color/transparent_black"
                             android:textColorHint="@color/colorPrimaryDark" />
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/date_picker_view_animator" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -228,7 +234,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="0dp"
                     android:layout_marginLeft="8dp"
-                    android:text=" Visibility Miles "
+                    android:text="Driving distance(miles)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textSize="14sp" />
                 <!--<at.markushi.ui.CircleButton-->
@@ -241,22 +247,15 @@
                 <!--android:src="@drawable/ic_mode_edit_white_24dp" />-->
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
+            <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|bottom"
-                    android:layout_marginTop="8dp"
                     android:background="@color/cardview_light_background"
                     android:orientation="horizontal"
                     android:paddingBottom="5dp"
-                    android:paddingTop="5dp">
+                    android:paddingTop="5dp"
+                    android:layout_marginLeft="8dp">
 
 
                     <SeekBar
@@ -279,12 +278,16 @@
                         android:text="100" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/date_picker_view_animator" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -292,7 +295,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="0dp"
                     android:layout_marginLeft="8dp"
-                    android:text=" Visibility Mode "
+                    android:text="Visibility mode "
                     android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                     android:textSize="14sp" />
                 <!--<at.markushi.ui.CircleButton-->
@@ -305,17 +308,9 @@
                 <!--android:src="@drawable/ic_mode_edit_white_24dp" />-->
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp"
-                app:cardUseCompatPadding="true">
-
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal|bottom"
                     android:layout_marginTop="8dp"
                     android:background="@color/cardview_light_background"
                     android:orientation="vertical"
@@ -325,49 +320,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/btnSelectImageFromDevice"
-                            android:layout_width="0dip"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1.0"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_camera_enhance_black_24dp"
-                            android:text="Visible" />
-
-                        <TextView
-                            android:id="@+id/btnCommentSend1"
-                            android:layout_width="0dip"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1.0"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_send_black_24dp"
-                            android:text="DoNotDisturb" />
-
-
-                        <TextView
-                            android:id="@+id/btnCommentSend2"
-                            android:layout_width="0dip"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1.0"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:src="@drawable/ic_send_black_24dp"
-                            android:text="invisible" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginLeft="45dp"
-                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <RadioGroup
@@ -376,40 +329,71 @@
                             android:layout_weight="1.0"
                             android:checkedButton="@+id/user_visibility_mode"
                             android:orientation="horizontal">
-
-                            <RadioButton
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:id="@+id/btnSelectImageFromDevice"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_camera_enhance_black_24dp"
+                                    android:text="Visible" />
+                                <RadioButton
                                 android:id="@+id/user_visible"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
+                                android:gravity="right"
+                                android:padding="12dp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
                                 android:layout_gravity="center"
-                                android:layout_marginRight="18dp"
-                                android:layout_weight="1.0"
-                                android:gravity="center"
-                                android:padding="8dp" />
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:id="@+id/btnCommentSend1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_send_black_24dp"
+                                    android:text="DoNotDisturb" />
 
+                                <RadioButton
+                                    android:id="@+id/user_donotdisturb"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:padding="12dp" />
+                            </LinearLayout>
 
-                            <RadioButton
-                                android:id="@+id/user_donotdisturb"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
                                 android:layout_gravity="center"
-                                android:layout_weight="1.0"
-                                android:gravity="center"
-                                android:padding="8dp" />
-
+                                android:layout_weight="1"
+                                android:gravity="center">
+                                <TextView
+                                    android:id="@+id/btnCommentSend2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_send_black_24dp"
+                                    android:text="invisible" />
                             <RadioButton
                                 android:id="@+id/user_invisible"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_gravity="center"
-                                android:layout_marginLeft="20dp"
-                                android:layout_weight="1.0"
-                                android:gravity="center"
-                                android:padding="8dp" />
+                                android:padding="12dp" />
+                            </LinearLayout>
                         </RadioGroup>
                     </LinearLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/link_dob_error"

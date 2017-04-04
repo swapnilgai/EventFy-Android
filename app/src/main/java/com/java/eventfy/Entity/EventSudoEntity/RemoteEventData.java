@@ -1,6 +1,7 @@
 package com.java.eventfy.Entity.EventSudoEntity;
 
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.SignUp;
 
 import java.util.List;
 
@@ -11,6 +12,16 @@ import java.util.List;
 public class RemoteEventData {
     private String viewMsg;
     private List<Events> eventsList;
+
+    public SignUp getSignUp() {
+        return signUp;
+    }
+
+    public void setSignUp(SignUp signUp) {
+        this.signUp = signUp;
+    }
+
+    private SignUp signUp;
 
     public String getViewMsg() {
         return viewMsg;

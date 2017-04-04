@@ -43,29 +43,29 @@ public class RemoveFromWishList extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 //        try {
 
-            Gson g = new Gson();
-            Log.e(" facebook Id ", ""+url);
-            Log.e(" facebook Id ", ""+signUp.getEvents().get(0).getFacebookEventId());
+        Gson g = new Gson();
+        Log.e(" facebook Id ", ""+url);
+        Log.e(" facebook Id ", ""+signUp.getEvents().get(0).getFacebookEventId());
 
-            Log.e(" remove ", g.toJson(signUp));
+        Log.e(" remove ", g.toJson(signUp));
 
-           // signUp = CleanEntityObjects.getInstance().clearSignUpObject(signUp);
+        // signUp = CleanEntityObjects.getInstance().clearSignUpObject(signUp);
 
-            RestTemplate restTemplate = new RestTemplate(true);
-            restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+        RestTemplate restTemplate = new RestTemplate(true);
+        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
+        HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
 
-            ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
-            result = rateResponse.getBody();
+        ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
+        result = rateResponse.getBody();
 
-            Log.e("rsult :::::: ", result);
+        Log.e("rsult :::::: ", result);
 
         //}catch (Exception e) {
-          //   removeFromWishListEntity = new RemoveFromWishListEntity();
+        //   removeFromWishListEntity = new RemoveFromWishListEntity();
         //}
         return null;
     }

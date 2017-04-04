@@ -88,6 +88,19 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventAwayDuration;
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private String eventRequest;
+
+
+
+    public String getEventRequest() {
+        return eventRequest;
+    }
+    public void setEventRequest(String eventRequest) {
+        this.eventRequest = eventRequest;
+    }
+
+
     public String getEventAwayDistanve() {
         return eventAwayDistanve;
     }

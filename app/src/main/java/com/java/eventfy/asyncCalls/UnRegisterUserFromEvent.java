@@ -6,13 +6,15 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
+import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -24,51 +26,63 @@ import org.springframework.web.client.RestTemplate;
 public class UnRegisterUserFromEvent extends AsyncTask<Void, Void, Void> {
 
     private String url;
-    private Events events;
     private Context context;
     private SignUp signUp;
+    private Events events;
+    private Events eventTemp;
+    private String result;
+    RemoveFromWishListEntity removeFromWishListEntity;
 
-    public UnRegisterUserFromEvent(String url, Events events, Context context) {
+
+    public UnRegisterUserFromEvent(String url, SignUp signUp, Context context) {
         this.url = url;
         this.context = context;
-        this.events = events;
+        this.signUp = signUp;
+        this.events = signUp.getEvents().get(0);
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        try {
-            Gson gson = new Gson();
-            Log.e("rsvp : ", "rsvp : "+gson.toJson(events));
+//        try {
 
-            RestTemplate restTemplate = new RestTemplate(true);
-            restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+        Gson g = new Gson();
 
-            HttpEntity<Events> request = new HttpEntity<>(events);
+        RestTemplate restTemplate = new RestTemplate(true);
+        restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-            ResponseEntity<Events> response = restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-            events = response.getBody();
+        HttpEntity<SignUp> request = new HttpEntity<>(signUp, headers);
 
-        }catch (Exception e) {
+        ResponseEntity<Events> rateResponse = restTemplate.postForEntity(url, request, Events.class);
+        eventTemp = rateResponse.getBody();
 
-        }
+        //}catch (Exception e) {
+        //   removeFromWishListEntity = new RemoveFromWishListEntity();
+        //}
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        RegisterEvent registerEvent = new RegisterEvent();
 
-        if(events==null) {
-            registerEvent.setDecesion(context.getString(R.string.event_register_server_error));
+
+        if(eventTemp==null) {
+            events.setViewMessage(context.getString(R.string.home_connection_error));
         }else{
-            registerEvent.setDecesion(events.getDecesion());
+            if(eventTemp.getViewMessage().equals(context.getString(R.string.remove_wish_list_success)))
+                events.setDecesion(eventTemp.getDecesion());
         }
 
-        registerEvent.setEvents(events);
-        EventBusService.getInstance().post(registerEvent);
+        events.setViewMessage(eventTemp.getViewMessage());
+        Log.e("view msg in async : ", "  &&&&&   "+events.getViewMessage());
 
-        // calls getEventAfterUnregistratation() in NearBy, Invited
+        RegisterEvent registerEvent = new RegisterEvent();
+        registerEvent.setEvents(events);
+        registerEvent.setViewMessage(events.getViewMessage());
+        events.setViewMessage(null);
+        EventBusService.getInstance().post(registerEvent);
     }
 }

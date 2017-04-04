@@ -98,9 +98,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:paddingTop="8dp"
+                android:paddingTop="4dp"
                 android:paddingLeft="8dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="4dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -114,7 +114,6 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:elevation="20dp"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_local_play_black_18dp"
@@ -125,10 +124,10 @@
                     android:id="@+id/event_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="4dp"
                     android:text="Birthday"
                     android:textColor="#6c7880"
-                    android:textSize="13sp" />
+                    android:textSize="11sp" />
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -141,7 +140,6 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:elevation="20dp"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_star_rate_black_18dp"
@@ -152,11 +150,10 @@
                     android:id="@+id/event_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:paddingLeft="10dp"
+                    android:layout_marginTop="4dp"
                     android:text="30 people"
                     android:textColor="#6c7880"
-                    android:textSize="13sp" />
+                    android:textSize="11sp" />
             </LinearLayout>
 
                 <LinearLayout
@@ -171,7 +168,6 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:elevation="20dp"
                         android:fitsSystemWindows="true"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_street_view"
@@ -181,10 +177,10 @@
                     <com.devspark.robototextview.widget.RobotoTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
+                        android:layout_marginTop="4dp"
                         android:text="Street View"
                         android:textColor="#6c7880"
-                        android:textSize="13sp" />
+                        android:textSize="11sp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -502,7 +498,7 @@
                 android:layout_weight="1"
                 android:text="Description"
                 android:inputType="textCapSentences|textMultiLine"
-                android:maxLines="4" />
+                android:maxLines="2" />
 
         </LinearLayout>
 

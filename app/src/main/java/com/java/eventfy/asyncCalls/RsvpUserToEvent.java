@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -22,22 +23,26 @@ import org.springframework.web.client.RestTemplate;
 
 public class RsvpUserToEvent extends AsyncTask<Void, Void, Void> {
 
-private String url;
-private Events events;
-private Context context;
-private SignUp signUp;
+        private String url;
+        private Context context;
+        private Events events;
+        private Events eventsTemp;
+        private SignUp signUp;
 
-public RsvpUserToEvent(String url, SignUp signUp, Context context) {
-        this.url = url;
-        this.context = context;
-        this.signUp = signUp;
-}
+        public RsvpUserToEvent(String url, SignUp signUp, Context context) {
+                this.url = url;
+                this.context = context;
+                this.signUp = signUp;
+                events = signUp.getEvents().get(0);
+        }
 
-@Override
-protected Void doInBackground(Void... params) {
-        try {
-                Gson  gson = new Gson();
-                Log.e("rsvp : ", "rsvp : "+gson.toJson(signUp));
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+                Gson gson = new Gson();
+
+                Log.e("add ", gson.toJson(signUp));
 
                 RestTemplate restTemplate = new RestTemplate(true);
                 restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -46,25 +51,29 @@ protected Void doInBackground(Void... params) {
 
                 ResponseEntity<Events> response = restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
 
-                events = response.getBody();
+                eventsTemp = response.getBody();
 
-        }catch (Exception e) {
 
-        }
-        return null;
+                return null;
         }
 
-@Override
-protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        if(events==null) {
-                Events events = new Events();
-                events.setViewMessage(context.getString(R.string.home_connection_error));
+        @Override
+        protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                if(eventsTemp==null) {
+                        events.setViewMessage(context.getString(R.string.home_connection_error));
+                }else{
+                        if(eventsTemp.getViewMessage().equals(context.getString(R.string.wish_list_update_success)))
+                                events.setDecesion(eventsTemp.getDecesion());
+                }
+
+                events.setViewMessage(eventsTemp.getViewMessage());
+                Log.e("view msg in async : ", "  &&&&&   "+events.getViewMessage());
+
+                RegisterEvent registerEvent = new RegisterEvent();
+                registerEvent.setEvents(events);
+                registerEvent.setViewMessage(events.getViewMessage());
+                events.setViewMessage(null);
+                EventBusService.getInstance().post(registerEvent);
         }
-
-        Gson g =new Gson();
-        Log.e("object received : ", " ---- "+g.toJson(events));
-
-        EventBusService.getInstance().post(events);
-}
 }

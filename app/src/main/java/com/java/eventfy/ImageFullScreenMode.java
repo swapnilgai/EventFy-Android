@@ -34,7 +34,7 @@ public class ImageFullScreenMode extends AppCompatActivity {
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        getSupportActionBar().setTitle("Profile picture");
+        getSupportActionBar().setTitle("");
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -88,6 +88,8 @@ public class ImageFullScreenMode extends AppCompatActivity {
 
                     if(imageViewObj.getUserName()!=null)
                         userName.setVisibility(View.VISIBLE);
+                    if(imageViewObj.getUserImageUrl()!=null)
+                        userImage.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -98,6 +100,7 @@ public class ImageFullScreenMode extends AppCompatActivity {
     public void setImageDataObject() {
         Log.e("out condition 1  : ", ""+imageViewObj.getBitmapByteArray());
         Log.e("out condition 2  : ", ""+imageViewObj.getUserName());
+        Log.e("out condition 3  : ", ""+imageViewObj.getUserImageUrl());
 
 
         if(imageViewObj.getBitmapByteArray()==null && imageViewObj.getImageUrl()!=null && !imageViewObj.getImageUrl().equals("default") )
@@ -136,12 +139,14 @@ public class ImageFullScreenMode extends AppCompatActivity {
 
 
         if(imageViewObj.getUserImageUrl()!=null)
-
-            Picasso.with(getApplicationContext()).
-                load(imageViewObj.getUserImageUrl())
-                .fit()
-                .transform(new RoundedCornersTransformCommentAuthor())
-                .into(userImage);
+        {
+            if(!imageViewObj.getUserImageUrl().equals("default"))
+                Picasso.with(getApplicationContext()).
+                    load(imageViewObj.getUserImageUrl())
+                    .fit()
+                    .transform(new RoundedCornersTransformCommentAuthor())
+                    .into(userImage);
+        }
         else
             userImage.setVisibility(View.GONE);
 
@@ -156,7 +161,7 @@ public class ImageFullScreenMode extends AppCompatActivity {
             date.setVisibility(View.GONE);
 
 
-        myToolbar.setTitle(imageViewObj.getUserName());
+        //myToolbar.setTitle(imageViewObj.getUserName());
 
     }
 

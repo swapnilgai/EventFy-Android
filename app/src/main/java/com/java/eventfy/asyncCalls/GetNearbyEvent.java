@@ -13,6 +13,7 @@ import com.java.eventfy.R;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -62,6 +63,10 @@ try  {
             HttpEntity<SignUp> request = new HttpEntity<>(signUp);
 
             ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
+
+            HttpStatus status = response.getStatusCode();
+            Log.e("Response code :  N " , "  Response code : "+status.value());
+            Log.e("Response code :  N " , "  Response code : "+status);
 
             Events[] event = response.getBody();
 

@@ -13,6 +13,7 @@ import com.java.eventfy.R;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -28,15 +29,15 @@ import java.util.List;
 public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
 
     private String url;
-    private SignUp signUp;
     private List<Events> eventLst;
     private String flag;
     private Context context;
+    private RemoteEventData remoteEventData;
 
 
-    public GetRemoteEvent(String url, SignUp signUp, Context context){
+    public GetRemoteEvent(String url, RemoteEventData remoteEventData, Context context){
         this.url = url;
-        this.signUp = signUp;
+        this.remoteEventData = remoteEventData;
         this.context = context;
     }
 
@@ -46,20 +47,26 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
         try {
             Log.e("event is : ", " " + url);
             Gson g = new Gson();
-            Log.e("event is : ", " " + g.toJson(signUp));
+            Log.e("event is : ", " " + g.toJson(remoteEventData.getSignUp()));
 
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-            HttpEntity<SignUp> request = new HttpEntity<>(signUp);
+            HttpEntity<SignUp> request = new HttpEntity<>(remoteEventData.getSignUp());
 
             ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
+
+            HttpStatus status = response.getStatusCode();
+
+            Log.e("Response code :  R " , "  Response code : "+status.value());
 
             Events[] event = response.getBody();
 
             eventLst = new LinkedList<Events>(Arrays.asList(event));
         }catch (Exception e)
-        {}
+        {
+            remoteEventData.getSignUp().setViewMessage(context.getString(R.string.remote_list_fail));
+        }
 
         return null;
     }
@@ -68,9 +75,13 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
+        if(eventLst!=null && eventLst.size()>0){
+            remoteEventData.setViewMsg(context.getString(R.string.remote_list_success));
+        }
+
         if(eventLst!=null)
             for(Events obj : eventLst) {
-                if(obj.getEventImageUrl().equals("default"))
+                if(obj.getEventImageUrl()!=null && obj.getEventImageUrl().equals("default"))
                     obj.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
             }
         else{
@@ -78,6 +89,7 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
             Events events = new Events();
             events.setViewMessage(context.getString(R.string.home_no_data));
             eventLst.add(events);
+            remoteEventData.setViewMsg(events.getViewMessage());
         }
 
         Gson g = new Gson();
@@ -85,8 +97,8 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
             Log.e("event is : ", " "+g.toJson(e));
         }
 
-        RemoteEventData remoteEventData = new RemoteEventData();
         remoteEventData.setEventsList(eventLst);
+
 
         EventBusService.getInstance().post(remoteEventData);
     }

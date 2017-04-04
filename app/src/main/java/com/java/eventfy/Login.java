@@ -205,6 +205,7 @@ public class Login extends AppCompatActivity  {
                                                                 try {
 
                                                                     String jsonresult = String.valueOf(object);
+                                                                    Log.e("signup : ", jsonresult);
 
                                                                     String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
                                                                     String Address = object.getJSONObject("location").getString("name");
@@ -217,7 +218,9 @@ public class Login extends AppCompatActivity  {
                                                                     signUp.setImageUrl(profilePicUrl);
                                                                     signUp.setIsFacebook("true");
                                                                     signUp.setUserId(object.getString("email"));
-
+                                                                    signUp.setVisibilityMiles(10);
+                                                                    signUp.setFacebookId(object.getString("id"));
+                                                                    signUp.setVisibilityMode(getString(R.string.visibility_mode_visible));
 
                                                                     if(latLng!=null) {
                                                                         Location location = new Location();
@@ -311,6 +314,10 @@ public class Login extends AppCompatActivity  {
 
     private void serverCallFbLogin(SignUp signUp) {
 
+        Log.e(" ----- ", " -------------- ");
+
+        Log.e("signup : ", new Gson().toJson(signUp));
+        LoginManager.getInstance().logOut();
         invalidUsernamePasswordMsg.setVisibility(View.GONE);
         String url = getString(R.string.ip_local)+getString(R.string.login_action_facebook);
         SignUpAction loginAction = new SignUpAction(signUp,url);
@@ -335,13 +342,12 @@ public class Login extends AppCompatActivity  {
         {
             EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, Home.class);
-            signUp.setPassword(passwordTemp);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra("user", signUp);
             startActivity(intent);
         }
         else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.login_fail))){
-            Toast.makeText(Login.this, "Inavlid Username/ Password", Toast.LENGTH_LONG).show();
+            Toast.makeText(Login.this, "Invalid Username/ Password", Toast.LENGTH_LONG).show();
             invalidUsernamePasswordMsg.setVisibility(View.VISIBLE);
         }
         else{

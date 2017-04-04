@@ -126,6 +126,8 @@ public class ProfilePage extends AppCompatActivity {
 
         loadingImage = (ImageView) findViewById(R.id.loadingImage);
 
+        changePasswordLink = (TextView) findViewById(R.id.link_chnage_password);
+
         final Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle("My Account");
@@ -159,7 +161,7 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(signUp.getIsVerified().equals("false"))
+                if(signUp.getFacebookId()==null && signUp.getIsVerified().equals("false"))
                     verifyAccountPopUpBox();
             }
         });
@@ -255,9 +257,6 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
-        changePasswordLink = (TextView) findViewById(R.id.link_chnage_password);
-
-
         changePasswordLink.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -298,11 +297,15 @@ public class ProfilePage extends AppCompatActivity {
         usetName.setText(signUp.getUserName());
         usetEmail.setText(signUp.getUserId());
         usetDob.setText(signUp.getDob());
-        if(signUp.getIsVerified().equals("false")){
+        if(signUp.getIsFacebook().equals("false") && signUp.getFacebookId()==null && signUp.getIsVerified().equals("false")){
             verifyUserAccount.setImageResource(R.drawable.not_verified);
         }
         else{
             verifyUserAccount.setImageResource(R.drawable.verified);
+        }
+
+        if(signUp.getFacebookId()!=null){
+            changePasswordLink.setVisibility(View.GONE);
         }
 
         if(signUp.getVisibilityMiles()<=0)
@@ -498,7 +501,7 @@ public class ProfilePage extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.profileeditmenu, menu);
+        //getMenuInflater().inflate(R.menu.profileeditmenu, menu);
         return true;
     }
 

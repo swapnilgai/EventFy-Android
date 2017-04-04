@@ -23,7 +23,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -91,9 +90,7 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
 
         signUp = getUserObject();
 
-
-
-        if(event == null && signUp.getIsVerified().equals("false")){
+        if(event == null && signUp.getFacebookId()==null && signUp.getIsVerified().equals("false")){
             // Call from create event
                setErrorMessageToVerifyAccount();
         }else {
@@ -272,17 +269,11 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
 
          createEventFragment1 = new CreateEventFragment1();
          createEventFragment2 = new CreateEventFragment2();
-
-        Log.e("event to edit : ", ""+event);
         Bundle bundle = new Bundle();
         bundle.putSerializable(getString(R.string.event_type_value), category);
         bundle.putSerializable(getString(R.string.event_to_edit_eventinfo), event);
         createEventFragment1.setArguments(bundle);
-
-
         adapter.addFrag(createEventFragment1, "Information");
-
-        Log.e("edit option : ", " 0000) "+category);
         if(category!=null && category.equals(getString(R.string.create_event_category_private))) {
             adapter.addFrag(createEventFragment2, "Invite");
 
@@ -405,7 +396,6 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
     @Subscribe
     public void getCreatedEventFromServer(CreateEvent createEvent) {
 
-        createEventFragment1.dismissProgressDialog();
         if(createEvent.getViewMsg().equals(getString(R.string.create_event_success))){
             Toast.makeText(this, "Event created", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(CreatePublicEvent.this, EventInfoPublic.class);
