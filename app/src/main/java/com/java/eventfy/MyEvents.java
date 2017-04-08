@@ -355,7 +355,7 @@ public class MyEvents extends AppCompatActivity {
     @Subscribe
     public void getDeleteEvent(DeleteEvent deleteEvent)
     {
-        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_success))) {
             int index = -1;
 
             Events temp = null;

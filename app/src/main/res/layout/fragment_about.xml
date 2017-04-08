@@ -32,9 +32,9 @@
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Event Name"
-                android:textSize="25sp"
+                android:textSize="23sp"
                 android:layout_marginLeft="5dp"
                 android:typeface="serif"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -467,7 +467,7 @@
             android:orientation="vertical"
             android:paddingLeft="7dp"
             android:paddingRight="16dp"
-            android:layout_marginBottom="30dp">
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:id="@+id/liner_layout_navigate_admin_profile"
@@ -540,46 +540,36 @@
                             android:textSize="14sp" />
 
                     </LinearLayout>
-
-
-                    <!--<at.markushi.ui.CircleButton-->
-                        <!--android:id="@+id/navigate_admin_profile"-->
-                        <!--android:layout_width="36dp"-->
-                        <!--android:layout_height="36dp"-->
-                        <!--android:layout_gravity="center"-->
-                        <!--android:gravity="center"-->
-                        <!--android:src="@drawable/ic_navigate_next_white_24dp"-->
-                        <!--app:cb_color="@color/colorPrimary"-->
-                        <!--app:cb_pressedRingWidth="5dip" />-->
                 </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/transparent_black" />
 
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardCornerRadius="4dp"
+            app:cardCornerRadius="2dp"
             app:cardElevation="150dp"
             android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
             >
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_marginBottom="2dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                    android:visibility="gone"
                 android:id="@+id/linear_layout_with_admin_options"
-                android:background="@color/com_facebook_button_login_silver_background_color"
                 android:orientation="horizontal"
                 >
                 <LinearLayout
@@ -588,8 +578,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_weight="1"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:gravity="center"
                     >
                     <at.markushi.ui.CircleButton
@@ -654,6 +644,7 @@
                     android:gravity="center"
                     >
                     <at.markushi.ui.CircleButton
+                        android:id="@+id/event_delete_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:src="@drawable/ic_delete_holo"
@@ -661,6 +652,7 @@
                         android:padding="2dp"
                         />
                     <TextView
+                        android:id="@+id/event_delete_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="11sp"

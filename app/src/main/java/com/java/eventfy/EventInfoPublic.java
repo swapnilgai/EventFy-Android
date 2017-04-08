@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
@@ -101,18 +102,6 @@ public class EventInfoPublic extends AppCompatActivity {
 
             rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
 
-
-//            if(event.getDecesion().equals(getString(R.string.event_not_attending))){
-//                rsvpForEventBtn.setVisibility(View.GONE);
-//            }else{
-//
-//                if(event.getNotifyMe())
-//                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_on));
-//                else
-//                    rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_notification_off));
-//            }
-
-
             if (event.getEventImageUrl()==null || event.getEventImageUrl().equals("default"))
                 eventImage.setImageResource(R.drawable.logo);
             else {
@@ -122,23 +111,6 @@ public class EventInfoPublic extends AppCompatActivity {
                         .into(eventImage);
             }
 
-//            if (event.getDecesion().equals(getString(R.string.attending)))
-//                rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
-
-//            rsvpForEventBtn.setOnClickListener(new OnClickListener() {
-//
-//                @Override
-//                public void onClick(View v) {
-//                   // dialogBox();
-//
-//                    if (rsvpForEventBtn.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.ic_notification_on).getConstantState())){
-//                        //Do your work here
-//                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_off));
-//                    }else{
-//                        rsvpForEventBtn.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_notification_on));
-//                    }
-//                }
-//            });
             setupToolbar();
 
             setupViewPager();
@@ -319,7 +291,7 @@ public class EventInfoPublic extends AppCompatActivity {
     public void dialogBoxToHandleDelete() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("Deleted");
-        alertDialogBuilder.setMessage("Event is no longer available");
+        alertDialogBuilder.setMessage("Event will no longer available");
         alertDialogBuilder.setCancelable(false);
         alertDialogBuilder.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {
@@ -334,33 +306,23 @@ public class EventInfoPublic extends AppCompatActivity {
         alertDialog.show();
     }
 
-
-
-
     @Subscribe
-    public void getEventAfterUnRegistratation(RegisterEvent registerEvent)
+    public void getEventAfterUnRegister(RegisterEvent registerEvent)
     {
         dismissProgressDialog();
         //TODO add thoast message
         Events events = registerEvent.getEvents();
-//
-//       if(!registerEvent.getDecesion().equals(getString(R.string.event_register_server_error)) &&
-//               !events.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2)))
-//        {
-////        if(events.getDecesion().equals(getString(R.string.event_attending)))
-////            rsvpForEventBtn.setImageResource(R.drawable.ic_clear_white_24dp);
-////        else if(events.getDecesion().equals(getString(R.string.event_not_attending)))
-////             rsvpForEventBtn.setImageResource(R.drawable.fab_add);
-//
-//            this.event.setDecesion(events.getDecesion());
-//        }
     }
 
     @Subscribe
     public void getDeletedEvent(DeleteEvent deleteEvent)
     {
-            if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+            if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_success))) {
                 finish();
+            }
+            else if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_fail)) ||
+                    deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_server_error))){
+                Toast.makeText(this, "Unable to delete event, Try again", Toast.LENGTH_SHORT).show();
             }
     }
 
@@ -370,15 +332,6 @@ public class EventInfoPublic extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
     }
-
-    public void startProgressDialog() {
-        if(event.getDecesion().equals(getString(R.string.event_attending)))
-            progressDialog.setMessage("Un regestering...");
-        else if(event.getDecesion().equals(getString(R.string.event_attending)))
-            progressDialog.setMessage("Regisering...?");
-        progressDialog.show();
-    }
-
 
     public void dismissProgressDialog()
     {

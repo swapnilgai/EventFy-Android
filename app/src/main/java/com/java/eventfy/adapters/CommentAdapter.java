@@ -309,7 +309,7 @@ public class CommentAdapter extends ArrayRecyclerAdapter<AddComment, RecyclerVie
                                     break;
                                 case R.id.delete:
                                     //handle menu2 click
-                                    dialogBox(context.getString(R.string.deleted), addComment);
+                                    dialogBox(context.getString(R.string.delete_event_view_msg), addComment);
                                     break;
                             }
                             return false;

@@ -1,29 +1,32 @@
 package com.java.eventfy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
  * Created by swapnil on 5/29/16.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NotificationDetail implements Serializable {
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String notificationTitle;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String notificationTime;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String notificationMessage;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String notifierImageUrl;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String notificationType;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String primaryActivity;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String secondaryActivity;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private Events events;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;
 
     public Events getEvents() {

@@ -7,10 +7,11 @@ import java.io.Serializable;
 /**
  * Created by swapnil on 11/1/16.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NotificationId implements Serializable {
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private int id;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String regId;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;

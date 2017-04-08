@@ -103,6 +103,10 @@ public class About extends Fragment implements OnMapReadyCallback {
     private LinearLayout streetViewLinearLayout;
     private CircleButton edit_btn;
     private Button checkInBtn;
+    private CircleButton eventDeleteBtn;
+    private TextView eventDeleteTextView;
+    private Location userCurrentLocation;
+
 
 
     @Override
@@ -140,8 +144,9 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventInvisibleTextVew = (TextView) view.findViewById(R.id.event_invisible_text_view);
         eventInvisibleBtn = (CircleButton) view.findViewById(R.id.event_invisible_btn);
         eventInvisibleLinearLayout = (LinearLayout) view.findViewById(R.id.event_invisible_linear_layout);
-
+        eventDeleteBtn = (CircleButton) view.findViewById(R.id.event_delete_btn);
         videoLinearLayout = (LinearLayout) view.findViewById(R.id.video_linar_layout);
+        eventDeleteTextView = (TextView) view.findViewById(R.id.event_delete_text_view);
 
         mapValuesFromEventObject();
 
@@ -160,11 +165,27 @@ public class About extends Fragment implements OnMapReadyCallback {
         mapView.onResume();
         mapView.getMapAsync(this);
 
+        eventDeleteBtn.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dialogBox(getString(R.string.delete_event_view_msg), event);
+            }
+        });
+
+        eventDeleteTextView.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                dialogBox(getString(R.string.delete_event_view_msg), event);
+            }
+        });
+
         deleteEvent.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                dialogBox(getString(R.string.deleted), event);
+                dialogBox(getString(R.string.delete_event_view_msg), event);
             }
         });
 
@@ -388,14 +409,20 @@ public class About extends Fragment implements OnMapReadyCallback {
         markerOptions.title(event.getEventName());
         markerLst.add(googleMap.addMarker(markerOptions));
 
-        if(signUp.getLocation()!=null)
-            setUserOnMap(signUp.getLocation());
+        if(event.getEventRequest().equals(getString(R.string.event_request_nearby))){
+            getUserObject();
+            userCurrentLocation = signUp.getLocation();
+        }
+        else if(event.getEventRequest().equals(getString(R.string.event_request_remote))) {
+            getRemoteUserObject();
+            userCurrentLocation = signUp.getFilter().getLocation();
+        }
 
+        setUserOnMap(userCurrentLocation);
         googleMapSetting(event.getLocation());
 
+
     }
-
-
 
     public void setUserOnMap(Location location){
 
@@ -413,7 +440,6 @@ public class About extends Fragment implements OnMapReadyCallback {
     }
 
     public void googleMapSetting(Location location) {
-
         //googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.getUiSettings().setZoomControlsEnabled(true);
@@ -463,6 +489,15 @@ public class About extends Fragment implements OnMapReadyCallback {
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
+
+    public void getRemoteUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObjectRemote), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getString(R.string.userObjectRemote), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
+
 
     public String convertTimeInTwelve(String time) {
         try {
@@ -570,20 +605,28 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     public void serverCallToDelete(Events event) {
         String url = getString(R.string.ip_local) + getString(R.string.delete_event);
+        SignUp tempSignUp = new SignUp();
+        tempSignUp.setToken(signUp.getToken());
+        tempSignUp.setUserId(signUp.getUserId());
+        event.setAdmin(tempSignUp);
         DeleteEvent deleteEvent = new DeleteEvent(url, event);
         deleteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
     public void serverCallToUndo(Comments comment) {
-
         String url = getString(R.string.ip_local) + getString(R.string.get_comment_for_event);
 
+        getUserObject();
+
+        SignUp tempSignUp = new SignUp();
+        tempSignUp.setToken(signUp.getToken());
+        tempSignUp.setUserId(signUp.getUserId());
+
+        event.setAdmin(tempSignUp);
         DeleteEvent deleteEvent = new DeleteEvent(url, event);
         deleteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
-
 
     @Subscribe
     public void getDeletedOrUndoComment(Comments comments) {
@@ -605,9 +648,8 @@ public class About extends Fragment implements OnMapReadyCallback {
 
     @Subscribe
     public void getDeletedEvent(com.java.eventfy.Entity.EventSudoEntity.DeleteEvent deleteEvent) {
-        Log.e("msg : ", ""+deleteEvent.getEvents().getViewMessage());
 
-        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_success))) {
             dismissProgressDialog();
         }
     }
@@ -616,8 +658,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     public void getUserCurrentLocation(EditEvent editEvent) {
 
         dismissProgressDialog();
-        if(editEvent.getViewMsg()==null)
-        {
+        if(editEvent.getViewMsg()==null) {
             //Success
             event =  editEvent.getEvents();
             mapValuesFromEventObject();
@@ -644,6 +685,5 @@ public class About extends Fragment implements OnMapReadyCallback {
     {
         progressDialog.dismiss();
     }
-
 
 }

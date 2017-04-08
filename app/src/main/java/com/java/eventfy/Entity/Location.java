@@ -1,20 +1,39 @@
 package com.java.eventfy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
  * Created by swapnil on 5/29/16.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Location implements Serializable {
 
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
+    }
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private int locationId;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private double longitude;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private double latitude;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private double distance;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String name;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String venueName;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String venueImageUrl;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String venueDetail;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String venueId;
 
     public String getName() {

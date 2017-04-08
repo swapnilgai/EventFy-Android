@@ -137,10 +137,13 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private ViewPager viewPager;
     private Button cancleBtn;
     private String url;
-    private ObjectAnimator animator;
     private LinearLayout gettingLocationLinearlayout;
     private CircleButton cancelLocationLoadingBtn;
     private CircleButton loadingLoactionBtn;
+    private LinearLayout createEventLinearLayout;
+    private LinearLayout createOrSaveLinearlayout;
+    private TextView createOrSaveTextView;
+    private  ObjectAnimator animator;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -155,8 +158,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         EventBusService.getInstance().register(this);
         viewPager =(ViewPager) getActivity().findViewById(R.id.viewpager);
-
-
         mapView = (MapView) view.findViewById(R.id.location_map_view);
         eventName = (EditText) view.findViewById(R.id.event_name);
         eventDescription  = (EditText) view.findViewById(R.id.public_event_description);
@@ -187,6 +188,11 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         loadingLoactionBtn = (CircleButton) view.findViewById(R.id.loading_location_btn);
 
+        createEventLinearLayout = (LinearLayout) view.findViewById(R.id.create_event_loading_linear_layout);
+
+        createOrSaveLinearlayout = (LinearLayout) view.findViewById(R.id.create_save_linear_layout);
+
+        createOrSaveTextView = (TextView) view.findViewById(R.id.create_save_loading_text_view);
 
         createProgressDialog();
 
@@ -271,9 +277,13 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
                 createEventObject();
+                Log.e("btn clicked: ", ""+createBtn.getText());
                 if(createBtn.getText().equals("Save")) {
-                    if(validate()) {
-                        dialogBox();
+                    //if(validate())
+                    {
+                        createOrSaveTextView.setText("Saving....");
+                        setProgressDialog();
+                        serverCallToEdit();
                     }
                 }
                 else if(eventType!= null && eventType.equals(getString(R.string.create_event_category_private)))
@@ -285,8 +295,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                     }
                 }
                 else if(eventType!= null && eventType.equals(getString(R.string.create_event_category_public))) {
+                        createOrSaveTextView.setText("Creating....");
                         setProgressDialog();
-
                         if (eventImageBm != null && signUp != null)
                              uploadImage();
                         else if (signUp != null) {
@@ -598,24 +608,24 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Subscribe
     public void getCreatedEventFromServer(Events event)
     {
-        if (event.getViewMessage()!=null && !event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))) {
+        if (event.getEventId() != -1 && event.getViewMessage().equals(getString(R.string.create_event_success))) {
+            Toast.makeText(getActivity(), "Event created", Toast.LENGTH_SHORT).show();
+            event.setViewMessage(null);
+            Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
+            intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            view.getContext().startActivity(intent);
+        }
+        else if(event.getViewMessage().equals(getString(R.string.create_event_fail)) ||
+                event.getViewMessage().equals(getString(R.string.create_event_server_error))){
+            event.setViewMessage(null);
+            Toast.makeText(getActivity(), "Enable create event, please Try again", Toast.LENGTH_SHORT).show();
+        }
+        else if (event.getViewMessage()!=null && !event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))) {
             dismissProgressDialog();
-            if (progressDialog != null && progressDialog.isShowing()) {
-                dismissProgressDialog();
-            } else if (event.getEventId() != -1) {
+            if (!eventType.equals(getString(R.string.create_event_category_private))) {
 
-               // EventBusService.getInstance().unregister(this);
-                Toast.makeText(getActivity(), "Event created", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
-                intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), event);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                view.getContext().startActivity(intent);
-            } else if (!eventType.equals(getString(R.string.create_event_category_private))) {
-                Toast.makeText(getActivity(), "Enable create event, please Try again", Toast.LENGTH_SHORT).show();
             }
-        }else if(event.getViewMessage() == null && event.getEventId() != -1)
-        {
-           // EventBusService.getInstance().unregister(this);
         }
     }
 
@@ -623,19 +633,21 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     public void getUserCurrentLocation(EditEvent editEvent) {
 
         dismissProgressDialog();
-        if(editEvent.getViewMsg()==null)
+        if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success)))
         {
             //Success
            // EventBusService.getInstance().unregister(this);
+            dismissProgressDialog();
             Toast.makeText(getActivity(), "Event Updated", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(view.getContext(), EventInfoPublic.class);
             intent.putExtra(view.getContext().getString(R.string.event_for_eventinfo), editEvent.getEvents());
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             view.getContext().startActivity(intent);
 
+
         }
-        else{
-            //fail
+        else if(editEvent.getViewMsg().equals(getString(R.string.edit_event_fail)) ||
+                editEvent.getViewMsg().equals(getString(R.string.edit_event_server_error))){
             Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -823,8 +835,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Override
     public void onResume() {
         super.onResume();
-
-        Log.e("registering frag", "eventImg ");
     }
 
     @Override
@@ -832,8 +842,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         super.onPause();
         if(progressDialog.isShowing())
             dismissProgressDialog();
-        Log.e("registering frag pause", "eventImg ");
-
     }
 
     @Override
@@ -852,14 +860,21 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         progressDialog.setCancelable(false);
     }
 
-    public void setProgressDialog()
-    {
-        progressDialog.show();
+    public void setProgressDialog() {
+        createEventLinearLayout.setVisibility(View.VISIBLE);
+        createOrSaveLinearlayout.setVisibility(View.GONE);
+
+        animator = ObjectAnimator.ofFloat(createEventLinearLayout, "rotation", 0, 360);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setDuration(1000);
+        animator.start();
     }
 
-    public void dismissProgressDialog()
-    {
-        progressDialog.dismiss();
+    public void dismissProgressDialog() {
+        createEventLinearLayout.setVisibility(View.GONE);
+        createOrSaveLinearlayout.setVisibility(View.VISIBLE);
+        animator.cancel();
     }
     public void setUpMarker() {
         int radius = getZoonValue(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
@@ -867,7 +882,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         LatLng myLaLn = new LatLng(eventObj.getLocation().getLatitude(), eventObj.getLocation().getLongitude());
 
-        Log.e("seting map ", "  ************************* "+eventObj.getLocation().getLatitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
@@ -916,7 +930,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
-        Log.e("user in create is ", "(((( "+json);
     }
 
     public int getZoonValue(int zoomVal) {
@@ -934,21 +947,19 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public boolean validate() {
         boolean flag = true;
-
-
         if (eventName.getText().toString().isEmpty()) {
-            eventName.setError("Enter valid email address");
+            eventName.setError("Name can't be empty");
             flag = false;
         } else {
             eventName.setError(null);
         }
 
         if (eventDescription.getText().toString().isEmpty()) {
-            eventDescription.setError("Evnter valid description");
+            eventDescription.setError("Description can't be empty");
             flag = false;
         }
-        else if(eventDescription.getText().toString().length()>140) {
-            eventDescription.setError("Event Descripting exceed limit of 200 character");
+        else if(eventDescription.getText().toString().length()>500) {
+            eventDescription.setError("Description exceed limit of 500 character");
             flag = false;
         }
         else {
@@ -1015,7 +1026,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         mAutocompleteView.setText(eventObj.getLocation().getName());
         eventName.setText(eventObj.getEventName());
         eventDescription.setText(eventObj.getEventDescription());
-
+        dateTimeFrom = eventObj.getDateTime().getDateTimeFrom();
+        dateTimeTo = eventObj.getDateTime().getDateTimeTo();
 
         startDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeFrom(), eventObj.getDateTime().getTimeZone()));
         endDate.setText(DateTimeStringOperations.getInstance().getDateTimeString(eventObj.getDateTime().getDateTimeTo(), eventObj.getDateTime().getTimeZone()));
@@ -1024,7 +1036,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         int index = -1;
         if(eventObj.getEventCategory()!=null) {
             index = getIndexOfSpinerItemCategory(getResources().getStringArray(R.array.category_arrays), eventObj.getEventCategory());
-            Log.e("category index : ", ""+index);
             //evenrCategory.setSelection(index);
         }
 
@@ -1037,19 +1048,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         else
             eventsVolatile.setChecked(false);
     }
-
-//    public int getIndexOfSpinerItem( String[] androidStrings , String item) {
-//        int i = 0 ;
-//        Log.e("itemp  : ", ""+item);
-//        Log.e("array len  : ", ""+androidStrings.length);
-//        for (String s : androidStrings) {
-//            i = s.indexOf(item);
-//            if (i >= 0) {
-//                return i;
-//            }
-//        }
-//        return i;
-//    }
 
     public int getIndexOfSpinerItem( int[] androidStrings , int item) {
         int i = -1 ;
@@ -1070,34 +1068,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         return i;
     }
-    public void dialogBox() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-
-            alertDialogBuilder.setMessage("Would you like to save the changes ?");
-
-        alertDialogBuilder.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        startProgressDialog("Saving Changes");
-                            serverCallToEdit();
-                    }
-                });
-
-        alertDialogBuilder.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-
-                    }
-                });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
 
     public void dialogBoxVolatile() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -1118,12 +1088,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-    }
-
-
-    public void startProgressDialog(String message) {
-        progressDialog.setMessage(message);
-        progressDialog.show();
     }
 
     public void serverCallToEdit(){

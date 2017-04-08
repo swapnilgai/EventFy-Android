@@ -13,7 +13,6 @@ import java.util.List;
  * Created by swapnil on 5/29/16.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class SignUp implements Serializable {
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -32,9 +31,11 @@ public class SignUp implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(Boolean.class)
     private String isVerified;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String visibilityMode;
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String status;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private int  visibilityMiles;
 
     @JsonIgnoreProperties(ignoreUnknown = true)

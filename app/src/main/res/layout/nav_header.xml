@@ -6,7 +6,7 @@
     android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
     android:layout_alignParentTop="true"
-    android:background="@drawable/drawer11"
+    android:background="@color/colorPrimaryDark"
     android:gravity="center"
     android:orientation="vertical">
 

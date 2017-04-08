@@ -3,8 +3,8 @@ package com.java.eventfy.Fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -18,7 +18,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,6 +27,16 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
@@ -56,6 +65,9 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private MainRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -79,6 +91,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private LocationNearby locationNearby;
     private NearbyFacebookEventData nearbyFacebookEventData;
     private NearbyEventData nearbyEventData;
+    private static final int REQUEST_CHECK_SETTINGS = 0x1;
+    private static GoogleApiClient mGoogleApiClient;
+    private static final int ACCESS_FINE_LOCATION_INTENT_ID = 3;
     public Nearby() {
         // Required empty public constructor
     }
@@ -140,7 +155,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             public void onRefresh() {
                 initServices();
                 removeAll();
-                addLoading();
+               // addLoading();
                 adapter.notifyItemRangeRemoved(0, eventsList.size()-1);
                 bindAdapter(adapter, eventsList);
                 swipeRefreshLayout.setRefreshing(false);
@@ -172,21 +187,97 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             }
         });
 
+        initGoogleAPIClient();
 
-        initServices();
-
+        getLocationAndInitServices();
 
         ((Home)getActivity()).setListnerToFabAndToolbar();
-
-        //
 
         super.onSaveInstanceState(savedInstanceState);
         return view;
     }
 
+    private void initGoogleAPIClient() {
+        //Without Google API Client Auto Location Dialog will not work
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+
+
+    private void showSettingDialog() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
+        // locationRequest.setInterval(30 * 1000);
+        locationRequest.setExpirationDuration(500);
+//        locationRequest.setExpirationTime(500);
+        //locationRequest.setFastestInterval(5 * 1000);//5 sec Time interval for location update
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true); //this is the key ingredient to show dialog always when GPS is off
+
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                      //  updateGPSStatus("GPS is Enabled in your device");
+                       getLocationAndInitServices();
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            e.printStackTrace();
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        Log.e("Settings", "Result OK");
+                        getLocationAndInitServices();
+                        break;
+                    case RESULT_CANCELED:
+                        removeNoDataOrLoadingObj();
+                        presentNoLocationView();
+                        bindAdapter(adapter, eventsList);
+                        Log.e("Settings", "Result Cancel");
+
+                        break;
+                }
+                break;
+        }
+    }
+
+
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-        Log.e("in start ser : ", " **** ");
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
@@ -195,8 +286,20 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
 
         }else{
-            getLocationAndInitServices();
+            showSettingDialog();
         }
+//
+//        if (ContextCompat.checkSelfPermission(getActivity(),
+//                Manifest.permission.ACCESS_FINE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(),
+//                Manifest.permission.ACCESS_COARSE_LOCATION)
+//                != PackageManager.PERMISSION_GRANTED){
+//            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+//
+//        }else{
+//
+//        }
+
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -214,7 +317,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             case 2: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    enableGpsPopUpOption();
+                    showSettingDialog();
                 } else {
                     presentNoLocationView();
                 }
@@ -223,26 +326,13 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
     private void getLocationAndInitServices(){
+
         gps = new GPSTracker(getActivity(), locationNearby);
 
         if(!gps.canGetLocation()) {
             presentNoLocationView();
         }else{
-
             addLoading();
-
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    if(locationNearby == null){
-//                        stopServices();
-//                        //TODO add unable to get location please try again/ restart device
-//                    }
-//                }
-//            }, 60000);
-
-
         }
         bindAdapter(adapter, eventsList);
     }
@@ -264,19 +354,18 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     private void stopServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-        getActivity().stopService(new Intent(getContext(), com.java.eventfy.Services.GPSTracker.class));
+        getActivity().stopService(new Intent(getContext(), GPSTracker.class));
+        System.gc();
     }
 
     @Subscribe
     public void getEditedEvent(EditEvent editEvent) {
 
         Events originalEvent = null;
-        if(editEvent.getViewMsg()==null)
+        if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success)))
         {
             //Success
-
             removeNoDataOrLoadingObj();
-
             int index = -1;
             for (Events e : eventsList) {
                 if (e.getEventId() == editEvent.getEvents().getEventId()) {
@@ -289,8 +378,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             if(index!=-1 && originalEvent!=null)
                 updateEditedEvent(editEvent.getEvents(), index);
         }
-        else{
-            //fail
+        else if(editEvent.getViewMsg().equals(getString(R.string.edit_event_fail)) ||
+                editEvent.getViewMsg().equals(getString(R.string.edit_event_server_error))){
+
             Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -386,7 +476,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             String []str = createEvent.getEvents().getEventAwayDistanve().split(" ");
 
             try {
-                Log.e(" MILES ::::  ", ""+Integer.parseInt(str[0]));
                 if(!str[0].equals(getString(R.string.Undefined)) && Integer.parseInt(str[0])<signUp.getVisibilityMiles()){
                     eventsList.add(0, createEvent.getEvents());
                     bindAdapter(adapter, eventsList);
@@ -413,12 +502,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             }
         }
 
-        Log.e(" view message : ", " IIIIIIII "+registerEvent.getViewMessage());
-
-        Log.e(" view index : ", " IIIIIIII "+index);
-
-        Log.e("decesion : ", " IIIIIIII "+events.getDecesion());
-
         if(index!=-1){
                 events.setViewMessage(null);
 
@@ -441,15 +524,22 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     @Subscribe
     public void getDeleteEvent(DeleteEvent deleteEvent)
     {
-
-        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_success))) {
             int index = -1;
-
             Events temp = null;
+            int count =0;
+            Events removalEvent = null;
             for(Events e: this.eventsList) {
                 if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
-                    removeEvent(e);
+                    index = count;
+                    removalEvent = e;
+                    break;
+
                 }
+                count++;
+            }
+            if(index!=-1 && removalEvent!=null){
+                removeEvent(removalEvent);
             }
         }
     }
@@ -478,6 +568,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         String url = getString(R.string.ip_local) + getString(R.string.get_nearby_event);
         getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.nearby_flag), getContext());
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        tempSignUp = null;
+        System.gc();
+
 
     }
 
@@ -532,6 +625,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
     public void removeAll() {
+        if(eventsList!=null && eventsList.size()>0)
         eventsList.removeAll(eventsList);
     }
 
@@ -563,56 +657,35 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
 
         }else{
-            enableGpsPopUpOption();
+
+
+            initServices();
+
         }
     }
 
-    public void enableGpsPopUpOption(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setCancelable(false);
-        builder.setTitle("Enable GPS");
-        builder.setMessage("Please enable GPS");
-        builder.setPositiveButton("Enable", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), 0);
-            }
-        });
-        builder.setNegativeButton("Ignore", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    @Override
-    public void enebleLoctionService() {
-
-    }
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 0:
-                removeNoDataOrLoadingObj();
-
-                addLoading();
-
-                bindAdapter(adapter, eventsList);
-
-                initServices();
-                break;
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch (requestCode) {
+//            case 0:
+//                removeNoDataOrLoadingObj();
+//
+//                addLoading();
+//
+//                bindAdapter(adapter, eventsList);
+//
+//                initServices();
+//                break;
+//        }
+//    }
 
     public void updateUserLocation(int visibilityMileValue) {
         removeAll();
         bindAdapter(adapter, eventsList);
         signUp.setVisibilityMiles(visibilityMileValue);
         initServices();
-
     }
 
 

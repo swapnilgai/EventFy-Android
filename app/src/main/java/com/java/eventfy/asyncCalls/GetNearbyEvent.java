@@ -52,12 +52,12 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-try  {
+    try  {
             Log.e("event is : ", " " + url);
             Gson g = new Gson();
             Log.e("event is : ", " " + g.toJson(signUp));
 
-            RestTemplate restTemplate = new RestTemplate();
+            RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
             HttpEntity<SignUp> request = new HttpEntity<>(signUp);
@@ -70,10 +70,15 @@ try  {
 
             Events[] event = response.getBody();
 
+        if(event!=null)
             eventLst = new LinkedList<Events>(Arrays.asList(event));
         }catch (Exception e){
 
-        }
+            eventLst = new LinkedList<Events>();
+            Events events = new Events();
+            events.setViewMessage(context.getString(R.string.home_connection_error));
+            eventLst.add(events);
+       }
 
         return null;
     }

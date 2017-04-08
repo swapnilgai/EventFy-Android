@@ -8,5 +8,4 @@ public interface OnLocationEnableClickListner {
 
     public void enableGpsPopUp();
 
-    public void enebleLoctionService();
 }

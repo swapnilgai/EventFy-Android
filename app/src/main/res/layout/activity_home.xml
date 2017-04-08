@@ -33,6 +33,7 @@
                 contentInsetStart="0dp"
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
+                android:titleTextColor="@color/white"
                 app:popupTheme="@style/Animation.AppCompat.DropDownUp"
                 app:theme="@style/AlertDialog.AppCompat.Light"
                 >
@@ -77,6 +78,7 @@
                 android:layout_height="@dimen/custom_tab_layout_height"
                 app:tabMode="fixed"
                 app:tabGravity="fill"
+                app:tabTextColor="@color/white"
                 android:animateLayoutChanges="true"
                 android:background="@color/colorPrimary"
                 android:layout_gravity="center"/>
@@ -96,5 +98,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/menu" />
+        app:menu="@menu/menu"
+        android:background="@color/colorPrimary"/>
 </android.support.v4.widget.DrawerLayout>

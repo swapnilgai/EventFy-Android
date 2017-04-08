@@ -323,7 +323,7 @@ public class Remot extends Fragment {
     @Subscribe
     public void getDeleteEvent(DeleteEvent deleteEvent)
     {
-        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_success))) {
             int index = -1;
 
             Events temp = null;
@@ -414,12 +414,8 @@ public class Remot extends Fragment {
     public void getEditedEvent(EditEvent editEvent) {
 
         Events originalEvent = null;
-        if(editEvent.getViewMsg()==null)
-        {
-            //Success
-
+        if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success))) {
             removeNoDataOrLoadingObj();
-
             int index = -1;
             for (Events e : eventsList) {
                 if (e.getEventId() == editEvent.getEvents().getEventId()) {
@@ -432,8 +428,9 @@ public class Remot extends Fragment {
             if(index!=-1 && originalEvent!=null)
                 updateEditedEvent(editEvent.getEvents(), index);
         }
-        else{
-            //fail
+        else if(editEvent.getViewMsg().equals(getString(R.string.edit_event_fail)) ||
+                editEvent.getViewMsg().equals(getString(R.string.edit_event_server_error))){
+
             Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
         }
     }

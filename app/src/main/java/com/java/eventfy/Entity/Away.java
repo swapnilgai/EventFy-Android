@@ -1,9 +1,11 @@
 package com.java.eventfy.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by swapnil on 2/19/17.
  */
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Away {
 
     private String distance;

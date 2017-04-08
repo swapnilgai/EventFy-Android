@@ -1,9 +1,10 @@
 package com.java.eventfy.Fragments;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
@@ -27,6 +29,8 @@ import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Location;
+import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
@@ -52,46 +56,62 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     SupportMapFragment supportMapFragmentRemot;
     private String flag;
     private List<Marker> markerList = new LinkedList<Marker>();
+    private SignUp signUpRemote;
+    private Marker userMarker;
 
 
     private void initializeMap() {
-        Log.e("in init map", ""+myLaLn);
-
-//      if(googleMapRemot==null)
-//        {
-//            googleMapRemot = supportMapFragmentRemot.getMap();
-//        }
-
-
        setUpMarker();
     }
 
     public void setUpMarker()
     {
         googleMapRemot.clear();
-        for(Events events : eventLst)
-        {
+        for(Events events : eventLst) {
             int zoomVal = 10;
-
             myLaLn = new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude());
-            Log.e("set marker in ", ""+myLaLn);
-
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLaLn);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             markerList.add(googleMapRemot.addMarker(markerOptions));
-
             //googleMap.setMyLocationEnabled(true);
             googleMapRemot.getUiSettings().setCompassEnabled(true);
             googleMapRemot.getUiSettings().setZoomControlsEnabled(true);
-
             googleMapRemot.moveCamera(CameraUpdateFactory.newLatLngZoom(myLaLn,40));
             // Zoom in, animating the camera.
             googleMapRemot.animateCamera(CameraUpdateFactory.zoomIn());
             // Zoom out to zoom level 10, animating with a duration of 2 seconds.
             googleMapRemot.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
-            Log.e("set marker out ", ""+myLaLn);
         }
+        getRemoteUserObject();
+    if(signUpRemote!=null && signUpRemote.getFilter().getLocation()!=null){
+        setUserOnMap(signUpRemote.getFilter().getLocation());
+    }
+    }
+
+    public void setUserOnMap(Location location){
+
+        if(userMarker!=null) {
+            markerList.remove(userMarker);
+            userMarker.remove();
+        }
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position( new LatLng(location.getLatitude(), location.getLongitude()));
+
+        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
+
+        markerOptions.title(signUpRemote.getUserName());
+        userMarker =  googleMapRemot.addMarker(markerOptions);
+        markerList.add(userMarker);
+    }
+
+
+    public void getRemoteUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObjectRemote), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getString(R.string.userObjectRemote), "");
+        this.signUpRemote = gson.fromJson(json, SignUp.class);
     }
 
     @Override
@@ -205,10 +225,11 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     @Subscribe
     public void getDeleteEvent(DeleteEvent deleteEvent)
     {
-        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.deleted))) {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_success))) {
             int index = -1;
 
             Events temp = null;
+            if(eventLst!=null)
             for(Events e: this.eventLst) {
                 if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
                    eventLst.remove(index);
@@ -240,11 +261,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     public void getEditedEvent(EditEvent editEvent) {
 
         Events originalEvent = null;
-        if(editEvent.getViewMsg()==null)
-        {
-            //Success
-
-
+        if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success))){
             int index = -1;
             for (Events e : eventLst) {
                 if (e.getEventId() == editEvent.getEvents().getEventId()) {
@@ -255,11 +272,15 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
             }
 
             if(index!=-1 && originalEvent!=null){
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(new LatLng(editEvent.getEvents().getLocation().getLatitude(), editEvent.getEvents().getLocation().getLongitude()));
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                markerList.add(index, googleMapRemot.addMarker(markerOptions));
                 eventLst.set(index, originalEvent);
             }
         }
-        else{
-            //fail
+        else if(editEvent.getViewMsg().equals(getString(R.string.edit_event_fail)) ||
+                editEvent.getViewMsg().equals(getString(R.string.edit_event_server_error))){
             Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
         }
     }

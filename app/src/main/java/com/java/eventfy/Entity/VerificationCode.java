@@ -9,10 +9,11 @@ import java.util.Date;
  * Created by swapnil on 5/29/16.
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VerificationCode implements Serializable {
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String vCode;
-
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String userId;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private Date createdTime;

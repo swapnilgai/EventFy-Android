@@ -7,9 +7,8 @@ import java.io.Serializable;
 /**
  * Created by swapnil on 2/25/17.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DateTime  implements Serializable {
-
-
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     private int id;
@@ -19,7 +18,6 @@ public class DateTime  implements Serializable {
     private String dateTimeTo;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String timeZone;
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     public Events getEvent() {
         return event;

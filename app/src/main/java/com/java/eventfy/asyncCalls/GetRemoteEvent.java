@@ -79,27 +79,14 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
             remoteEventData.setViewMsg(context.getString(R.string.remote_list_success));
         }
 
-        if(eventLst!=null)
-            for(Events obj : eventLst) {
-                if(obj.getEventImageUrl()!=null && obj.getEventImageUrl().equals("default"))
-                    obj.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
-            }
-        else{
+        if(eventLst==null){
             eventLst = new LinkedList<Events>();
             Events events = new Events();
             events.setViewMessage(context.getString(R.string.home_no_data));
             eventLst.add(events);
             remoteEventData.setViewMsg(events.getViewMessage());
         }
-
-        Gson g = new Gson();
-        for(Events e : eventLst) {
-            Log.e("event is : ", " "+g.toJson(e));
-        }
-
         remoteEventData.setEventsList(eventLst);
-
-
         EventBusService.getInstance().post(remoteEventData);
     }
 }

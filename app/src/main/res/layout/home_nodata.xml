@@ -13,7 +13,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="We are unable to find any events nearby"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <com.devspark.robototextview.widget.RobotoTextView
         android:layout_width="match_parent"
@@ -21,13 +21,24 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="Try increasing visibility radius in miles"
-        android:textSize="16sp" />
+        android:text="Increasing driving distance(miles)"
+        android:textSize="13sp" />
+
+    <com.devspark.robototextview.widget.RobotoTextView
+        android:id="@+id/visibility_miles_no_data_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="10"
+        android:textStyle="bold"
+        android:textSize="24sp" />
 
     <SeekBar
         android:id="@+id/evnet_visibility_miles"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="20dp"
         android:layout_marginLeft="35dp"
@@ -37,8 +48,10 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_search_nearby_events"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
         android:background="@drawable/content_main2_button_color"
         android:text="Search"
         android:textColor="@color/white" />

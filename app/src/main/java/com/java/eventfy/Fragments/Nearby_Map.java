@@ -21,8 +21,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Away;
 import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
+import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
@@ -92,10 +95,10 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private SeekBar eventSearchMiles;
     private TextView eventVisibilityRadius;
     private Button eventSearch;
-    private CardView eventSearchLinearLayout;
+    private LinearLayout eventSearchLinearLayout;
     private CardView eventInfoLinearLayout;
     private NearbyMapSearch nearbyMapSearch;
-    private List<Marker> markerLst = new LinkedList<Marker>();
+    private List<Marker> markerList = new LinkedList<Marker>();
     private Circle circle;
     private LatLng myLatLag;
     private SetEventIconGoogleMap setEventIconGoogleMap;
@@ -122,7 +125,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         markerOptions.title(signUp.getUserName());
         userMarker =  googleMap.addMarker(markerOptions);
-        markerLst.add(userMarker);
+        markerList.add(userMarker);
 
     }
 
@@ -140,7 +143,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
 
             setEventIconGoogleMap.setIcon(markerOptions, getContext(), events.getEventCategory());
-            markerLst.add(googleMap.addMarker(markerOptions));
+            markerList.add(googleMap.addMarker(markerOptions));
         }
 
 
@@ -148,9 +151,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
-
-                if(markerLst.contains(marker)){
-                    updateEventinfo(markerLst.indexOf(marker));
+                if(markerList.contains(marker)){
+                    updateEventinfo(markerList.indexOf(marker));
                 }
                 return false;
             }
@@ -242,7 +244,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         eventSearchMiles = (SeekBar) view.findViewById(R.id.nearby_map_view_event_visibility_miles);
         eventVisibilityRadius = (TextView) view.findViewById(R.id.nearby_map_view_visibility_miles_radius);
         eventSearch = (Button) view.findViewById(R.id.nearby_map_view_event_search_btn);
-        eventSearchLinearLayout = (CardView) view.findViewById(R.id.nearby_map_view_filter_card_view);
+        eventSearchLinearLayout = (LinearLayout) view.findViewById(R.id.nearby_map_view_filter_card_view);
         eventInfoLinearLayout = (CardView) view.findViewById(R.id.nearby_map_view_event_info_card_view);
         nearbyMapSearch = new NearbyMapSearch();
 
@@ -342,18 +344,16 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         userCurrentLocation = nearbyEventData.getLocation();
         if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
             if(eventLst.get(eventLst.size()-1).getViewMessage()==null){
-                setUserOnMap(nearbyEventData.getLocation());
                 initializeMap(nearbyEventData.getLocation());
+                setUserOnMap(nearbyEventData.getLocation());
                 updateEventinfo(0);
                 eventInfoLinearLayout.setVisibility(View.VISIBLE);
                 eventSearchLinearLayout.setVisibility(View.GONE);
             }else if(nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
             {
                 Gson g = new Gson();
-                Log.e(" ", " location object ::::  "+g.toJson(nearbyEventData.getLocation()));
                 if(nearbyEventData.getLocation()!=null && nearbyEventData.getLocation().getLongitude()!= 0.0 && nearbyEventData.getLocation().getLatitude()!= 0.0){
                     getUserObject();
-                    Log.e(" ", " Location ::::  "+g.toJson(nearbyEventData.getLocation()));
                     if(signUp!=null){
                         eventInfoLinearLayout.setVisibility(View.GONE);
                         eventSearchLinearLayout.setVisibility(View.VISIBLE);
@@ -377,10 +377,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     }
     // event bus subscribtion
     @Subscribe
-    public void getMyLatLang(LocationNearby loaLocationNearby)
-    {
-
-        Log.e("loction nearby map ", " ************** "+loaLocationNearby.getLocation());
+    public void getMyLatLang(LocationNearby loaLocationNearby) {
         if(loaLocationNearby!=null && loaLocationNearby.getLocation()!= null) {
             locationObj.setLongitude(loaLocationNearby.getLocation().getLongitude());
             locationObj.setLatitude(loaLocationNearby.getLocation().getLatitude());
@@ -437,9 +434,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void getUserObject(UpdateAccount updateAccount ) {
 
         boolean flag = false;
-        Log.e("inside location : ", ""+updateAccount.getSignUp().getViewMessage());
         if(updateAccount.getSignUp().getViewMessage() != null && !updateAccount.getSignUp().getViewMessage().equals("unsuccessfull")){
-            // do nothing or toast message
         }
         else{
             if(signUp == null)
@@ -517,6 +512,34 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 events.setViewMessage(null);
                 eventLst.set(index, events);
             }
+        }
+    }
+
+    @Subscribe
+    public void getEditedEvent(EditEvent editEvent) {
+
+        Events originalEvent = null;
+        if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success))){
+            int index = -1;
+            for (Events e : eventLst) {
+                if (e.getEventId() == editEvent.getEvents().getEventId()) {
+                    index = eventLst.indexOf(e);
+                    originalEvent = e;
+                    break;
+                }
+            }
+
+            if(index!=-1 && originalEvent!=null){
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(new LatLng(editEvent.getEvents().getLocation().getLatitude(), editEvent.getEvents().getLocation().getLongitude()));
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+                markerList.add(index, googleMap.addMarker(markerOptions));
+                eventLst.set(index, originalEvent);
+            }
+        }
+        else if(editEvent.getViewMsg().equals(getString(R.string.edit_event_fail)) ||
+                editEvent.getViewMsg().equals(getString(R.string.edit_event_server_error))){
+            Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
         }
     }
 
