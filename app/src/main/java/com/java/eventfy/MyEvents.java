@@ -380,12 +380,10 @@ public class MyEvents extends AppCompatActivity {
     public void getEditedEvent(EditEvent editEvent) {
 
         Events originalEvent = null;
-        if(editEvent.getViewMsg()==null)
+        if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success)))
         {
             //Success
-
             removeNoDataOrLoadingObj();
-
             int index = -1;
             for (Events e : eventsList) {
                 if (e.getEventId() == editEvent.getEvents().getEventId()) {
@@ -398,8 +396,9 @@ public class MyEvents extends AppCompatActivity {
             if(index!=-1 && originalEvent!=null)
                 updateEditedEvent(editEvent.getEvents(), index);
         }
-        else{
-            //fail
+        else if(editEvent.getViewMsg().equals(getString(R.string.edit_event_fail)) ||
+                editEvent.getViewMsg().equals(getString(R.string.edit_event_server_error))){
+
             Toast.makeText(this, "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
         }
     }
@@ -409,7 +408,6 @@ public class MyEvents extends AppCompatActivity {
         editedEvent.setViewMessage(null);
         eventsList.set(index, editedEvent);
         bindAdapter(adapter, this.eventsList);
-
         adapter.notifyDataSetChanged();
     }
 

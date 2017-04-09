@@ -144,6 +144,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private LinearLayout createOrSaveLinearlayout;
     private TextView createOrSaveTextView;
     private  ObjectAnimator animator;
+    private ImageView loadingImage;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -194,7 +195,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         createOrSaveTextView = (TextView) view.findViewById(R.id.create_save_loading_text_view);
 
-        createProgressDialog();
+        loadingImage = (ImageView) view.findViewById(R.id.loadingImage);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
@@ -852,19 +853,12 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
         EventBusService.getInstance().unregister(this);
     }
-    public void createProgressDialog()
-    {
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Event...");
-        progressDialog.setCancelable(false);
-    }
 
     public void setProgressDialog() {
         createEventLinearLayout.setVisibility(View.VISIBLE);
         createOrSaveLinearlayout.setVisibility(View.GONE);
 
-        animator = ObjectAnimator.ofFloat(createEventLinearLayout, "rotation", 0, 360);
+        animator = ObjectAnimator.ofFloat(loadingImage, "rotation", 0, 360);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setInterpolator(new LinearInterpolator());
         animator.setDuration(1000);

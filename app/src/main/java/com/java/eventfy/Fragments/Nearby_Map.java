@@ -110,7 +110,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     public void setUserOnMap(Location location){
 
-        googleMap.clear();
         userCurrentLocation = location;
 
         if(userMarker !=null)
@@ -152,7 +151,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
                 if(markerList.contains(marker)){
-                    updateEventinfo(markerList.indexOf(marker));
+                    updateEventInfo(markerList.indexOf(marker));
                 }
                 return false;
             }
@@ -185,10 +184,10 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public void updateEventinfo(int index)  {
+    public void updateEventInfo(int index)  {
         indexForOnclickEvent = index;
         if(eventAddress!=null)
-        eventAddress.setText(eventLst.get(index).getLocation().getName().toString());
+            eventAddress.setText(eventLst.get(index).getLocation().getName().toString());
 
         this.index = index;
         if(!eventLst.get(index).getEventImageUrl().equals("default"))
@@ -200,12 +199,10 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
               else{
                  eventImage.setImageResource(R.drawable.logo);
         }
-
-
             eventDistance.setText(eventLst.get(index).getEventAwayDistanve());
             eventDuration.setText(eventLst.get(index).getEventAwayDuration());
 
-        eventInfoLinearLayout.setOnClickListener(new OnClickListener() {
+            eventInfoLinearLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 View sharedView = eventImage;
@@ -332,7 +329,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         this.googleMap = googleMap;
 
        if(eventLst!=null && eventLst.get(eventLst.size()-1).getViewMessage().equals(getString(R.string.home_no_data)) && userCurrentLocation!=null){
-            setUserOnMap(userCurrentLocation);
+           setUserOnMap(userCurrentLocation);
             googleMapSetting(userCurrentLocation);
         }
     }
@@ -346,7 +343,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             if(eventLst.get(eventLst.size()-1).getViewMessage()==null){
                 initializeMap(nearbyEventData.getLocation());
                 setUserOnMap(nearbyEventData.getLocation());
-                updateEventinfo(0);
+                updateEventInfo(0);
                 eventInfoLinearLayout.setVisibility(View.VISIBLE);
                 eventSearchLinearLayout.setVisibility(View.GONE);
             }else if(nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
@@ -360,6 +357,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                         eventSearchMiles.setProgress(signUp.getVisibilityMiles());
                         //eventVisibilityRadius.setText(signUp.getVisibilityMiles());
                         if(googleMap!=null){
+                            googleMap.clear();
                             setUserOnMap(userCurrentLocation);
                             googleMapSetting(userCurrentLocation);
                         }

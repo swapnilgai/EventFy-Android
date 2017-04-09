@@ -187,15 +187,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             @Override
             public void onClick(View v) {
-                //Find EditText view
-                Log.e("close clicked ","(((((((");
-                //Clear the text from EditText view
-
-//                //Clear query
                 search.setQuery("", false);
-//                //Collapse the action view
                 search.onActionViewCollapsed();
-//                //Collapse the search widget
                 //search.collapseActionView();
             }
         });
@@ -452,8 +445,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     public void storeNotificationId(NotificationId notificationId){
-        Log.e("in put notification id ", " [[[[ "+notificationId );
-
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.notofocationId), MODE_PRIVATE);
         editor = mPrefs.edit();
         editor.putString(getString(R.string.notofocationId), notificationId.getRegId());
@@ -462,10 +453,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     public String getNotificationId(){
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.notofocationId), MODE_PRIVATE);
-
         String json = mPrefs.getString(getString(R.string.notofocationId), "");
-
-        Log.e("in get notification id ", " [[[[ "+json);
         return json;
     }
 
@@ -485,25 +473,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
 
-    public void storeUserObject(SignUp signUp)
-    {
-
+    public void storeUserObject(SignUp signUp) {
         Log.e("Storing user object1 : ", "     "+signUp.getViewMessage());
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         editor = mPrefs.edit();
-
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
-
         Log.e("Storing user object2 : ", "     "+json);
-
         editor.putString(getString(R.string.userObject), json);
-
         editor.commit();
-
     }
-
-
 
     public void storeRemoteUserObject(SignUp signUp)
     {

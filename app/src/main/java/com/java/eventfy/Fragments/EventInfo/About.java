@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -421,7 +422,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         setUserOnMap(userCurrentLocation);
         googleMapSetting(event.getLocation());
 
-
     }
 
     public void setUserOnMap(Location location){
@@ -686,4 +686,18 @@ public class About extends Fragment implements OnMapReadyCallback {
         progressDialog.dismiss();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            // called here
+            Log.e("About : ", " +++++ "+isVisibleToUser);
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 }
