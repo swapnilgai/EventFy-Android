@@ -13,7 +13,7 @@
             app:layout_scrollFlags="scroll|enterAlways"
             android:elevation="4dp"
             android:titleTextColor="@color/white"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            android:theme="@style/ToolbarStyle"/>
 
 
     <android.support.v4.widget.SwipeRefreshLayout

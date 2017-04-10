@@ -47,7 +47,7 @@ public class GetUserEvent  extends AsyncTask<Void, Void, Void> {
         try  {
             Log.e("event is : ", " " + url);
             Gson g = new Gson();
-
+            Log.e("" , " : " + g.toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());

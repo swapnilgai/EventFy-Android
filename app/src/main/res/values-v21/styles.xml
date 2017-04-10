@@ -9,7 +9,7 @@
                 <item name="windowNoTitle">true</item>
                 <item name="windowActionBar">false</item>
                 <item name="android:colorBackground">@color/white</item>
-                <item name="android:textColorPrimary">@color/colorAccent</item>
+                <item name="android:textColorPrimary">@color/colorErrorRed</item>
                 <item name="android:windowBackground">@color/white</item>
                 <item name="android:colorForeground">@color/foreground_material_dark</item>
                 <item name="android:textColorPrimaryInverse">@color/primary_text_material_dark

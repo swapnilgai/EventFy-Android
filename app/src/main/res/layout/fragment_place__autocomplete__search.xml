@@ -7,9 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="2dp"
-    android:layout_marginBottom="2dp"
-    android:paddingLeft="1pt"
-    android:paddingRight="1dp"
+        android:layout_marginBottom="2dp"
+        android:paddingLeft="1pt"
+        android:paddingRight="1dp"
         android:background="@color/white"
         android:orientation="vertical">
 
@@ -38,11 +38,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:layout_weight="1.0"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="55dp"
                     android:layout_alignParentBottom="true"
                     android:gravity="center"
+                    android:background="@color/map_transperant"
                     android:orientation="horizontal">
 
                     <android.support.design.widget.TextInputLayout
@@ -78,9 +79,12 @@
                         android:layout_height="match_parent"
                         android:layout_marginRight="8dp"
                         android:src="@drawable/places_ic_clear"
-                        android:text="10 miles"
+                        android:text="10 Miles"
                         android:textSize="16sp"
                         android:gravity="center"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="2dp"
                          />
                 </LinearLayout>
 
@@ -190,10 +194,11 @@
                                 android:background="@android:color/transparent"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                                 android:paddingLeft="45dp"
-                                android:paddingTop="8dp"
-                                android:paddingBottom="8dp"
+                                android:paddingTop="10dp"
+                                android:paddingBottom="10dp"
                                 android:paddingRight="40dp"
                                 android:scrollbars="vertical"
+                                android:textColor="@color/transparent_black"
                                 android:layout_alignParentTop="true"
                                 android:layout_alignParentLeft="true"
                                 android:layout_alignParentStart="true"/>
@@ -204,6 +209,7 @@
                                 android:layout_alignParentRight="true"
                                 android:scaleType="fitCenter"
                                 android:layout_height="23dp"
+                                android:visibility="gone"
                                 android:layout_centerVertical="true"
                                 android:paddingRight="8dp"
                                 android:src="@drawable/places_ic_clear" />

@@ -444,12 +444,8 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
     }
 
     public void setUserOnMap(Location location){
-
         userCurrentLocation = location;
-
-
         myLaLn = new LatLng(location.getLatitude(), location.getLongitude());
-
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLaLn);
 
@@ -457,11 +453,8 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 //            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(image));
 //        else
             markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
-
-        markerOptions.title(signUp.getUserName());
-        markerLst.add(googleMap.addMarker(markerOptions));
-
-
+            markerOptions.title(signUp.getUserName());
+            markerLst.add(googleMap.addMarker(markerOptions));
     }
 
 

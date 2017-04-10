@@ -26,7 +26,6 @@ import java.util.Calendar;
 
 public class SignUpActivity extends AppCompatActivity implements OnDateSetListener {
 
-    private static final String TAG = "SignupActivity";
 
     private EditText nameText;
     private EditText emailText;
@@ -83,7 +82,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         dobtext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
-                datePickerDialog.setYearRange(1910, calendar.get(Calendar.YEAR) - 10);
+                datePickerDialog.setYearRange(1910, calendar.get(Calendar.YEAR) - 13);
                 datePickerDialog.setCloseOnSingleTapDay(isCloseOnSingleTapDay());
                 datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
             }
@@ -100,7 +99,6 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         }
     }
 
-
     public SignUp createSignUpObjectFromFormDetail(){
 
         signUp.setUserId(emailText.getText().toString());
@@ -112,9 +110,6 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         signUp.setVisibilityMiles(10);
         return signUp;
     }
-
-
-
 
     private boolean isVibrate() {
         return false;
@@ -129,8 +124,6 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     }
 
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-        Log.e("date time ; ", ""+dobtext);
-
         dobString = year + "-" + month + "-" + day;
 
         signUp.setDob(dobString);
@@ -152,9 +145,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
     protected void onPause() {
         super.onPause();
         EventBusService.getInstance().unregister(this);
-
     }
-
 
     @Subscribe
     public void getUserObject(SignUp signUp)

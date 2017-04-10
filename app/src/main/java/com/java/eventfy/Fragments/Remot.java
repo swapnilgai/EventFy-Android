@@ -61,7 +61,6 @@ public class Remot extends Fragment {
     private Fragment search_place;
     private static final String context_id = "22";
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
-    static String TAG = "Search bar called";
     private String flag;
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;

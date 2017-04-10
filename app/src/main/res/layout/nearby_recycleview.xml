@@ -37,7 +37,7 @@
 
 
             <LinearLayout
-                android:layout_width="120dp"
+                android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:paddingTop="8dp"
@@ -68,7 +68,7 @@
                        android:layout_marginLeft="8dp"
                        android:text="Event Location"
                        android:textColor="@color/white"
-                       android:textSize="11sp" />
+                       android:textSize="14sp" />
                        android:textColor="@android:color/holo_orange_dark"/>
                </LinearLayout>
                 </LinearLayout>

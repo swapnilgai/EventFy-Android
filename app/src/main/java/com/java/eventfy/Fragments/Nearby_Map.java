@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -144,8 +143,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             setEventIconGoogleMap.setIcon(markerOptions, getContext(), events.getEventCategory());
             markerList.add(googleMap.addMarker(markerOptions));
         }
-
-
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
@@ -237,7 +234,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         eventStartDate = (RobotoTextView) view.findViewById(R.id.map_view_event_info_date);
         eventDuration = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
         eventDistance =  (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
-
         eventSearchMiles = (SeekBar) view.findViewById(R.id.nearby_map_view_event_visibility_miles);
         eventVisibilityRadius = (TextView) view.findViewById(R.id.nearby_map_view_visibility_miles_radius);
         eventSearch = (Button) view.findViewById(R.id.nearby_map_view_event_search_btn);
@@ -348,7 +344,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 eventSearchLinearLayout.setVisibility(View.GONE);
             }else if(nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
             {
-                Gson g = new Gson();
                 if(nearbyEventData.getLocation()!=null && nearbyEventData.getLocation().getLongitude()!= 0.0 && nearbyEventData.getLocation().getLatitude()!= 0.0){
                     getUserObject();
                     if(signUp!=null){
@@ -365,15 +360,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 }
             }
         }
-
     }
 
-    @Subscribe
-    public void setFlag(String flag)
-    {
-        this.flag = flag;
-    }
-    // event bus subscribtion
     @Subscribe
     public void getMyLatLang(LocationNearby loaLocationNearby) {
         if(loaLocationNearby!=null && loaLocationNearby.getLocation()!= null) {
@@ -384,22 +372,18 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     }
 
     public void updateAwayOnUi(Away awayObj){
-
         if(eventLst.get(index).getEventId() == awayObj.getEvents().getEventId()){
             eventDistance.setText(awayObj.getDistance());
             eventDuration.setText(awayObj.getDuration());
         }
     }
 
-
-    public void getUserObject()
-    {
+    public void getUserObject() {
         SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
-        Log.e("home nearby ", "***** "+json);
     }
 
 
@@ -422,7 +406,13 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
         } catch (NullPointerException e) {
         } catch (OutOfMemoryError o) {
+            result.recycle();
+            result = null;
+            System.gc();
+
         }
+        result.recycle();
+        System.gc();
         return result;
     }
 
@@ -455,7 +445,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                      signUp.setLocation(userCurrentLocation);
                  }
                     setUserOnMap(signUp.getLocation());
-
             }
         }
 

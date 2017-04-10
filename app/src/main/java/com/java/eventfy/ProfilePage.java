@@ -3,7 +3,6 @@ package com.java.eventfy;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.ActivityOptions;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,6 +41,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devspark.robototextview.widget.RobotoTextView;
+import com.fourmob.datetimepicker.date.DatePickerDialog;
+import com.fourmob.datetimepicker.date.DatePickerDialog.OnDateSetListener;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.ImageViewEntity;
 import com.java.eventfy.Entity.SignUp;
@@ -57,27 +58,36 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+import org.joda.time.format.DateTimeParser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import at.markushi.ui.CircleButton;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfilePage extends AppCompatActivity {
+import static com.java.eventfy.SignUpActivity.DATEPICKER_TAG;
 
-    private EditText usetStatus;
-    private EditText usetName;
-    private EditText usetEmail;
-    private EditText usetDob;
+public class ProfilePage extends AppCompatActivity implements OnDateSetListener {
+
+    private EditText userStatus;
+    private EditText userName;
+    private EditText userEmail;
+    private EditText userDob;
     private SeekBar userVisibilityMiles;
     private RadioGroup userVisibilityMode;
     private SignUp signUp;
     private RadioButton visibilityModeVisible, visibilityModeInVisible, visibilityModeDoNotDisturb;
     private Button saveButton;
     private UpdateUserDetail updateUserDetail;
-    private ProgressDialog progressDialog;
     private  LinearLayout linearLayoutStatus;
     private  Bitmap eventImageBM;
     private CircleImageView userProfilePic;
@@ -92,6 +102,7 @@ public class ProfilePage extends AppCompatActivity {
     private  ObjectAnimator animator;
     private LinearLayout updateProfileLinearLayout;
     private ImageView loadingImage;
+    private String dobString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +112,10 @@ public class ProfilePage extends AppCompatActivity {
         EventBusService.getInstance().register(this);
 
         userVisibilityMode = (RadioGroup) findViewById(R.id.user_visibility_mode);
-        usetStatus = (EditText) findViewById(R.id.user_status);
-        usetName = (EditText) findViewById(R.id.user_name);
-        usetEmail = (EditText) findViewById(R.id.user_id);
-        usetDob = (EditText) findViewById(R.id.user_dob);
+        userStatus = (EditText) findViewById(R.id.user_status);
+        userName = (EditText) findViewById(R.id.user_name);
+        userEmail = (EditText) findViewById(R.id.user_id);
+        userDob = (EditText) findViewById(R.id.user_dob);
 
         userVisibilityMiles =  (SeekBar) findViewById(R.id.user_visibility_miles);
         saveButton = (Button) findViewById(R.id.btn_save_user_profile);
@@ -128,6 +139,11 @@ public class ProfilePage extends AppCompatActivity {
 
         changePasswordLink = (TextView) findViewById(R.id.link_chnage_password);
 
+        final Calendar calendar = Calendar.getInstance();
+
+        final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(ProfilePage.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), false);
+
+
         final Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setTitle("My Account");
@@ -149,7 +165,18 @@ public class ProfilePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(validate()){
+                boolean isUser13plus = false;
+                if(dobString!=null)
+                    isUser13plus = checkUSerIs13Plus(dobString);
+
+                Log.e("dob str  : ", ""+dobString);
+                Log.e("13 Plus  : ", ""+isUser13plus);
+                userDob.setError(null);
+                if(isUser13plus) {
+                    dobErrorMsg.setVisibility(View.VISIBLE);
+                    userDob.setError("Minimum age to SignUp is 13");
+                }
+                else if(validate()){
                     getUpdatedUserData();
                     serverCallToUpdateUserDetail();
                 }
@@ -265,6 +292,15 @@ public class ProfilePage extends AppCompatActivity {
             }
         });
 
+        userDob.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                datePickerDialog.setYearRange(1910, calendar.get(Calendar.YEAR) - 13);
+                datePickerDialog.setCloseOnSingleTapDay(true);
+                datePickerDialog.show(getSupportFragmentManager(), DATEPICKER_TAG);
+            }
+        });
+
     }
 
     public void getVisibilityMode() {
@@ -292,11 +328,10 @@ public class ProfilePage extends AppCompatActivity {
     }
 
     public void setUserData(SignUp signUp) {
-
-        usetStatus.setText(signUp.getStatus());
-        usetName.setText(signUp.getUserName());
-        usetEmail.setText(signUp.getUserId());
-        usetDob.setText(signUp.getDob());
+        userStatus.setText(signUp.getStatus());
+        userName.setText(signUp.getUserName());
+        userEmail.setText(signUp.getUserId());
+        userDob.setText(DateTimeStringOperations.getInstance().getDateString(signUp.getDob()));
         if(signUp.getIsFacebook().equals("false") && signUp.getFacebookId()==null && signUp.getIsVerified().equals("false")){
             verifyUserAccount.setImageResource(R.drawable.not_verified);
         }
@@ -334,8 +369,6 @@ public class ProfilePage extends AppCompatActivity {
                             userProfilePic.setImageResource(R.drawable.user_image);
                         }
                     });
-
-            Log.e("setting imgae : ", " --- "+signUp.getImageUrl());
         }
 
         userVisibilityMiles.setProgress(signUp.getVisibilityMiles());
@@ -351,13 +384,14 @@ public class ProfilePage extends AppCompatActivity {
 
     public void getUpdatedUserData() {
 
-        signUp.setStatus(usetStatus.getText().toString());
+        signUp.setStatus(userStatus.getText().toString());
 
-        signUp.setUserName(usetName.getText().toString());
+        signUp.setUserName(userName.getText().toString());
 
-        signUp.setUserId(usetEmail.getText().toString());
+        signUp.setUserId(userEmail.getText().toString());
 
-        signUp.setDob(usetDob.getText().toString());
+        if(dobString!=null)
+            signUp.setDob(dobString);
 
         signUp.setVisibilityMiles(userVisibilityMiles.getProgress());
 
@@ -385,8 +419,7 @@ public class ProfilePage extends AppCompatActivity {
             this.signUp = gson.fromJson(json, SignUp.class);
     }
 
-    public void storeUserObject()
-    {
+    public void storeUserObject() {
         Intent in = getIntent();
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
@@ -400,7 +433,6 @@ public class ProfilePage extends AppCompatActivity {
     public void getUserObject(UpdateAccount updateAccount) {
         SignUp signUp = updateAccount.getSignUp();
         dismissProgressDialog();
-        Log.e("acccount update : ", " ******** "+signUp.getViewMessage());
         if(signUp.getViewMessage().equals(R.string.user_account_update_success)) {
             if(signUp.getIsVerified().equals("false")){
                 verifyUserAccount.setImageResource(R.drawable.not_verified);
@@ -604,45 +636,101 @@ public class ProfilePage extends AppCompatActivity {
     public boolean validate() {
         boolean valid = true;
 
-        signUp.setStatus(usetStatus.getText().toString());
+        signUp.setStatus(userStatus.getText().toString());
 
-        signUp.setUserName(usetName.getText().toString());
+        signUp.setUserName(userName.getText().toString());
 
-        signUp.setUserId(usetEmail.getText().toString());
+        signUp.setUserId(userEmail.getText().toString());
 
-        signUp.setDob(usetDob.getText().toString());
+        if(dobString!=null)
+            signUp.setDob(dobString);
 
         signUp.setVisibilityMiles(userVisibilityMiles.getProgress());
 
-        if (usetStatus.getText().toString().isEmpty()) {
-            usetStatus.setError("Status cant be empty");
+        if (userStatus.getText().toString().isEmpty()) {
+            userStatus.setError("Status cant be empty");
             valid = false;
         } else {
-            usetStatus.setError(null);
+            userStatus.setError(null);
         }
-        if (usetDob.getText().toString().isEmpty() || !DateTimeStringOperations.getInstance().checkUSerIs18Plus(signUp.getDob())){
+        if (userDob.getText().toString().isEmpty()){
 
-            if(usetDob.getText().toString().isEmpty()){
-                usetDob.setText("Date of birth cant be empty");
+            if(userDob.getText().toString().isEmpty()){
+                userDob.setText("Date of birth cant be empty");
             }
 
             dobErrorMsg.setVisibility(View.VISIBLE);
-            usetDob.setError("Minimum age to SignUp is 13");
+            userDob.setError("Minimum age to SignUp is 13");
             valid = false;
         }
         else {
-            usetDob.setError(null);
+            userDob.setError(null);
             dobErrorMsg.setVisibility(View.GONE);
         }
 
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(usetEmail.getText().toString()).matches()) {
-            usetEmail.setError(null);
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(userEmail.getText().toString()).matches()) {
+            userEmail.setError(null);
 
         } else {
-            usetEmail.setError("Enter a valid email address");
+            userEmail.setError("Enter a valid email address");
             valid = false;
         }
         return valid;
     }
+
+    @Override
+    public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
+
+        dobString = year + "-" + month + "-" + day;
+
+        userDob.setText(DateTimeStringOperations.getInstance().getDateString(dobString));
+
+    }
+
+
+    public boolean checkUSerIs13Plus(String userDob){
+
+
+        org.joda.time.DateTime dateTimeNow = new org.joda.time.DateTime(DateTimeZone.forID(TimeZone.getDefault().getID()));
+        dateTimeNow = dateTimeNow.plusYears(-13);
+        org.joda.time.DateTime userDobDateTime = convertStringToDateTime(userDob, TimeZone.getDefault().getID());
+
+        boolean b = true;
+        if(dateTimeNow.isBefore(userDobDateTime)){
+            b= true;
+        }
+        else
+            b = false;
+
+        return b;
+    }
+    public DateTime convertStringToDateTime(String date, String timeZone){
+        DateTimeParser[] parsers = {
+                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("MM/dd/yyyy HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy/MM/dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
+                DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
+                DateTimeFormat.forPattern("MM/dd/yyyy").getParser()
+        };
+
+        DateTime out = null;
+     //   try {
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .append(null, parsers)
+                .toFormatter()
+                .withZone(DateTimeZone.forID(timeZone));
+        out = formatter.parseDateTime(date);
+
+//        }catch (Exception e){
+//            toastMsg("Please check date of birth");
+//            userDob.setText(DateTimeStringOperations.getInstance().getDateString(signUp.getDob()));
+//        }
+        return out;
+
+    }
+
 
 }

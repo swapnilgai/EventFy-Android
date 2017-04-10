@@ -8,10 +8,10 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:textColorPrimaryInverse">@color/primary_text_material_dark</item>
-        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
-    <style name="SplashScreenTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="SplashScreenTheme" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
@@ -26,6 +26,7 @@
         <item name="android:paddingTop">5dp</item>
         <item name="android:paddingBottom">5dp</item>
         <item name="android:popupBackground">@color/colorPrimary</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.NoActionBar">
@@ -37,13 +38,13 @@
         <item name="colorControlHighlight">@color/transparent_black</item>
         <item name="android:textColorHint">@color/transparent_black</item>
         <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="FloatingTextLabel" parent="TextAppearance.AppCompat">
         <!-- Hint color and label color in FALSE state -->
         <item name="android:textColorHint">@color/transparent_black</item>
         <item name="android:textSize">19sp</item>
-
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorAccent">@color/transparent_black</item>
         <item name="colorControlNormal">@color/common_google_signin_btn_text_light_focused</item>
@@ -60,22 +61,19 @@
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="colorControlNormal">@color/white</item>
-        <item name="android:background">@color/colorPrimaryDark</item>
+        <!--<item name="android:background">@color/colorPrimaryDark</item>-->
     </style>
 
     <style name="TextLabel" parent="TextAppearance.AppCompat">
-        <!-- Hint color and label color in FALSE state -->
-        <!--<item name="android:textColorHint">@color/Color Name</item>-->
         <item name="android:textSize">18sp</item>
         <item name="android:textColorHint">@color/common_google_signin_btn_text_light_focused</item>
-        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
         <item name="colorAccent">@color/common_google_signin_btn_text_light_focused</item>
-        <!--<item name="colorControlNormal">@color/Color Name</item>-->
-        <!--<item name="colorControlActivated">@color/Color Name</item>-->
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="temp" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary_material_light_1</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 
     <style name="Theme.Transparent" parent="Base.Animation.AppCompat.Dialog">
@@ -83,6 +81,7 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <!--<item name="android:backgroundDimEnabled">true</item>-->
         <!--<item name="android:backgroundDimAmount">0.3</item>-->
+        <item name="actionMenuTextColor">@android:color/white</item>
 
     </style>
 

@@ -1,7 +1,5 @@
 package com.java.eventfy.utils;
 
-import android.util.Log;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -148,33 +146,8 @@ public class DateTimeStringOperations {
         else
         b = true;
 
-        Log.e("user is 13+ ", " ********* "+b);
         return b;
     }
-
-    public String convertStringToDateTime(String dateTime){
-
-        DateTimeParser[] parsers = {
-                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
-                DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
-        };
-
-        DateTime dTime = new DateTime();
-
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                .append(null, parsers)
-                .toFormatter()
-                .withZone(dTime.getZone());
-
-        dTime =  formatter.parseDateTime(dateTime);
-
-        Date date =  dTime.toDate();
-
-        Log.e("date obj = ", "  :   "+date);
-
-        return date.toString();
-    }
-
 
     public DateTime convertStringToDateTimeObj(String dateTime){
 
@@ -193,9 +166,7 @@ public class DateTimeStringOperations {
         dTime =  formatter.parseDateTime(dateTime);
 
         Date date =  dTime.toDate();
-
-        Log.e("date obj = ", "  :   "+date);
-
+        
         return dTime;
     }
 

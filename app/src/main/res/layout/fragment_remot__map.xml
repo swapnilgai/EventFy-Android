@@ -4,9 +4,236 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/remot_map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        app:cardCornerRadius="2dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/remote_map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/nearby_map_view_event_info_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_margin="8dp"
+                app:cardCornerRadius="2dp"
+                android:elevation="10dp"
+                android:layout_alignParentTop="true"
+                android:visibility="gone"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingTop="8dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/map_view_event_info_image_view"
+                        android:layout_width="75dp"
+                        android:layout_height="77dp"
+                        android:layout_gravity="center_vertical"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo"
+                        />
+
+
+                    <LinearLayout
+                        android:id="@+id/map_view_event_info_linear_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+
+                        <com.devspark.robototextview.widget.RobotoTextView
+                            android:id="@+id/map_view_event_info_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:text="Sun 12, 8:30 pm"
+                            android:textSize="12sp" />
+
+                        <com.devspark.robototextview.widget.RobotoTextView
+                            android:id="@+id/map_view_event_info_event_location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine"
+                            android:maxLines="2"
+                            android:text="Event Location duabshdfb asd basbdhabb"
+                            android:textColor="@color/cardview_dark_background"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginTop="4dp"
+                            android:background="@color/date_picker_view_animator" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:orientation="horizontal">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="20dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center_vertical"
+                                android:elevation="20dp"
+                                android:fitsSystemWindows="true"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/ic_arrow_drop_down_black_18dp"
+                                app:civ_border_color="@color/transparent_black"
+                                app:civ_border_width="1dp"
+                                app:layout_collapseMode="parallax" />
+
+                            <com.devspark.robototextview.widget.RobotoTextView
+                                android:id="@+id/map_view_event_info_event_away_distance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="6dp"
+                                android:layout_weight="1"
+                                android:text="2 Mile"
+                                android:textSize="12sp" />
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:elevation="20dp"
+                                android:fitsSystemWindows="true"
+                                android:scaleType="centerCrop"
+                                android:transitionName="event_transition"
+                                android:src="@drawable/ic_directions_car_black_24dp"
+                                app:civ_border_color="@color/transparent_black"
+                                app:civ_border_width="1dp"
+                                app:layout_collapseMode="parallax" />
+
+                            <com.devspark.robototextview.widget.RobotoTextView
+                                android:id="@+id/map_view_event_info_event_away_duration"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="8dp"
+                                android:layout_weight="1"
+                                android:text="30 min"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <!--<android.support.v7.widget.CardView-->
+            <!--android:id="@+id/nearby_map_view_filter_card_view"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:cardCornerRadius="2dp"-->
+            <!--android:layout_margin="8dp"-->
+            <!--android:elevation="50dp"-->
+            <!--android:background="#00ffffff"-->
+            <!--&gt;-->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:background="@color/map_transperant"
+                android:layout_alignParentTop="true"
+                android:id="@+id/nearby_map_view_filter_card_view"
+                >
+                <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1.0"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_marginTop="150dp"-->
+                <!--android:background="#00FFFFFF"-->
+                <!--android:orientation="horizontal">-->
+
+                <com.devspark.robototextview.widget.RobotoTextView
+                    android:id="@+id/nearby_map_view_visibility_miles_radius"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/places_ic_clear"
+                    android:text="10 miles"
+                    android:textSize="20sp"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:background="#00FFFFFF"
+
+                    />
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center">
+
+                    <SeekBar
+                        android:id="@+id/nearby_map_view_event_visibility_miles"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="2dp"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:hint="End Date"
+                        android:padding="8dp"
+                        android:inputType="textCapWords|date"
+                        android:max="40"
+                        android:progress="1"
+                        android:textAlignment="center"
+                        android:background="#00FFFFFF"
+                        android:textColor="@color/colorPrimaryDark" />
+                </android.support.design.widget.TextInputLayout>
+
+
+                <!--</LinearLayout>-->
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/nearby_map_view_event_search_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="37dp"
+                    android:layout_marginTop="16dp"
+                    android:paddingLeft="60dp"
+                    android:paddingRight="60dp"
+                    android:background="@drawable/content_main2_button_color"
+                    android:text="Search"
+
+                    android:layout_gravity="center"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <!--</android.support.v7.widget.CardView>-->
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

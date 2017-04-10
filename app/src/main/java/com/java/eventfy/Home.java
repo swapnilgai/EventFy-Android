@@ -101,38 +101,24 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         setupViewPager(viewPager);
-        Log.e("user image ", ""+userImage);
-
-        View headerLayout =
-                navigationView.getHeaderView(0);
-
-
+        View headerLayout = navigationView.getHeaderView(0);
         userName = (TextView) headerLayout.findViewById(R.id.user_name_drawer);
         userImage = (CircleImageView) headerLayout.findViewById(R.id.user_image_drawer);
-
-
         userName.setText(signUp.getUserName());
-
         setNavigationDrawerUserData(signUp);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
                 drawer, toolbar, R.string.navigation_drawer_opened, R.string.navigation_drawer_closed);
         drawer.setDrawerListener(toggle);
         navigationView.setNavigationItemSelectedListener(this);
-
-
         tabLayout.setupWithViewPager(viewPager);
         deviceDimensions();
         //initServices();
         toggle.syncState();
         setupTabIcons();
-
     }
 
     public void setNavigationDrawerUserData(SignUp signUp){
-
         if(signUp.getImageUrl()!=null && signUp.getImageUrl().equals("default"))
             userImage.setImageResource(R.drawable.user_image);
         else
@@ -152,33 +138,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     {    eventBus = EventBusService.getInstance();
     }
 
-    public void registerEventBusInstance()
-    {
+    public void registerEventBusInstance() {
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
     }
 
-
-//    private void initServices() {
-//        // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-//
-//        this.startService(new Intent(this, com.java.eventfy.Services.UserCurrentLocation.class));
-//    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
-
             getMenuInflater().inflate(R.menu.homemenu, menu);
-
-
             SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
            final SearchView search = (SearchView) menu.findItem(R.id.search_home).getActionView();
-
-           // search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
-
+        // search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
         // Get the search close button image view
         ImageView closeButton = (ImageView)search.findViewById(R.id.search_close_btn);
 
@@ -192,8 +162,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 //search.collapseActionView();
             }
         });
-
-
 
             search.setOnQueryTextListener(new OnQueryTextListener() {
 
@@ -258,7 +226,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         nearbyFragment = new Nearby();
         adapter.addFrag(nearbyFragment, "Nearby");
-        adapter.addFrag(new Remot(), "Remot");
+        adapter.addFrag(new Remot(), "Remote");
         adapter.addFrag(new Notification(), "Notification");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
@@ -460,15 +428,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     public void storeUserLocation(Location location)
     {
-        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
-        SharedPreferences.Editor editor = mPrefs.edit();
         if(signUp!=null && signUp.getUserId()!=null && signUp.getToken()!=null){
+            SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+            SharedPreferences.Editor editor = mPrefs.edit();
             signUp.setLocation(location);
             Gson gson = new Gson();
             String json = gson.toJson(signUp);
             editor.putString(getString(R.string.userObject), json);
             editor.commit();
-            Log.e("user object ", " LLLLLLL "+json);
+            Log.e("user location ", " LLLLLLL "+json);
     }
     }
 
@@ -545,7 +513,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
          nearbyFragment.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-             final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)  nearbyFragment.recyclerView.getLayoutManager();
+
+             LinearLayoutManager linearLayoutManager = (LinearLayoutManager)  nearbyFragment.recyclerView.getLayoutManager();
 
              @Override
              public void onScrolled(RecyclerView recyclerView, int dx, int dy){
