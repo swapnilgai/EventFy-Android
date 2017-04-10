@@ -161,6 +161,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             }
         });
 
+
         fragment_switch_button.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -421,21 +422,22 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         if(locationNearby instanceof LocationNearby) {
             this.locationNearby = locationNearby;
-            if(signUp!=null && signUp.getLocation()!=null) {
-                signUp.getLocation().setLatitude(latLng.latitude);
-                signUp.getLocation().setLongitude(latLng.longitude);
-                signUp.getLocation().setDistance(signUp.getVisibilityMiles());
 
-            }else if(locationNearby!=null && locationNearby.getLocation()!=null){
+            if(locationNearby!=null && locationNearby.getLocation()!=null){
                 Location location = new Location();
                 location.setLatitude(locationNearby.getLocation().getLatitude());
                 location.setLongitude(locationNearby.getLocation().getLongitude());
-                Log.e("sign up : ", " "+signUp);
                 if(signUp == null)
                     location.setDistance(10);
                 else
                     location.setDistance(signUp.getVisibilityMiles());
                 signUp.setLocation(location);
+            }
+                else if(signUp!=null && signUp.getLocation()!=null) {
+                    signUp.getLocation().setLatitude(locationNearby.getLocation().getLatitude());
+                    signUp.getLocation().setLongitude(locationNearby.getLocation().getLatitude());
+                    signUp.getLocation().setDistance(signUp.getVisibilityMiles());
+
             }
 
             fragment_switch_button.setVisibility(View.GONE);

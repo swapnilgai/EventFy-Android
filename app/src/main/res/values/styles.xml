@@ -7,8 +7,11 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:textColorPrimaryInverse">@color/primary_text_material_dark</item>
+        <item name="android:textColorPrimaryInverse">@color/white</item>
         <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/colorPrimaryDark</item>
+        <item name="android:textColorSecondaryInverse">@color/white</item>
     </style>
 
     <style name="SplashScreenTheme" parent="AppTheme">

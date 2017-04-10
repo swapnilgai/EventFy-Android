@@ -9,7 +9,6 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -23,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -181,9 +181,6 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(CreatePublicEvent.this, addImage);
                 //inflating menu from xml resource
-
-//                    popup.inflate(R.menu.profilepicturemenu);
-
                 popup.getMenuInflater()
                         .inflate(R.menu.profilepicturemenu, popup.getMenu());
                 //adding click listener
@@ -223,13 +220,7 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
 
                                 Intent intent = new Intent(CreatePublicEvent.this, ImageFullScreenMode.class);
                                 intent.putExtra(getString(R.string.image_view_for_fullscreen_mode), imageViewEntity);
-
                                 startActivity(intent);
-
-
-                                // EventBusService.getInstance().post(imageViewEntity);
-                                //EventBusService.getInstance().unregister(this);
-
                                 break;
 
                         }
@@ -267,8 +258,8 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-         createEventFragment1 = new CreateEventFragment1();
-         createEventFragment2 = new CreateEventFragment2();
+        createEventFragment1 = new CreateEventFragment1();
+        createEventFragment2 = new CreateEventFragment2();
         Bundle bundle = new Bundle();
         bundle.putSerializable(getString(R.string.event_type_value), category);
         bundle.putSerializable(getString(R.string.event_to_edit_eventinfo), event);
@@ -332,6 +323,7 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
         if (requestCode == PICK_IMAGE_ID) {
             Uri selectedImage = ImagePicker.getImageFromResult(this, resultCode, data);
             dest = beginCrop(selectedImage);
+            Log.e("destination is : ", " IIIMMMM "+dest);
         } else if (requestCode == Crop.REQUEST_CROP) {
             handleCrop(resultCode, data, dest);
         }
@@ -348,10 +340,7 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
     }
 
     private void handleCrop(int resultCode, Intent result, Uri destination) {
-
-
         if (resultCode == RESULT_OK) {
-
             eventImageBM = decodeBitmap(this, destination, 3);
             eventImageIV.setImageBitmap(eventImageBM);
             EventBusService.getInstance().post(eventImageBM);
@@ -363,8 +352,6 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
 
 
     private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
-        Options options = new Options();
-        options.inSampleSize = sampleSize;
 
         AssetFileDescriptor fileDescriptor = null;
         try {
@@ -373,14 +360,53 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
             e.printStackTrace();
         }
 
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
         Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
                 fileDescriptor.getFileDescriptor(), null, options);
 
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, 300, 200);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
+                fileDescriptor.getFileDescriptor(), null, options);
+
+        Log.e("height ", ""+actuallyUsableBitmap.getHeight());
+
+        Log.e("width ", ""+actuallyUsableBitmap.getWidth());
+
+        Log.e("size ", ""+actuallyUsableBitmap.getByteCount());
 
         return actuallyUsableBitmap;
     }
     // Crop image end
 
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
 
     @Override
     protected void onResume() {

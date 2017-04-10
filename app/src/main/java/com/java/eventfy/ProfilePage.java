@@ -11,7 +11,6 @@ import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -363,6 +362,10 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
                             imageDrawable.setCircular(true);
                             imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
                             userProfilePic.setImageDrawable(imageDrawable);
+                            imageBitmap.recycle();
+                            imageBitmap=null;
+                            System.gc();
+
                         }
                         @Override
                         public void onError() {
@@ -464,14 +467,6 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
             updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
-
-
-//    public void setProgressDialog() {
-//        progressDialog = new ProgressDialog(this);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setMessage("Updating...");
-//        progressDialog.setCancelable(false);
-//    }
 
     public void startProgressDialog() {
         saveButton.setVisibility(View.GONE);
@@ -602,8 +597,6 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
 
 
     private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
-        Options options = new Options();
-        options.inSampleSize = sampleSize;
 
         AssetFileDescriptor fileDescriptor = null;
         try {
@@ -612,11 +605,46 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
             e.printStackTrace();
         }
 
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
         Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
                 fileDescriptor.getFileDescriptor(), null, options);
 
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, 300, 200);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
+                fileDescriptor.getFileDescriptor(), null, options);
 
         return actuallyUsableBitmap;
+    }
+    // Crop image end
+
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
     // Crop image end
 
@@ -717,17 +745,17 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
         };
 
         DateTime out = null;
-     //   try {
+        try {
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                 .append(null, parsers)
                 .toFormatter()
                 .withZone(DateTimeZone.forID(timeZone));
         out = formatter.parseDateTime(date);
 
-//        }catch (Exception e){
-//            toastMsg("Please check date of birth");
-//            userDob.setText(DateTimeStringOperations.getInstance().getDateString(signUp.getDob()));
-//        }
+        }catch (Exception e){
+            toastMsg("Please enter valid date of birth");
+            userDob.setText(DateTimeStringOperations.getInstance().getDateString(signUp.getDob()));
+        }
         return out;
 
     }

@@ -9,7 +9,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -383,8 +382,6 @@ public class Comment extends Fragment {
 
 
     private static Bitmap decodeBitmap(Context context, Uri theUri, int sampleSize) {
-        Options options = new Options();
-        options.inSampleSize = sampleSize;
 
         AssetFileDescriptor fileDescriptor = null;
         try {
@@ -393,13 +390,45 @@ public class Comment extends Fragment {
             e.printStackTrace();
         }
 
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+
         Bitmap actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
                 fileDescriptor.getFileDescriptor(), null, options);
 
-        Log.d("img : ", options.inSampleSize + " sample method bitmap ... " +
-                actuallyUsableBitmap.getWidth() + " " + actuallyUsableBitmap.getHeight());
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, 300, 200);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
+                fileDescriptor.getFileDescriptor(), null, options);
 
         return actuallyUsableBitmap;
+    }
+    // Crop image end
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
     // Crop image end
@@ -479,12 +508,7 @@ public class Comment extends Fragment {
 
         if (isVisibleToUser) {
             // called here
-            Log.e("Comment : ", " +++++ "+isVisibleToUser);
-            Log.e("Comment size: ", " +++++ "+addCommentsList.size());
             if(addCommentsList.size()<=1 && noDataOrLoadingObjCheck(0)){
-              //  removeNoDataOrLoadingObj();
-              //  addLoadingAtStrat();
-                Log.e("Comment inside: ", " +++++ "+addCommentsList.size());
                 getEventCommentServerCall();
             }
         }

@@ -391,7 +391,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     startService();
                 } else {
-                    toastMsg("Error, Unable to get yout location");
+                    toastMsg("Error, Unable to get you'r location");
                 }
                 return;
             }
@@ -400,7 +400,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     enableGpsPopUpOption();
                 } else {
-                    toastMsg("Error, Unable to get yout location");
+                    toastMsg("Error, Unable to get you'r location");
                 }
             }
         }
@@ -841,16 +841,11 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     @Override
     public void onPause() {
         super.onPause();
-        if(progressDialog.isShowing())
-            dismissProgressDialog();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(progressDialog.isShowing())
-            dismissProgressDialog();
-
         EventBusService.getInstance().unregister(this);
     }
 
