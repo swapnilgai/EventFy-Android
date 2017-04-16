@@ -389,16 +389,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         setUpMarker();
     }
 
-    public String timeConverter(String timeStr) {
-            float time = Integer.parseInt(timeStr);
-
-        if((time-12)>0)
-            return "PM";
-        else
-            return "AM";
-
-    }
-
     public void setUpMarker()
     {
 
@@ -467,7 +457,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         googleMap.moveCamera(cu);
 
     }
-
 
     public int getZoonValue(int zoomVal) {
 

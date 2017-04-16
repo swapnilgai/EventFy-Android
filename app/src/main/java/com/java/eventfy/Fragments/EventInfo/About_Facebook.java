@@ -579,10 +579,8 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 
         else{
             //TODO Toast error message
-
         }
     }
-
 
     @Subscribe
     public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
@@ -595,7 +593,6 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
             setWishList(events);
         }else{
             //TODO Toast error message
-
         }
     }
 

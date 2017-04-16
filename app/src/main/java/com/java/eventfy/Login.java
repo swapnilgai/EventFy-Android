@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,6 +45,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.java.eventfy.R.string.userObject;
 
 public class Login extends AppCompatActivity  {
 
@@ -205,13 +206,9 @@ public class Login extends AppCompatActivity  {
                                                                 try {
 
                                                                     String jsonresult = String.valueOf(object);
-                                                                    Log.e("signup : ", jsonresult);
-
                                                                     String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
                                                                     String Address = object.getJSONObject("location").getString("name");
-
                                                                     LatLng latLng = getLocationFromAddress(Address);
-
                                                                     signUp = new SignUp();
                                                                     signUp.setUserName(object.getString("name"));
                                                                     signUp.setDob(object.getString("birthday"));
@@ -313,10 +310,6 @@ public class Login extends AppCompatActivity  {
     }
 
     private void serverCallFbLogin(SignUp signUp) {
-
-        Log.e(" ----- ", " -------------- ");
-
-        Log.e("signup : ", new Gson().toJson(signUp));
         LoginManager.getInstance().logOut();
         invalidUsernamePasswordMsg.setVisibility(View.GONE);
         String url = getString(R.string.ip_local)+getString(R.string.login_action_facebook);
@@ -324,7 +317,6 @@ public class Login extends AppCompatActivity  {
         loginAction.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void serverCallLogin(User user) {
-
         invalidUsernamePasswordMsg.setVisibility(View.GONE);
         passwordTemp = user.getPassword();
         securityOperations = new SecurityOperations();
@@ -335,15 +327,14 @@ public class Login extends AppCompatActivity  {
     }
 
     @Subscribe
-    public void getUserObject(SignUp signUp)
-    {
+    public void getUserObject(SignUp signUp) {
         dismissProgressDialog();
         if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.login_success)))
         {
             EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, Home.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.putExtra("user", signUp);
+            intent.putExtra(getString(R.string.userObject), signUp);
             startActivity(intent);
         }
         else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.login_fail))){
@@ -368,16 +359,14 @@ public class Login extends AppCompatActivity  {
     }
 
     private String getUserObject() {
-        SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
+        SharedPreferences mPrefs = getSharedPreferences(getString(userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         //TODO uncomment
-        String json = mPrefs.getString(getString(R.string.userObject), "");
+        String json = mPrefs.getString(getString(userObject), "");
 
         if(json!=null && json.length()<100)
             json = null;
-
-        Log.e("user is : ", ""+json);
 
         return json;
     }

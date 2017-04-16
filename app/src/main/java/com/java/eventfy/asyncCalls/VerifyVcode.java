@@ -1,11 +1,14 @@
 package com.java.eventfy.asyncCalls;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
-import com.java.eventfy.Entity.UserAccount.VerifyAccount;
 import com.java.eventfy.EventBus.EventBusService;
+import com.java.eventfy.R;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -21,18 +24,22 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
     private SignUp signUp;
     private String url;
     private String result;
-    private VerifyAccount verifyAccount;
+    private Context context;
 
-    public VerifyVcode(SignUp signUp, String url) {
+    public VerifyVcode(SignUp signUp, String url, Context context) {
         this.signUp = signUp;
         this.url = url;
-        verifyAccount = new VerifyAccount();
+        this.context = context;
     }
 
     @Override
     protected Void doInBackground(Void... strings) {
 
         try {
+            Log.e("", url);
+
+            Log.e("", new Gson().toJson(signUp));
+
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -46,10 +53,12 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
             ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
             result = rateResponse.getBody();
 
-            signUp.setViewMessage(result);
+        signUp.setViewMessage(result);
+
 
         }catch (Exception e)
         {
+            result = context.getString(R.string.verify_account_success);
         }
         return null;
 
@@ -58,8 +67,11 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
-            // send to signup activity
+        if(result.equals(context.getString(R.string.verify_account_fail)) || result.equals(context.getString(R.string.verify_account_server_error))) {
+            signUp.setViewMessage(result);
+        }else{
+            signUp.setToken(result);
+        }
             EventBusService.getInstance().post(signUp);
     }
 }

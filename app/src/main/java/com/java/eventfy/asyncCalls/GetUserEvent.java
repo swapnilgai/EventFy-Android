@@ -13,10 +13,12 @@ import com.java.eventfy.R;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +49,7 @@ public class GetUserEvent  extends AsyncTask<Void, Void, Void> {
         try  {
             Log.e("event is : ", " " + url);
             Gson g = new Gson();
-            Log.e("" , " : " + g.toJson(signUp));
+            Log.e("user is : " , " : " + g.toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -56,16 +58,22 @@ public class GetUserEvent  extends AsyncTask<Void, Void, Void> {
 
             ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
 
+            HttpStatus status = response.getStatusCode();
+
             Events[] event = response.getBody();
 
-            eventLst = new LinkedList<Events>(Arrays.asList(event));
+            if(status.value() == 200)
+                eventLst = new LinkedList<Events>(Arrays.asList(event));
 
             for(Events e: eventLst){
                 Log.e("event is : ", " " + g.toJson(e));
             }
 
         }catch (Exception e){
-            eventLst = null;
+            eventLst = new ArrayList<Events>();
+            Events events = new Events();
+            events.setViewMessage(context.getString(R.string.home_connection_error));
+            eventLst.add(events);
         }
         return null;
     }
@@ -84,11 +92,6 @@ public class GetUserEvent  extends AsyncTask<Void, Void, Void> {
             eventLst.add(events);
 
        }
-        else if(eventLst!=null && eventLst.size()==0){
-            myEvents.setViewMsg(context.getString(R.string.home_connection_error));
-            events.setViewMessage(myEvents.getViewMsg());
-            eventLst.add(events);
-        }
         myEvents.setEventsList(eventLst);
         EventBusService.getInstance().post(myEvents);
     }

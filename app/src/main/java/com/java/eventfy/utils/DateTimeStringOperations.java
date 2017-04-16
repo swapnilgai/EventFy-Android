@@ -107,10 +107,11 @@ public class DateTimeStringOperations {
 
     public DateTime convertStringToDateTime(String date, String timeZone){
         DateTimeParser[] parsers = {
-                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm").getParser(),
                 DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("MM-dd-yyyy HH:mm").getParser(),
                 DateTimeFormat.forPattern("MM/dd/yyyy HH:mm").getParser(),
                 DateTimeFormat.forPattern("yyyy/MM/dd HH:mm").getParser(),
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
                 DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
                 DateTimeFormat.forPattern("yyyy-dd-MM").getParser(),
                 DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
@@ -131,6 +132,30 @@ public class DateTimeStringOperations {
         return out;
 
     }
+
+
+    public DateTime convertStringToDateTimeSignUp(String date, String timeZone){
+        DateTimeParser[] parsers = {
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
+                DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
+                DateTimeFormat.forPattern("MM/dd/yyyy").getParser()
+        };
+
+        DateTime out = null;
+        //try {
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .append(null, parsers)
+                .toFormatter()
+                .withZone(DateTimeZone.forID(timeZone));
+        out = formatter.parseDateTime(date);
+
+//        }catch (Exception e){
+//
+//        }
+        return out;
+
+    }
+
 
     public boolean checkUSerIs18Plus(String userDob){
 

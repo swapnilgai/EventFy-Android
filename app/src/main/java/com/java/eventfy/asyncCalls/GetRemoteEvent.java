@@ -79,7 +79,7 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
             remoteEventData.setViewMsg(context.getString(R.string.remote_list_success));
         }
 
-        if(eventLst==null){
+        if(eventLst==null || (eventLst!=null && eventLst.size()==0)){
             eventLst = new LinkedList<Events>();
             Events events = new Events();
             events.setViewMessage(context.getString(R.string.home_no_data));

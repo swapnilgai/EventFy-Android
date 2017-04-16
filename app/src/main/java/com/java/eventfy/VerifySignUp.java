@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,7 +45,7 @@ public class VerifySignUp extends AppCompatActivity {
         setContentView(R.layout.activity_verify_sign_up);
 
         Intent in = getIntent();
-        signUp = (SignUp) in.getSerializableExtra("user");
+        signUp = (SignUp) in.getSerializableExtra(getString(R.string.userObject));
 
         verifyAccount = (VerifyAccount) in.getSerializableExtra(getString(R.string.verify_account));
 
@@ -80,12 +81,13 @@ public class VerifySignUp extends AppCompatActivity {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
             if(signUp!=null){
+                Log.e("Clicked: ", "  signup if  ");
                 verifyAccountViaSignUp();
             }
             else if(verifyAccount != null){
+                Log.e("Clicked: ", "  signup else if  ");
                 verifyAccountViaMyAccount();
             }
-
             }
 
         });
@@ -105,11 +107,10 @@ public class VerifySignUp extends AppCompatActivity {
                 else if(signUp!=null){
 
                     Intent intent = new Intent(VerifySignUp.this, Home.class);
-                    intent.putExtra("user", signUp);
+                    intent.putExtra(getString(R.string.userObject), signUp);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     finish();
                     startActivity(intent);
-
                 }
 
             }
@@ -151,8 +152,7 @@ public class VerifySignUp extends AppCompatActivity {
 
     public void verifyAccountViaSignUp(){
         if (mCodeEditText!=null && mCodeEditText.length()==4) {
-            mCodeSendButton.setEnabled(false);
-
+            //mCodeSendButton.setEnabled(false);
             verificationCode = new VerificationCode();
             verificationCode.setvCode(mCodeEditText.getText().toString());
             signUp.setVerificationCode(verificationCode);
@@ -165,7 +165,7 @@ public class VerifySignUp extends AppCompatActivity {
 
     public void verifyAccountViaMyAccount(){
         if (mCodeEditText!=null && mCodeEditText.length()==4) {
-            mCodeSendButton.setEnabled(false);
+           // mCodeSendButton.setEnabled(false);
             verificationCode = new VerificationCode();
             verificationCode.setvCode(mCodeEditText.getText().toString());
             verifyAccount.getSignUp().setVerificationCode(verificationCode);
@@ -197,7 +197,7 @@ public class VerifySignUp extends AppCompatActivity {
         if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(signUp.getToken()))
         {
             Intent intent = new Intent(this, Home.class);
-            intent.putExtra("user", signUp);
+            intent.putExtra(getString(R.string.userObject), signUp);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             finish();
             startActivity(intent);
@@ -226,10 +226,19 @@ public void resendVcodeStatus(String result)
     @Subscribe
     public void resendVcodeStatus(VerifyAccount verifyAccount) {
         dismissProgressDialog();
+        Log.e("View msg : ", verifyAccount.getViewMsg());
+        Log.e("Token msg : ", this.verifyAccount.getSignUp().getToken());
 
-        if(verifyAccount.getViewMsg().equals(signUp.getToken())){
-            toastMsg("Congratulations, you'r account successfully updated");
+        if(verifyAccount.getViewMsg().equals(this.verifyAccount.getSignUp().getToken())){
+            toastMsg("Congratulations!, you'r account successfully updated");
             finish();
+            this.signUp = verifyAccount.getSignUp();
+
+            EventBusService.getInstance().unregister(this);
+
+            Intent intent = new Intent(this, Home.class);
+            intent.putExtra(getString(R.string.userObject), signUp);
+            startActivity(intent);
         }
         else if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
             toastMsg("Error while verifying account");
@@ -241,22 +250,22 @@ public void resendVcodeStatus(String result)
 
     }
 
-
     public void toastMsg(String msg){
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
 
     private void serverCall(SignUp signUp) {
         setProgressDialog();
         invalidVerificationCodeLink.setVisibility(View.INVISIBLE);
         String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
-        VerifyVcode verifyVcode = new VerifyVcode(signUp,url);
+        VerifyVcode verifyVcode = new VerifyVcode(signUp,url, getApplicationContext());
         verifyVcode.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     private void serverCallToResendVcode(SignUp signUp) {
-        if(verifyAccount==null)
+        if(verifyAccount==null){
+            progressDialog.setMessage("Generating...");
             setProgressDialog();
+        }
         invalidVerificationCodeLink.setVisibility(View.INVISIBLE);
 
         String url = getString(R.string.ip_local)+getString(R.string.verification_code_get);
@@ -267,19 +276,17 @@ public void resendVcodeStatus(String result)
     private void serverCallToVerifyAccount(VerifyAccount verifyAccount) {
         setProgressDialog();
         invalidVerificationCodeLink.setVisibility(View.INVISIBLE);
-
         String url = getString(R.string.ip_local)+getString(R.string.verify_vcode);
         VerifyMyAccount verifyMyAccount = new VerifyMyAccount(verifyAccount,url, getApplicationContext());
         verifyMyAccount.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
-    public void createProgressDialog()
-    {
+    public void createProgressDialog() {
         progressDialog = new ProgressDialog(this);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Verifying...");
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
     }
 
     public void setProgressDialog()

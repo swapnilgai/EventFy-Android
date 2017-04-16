@@ -81,7 +81,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     private CircleImageView eventImage;
     private Location userCurrentLocation;
     private Marker userMarker;
-//    private TextView eventName;
+    //    private TextView eventName;
     private RobotoTextView eventAddress;
     private RobotoTextView eventStartDate;
     private RobotoTextView eventDuration;
@@ -189,17 +189,17 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         this.index = index;
         if(!eventLst.get(index).getEventImageUrl().equals("default"))
             Picasso.with(getContext())
-                .load(eventLst.get(index).getEventImageUrl())
-                .fit()
-                .into(eventImage);
+                    .load(eventLst.get(index).getEventImageUrl())
+                    .fit()
+                    .into(eventImage);
 
-              else{
-                 eventImage.setImageResource(R.drawable.logo);
+        else{
+            eventImage.setImageResource(R.drawable.logo);
         }
-            eventDistance.setText(eventLst.get(index).getEventAwayDistanve());
-            eventDuration.setText(eventLst.get(index).getEventAwayDuration());
+        eventDistance.setText(eventLst.get(index).getEventAwayDistanve());
+        eventDuration.setText(eventLst.get(index).getEventAwayDuration());
 
-            eventInfoLinearLayout.setOnClickListener(new OnClickListener() {
+        eventInfoLinearLayout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 View sharedView = eventImage;
@@ -214,7 +214,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 }else {
                     mActivity.startActivity(intent);
                 }
-        }
+            }
         });
     }
 
@@ -316,7 +316,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-       // mapView.onLowMemory();
+        // mapView.onLowMemory();
     }
 
 
@@ -324,8 +324,8 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
-       if(eventLst!=null && eventLst.get(eventLst.size()-1).getViewMessage().equals(getString(R.string.home_no_data)) && userCurrentLocation!=null){
-           setUserOnMap(userCurrentLocation);
+        if(eventLst!=null && eventLst.get(eventLst.size()-1).getViewMessage().equals(getString(R.string.home_no_data)) && userCurrentLocation!=null){
+            setUserOnMap(userCurrentLocation);
             googleMapSetting(userCurrentLocation);
         }
     }
@@ -439,12 +439,12 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
 
             if(flag) {
 
-                 if(updateAccount.getSignUp().getLocation()!= null )
-                   signUp.setLocation(updateAccount.getSignUp().getLocation());
+                if(updateAccount.getSignUp().getLocation()!= null )
+                    signUp.setLocation(updateAccount.getSignUp().getLocation());
                 else if(userCurrentLocation!=null) {
-                     signUp.setLocation(userCurrentLocation);
-                 }
-                    setUserOnMap(signUp.getLocation());
+                    signUp.setLocation(userCurrentLocation);
+                }
+                setUserOnMap(signUp.getLocation());
             }
         }
 

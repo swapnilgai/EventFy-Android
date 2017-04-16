@@ -99,6 +99,7 @@ public class SetEventIconGoogleMap {
             default:
                 markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.other));
 
+
                 break;
 
         }

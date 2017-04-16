@@ -155,7 +155,7 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
             this.signUp = signUp;
             EventBusService.getInstance().unregister(this);
             Intent intent = new Intent(this, VerifySignUp.class);
-            intent.putExtra("user", signUp);
+            intent.putExtra(getString(R.string.userObject), signUp);
             startActivity(intent);
         }
         else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.signup_account_already_present))) {
@@ -181,7 +181,6 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         } else {
             nameText.setError(null);
         }
-        Log.e("date of b : ", " "+signUp.getDob());
         if (signUp.getDob()!= null && signUp.getDob().length()>0 && !DateTimeStringOperations.getInstance().checkUSerIs18Plus(signUp.getDob())){
 
             if(signUp.getDob()==null){

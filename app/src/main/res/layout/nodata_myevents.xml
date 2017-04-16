@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
               android:gravity="center"
-              android:layout_gravity="center">
+              android:layout_height="match_parent">
+
 
     <ImageView
         android:id="@+id/network_error_image_view"
@@ -22,7 +22,7 @@
         android:lines="@android:integer/config_longAnimTime"
         android:paddingTop="10dp"
         android:textSize="20dp"
-        android:text="Oops! Network Error"
+        android:text="You did not have any event history"
         android:paddingLeft="2dp"
         android:paddingRight="4dp"
         android:gravity="center"

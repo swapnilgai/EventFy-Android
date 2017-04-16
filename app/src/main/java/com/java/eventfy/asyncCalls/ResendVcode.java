@@ -6,6 +6,7 @@ import android.util.Log;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
+import com.java.eventfy.EventBus.EventBusService;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -50,17 +51,15 @@ public class ResendVcode extends AsyncTask<Void, Void, Void> {
 
 
         }catch (Exception e) {
-
             Log.e("Exception : ", ""+e.getStackTrace());
         }
-
-
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-       // EventBusService.getInstance().post(result);
+        if(result == null)
+            EventBusService.getInstance().post("verification_code_generate_fail");
     }
 }

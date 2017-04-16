@@ -87,7 +87,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         getUserObject();
 
         userLoccation = new Location();
-        if(getNotificationId() == null) {
+        if(getNotificationId() == null || getNotificationId().length()<10) {
             registerDeviceForNotification();
         }
 
@@ -134,8 +134,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         registerToGCM.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void initEventBus()
-    {    eventBus = EventBusService.getInstance();
+    public void initEventBus() {
+        eventBus = EventBusService.getInstance();
     }
 
     public void registerEventBusInstance() {
@@ -150,8 +150,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
            final SearchView search = (SearchView) menu.findItem(R.id.search_home).getActionView();
         // search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
         // Get the search close button image view
-        ImageView closeButton = (ImageView)search.findViewById(R.id.search_close_btn);
-
+            ImageView closeButton = (ImageView)search.findViewById(R.id.search_close_btn);
         // Set on click listener
         closeButton.setOnClickListener(new View.OnClickListener() {
 
@@ -208,7 +207,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         tabThree.setText("Remote");
         tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_near_me_white_24dp, 0, 0);
         tabLayout.getTabAt(1).setCustomView(tabThree);
-
 
         TextView tabFour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         tabFour.setText("Notification");
@@ -313,6 +311,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.commit();
+
+            preferences =getSharedPreferences(getString(R.string.notofocationId),Context.MODE_PRIVATE);
+            editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+
             finish();
 
             Intent intent = new Intent(this, Login.class);
@@ -348,8 +352,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Subscribe
     public void getNotificationDetail(NotificationId notificationId)
     {
+        Log.e(" notification id  :   ", " "+notificationId.getRegId());
+        Log.e(" notification view msg  :   ", " "+notificationId.getViewMessage());
+
         if(notificationId.getViewMessage().equals(getString(R.string.notification_id_gcm_register_success))){
             String url = getString(R.string.ip_local)+getString(R.string.register_notification_detail);
+            getUserObject();
+            signUp.setNotificationId(notificationId);
             UpdateNotificationDetail updateNotificationDetail = new UpdateNotificationDetail(signUp, url, getApplicationContext());
             updateNotificationDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }else if(notificationId.getViewMessage().equals(getString(R.string.notification_id_server_register_success))){
@@ -398,7 +407,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public void storeUserObject(SharedPreferences.Editor editor)
     {
         Intent in = getIntent();
-        signUp = (SignUp) in.getSerializableExtra("user");
+        signUp = (SignUp) in.getSerializableExtra(getString(R.string.userObject));
 
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
@@ -408,7 +417,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         editor.commit();
 
-        if(signUp.getNotificationId()!=null)
+        if(signUp!=null && signUp.getNotificationId()!=null)
             storeNotificationId(signUp.getNotificationId());
     }
 
@@ -422,6 +431,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public String getNotificationId(){
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.notofocationId), MODE_PRIVATE);
         String json = mPrefs.getString(getString(R.string.notofocationId), "");
+        Log.e("notification id : ", ""+json);
         return json;
     }
 

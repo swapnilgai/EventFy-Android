@@ -65,9 +65,6 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
             ResponseEntity<Events[]> response = restTemplate.exchange(url, HttpMethod.POST, request, Events[].class);
 
             HttpStatus status = response.getStatusCode();
-            Log.e("Response code :  N " , "  Response code : "+status.value());
-            Log.e("Response code :  N " , "  Response code : "+status);
-
             Events[] event = response.getBody();
 
         if(event!=null)
@@ -86,16 +83,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
-//        Log.e("event size : ", " 8888888 " + eventLst.size());
-
-
-        if(eventLst!=null)
-            for(Events obj : eventLst) {
-                if(obj!=null && obj.getEventImageUrl()!=null && obj.getEventImageUrl().equals("default"))
-                    obj.setEventImageUrl("http://res.cloudinary.com/eventfy/image/upload/v1462334816/logo_qe8avs.png");
-            }
-        else{
+        if(eventLst==null){
             eventLst = new LinkedList<Events>();
             Events events = new Events();
             events.setViewMessage(context.getString(R.string.home_no_data));

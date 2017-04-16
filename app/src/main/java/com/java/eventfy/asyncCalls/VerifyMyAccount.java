@@ -2,7 +2,6 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.java.eventfy.Entity.SignUp;
@@ -65,9 +64,8 @@ public class VerifyMyAccount extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(aVoid);
        if(result == null)
            verifyAccount.setViewMsg(context.getString(R.string.verify_account_fail));
-
-
-        Log.e("message : ", ""+result);
+        else
+            verifyAccount.setViewMsg(result);
         // send to signup activity
 
         EventBusService.getInstance().post(verifyAccount);

@@ -6,27 +6,23 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.UiThread;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Filter.Filter;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
@@ -36,6 +32,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class MyEvents extends AppCompatActivity {
 
@@ -43,17 +40,12 @@ public class MyEvents extends AppCompatActivity {
     private MainRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
-    private FragmentTransaction transaction;
-    private FragmentManager manager;
-    private Fragment nearby_map;
     private static final String context_id = "11";
-    private String flag;
-    private LatLng latLng;
     private GetUserEvent getUserEvent;
     private List<Events> eventsList = new LinkedList<Events>();
     private List<Events> eventsListTemp = new LinkedList<Events>();
     FloatingActionMenu materialDesignFAM;
-    FloatingActionButton floatingActionButton1, floatingActionButton2, floatingActionButton3, floatingActionButton4;
+    FloatingActionButton floatingActionButton2, floatingActionButton3, floatingActionButton4;
     private SignUp signUp;
     private Events eventLoadingObj, eventNoDataObj;
 
@@ -86,16 +78,11 @@ public class MyEvents extends AppCompatActivity {
         floatingActionButton2 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item2);
         floatingActionButton3 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item3);
         floatingActionButton4 = (FloatingActionButton) findViewById(R.id.material_design_floating_action_menu_item4);
-
         adapter = new MainRecyclerAdapter(this, getString(R.string.activity_MyEvents));
-
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
-
         bindAdapter(adapter, eventsList);
-
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -104,16 +91,9 @@ public class MyEvents extends AppCompatActivity {
             }
         });
 
-//        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                //TODO something when floating action menu first item clicked
-//                Log.e("button 1 clicked", "public");
-//            }
-//        });
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu second item clicked
-                Log.e("button 2 clicked", "public");
 
                 removeAll(eventsListTemp);
                 for(Events event : eventsList){
@@ -127,7 +107,6 @@ public class MyEvents extends AppCompatActivity {
         floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
-                Log.e("button 3 clicked", "public");
                 removeAll(eventsListTemp);
                 for(Events event : eventsList){
                     if(event.getFacebookEventId()==null)
@@ -140,7 +119,6 @@ public class MyEvents extends AppCompatActivity {
         floatingActionButton4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //TODO something when floating action menu third item clicked
-                Log.e("button 3 clicked", "public");
                 removeAll(eventsListTemp);
                 bindAdapter(adapter, eventsList);
             }
@@ -189,6 +167,9 @@ public class MyEvents extends AppCompatActivity {
 
     private void getMyEventServerCall(){
         getUserObject();
+        Filter filter = new Filter();
+        filter.setTimeZone(TimeZone.getDefault().getID());
+        signUp.setFilter(filter);
         String url = getString(R.string.ip_local) + getString(R.string.user_event);
         getUserEvent = new GetUserEvent(url, signUp, getApplicationContext());
         getUserEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -216,8 +197,6 @@ public class MyEvents extends AppCompatActivity {
     }
 
     public boolean checkIsDataPrsent(List<Events> eventsList){
-
-
         if(eventsList.size()>0) {
             if (eventsList.get(0).getViewMessage() != null)
                 if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
@@ -249,8 +228,7 @@ public class MyEvents extends AppCompatActivity {
         EventBusService.getInstance().unregister(this);
     }
 
-    public void getUserObject()
-    {
+    public void getUserObject() {
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
@@ -278,7 +256,6 @@ public class MyEvents extends AppCompatActivity {
 
 
     public void removeNoDataOrLoadingObj() {
-
         if(eventsList.size()>0) {
             if (eventsList.get(0).getViewMessage() != null)
                 if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
@@ -296,11 +273,9 @@ public class MyEvents extends AppCompatActivity {
     }
 
     @Subscribe
-    public void getEventAfterUnregistratation(RegisterEvent registerEvent)
-    {
+    public void getEventAfterUnregistratation(RegisterEvent registerEvent) {
         Events events =    registerEvent.getEvents();
         int index = -1;
-        Log.e("my event : ", ""+events.getEventId());
         // Remove user from event to reflect icon for RSVP button
         for(Events e: eventsList) {
             if(e.getEventId() == events.getEventId()) {
@@ -310,7 +285,6 @@ public class MyEvents extends AppCompatActivity {
             }
         }
 
-        Log.e("index : ", ""+index);
         if(index!=-1){
             events.setViewMessage(null);
 

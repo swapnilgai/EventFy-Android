@@ -110,7 +110,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     public void setUpMarker() {
         setEventIconGoogleMap = SetEventIconGoogleMap.getInstance();
         for(Events events : eventLst) {
-            int zoomVal = 10;
             myLatLag = new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude());
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLatLag);

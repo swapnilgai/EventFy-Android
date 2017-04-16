@@ -168,8 +168,6 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
                 if(dobString!=null)
                     isUser13plus = checkUSerIs13Plus(dobString);
 
-                Log.e("dob str  : ", ""+dobString);
-                Log.e("13 Plus  : ", ""+isUser13plus);
                 userDob.setError(null);
                 if(isUser13plus) {
                     dobErrorMsg.setVisibility(View.VISIBLE);
