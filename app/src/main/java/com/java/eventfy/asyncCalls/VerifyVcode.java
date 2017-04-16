@@ -2,10 +2,8 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
@@ -36,10 +34,6 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... strings) {
 
         try {
-            Log.e("", url);
-
-            Log.e("", new Gson().toJson(signUp));
-
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -58,7 +52,7 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
 
         }catch (Exception e)
         {
-            result = context.getString(R.string.verify_account_success);
+            result = context.getString(R.string.verify_account_fail);
         }
         return null;
 
@@ -71,6 +65,7 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
             signUp.setViewMessage(result);
         }else{
             signUp.setToken(result);
+            signUp.setViewMessage(context.getString(R.string.verify_account_fail));
         }
             EventBusService.getInstance().post(signUp);
     }

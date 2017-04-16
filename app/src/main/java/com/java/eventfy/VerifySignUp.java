@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -81,11 +80,9 @@ public class VerifySignUp extends AppCompatActivity {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
             if(signUp!=null){
-                Log.e("Clicked: ", "  signup if  ");
                 verifyAccountViaSignUp();
             }
             else if(verifyAccount != null){
-                Log.e("Clicked: ", "  signup else if  ");
                 verifyAccountViaMyAccount();
             }
             }
@@ -96,13 +93,9 @@ public class VerifySignUp extends AppCompatActivity {
         skipLink.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
-                if(verifyAccount!=null && verifyAccount.getActivityName()!=null && verifyAccount.getActivityName().equals(getString(R.string.activity_CreatePublicEvent)))
-                {
-                    Intent intent = new Intent(VerifySignUp.this, Home.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra(getString(R.string.verify_account), verifyAccount);
-                    finish();
-                    startActivity(intent);
+                if(verifyAccount!=null && verifyAccount.getActivityName()!=null ) {
+                    startActivity();
+
                 }
                 else if(signUp!=null){
 
@@ -127,13 +120,8 @@ public class VerifySignUp extends AppCompatActivity {
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
 
-            if(verifyAccount!=null && verifyAccount.getActivityName()!=null && verifyAccount.getActivityName().equals(getString(R.string.activity_CreatePublicEvent)))
-                {
-                    Intent intent = new Intent(VerifySignUp.this, ProfilePage.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra(getString(R.string.verify_account), verifyAccount);
-                    finish();
-                    startActivity(intent);
+            if(verifyAccount!=null && verifyAccount.getActivityName()!=null ) {
+                  startActivity();
                 }
                 else{
                     finish();
@@ -143,6 +131,22 @@ public class VerifySignUp extends AppCompatActivity {
         });
 
     }
+
+
+    public void startActivity(){
+        Intent intent;
+        if(verifyAccount.getActivityName()!=null && verifyAccount.getActivityName().equals(getString(R.string.activity_ProfilePage))) {
+            intent = new Intent(VerifySignUp.this, ProfilePage.class);
+
+        }else {
+            intent = new Intent(VerifySignUp.this, Home.class);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(getString(R.string.verify_account), verifyAccount);
+        finish();
+        startActivity(intent);
+    }
+
 
     public void setUserData(SignUp signUp){
         userName.setText(signUp.getUserName());
@@ -194,8 +198,7 @@ public class VerifySignUp extends AppCompatActivity {
     public void getUserObject(SignUp signUp)
     {
         dismissProgressDialog();
-        if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(signUp.getToken()))
-        {
+        if(signUp.getViewMessage()!=null && signUp.getViewMessage().equals(getString(R.string.verify_account_success))) {
             Intent intent = new Intent(this, Home.class);
             intent.putExtra(getString(R.string.userObject), signUp);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -226,19 +229,15 @@ public void resendVcodeStatus(String result)
     @Subscribe
     public void resendVcodeStatus(VerifyAccount verifyAccount) {
         dismissProgressDialog();
-        Log.e("View msg : ", verifyAccount.getViewMsg());
-        Log.e("Token msg : ", this.verifyAccount.getSignUp().getToken());
 
-        if(verifyAccount.getViewMsg().equals(this.verifyAccount.getSignUp().getToken())){
-            toastMsg("Congratulations!, you'r account successfully updated");
-            finish();
+        if(verifyAccount.getViewMsg().equals(getString(R.string.verify_account_success))){
+
             this.signUp = verifyAccount.getSignUp();
 
             EventBusService.getInstance().unregister(this);
-
-            Intent intent = new Intent(this, Home.class);
-            intent.putExtra(getString(R.string.userObject), signUp);
-            startActivity(intent);
+            toastMsg("Congratulations!, you'r account successfully updated");
+            finish();
+            startActivity();
         }
         else if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
             toastMsg("Error while verifying account");

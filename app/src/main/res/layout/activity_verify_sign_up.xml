@@ -184,10 +184,10 @@
 
             <com.devspark.robototextview.widget.RobotoTextView
                 android:id="@+id/link_skip_verification"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="10dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="10dp"
                 android:gravity="center"
                 android:text="Skip"
                 android:textColor="@color/transparent_black"

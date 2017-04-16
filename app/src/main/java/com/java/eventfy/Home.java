@@ -521,37 +521,34 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
      public void setListnerToFabAndToolbar(){
 
+         if(nearbyFragment!=null && nearbyFragment.recyclerView!=null) {
+             nearbyFragment.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-         nearbyFragment.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+                 LinearLayoutManager linearLayoutManager = (LinearLayoutManager) nearbyFragment.recyclerView.getLayoutManager();
 
-             LinearLayoutManager linearLayoutManager = (LinearLayoutManager)  nearbyFragment.recyclerView.getLayoutManager();
+                 @Override
+                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                     //  scrollPositionNearBy = linearLayoutManager.findFirstVisibleItemPosition();
+                     int currentFirstVisible = linearLayoutManager.findFirstVisibleItemPosition();
+                     //recyclerView.computeVerticalScrollOffset();
 
-             @Override
-             public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-               //  scrollPositionNearBy = linearLayoutManager.findFirstVisibleItemPosition();
-                // Log.e("fragggggg SS: ", "  dx:  "+linearLayoutManager.findFirstVisibleItemPosition());
-               //  Log.e("fragggggg Y: ", "  dx:  "+recyclerView.computeVerticalScrollOffset());
-                 int currentFirstVisible = linearLayoutManager.findFirstVisibleItemPosition();
-                         //recyclerView.computeVerticalScrollOffset();
-
-                         //=linearLayoutManager.findFirstVisibleItemPosition();
-                 if(currentFirstVisible > scrollPositionNearBy){
-                     nearbyFragment.fragment_switch_button.hide();
-                  //   toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
+                     //=linearLayoutManager.findFirstVisibleItemPosition();
+                     if (currentFirstVisible > scrollPositionNearBy) {
+                         nearbyFragment.fragment_switch_button.hide();
+                         //   toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
 //                     tabLayout.animate().translationY(-tabLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
-                    // if(toolbar.isShown())
-                     //   toolbar.setVisibility(View.GONE);
+                         // if(toolbar.isShown())
+                         //   toolbar.setVisibility(View.GONE);
 
-                 }
-                 else if(currentFirstVisible<scrollPositionNearBy){
-                     nearbyFragment.fragment_switch_button.show();
-                   //  toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                //     tabLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                    // if(!toolbar.isShown())
-                     //   toolbar.setVisibility(View.VISIBLE);
+                     } else if (currentFirstVisible < scrollPositionNearBy) {
+                         nearbyFragment.fragment_switch_button.show();
+                         //  toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                         //     tabLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                         // if(!toolbar.isShown())
+                         //   toolbar.setVisibility(View.VISIBLE);
 
-                 }
-                 scrollPositionNearBy = currentFirstVisible;
+                     }
+                     scrollPositionNearBy = currentFirstVisible;
 
 //                 if(scrollPositionNearBy<recyclerView.computeVerticalScrollOffset()){
 
@@ -560,18 +557,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 //                     scrollPositionNearBy = recyclerView.computeVerticalScrollOffset()-800;
 //                 }
+                 }
+                 @Override
+                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                     super.onScrollStateChanged(recyclerView, newState);
+                 }
 
-             }
-
-             @Override
-             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                 super.onScrollStateChanged(recyclerView, newState);
-             }
-         });
+             });
+         }
      }
-
-
-
-
-
 }

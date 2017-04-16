@@ -2,9 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.NotificationId;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -37,7 +35,7 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... strings) {
 
-     //  try {
+       try {
 
            signUp = CleanEntityObjects.getInstance().clearSignUpObject(signUp);
 
@@ -52,20 +50,15 @@ public class UpdateNotificationDetail   extends AsyncTask<Void, Void, Void> {
            ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
            result = rateResponse.getBody();
 
-//       }catch (Exception e){
-//            result = null;
-//       }
+       }catch (Exception e){
+            result = null;
+       }
         return null;
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
-        Log.e("  ", " signup :   "+new Gson().toJson(signUp));
-
-        Log.e("  ", " result :   "+result);
-
         if(signUp.getNotificationId()!= null){
             NotificationId notificationId = new NotificationId();
             signUp.setNotificationId(notificationId);
