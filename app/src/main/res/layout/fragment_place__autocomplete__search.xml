@@ -272,6 +272,7 @@
                             android:layout_height="35dp"
                             android:layout_gravity="center"
                             app:cb_color="@color/white"
+                            android:visibility="gone"
                             android:id="@+id/hide_show_advance_search_btn"
                             android:src="@drawable/ic_arrow_drop_down_black_18dp"/>
 

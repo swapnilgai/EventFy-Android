@@ -65,7 +65,7 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/menu"
-        app:itemTextColor="@color/white"
-        app:itemIconTint="@color/white"
+        app:itemTextColor="#fff3f3f3"
+        app:itemIconTint="#fff3f3f3"
         android:background="@color/colorPrimary"/>
 </android.support.v4.widget.DrawerLayout>

@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -134,9 +133,7 @@ import static com.java.eventfy.R.string.edited;
             });
         }
         else {
-
                 final Events event = getItem(position);
-
                 ((ResultHolder)holder).linearLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -192,6 +189,8 @@ import static com.java.eventfy.R.string.edited;
 
             if(event.getFacebookEventId()==null)
                 ((ResultHolder)holder).eventSourceImage.setImageResource(R.drawable.logo);
+            else
+                ((ResultHolder)holder).eventSourceImage.setImageResource(R.drawable.com_facebook_button_icon_blue);
 
             ((ResultHolder)holder).eventTimeFromNow.setText(event.getEventTimeFromNow());
 

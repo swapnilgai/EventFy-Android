@@ -9,9 +9,9 @@
           android:id="@+id/nav_item_create_event_public"
           android:icon="@drawable/input_black_192x192"/>
 
-    <item android:title="Create Private Event"
-          android:id="@+id/nav_item_create_event_private"
-          android:icon="@drawable/input_black_192x192"/>
+    <!--<item android:title="Create Private Event"-->
+          <!--android:id="@+id/nav_item_create_event_private"-->
+          <!--android:icon="@drawable/input_black_192x192"/>-->
 
     <item android:title="My Events"
           android:id="@+id/nav_item_my_events"

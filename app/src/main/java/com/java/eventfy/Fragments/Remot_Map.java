@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,7 +28,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
@@ -38,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.java.eventfy.Entity.Away;
 import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
 import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
@@ -57,7 +54,6 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,24 +66,16 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap googleMapRemot;
     private MapView mapView_remot;
-    private boolean mapsSupported_remot = true;
     private List<Events> eventLst;
-    private double radious_remot;
-    private LatLng myLaLn_remot;
-    private Circle mapCircle_remot;
     private View view;
     LatLng myLaLn;
-    SupportMapFragment supportMapFragmentRemot;
-    private String flag;
     private SignUp signUpRemote;
     private Marker userMarker;
     private RobotoTextView eventAddress;
-    private RobotoTextView eventStartDate;
     private RobotoTextView eventDuration;
     private RobotoTextView eventDistance;
     private int indexForOnclickEvent;
     private SignUp signUp;
-    private HashMap<Integer, Away> eventAwayMapping;
     private int index;
     private Bitmap image = null;
     private SeekBar eventSearchMiles;
@@ -121,7 +109,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
-                if(markerList.contains(marker)){
+                if(!userMarker.getId().equals(marker.getId()) && markerList.contains(marker)){
                     updateEventInfo(markerList.indexOf(marker));
                 }
                 return false;
@@ -170,22 +158,44 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
     public void googleMapSetting(Location location) {
 
-        circle = googleMapRemot.addCircle(new CircleOptions()
-                .center(myLatLag)
-                .fillColor(R.color.colorPrimaryExtraTransparent)
-                .radius(location.getDistance()*1610));
+        CameraPosition cameraPosition = null;
 
+        if(checkNoData()) {
+            circle = googleMapRemot.addCircle(new CircleOptions()
+                    .center(myLatLag)
+                    .fillColor(R.color.colorPrimaryExtraTransparent)
+                    .radius(location.getDistance() * 1610));
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().
-                target(new LatLng(location.getLatitude(), location.getLongitude())).
-                tilt(45).
-                bearing(40).
-                zoom(15).
-                build();
-
+            cameraPosition = new CameraPosition.Builder().
+                    target(new LatLng(location.getLatitude(), location.getLongitude())).
+                    zoom(getZoomLevel(circle)).
+                    build();
+        }else{
+            cameraPosition = new CameraPosition.Builder().
+                    target(new LatLng(location.getLatitude(), location.getLongitude())).
+                    zoom(14).
+                    build();
+        }
         CameraUpdate cu1 = CameraUpdateFactory.newCameraPosition(cameraPosition);
         googleMapRemot.animateCamera(cu1);
 
+    }
+
+    public boolean checkNoData(){
+        if(eventLst!=null && eventLst.get(0).getViewMessage()!=null && eventLst.get(0).getViewMessage().equals(getString(R.string.home_no_data))){
+            return true;
+        }
+        return  false;
+    }
+
+    public int getZoomLevel(Circle circle) {
+        int zoomLevel = 10;
+        if (circle != null){
+            double radius = circle.getRadius();
+            double scale = radius / 500;
+            zoomLevel =(int) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
     }
 
     public void setUserOnMap(Location location){
@@ -198,12 +208,24 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
         markerOptions.position( new LatLng(location.getLatitude(), location.getLongitude()));
 
         markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_map));
+        getUserObject();
 
-        markerOptions.title(signUpRemote.getUserName());
+        if(signUp != null)
+            markerOptions.title(signUp.getUserName());
+        else
+            markerOptions.title(signUpRemote.getUserName());
+
         userMarker =  googleMapRemot.addMarker(markerOptions);
         markerList.add(userMarker);
     }
 
+    public void getUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getString(R.string.userObject), "");
+        this.signUp = gson.fromJson(json, SignUp.class);
+    }
 
     public void getRemoteUserObject() {
         SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObjectRemote), Context.MODE_PRIVATE);
@@ -226,7 +248,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
         eventImage = (CircleImageView) view.findViewById(R.id.map_view_event_info_image_view);
         eventAddress = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_location);
-        eventStartDate = (RobotoTextView) view.findViewById(R.id.map_view_event_info_date);
         eventDuration = (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_duration);
         eventDistance =  (RobotoTextView) view.findViewById(R.id.map_view_event_info_event_away_distance);
         eventSearchMiles = (SeekBar) view.findViewById(R.id.nearby_map_view_event_visibility_miles);
@@ -276,8 +297,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
         if(remoteEventData.getEventsList()!=null && remoteEventData.getEventsList().size()>0 && remoteEventData.getEventsList().get(0) instanceof Events) {
             if (eventLst!= null && eventLst.get(eventLst.size() - 1).getViewMessage() == null) {
                 googleMapRemot.clear();
-                Log.e("user location : ", " :::::: "+remoteEventData.getSignUp().getFilter().getLocation().getLatitude());
-                Log.e("user location : ", " :::::: "+remoteEventData.getSignUp().getFilter().getLocation().getLongitude());
                 eventInfoLinearLayout.setVisibility(View.VISIBLE);
                 eventSearchLinearLayout.setVisibility(View.GONE);
                 initializeMap();
@@ -366,7 +385,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
             }
         }
     }
-
 
     @Subscribe
     public void getEventAfterUnregistratation(RegisterEvent registerEvent)

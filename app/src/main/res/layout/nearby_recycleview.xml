@@ -169,7 +169,6 @@
                     android:layout_gravity="center"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/com_facebook_button_icon_blue"
                     app:layout_collapseMode="parallax" />
 
             </LinearLayout>

@@ -18,7 +18,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -278,9 +277,8 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             public void onClick(View v) {
                 // datePickerDialog.setVibrate(isVibrate());
                 createEventObject();
-                Log.e("btn clicked: ", ""+createBtn.getText());
                 if(createBtn.getText().equals("Save")) {
-                    //if(validate())
+                    if(validate())
                     {
                         createOrSaveTextView.setText("Saving....");
                         setProgressDialog();
@@ -674,8 +672,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
     public void getAddressFromLatLang(double latitude, double longitude) {
 
-        new AsyncTask<LatLng, Void, String>()
-        {
+        new AsyncTask<LatLng, Void, String>() {
             @Override
             protected String  doInBackground(LatLng... latLan)
             {
@@ -827,9 +824,11 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     }
 
 
-    public void uploadImage()
-    {
-        UploadImage uploadImage = new UploadImage(eventObj, eventImageBm);
+    public void uploadImage() {
+        getUserObject();
+        String url = getString(R.string.ip_localhost)+getString(R.string.add_event);
+        eventObj.setAdmin(signUp);
+        UploadImage uploadImage = new UploadImage(eventObj, eventImageBm, url);
         uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
@@ -1072,15 +1071,11 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
 
                     }
                 });
-
-
-
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
 
     public void serverCallToEdit(){
-
         eventObj.setAdmin(signUp);
         EditEvent editEventObj = new EditEvent();
         editEventObj.setEvents(eventObj);

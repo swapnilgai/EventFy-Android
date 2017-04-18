@@ -33,7 +33,9 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     private EditEvent editEvent;
     private String urlForEditEvent;
     private String urlForUpdateUserImage;
+    private String urlForCreateEvent;
     private SignUp signUp;
+
 
     public UploadImage(AddComment addComment, Bitmap bm, String urlForComment, Context context) {
         this.addComment = addComment;
@@ -48,18 +50,16 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
             this.bm = bm;
         }
 
-
-
     public UploadImage(EditEvent editEvent, Bitmap bm, String urlForEditEvent, Context context) {
         this.editEvent = editEvent;
         this.bm = bm;
         this.urlForEditEvent = urlForEditEvent;
         this.context = context;
     }
-    public UploadImage(Events event, Bitmap bm) {
+    public UploadImage(Events event, Bitmap bm, String urlForCreateEvent) {
         this.event = event;
         this.bm = bm;
-        Log.e("upload image event: ",""+event);
+        this.urlForCreateEvent = urlForCreateEvent;
     }
 
     public UploadImage(boolean b) {
@@ -94,10 +94,6 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-
-
-        Log.e("url : ", " "+Url);
-        Log.e("url : ", " "+addComment);
         if(addComment!=null && Url!=null)
         {
             addComment.getComment().setIsImage("true");
@@ -133,10 +129,13 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
 
         if(event!=null && Url==null) {
             // send url to CreateEventFragment1
+
             EventBusService.getInstance().post(Url);
         }
-        else{
-            // TODO Send Error msg
+        else if(event!=null && Url!=null){
+            event.setEventImageUrl(Url);
+            CreatePublicEvent createPublicEvent = new CreatePublicEvent(urlForCreateEvent, event);
+            createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 }

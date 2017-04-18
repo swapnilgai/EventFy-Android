@@ -56,6 +56,7 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
         createEvent.setViewMsg(event.getViewMessage());
         event.setViewMessage(null);
         createEvent.setEvents(event);
+        Log.e(" event after creation:  ", new Gson().toJson(event));
         EventBusService.getInstance().post(createEvent);
     }
 }

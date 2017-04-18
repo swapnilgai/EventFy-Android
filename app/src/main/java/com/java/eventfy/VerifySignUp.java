@@ -297,5 +297,4 @@ public void resendVcodeStatus(String result)
     {
         progressDialog.dismiss();
     }
-
 }

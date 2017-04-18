@@ -49,7 +49,7 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class Remot extends Fragment {
-    MainRecyclerAdapter adapter;
+    public MainRecyclerAdapter adapter;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -64,7 +64,7 @@ public class Remot extends Fragment {
     private String flag;
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
-    private List<Events> eventsList = new LinkedList<Events>();
+    public List<Events> eventsList = new LinkedList<Events>();
     private SignUp signUp;
     private Events eventLoadingObj;
     private FloatingActionMenu floatingActionMenu;
@@ -152,7 +152,7 @@ public class Remot extends Fragment {
 //            getRemotEventsServerCall();
     }
 
-    private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
+    public void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
         swipeRefreshLayout.setRefreshing(false);
         if (adapter != null){
             adapter.clear();

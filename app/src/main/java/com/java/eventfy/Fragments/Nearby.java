@@ -69,7 +69,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
 public class Nearby extends Fragment implements OnLocationEnableClickListner{
-    private MainRecyclerAdapter adapter;
+    public MainRecyclerAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     public RecyclerView recyclerView;
     public FloatingActionButton fragment_switch_button;
@@ -81,7 +81,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private GPSTracker gpsTracker;
     private LatLng latLng;
     private GetNearbyEvent getNearbyEvent;
-    private List<Events> eventsList;
+    public List<Events> eventsList;
     private List<Events> eventsListTemp;
     private SignUp signUp;
     private Events currentEventToDelete;
@@ -183,8 +183,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         });
 
         initGoogleAPIClient();
-
-        getLocationAndInitServices();
+        initServices();
+        //getLocationAndInitServices();
 
         ((Home)getActivity()).setListnerToFabAndToolbar();
 
@@ -203,10 +203,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private void showSettingDialog() {
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
-        // locationRequest.setInterval(30 * 1000);
         locationRequest.setExpirationDuration(10);
-//        locationRequest.setExpirationTime(500);
-        //locationRequest.setFastestInterval(5 * 1000);//5 sec Time interval for location update
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         builder.setAlwaysShow(true); //this is the key ingredient to show dialog always when GPS is off
@@ -253,15 +250,12 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {
                     case RESULT_OK:
-                        Log.e("Settings", "Result OK");
                         getLocationAndInitServices();
                         break;
                     case RESULT_CANCELED:
                         removeNoDataOrLoadingObj();
                         presentNoLocationView();
                         bindAdapter(adapter, eventsList);
-                        Log.e("Settings", "Result Cancel");
-
                         break;
                 }
                 break;
@@ -448,8 +442,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     @Subscribe
     public void receiveEvents(NearbyEventData nearbyEventData) {
-        Log.e(" nearby ", " list size : " + eventsList.size());
-        Log.e(" nearby ", " list size nb : " + nearbyEventData.getEventsList().size());
         this.nearbyEventData = nearbyEventData;
 
         if (nearbyEventData.getEventsList() != null && nearbyEventData.getEventsList().size() > 0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
@@ -507,8 +499,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
             }
         }
-
     }
+
     @Subscribe
     public void getEventAfterUnregistratation(RegisterEvent registerEvent)
     {
@@ -610,7 +602,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         //   EventBusService.getInstance().unregister(this);
     }
 
-    private void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
+    public void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
         refreshData(eventsList);
     }
 

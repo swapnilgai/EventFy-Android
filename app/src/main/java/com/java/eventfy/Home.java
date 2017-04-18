@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -23,7 +22,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +32,7 @@ import android.widget.TextView;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
+import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.LocationSudoEntity.LocationNearby;
 import com.java.eventfy.Entity.NotificationId;
@@ -46,7 +45,6 @@ import com.java.eventfy.Fragments.Notification;
 import com.java.eventfy.Fragments.Remot;
 import com.java.eventfy.asyncCalls.RegisterToGCM;
 import com.java.eventfy.asyncCalls.UpdateNotificationDetail;
-import com.java.eventfy.utils.DeviceDimensions;
 import com.java.eventfy.utils.SecurityOperations;
 import com.squareup.picasso.Picasso;
 
@@ -76,7 +74,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     private SharedPreferences.Editor editor;
     private Location userLoccation;
     private Nearby nearbyFragment;
+    private Remot remotFragment;
     private  double scrollPositionNearBy =0;
+    private List<Events> eventSearch = new ArrayList<Events>();
+    private List<Events> eventSearchRemote = new ArrayList<Events>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,8 +113,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.setDrawerListener(toggle);
         navigationView.setNavigationItemSelectedListener(this);
         tabLayout.setupWithViewPager(viewPager);
-        deviceDimensions();
-        //initServices();
         toggle.syncState();
         setupTabIcons();
     }
@@ -159,19 +158,51 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 search.setQuery("", false);
                 search.onActionViewCollapsed();
                 //search.collapseActionView();
+
+                if(nearbyFragment.eventsList!=null && nearbyFragment.eventsList.size()>0
+                        && !checkNoDataEventList(nearbyFragment.eventsList)){
+                    nearbyFragment.bindAdapter(nearbyFragment.adapter, nearbyFragment.eventsList);
+                }
+
+
+                if(remotFragment.eventsList!=null && remotFragment.eventsList.size()>0
+                        && !checkNoDataEventList(remotFragment.eventsList)){
+                    remotFragment.bindAdapter(remotFragment.adapter, remotFragment.eventsList);
+                }
+
             }
         });
+
 
             search.setOnQueryTextListener(new OnQueryTextListener() {
 
                 @Override
                 public boolean onQueryTextSubmit(String query) {
+
+                    eventSearch.removeAll(eventSearch);
+                    if(nearbyFragment.eventsList!=null  && nearbyFragment.eventsList.size()>0 && !checkNoDataEventList(nearbyFragment.eventsList)){
+                        for(Events event : nearbyFragment.eventsList){
+                            if(event.getEventName().contains(query))
+                                eventSearch.add(event);
+                        }
+                        nearbyFragment.bindAdapter(nearbyFragment.adapter, eventSearch);
+                    }
+
+                    if(remotFragment.eventsList!=null && remotFragment.eventsList.size()>0 && !checkNoDataEventList(remotFragment.eventsList)){
+                        for(Events event : remotFragment.eventsList){
+                            if(event.getEventName().contains(query))
+                                eventSearchRemote.add(event);
+                        }
+                        remotFragment.bindAdapter(remotFragment.adapter, eventSearchRemote);
+                    }
+
                     return false;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String query) {
                     // loadHistory(query);
+
 
                     return true;
 
@@ -181,6 +212,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         return true;
     }
+
+    public boolean checkNoDataEventList(List<Events> eventLst){
+        if(eventLst!=null && eventLst.get(0).getViewMessage()!=null && (eventLst.get(0).getViewMessage().equals(getString(R.string.home_no_data))||
+                eventLst.get(0).getViewMessage().equals(getString(R.string.home_connection_error)) ||
+                eventLst.get(0).getViewMessage().equals(getString(R.string.home_loading)) ||
+                eventLst.get(0).getViewMessage().equals(getString(R.string.home_loading)))){
+            return true;
+        }
+        return false;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -223,8 +265,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         nearbyFragment = new Nearby();
+        remotFragment = new Remot();
         adapter.addFrag(nearbyFragment, "Nearby");
-        adapter.addFrag(new Remot(), "Remote");
+        adapter.addFrag(remotFragment, "Remote");
         adapter.addFrag(new Notification(), "Notification");
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(2);
@@ -278,35 +321,31 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             intent.putExtra(getString(R.string.create_event_category), getString(R.string.create_event_category_public));
             startActivity(intent);
 
-        } else if (id == R.id.nav_item_create_event_private)
-        {
-            // Handle the Private event action
-            Intent intent = new Intent(this, CreatePublicEvent.class);
-            intent.putExtra(getString(R.string.create_event_category), getString(R.string.create_event_category_private));
-            startActivity(intent);
-
-        } else if (id == R.id.nav_item_my_events)
-        {
-
+        }
+//        else if (id == R.id.nav_item_create_event_private) {
+//            // Handle the Private event action
+//            Intent intent = new Intent(this, CreatePublicEvent.class);
+//            intent.putExtra(getString(R.string.create_event_category), getString(R.string.create_event_category_private));
+//            startActivity(intent);
+//
+//        }
+        else if (id == R.id.nav_item_my_events) {
             Intent intent = new Intent(this, MyEvents.class);
             startActivity(intent);
 
             // Handle the Event History action
 
-        } else if (id == R.id.nav_item_about)
-        {
+        } else if (id == R.id.nav_item_about) {
             // Handle the About action
 
-        } else if (id == R.id.nav_item_myacc)
-        {
+        } else if (id == R.id.nav_item_myacc) {
             // Handle the MyAccount action
 
             Intent intent = new Intent(this, ProfilePage.class);
             startActivity(intent);
 
         }
-        else if (id == R.id.nav_item_logout)
-        {
+        else if (id == R.id.nav_item_logout) {
             SharedPreferences preferences =getSharedPreferences(getString(R.string.userObject),Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
@@ -374,15 +413,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
-
-    public void deviceDimensions() {
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-            DeviceDimensions.deviceHeight = size.y;
-            DeviceDimensions.deviceWeidth = size.x;
-    }
-
     private void getUserObject() {
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
          editor = mPrefs.edit();
@@ -404,19 +434,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }
     }
 
-    public void storeUserObject(SharedPreferences.Editor editor)
-    {
+    public void storeUserObject(SharedPreferences.Editor editor) {
         Intent in = getIntent();
         signUp = (SignUp) in.getSerializableExtra(getString(R.string.userObject));
-
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
-
-        Log.e("string after ", "((((: "+json);
         editor.putString(getString(R.string.userObject), json);
-
         editor.commit();
-
         if(signUp!=null && signUp.getNotificationId()!=null)
             storeNotificationId(signUp.getNotificationId());
     }
@@ -431,7 +455,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public String getNotificationId(){
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.notofocationId), MODE_PRIVATE);
         String json = mPrefs.getString(getString(R.string.notofocationId), "");
-        Log.e("notification id : ", ""+json);
         return json;
     }
 
@@ -452,12 +475,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
 
     public void storeUserObject(SignUp signUp) {
-        Log.e("Storing user object1 : ", "     "+signUp.getViewMessage());
         SharedPreferences mPrefs = getSharedPreferences(getString(R.string.userObject), MODE_PRIVATE);
         editor = mPrefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
-        Log.e("Storing user object2 : ", "     "+json);
         editor.putString(getString(R.string.userObject), json);
         editor.commit();
     }

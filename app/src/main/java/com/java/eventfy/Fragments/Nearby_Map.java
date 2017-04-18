@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,6 +43,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.Away;
 import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
+import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
+import com.java.eventfy.Entity.EventSudoEntity.DeleteEvent;
 import com.java.eventfy.Entity.EventSudoEntity.EditEvent;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
@@ -132,14 +135,12 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
         signUp.setLocation(location);
         setEventIconGoogleMap = SetEventIconGoogleMap.getInstance();
         for(Events events : eventLst) {
-            int zoomVal = 10;
             myLatLag = new LatLng(events.getLocation().getLatitude(), events.getLocation().getLongitude());
 
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(myLatLag);
             markerOptions.title(events.getEventName());
             //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-
             setEventIconGoogleMap.setIcon(markerOptions, getContext(), events.getEventCategory());
             markerList.add(googleMap.addMarker(markerOptions));
         }
@@ -147,7 +148,9 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
-                if(markerList.contains(marker)){
+                Log.e("user marker : ", " "+userMarker.getId());
+                Log.e("clicked marker : ", " "+marker.getId());
+                if(!userMarker.getId().equals(marker.getId()) && markerList.contains(marker)){
                     updateEventInfo(markerList.indexOf(marker));
                 }
                 return false;
@@ -163,23 +166,36 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     }
     public void googleMapSetting(Location location) {
 
+        CameraPosition cameraPosition = null;
+
+    if(checkNoData()) {
         circle = googleMap.addCircle(new CircleOptions()
                 .center(myLatLag)
                 .fillColor(R.color.colorPrimaryExtraTransparent)
-                .radius(location.getDistance()*1610));
+                .radius(location.getDistance() * 1610));
 
-
-        CameraPosition cameraPosition = new CameraPosition.Builder().
+        cameraPosition = new CameraPosition.Builder().
                 target(new LatLng(location.getLatitude(), location.getLongitude())).
-                tilt(45).
-                bearing(40).
                 zoom(getZoomLevel(circle)).
                 build();
-
+    }else{
+        cameraPosition = new CameraPosition.Builder().
+                target(new LatLng(location.getLatitude(), location.getLongitude())).
+                zoom(14).
+                build();
+    }
         CameraUpdate cu1 = CameraUpdateFactory.newCameraPosition(cameraPosition);
         googleMap.animateCamera(cu1);
 
     }
+
+    public boolean checkNoData(){
+        if(eventLst!=null && eventLst.get(0).getViewMessage()!=null && eventLst.get(0).getViewMessage().equals(getString(R.string.home_no_data))){
+            return true;
+        }
+        return  false;
+    }
+
 
     public void updateEventInfo(int index)  {
         indexForOnclickEvent = index;
@@ -271,7 +287,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
         eventSearch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,7 +294,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 EventBusService.getInstance().post(nearbyMapSearch);
             }
         });
-
 
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
@@ -331,8 +345,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     }
 
     @Subscribe
-    public void receiveEvents(final NearbyEventData nearbyEventData)
-    {
+    public void receiveEvents(final NearbyEventData nearbyEventData) {
         this.eventLst = nearbyEventData.getEventsList();
         userCurrentLocation = nearbyEventData.getLocation();
         if(nearbyEventData.getEventsList()!=null && nearbyEventData.getEventsList().size()>0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
@@ -520,13 +533,60 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(editEvent.getEvents().getLocation().getLatitude(), editEvent.getEvents().getLocation().getLongitude()));
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-                markerList.add(index, googleMap.addMarker(markerOptions));
+                markerList.set(index, googleMap.addMarker(markerOptions));
                 eventLst.set(index, originalEvent);
             }
         }
         else if(editEvent.getViewMsg().equals(getString(R.string.edit_event_fail)) ||
                 editEvent.getViewMsg().equals(getString(R.string.edit_event_server_error))){
             Toast.makeText(getActivity(), "Unable to update event, Try again", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Subscribe
+    public void getCreatedEvent(CreateEvent createEvent) {
+
+        if(createEvent.getViewMsg().equals(getString(R.string.create_event_success))){
+
+            String []str = createEvent.getEvents().getEventAwayDistanve().split(" ");
+
+            try {
+                if(!str[0].equals(getString(R.string.Undefined)) && Integer.parseInt(str[0])<signUp.getVisibilityMiles()){
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.position(new LatLng(createEvent.getEvents().getLocation().getLatitude(), createEvent.getEvents().getLocation().getLongitude()));
+                    eventLst.add(index, createEvent.getEvents());
+                    if(setEventIconGoogleMap==null)
+                        setEventIconGoogleMap = SetEventIconGoogleMap.getInstance();
+                    setEventIconGoogleMap.setIcon(markerOptions, getContext(), createEvent.getEvents().getEventCategory());
+                    markerList.add(index, googleMap.addMarker(markerOptions));
+                }
+
+            }catch (Exception e){
+
+            }
+        }
+    }
+
+    @Subscribe
+    public void getDeleteEvent(DeleteEvent deleteEvent) {
+        if(deleteEvent.getEvents().getViewMessage().equals(getString(R.string.delete_event_success))) {
+            int index = -1;
+            Events temp = null;
+            int count =0;
+            Events removalEvent = null;
+            for(Events e: this.eventLst) {
+                if(e.getEventId() == deleteEvent.getEvents().getEventId()) {
+                    index = count;
+                    removalEvent = e;
+                    break;
+
+                }
+                count++;
+            }
+            if(index!=-1 && removalEvent!=null){
+                eventLst.remove(index);
+                markerList.remove(index);
+            }
         }
     }
 

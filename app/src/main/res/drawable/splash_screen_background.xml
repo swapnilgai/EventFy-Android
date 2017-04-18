@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />
-    <item android:left="100dp" android:right="100dp" android:top="200dp" android:bottom="200dp">
+    <item android:height="100dp" android:width="100dp">
+    <!--<item android:left="300dp" android:right="300dp" android:top="300dp" android:bottom="300dp">-->
         <bitmap
             android:gravity="center"
             android:src="@drawable/splash_logo"

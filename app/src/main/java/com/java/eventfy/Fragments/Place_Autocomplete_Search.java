@@ -46,6 +46,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.code.geocoder.Geocoder;
+import com.google.code.geocoder.GeocoderRequestBuilder;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderRequest;
+import com.google.code.geocoder.model.GeocoderResult;
+import com.google.code.geocoder.model.GeocoderStatus;
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Events;
@@ -325,7 +331,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
             Toast.makeText(getContext(), "Clicked: " + primaryText,
                     Toast.LENGTH_SHORT).show();
-            Log.i(TAG, "Called getPlaceById to get Place details for " + placeId);
         }
     };
 
@@ -359,7 +364,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
                 //setting url
 
                 eventObj.setLocation(locationSelected);
-                Log.e(TAG, "Place details received: " + place.getLatLng());
             }
             // Format details of the place for display and show it in a TextView.
         //    mAutocompleteView.setText(formatPlaceDetails(getResources(), place.getLatLng());
@@ -372,8 +376,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
                // mPlaceDetailsAttribution.setVisibility(View.VISIBLE);
                // mPlaceDetailsAttribution.setText(Html.fromHtml(thirdPartyAttribution.toString()));
             }
-
-            Log.i(TAG, "Place details received: " + place.getLatLng());
 
             places.release();
         }
@@ -423,8 +425,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         getRemoteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void getUserObject()
-    {
+    public void getUserObject() {
         SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObject), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
@@ -450,8 +451,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         return false;
     }
 
-
-
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
         if (month<12)
@@ -464,26 +463,20 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
     public void setUpMarker(double latitude, double longitude) {
         mapView.setVisibility(View.VISIBLE);
-
         myLatLag = new LatLng(latitude, longitude);
-
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(myLatLag);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         googleMap.clear();
         locationMarker =  googleMap.addMarker(markerOptions);
-
         locationInfo.setVisibility(View.VISIBLE);
         locationEditInfo.setVisibility(View.GONE);
-
         circle = googleMap.addCircle(new CircleOptions()
                 .center(myLatLag)
                 .fillColor(R.color.colorPrimaryExtraTransparent)
                 .radius(visiblityMilesVal*1610));
         googelMapSetting(latitude,  longitude);
-
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -522,6 +515,10 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
     @Override
     public void onMapLongClick(LatLng point) {
+        locationSelected.setLatitude(point.latitude);
+        locationSelected.setLongitude(point.longitude);
+        eventObj.setLocation(locationSelected);
+        getAddressFromLatLang(point.latitude, point.longitude);
         setUpMarker(point.latitude, point.longitude);
     }
 
@@ -535,4 +532,60 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         }
         return zoomLevel;
     }
+
+    public void getAddressFromLatLang(double latitude, double longitude) {
+
+        new AsyncTask<LatLng, Void, String>()
+        {
+            @Override
+            protected String  doInBackground(LatLng... latLan)
+            {
+               // try {
+                    Log.e("Address fetching......", "");
+                    GeocoderRequest geocoderRequest;
+                    Geocoder geocoder = new Geocoder();
+                    geocoderRequest =  new GeocoderRequestBuilder().setLocation
+                            (new com.google.code.geocoder.model.LatLng(String.valueOf(latLan[0].latitude), String.valueOf(latLan[0].longitude)))
+                            .setLanguage("en").getGeocoderRequest();
+                    GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+                    if (geocoderResponse != null) {
+                        if (geocoderResponse.getStatus() == GeocoderStatus.OK) {
+                            if (!geocoderResponse.getResults().isEmpty()) {
+                                GeocoderResult geocoderResult = // Get the first result
+                                        geocoderResponse.getResults().iterator().next();
+                                String resultAddr = geocoderResult.getFormattedAddress();
+
+                                return resultAddr;
+                            }
+                        }
+                    }
+
+                return null;
+                }
+//                catch (Exception ex)
+//                {
+//                    Log.e("Address fetching......", " Exception ");
+//                    Log.e("Address fetching......", "  "+ex.getMessage());
+//                    return null;
+//                    // log exception or do whatever you want to do with it!
+//                }
+//                return null;
+//            }
+
+            @Override
+            protected void onPostExecute(String addresses)
+            {
+                Log.e("Address fetched......", "");
+                if (addresses!= null && addresses.length() > 0) {
+
+                    eventLocationTextView.setText(addresses);
+                }
+                // do whatever you want/need to do with the address found
+                // remember to check first that it's not null
+            }
+        }.execute(new LatLng(latitude, longitude));
+
+    }
+
+
 }

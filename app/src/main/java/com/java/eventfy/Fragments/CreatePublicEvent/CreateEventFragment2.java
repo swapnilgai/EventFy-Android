@@ -186,16 +186,16 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
     public void uploadImage()
     {
-        UploadImage uploadImage = new UploadImage(eventObj, eventImageBm);
+        getUserObject();
+        String url = getString(R.string.ip_localhost)+getString(R.string.add_event);
+        eventObj.setAdmin(signUp);
+        UploadImage uploadImage = new UploadImage(eventObj, eventImageBm, url);
         uploadImage.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
     @Subscribe
-    public void getLocation(LocationPrivateEvent locationPrivateEvent)
-    {
-
-
+    public void getLocation(LocationPrivateEvent locationPrivateEvent) {
         if(eventObj.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))
                 && locationPrivateEvent.getLocation()!=null
                 && (locationPrivateEvent.getLocation().getLatitude() == 0.0 && locationPrivateEvent.getLocation().getLongitude() == 0.0) )
