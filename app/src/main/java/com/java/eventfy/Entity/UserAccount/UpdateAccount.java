@@ -9,6 +9,15 @@ import com.java.eventfy.Entity.SignUp;
 public class UpdateAccount {
     private double id;
     private SignUp signUp;
+    private String viewMsg;
+
+    public String getViewMsg() {
+        return viewMsg;
+    }
+
+    public void setViewMsg(String viewMsg) {
+        this.viewMsg = viewMsg;
+    }
 
     public double getId() {
         return id;

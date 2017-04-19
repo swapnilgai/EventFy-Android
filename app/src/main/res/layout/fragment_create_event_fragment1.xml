@@ -282,34 +282,34 @@
                     <!--android:layout_gravity="center"-->
                     <!--android:src="@drawable/ic_arrow_drop_down_black_18dp" />-->
 
-                <!--<Spinner-->
-                    <!--android:id="@+id/public_event_category"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="45dp"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:background="@android:color/transparent"-->
-                    <!--android:gravity="center"-->
-                    <!--android:entries="@array/category_arrays"-->
-                    <!--android:spinnerMode="dropdown"-->
-                    <!--android:layout_alignParentTop="true"-->
-                    <!--android:layout_alignParentRight="true"-->
-                    <!--android:layout_alignParentEnd="true"/>-->
+                <Spinner
+                    android:id="@+id/public_event_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:gravity="center"
+                    android:entries="@array/category_arrays"
+                    android:spinnerMode="dropdown"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"/>
 
 
-            <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-                android:id="@+id/public_event_category"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginRight="12dp"
-                android:spinnerMode="dropdown"
-                android:background="@android:color/transparent"
-                android:entries="@array/category_arrays"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:textColor="@color/common_google_signin_btn_text_light_focused"
-                app:hintText="Category"/>
+            <!--<com.toptoche.searchablespinnerlibrary.SearchableSpinner-->
+                <!--android:id="@+id/public_event_category"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="30dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginRight="12dp"-->
+                <!--android:spinnerMode="dropdown"-->
+                <!--android:background="@android:color/transparent"-->
+                <!--android:entries="@array/category_arrays"-->
+                <!--android:layout_alignParentTop="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:textColor="@color/common_google_signin_btn_text_light_focused"-->
+                <!--app:hintText="Category"/>-->
 
             <!--</RelativeLayout>-->
 

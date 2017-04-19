@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="@color/colorPrimary"
     android:layout_gravity="center">
 
     <LinearLayout
@@ -16,6 +18,17 @@
         android:paddingTop="20dp"
         android:layout_gravity="center">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="20dp"
+            android:text="Create Account"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="24sp" />
+
         <!-- Name Label -->
         <!--<ImageView-->
             <!--android:id="@+id/imageView"-->
@@ -28,6 +41,9 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:hintTextAppearance="@color/white"
             android:layout_marginBottom="8dp" >
 
             <EditText
@@ -35,6 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name_label"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
@@ -42,6 +60,9 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            app:hintTextAppearance="@color/white"
             android:layout_marginBottom="8dp" >
 
             <EditText
@@ -49,6 +70,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email_phone_number"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 
@@ -56,6 +79,9 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            app:hintTextAppearance="@color/white"
+            android:textColorHint="@color/white"
             android:layout_marginBottom="8dp" >
 
             <EditText
@@ -63,6 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_label"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
@@ -71,6 +99,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:textColor="@color/white"
+            app:hintTextAppearance="@color/white"
+            android:textColorHint="@color/white"
             android:focusable="false">
 
             <EditText
@@ -80,6 +111,8 @@
                 android:clickable="true"
                 android:focusable="false"
                 android:hint="@string/date_of_birth"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
                 android:inputType="textCapWords|date" />
         </android.support.design.widget.TextInputLayout>
 
@@ -99,12 +132,12 @@
             android:id="@+id/btn_signup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/content_main2_button_color"
+            android:background="@color/colorPrimaryDark"
             android:textColor="@android:color/white"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="24dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
             android:text="@string/create_account" />
 
         <TextView
@@ -112,10 +145,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="10dp"
+            android:paddingTop="16dp"
             android:paddingBottom="20dp"
             android:text="@string/already_a_member"
-            android:textColor="@color/transparent_black"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="16sp" />
 
     </LinearLayout>

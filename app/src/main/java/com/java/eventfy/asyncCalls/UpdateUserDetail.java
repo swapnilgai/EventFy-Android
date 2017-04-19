@@ -59,6 +59,7 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
 
         }catch (Exception e)
         {
+            signUp = null;
             Log.e("exception : ", ""+e.getStackTrace());
         }
         return null;
@@ -72,7 +73,10 @@ public class UpdateUserDetail extends AsyncTask<Void, Void, Void> {
             signUp.setViewMessage(context.getString(R.string.user_account_update_server_error));
         }
         UpdateAccount updateAccount = new UpdateAccount();
+        updateAccount.setViewMsg(signUp.getViewMessage());
+        signUp.setViewMessage(null);
         updateAccount.setSignUp(signUp);
+
 
         EventBusService.getInstance().post(updateAccount);
     }

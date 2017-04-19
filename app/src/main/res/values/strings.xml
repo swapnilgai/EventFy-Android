@@ -220,7 +220,7 @@
     <string name="no_account">No account yet? Create one</string>
     <string name="forgot_password">Forget password?</string>
     <string name="name_label">Name</string>
-    <string name="email_phone_number">Email/Phone Number</string>
+    <string name="email_phone_number">Email</string>
     <string name="password_label">Password</string>
     <string name="date_of_birth">Date Of Birth</string>
     <string name="create_account">Create Account</string>

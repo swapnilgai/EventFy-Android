@@ -496,28 +496,52 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     @Subscribe
     public void getUserObject(UpdateAccount updateAccount ) {
-        if (updateAccount.getSignUp().getViewMessage().equals(getString(R.string.user_account_update_success))) {
+        if (updateAccount.getViewMsg().equals(getString(R.string.user_account_update_success))) {
             setNavigationDrawerUserData(updateAccount.getSignUp());
             updateAccount.getSignUp().setViewMessage(null);
             storeUserObject(updateAccount.getSignUp());
         }
     }
 
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+//
+//        Log.e("permission : ", " : "+requestCode);
+//        Log.e("grant result : ", " : "+grantResults[0]);
+//
+//        switch (requestCode) {
+//            case 65537: {
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    nearbyFragment.getLocationAndInitServices();
+//                } else {
+//                    nearbyFragment.removeNoDataOrLoadingObj();
+//                    nearbyFragment.presentNoLocationView();
+//                    nearbyFragment.bindAdapter(nearbyFragment.adapter, nearbyFragment.eventsList);
+//                }
+//                return;
+//            }
+//            case 2: {
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    nearbyFragment.showSettingDialog();
+//                } else {
+//                    nearbyFragment.removeNoDataOrLoadingObj();
+//                    nearbyFragment.presentNoLocationView();
+//                    nearbyFragment.bindAdapter(nearbyFragment.adapter, nearbyFragment.eventsList);
+//                }
+//            }
+//        }
+//    }
+
+
     // verified account object return from server
 
     @Subscribe
     public void getUserObject(VerifyAccount verifyAccount ) {
-//        if (verifyAccount.getViewMsg() != null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_success))) {
-//            {
-//                signUp.setIsVerified("true");
-//                storeUserObject(signUp);
-//            }
-//        }
-
         if(verifyAccount.getViewMsg()!= null && verifyAccount.getViewMsg().equals(getString(R.string.verify_account_fail))){
         }
         else{
-
             if(signUp==null)
                  getUserObject();
 
@@ -525,18 +549,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             storeUserObject(signUp);
         }
-
-
     }
 
     @Subscribe
     public void getLocation (LocationNearby locationNearby){
-        Log.e("Location in nearby : ", " LLLLLLL "+locationNearby );
-
         userLoccation.setLongitude(locationNearby.getLocation().getLongitude());
         userLoccation.setLatitude(locationNearby.getLocation().getLatitude());
         userLoccation.setDistance(signUp.getVisibilityMiles());
-
         storeUserLocation(userLoccation);
     }
 
@@ -546,38 +565,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
              nearbyFragment.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
                  LinearLayoutManager linearLayoutManager = (LinearLayoutManager) nearbyFragment.recyclerView.getLayoutManager();
-
                  @Override
                  public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                     //  scrollPositionNearBy = linearLayoutManager.findFirstVisibleItemPosition();
                      int currentFirstVisible = linearLayoutManager.findFirstVisibleItemPosition();
-                     //recyclerView.computeVerticalScrollOffset();
-
-                     //=linearLayoutManager.findFirstVisibleItemPosition();
                      if (currentFirstVisible > scrollPositionNearBy) {
                          nearbyFragment.fragment_switch_button.hide();
-                         //   toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
-//                     tabLayout.animate().translationY(-tabLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
-                         // if(toolbar.isShown())
-                         //   toolbar.setVisibility(View.GONE);
-
                      } else if (currentFirstVisible < scrollPositionNearBy) {
                          nearbyFragment.fragment_switch_button.show();
-                         //  toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                         //     tabLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-                         // if(!toolbar.isShown())
-                         //   toolbar.setVisibility(View.VISIBLE);
-
                      }
                      scrollPositionNearBy = currentFirstVisible;
-
-//                 if(scrollPositionNearBy<recyclerView.computeVerticalScrollOffset()){
-
-//                     scrollPositionNearBy = recyclerView.computeVerticalScrollOffset();
-//                 }else if(scrollPositionNearBy>recyclerView.computeVerticalScrollOffset()-800){
-
-//                     scrollPositionNearBy = recyclerView.computeVerticalScrollOffset()-800;
-//                 }
                  }
                  @Override
                  public void onScrollStateChanged(RecyclerView recyclerView, int newState) {

@@ -1,5 +1,6 @@
 package com.java.eventfy;
 
+import android.Manifest.permission;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.ActivityOptions;
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -215,10 +217,13 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
                                 break;
                             case R.id.replace_profile_pic:
                                 //handle menu2 click
-                                signUp.setImageUrl(null);
 
-                                Intent chooseImageIntent = ImagePicker.getPickImageIntent(getApplicationContext());
-                                startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+                                if(isStoragePermissionGranted() && isCamPermissionGranted()){
+                                    signUp.setImageUrl(null);
+
+                                    Intent chooseImageIntent = ImagePicker.getPickImageIntent(getApplicationContext());
+                                    startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+                                }
                                 break;
                             case R.id.view_profile_pic:
                                 //handle menu2 click
@@ -328,7 +333,14 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
         userStatus.setText(signUp.getStatus());
         userName.setText(signUp.getUserName());
         userEmail.setText(signUp.getUserId());
-        userDob.setText(DateTimeStringOperations.getInstance().getDateString(signUp.getDob()));
+
+        Log.e(" userDob : ", " "+signUp.getDob());
+
+        if(signUp.getIsFacebook().equals("true"))
+            userDob.setText(DateTimeStringOperations.getInstance().getDateStringDOB(signUp.getDob()));
+        else
+            userDob.setText(DateTimeStringOperations.getInstance().getDateString(signUp.getDob()));
+
         if(signUp.getIsFacebook().equals("false") && signUp.getFacebookId()==null && signUp.getIsVerified().equals("false")){
             verifyUserAccount.setImageResource(R.drawable.not_verified);
         }
@@ -434,8 +446,9 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
     public void getUserObject(UpdateAccount updateAccount) {
         SignUp signUp = updateAccount.getSignUp();
         dismissProgressDialog();
-        if(signUp.getViewMessage().equals(R.string.user_account_update_success)) {
-            if(signUp.getIsVerified().equals("false")){
+        Log.e("profile update view ", " "+updateAccount.getViewMsg());
+        if(updateAccount.getViewMsg().equals(getString(R.string.user_account_update_success))) {
+            if(!signUp.getIsFacebook().equals("true") && signUp.getIsVerified().equals("false")){
                 verifyUserAccount.setImageResource(R.drawable.not_verified);
             }
             else{
@@ -445,7 +458,7 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
             toastMsg("Updated successfully");
 
         }else if(signUp.getViewMessage().equals(R.string.user_account_update_fail)){
-            toastMsg("Error, please check user detail");
+            toastMsg("Error, please check updated details");
         }
         else if(signUp.getViewMessage().equals(R.string.user_account_update_server_error)){
             toastMsg("Server error, please try again later");
@@ -755,7 +768,36 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
             userDob.setText(DateTimeStringOperations.getInstance().getDateString(signUp.getDob()));
         }
         return out;
+    }
 
+    public  boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE )
+                    == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
+    }
+
+    public  boolean isCamPermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(permission.CAMERA )
+                    == PackageManager.PERMISSION_GRANTED) {
+                return true;
+            } else {
+                requestPermissions(new String[]{permission.CAMERA}, 1);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            return true;
+        }
     }
 
 

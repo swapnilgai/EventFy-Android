@@ -64,7 +64,8 @@
             android:name=".SplashScreen"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashScreenTheme">
+            android:theme="@style/SplashScreenTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -74,30 +75,41 @@
         <activity
             android:name=".Home"
             android:configChanges="orientation|screenSize"
-            android:uiOptions="splitActionBarWhenNarrow"/>
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".EventInfoPublic"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".CreatePublicEvent"
-            android:configChanges="orientation|screenSize"/>
-        <activity android:name=".MyEvents"/>
-        <activity android:name=".EventInfoPrivate"/>
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity"/>
-        <activity android:name=".Login"/>
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MyEvents" android:screenOrientation="portrait"/>
+        <activity android:name=".EventInfoPrivate" android:screenOrientation="portrait"/>
+        <activity android:name="com.soundcloud.android.crop.CropImageActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Login" android:screenOrientation="portrait"/>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"/>
-        <activity android:name=".SignUpActivity"/>
-        <activity android:name=".VerifySignUp"/>
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SignUpActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".VerifySignUp"
+                  android:screenOrientation="portrait"/>
         <activity
             android:name=".ProfilePage"
+            android:screenOrientation="portrait"
            />
-        <activity android:name=".ViewerProfilePage"/>
-        <activity android:name=".PasswordUpdate"/>
-        <activity android:name=".ImageFullScreenMode"/>
-        <activity android:name=".ImageComment"/>
+        <activity android:name=".ViewerProfilePage"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".PasswordUpdate"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ImageFullScreenMode"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ImageComment"
+                  android:screenOrientation="portrait"/>
         <!-- Meta data block end -->
 
 

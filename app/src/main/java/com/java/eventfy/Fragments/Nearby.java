@@ -113,10 +113,17 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         getUserObject();
 
-        locationNearby = new LocationNearby();
-        eventsList = new LinkedList<Events>();
-        eventsListTemp = new LinkedList<Events>();
+        if(locationNearby==null)
+            locationNearby = new LocationNearby();
 
+        createLoadingObj();
+        createNoDataObj();
+
+        if(eventsList == null) {
+            eventsList = new LinkedList<Events>();
+            eventsListTemp = new LinkedList<Events>();
+            addLoading();
+        }
 
         fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
         fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
@@ -129,8 +136,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         transaction.hide(nearby_map);
         transaction.commit();
 
-        createLoadingObj();
-        createNoDataObj();
+
 
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
@@ -145,7 +151,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         //recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
-        addLoading();
+
         bindAdapter(adapter, eventsList);
 
         swipeRefreshLayout.setRefreshing(false);
@@ -276,7 +282,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     private void initServices() {
         // GET USER CURRENT LOCATION ON APPLICATION STARTUP
-
         if(!checkLocationPermission()){
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }else{
@@ -285,7 +290,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-
+        Log.e("permission : ", " : "+requestCode);
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0
@@ -328,7 +333,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         }else{
             if(!checkNoDataOrLoadingCondition(eventsList))
-                addLoading();
+                addNoData();
         }
         bindAdapter(adapter, eventsList);
     }

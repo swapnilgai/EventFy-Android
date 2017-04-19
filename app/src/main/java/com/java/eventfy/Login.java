@@ -114,7 +114,6 @@ public class Login extends AppCompatActivity  {
 
 
         signupLink.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // Start the Signup activity
@@ -125,7 +124,6 @@ public class Login extends AppCompatActivity  {
         });
 
         forgotPasswordLink.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // Start the Signup activity
@@ -136,7 +134,6 @@ public class Login extends AppCompatActivity  {
         });
 
         loginButton.setOnClickListener(new OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 loginAction();
@@ -146,9 +143,7 @@ public class Login extends AppCompatActivity  {
 
     private void loginAction() {
         //TODO write action for login button
-
-        if(validate())
-        {
+        if(validate()) {
             startProgressDialog();
             user = new User();
             user.setUsername(emailText.getText().toString());
@@ -206,10 +201,13 @@ public class Login extends AppCompatActivity  {
                                                                 try {
 
                                                                     String jsonresult = String.valueOf(object);
-                                                                    String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
+                                                                  //  String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
                                                                     String Address = object.getJSONObject("location").getString("name");
                                                                     LatLng latLng = getLocationFromAddress(Address);
+
+
                                                                     signUp = new SignUp();
+                                                                    String profilePicUrl = "https://graph.facebook.com/"+object.getString("id")+"/picture?type=large";
                                                                     signUp.setUserName(object.getString("name"));
                                                                     signUp.setDob(object.getString("birthday"));
                                                                     signUp.setImageUrl(profilePicUrl);
@@ -218,6 +216,7 @@ public class Login extends AppCompatActivity  {
                                                                     signUp.setVisibilityMiles(10);
                                                                     signUp.setFacebookId(object.getString("id"));
                                                                     signUp.setVisibilityMode(getString(R.string.visibility_mode_visible));
+                                                                    signUp.setIsVerified("true");
 
                                                                     if(latLng!=null) {
                                                                         Location location = new Location();
@@ -225,11 +224,8 @@ public class Login extends AppCompatActivity  {
                                                                         location.setLongitude(latLng.longitude);
                                                                         location.setDistance(10);
                                                                         signUp.setLocation(location);
-
                                                                     }
-
                                                                     serverCallFbLogin(signUp);
-
                                                                 } catch (JSONException e) {
                                                                     e.printStackTrace();
                                                                 }

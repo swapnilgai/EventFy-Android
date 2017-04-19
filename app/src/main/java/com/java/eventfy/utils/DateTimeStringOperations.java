@@ -7,6 +7,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.DateTimeParser;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -133,12 +134,34 @@ public class DateTimeStringOperations {
 
     }
 
+    public String getDateStringDOB(String dateStr){
+
+        try {
+            Date dob  =  new java.text.SimpleDateFormat("MM/dd/yyyy").parse(dateStr);
+
+        DateTime dateTime = new DateTime(dob);
+
+        DateTime.Property pDoW = dateTime.monthOfYear();
+        String month = pDoW.getAsText(Locale.ENGLISH);
+
+        String dateTimeStr = month.substring(0,3)+", "+dateTime.getDayOfMonth()+" "+dateTime.getYear();
+
+        return dateTimeStr;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
 
     public DateTime convertStringToDateTimeSignUp(String date, String timeZone){
         DateTimeParser[] parsers = {
                 DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
                 DateTimeFormat.forPattern("MM-dd-yyyy").getParser(),
-                DateTimeFormat.forPattern("MM/dd/yyyy").getParser()
+                DateTimeFormat.forPattern("MM/dd/yyyy").getParser(),
         };
 
         DateTime out = null;
@@ -153,9 +176,7 @@ public class DateTimeStringOperations {
 //
 //        }
         return out;
-
     }
-
 
     public boolean checkUSerIs18Plus(String userDob){
 
@@ -178,7 +199,8 @@ public class DateTimeStringOperations {
 
         DateTimeParser[] parsers = {
                 DateTimeFormat.forPattern("yyyy-MM-dd HH:mm").getParser(),
-                DateTimeFormat.forPattern("yyyy-MM-dd").getParser()
+                DateTimeFormat.forPattern("yyyy-MM-dd").getParser(),
+                DateTimeFormat.forPattern("MM-dd-yyyy").getParser()
         };
 
         DateTime dTime = new DateTime();
