@@ -13,15 +13,15 @@
     <string name="navigation_drawer_closed">The navigation drawer is closed</string>
 
     <!-- Web servises url -->
-    <string name="ip_local">http://192.168.0.6:8080/EventFy</string>
-    <string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>
+    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
+    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
 
     <!--<string name="ip_local">http://10.67.70.107:8080/EventFy</string>-->
     <!--<string name="ip_localhost">http://10.67.70.107:8080/EventFy</string>-->
 
     <!---->
-    <!--<string name="ip_local">https://eventefy.herokuapp.com</string>-->
-    <!--<string name="ip_localhost">https://eventefy.herokuapp.com</string>-->
+    <string name="ip_local">https://eventefy.herokuapp.com</string>
+    <string name="ip_localhost">https://eventefy.herokuapp.com</string>
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
