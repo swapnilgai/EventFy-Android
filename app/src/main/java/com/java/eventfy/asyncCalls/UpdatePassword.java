@@ -3,7 +3,6 @@ package com.java.eventfy.asyncCalls;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.UserAccount.PasswordReset;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -33,12 +32,6 @@ public class UpdatePassword extends AsyncTask<Void, Void, Void>  {
 
         try {
 
-        Log.e(" url ", url);
-
-        Gson gson = new Gson();
-
-        Log.e(" obj :  ", gson.toJson(passwordReset));
-
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -53,8 +46,6 @@ public class UpdatePassword extends AsyncTask<Void, Void, Void>  {
 
         }catch (Exception e)
         {
-            Log.e("exception : ", ""+e.getStackTrace());
-
             passwordReset.setViewMsg("Error");
         }
         return null;

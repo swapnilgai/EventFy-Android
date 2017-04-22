@@ -104,12 +104,20 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
     private LinearLayout updateProfileLinearLayout;
     private ImageView loadingImage;
     private String dobString;
+    private VerifyAccount verifyAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_page);
-        getUserObject();
+
+        verifyAccount = (VerifyAccount) getIntent().getSerializableExtra(getString(R.string.verify_account));
+
+        if(verifyAccount == null)
+            getUserObject();
+        else
+            signUp = verifyAccount.getSignUp();
+
         EventBusService.getInstance().register(this);
 
         userVisibilityMode = (RadioGroup) findViewById(R.id.user_visibility_mode);
@@ -143,7 +151,6 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
         final Calendar calendar = Calendar.getInstance();
 
         final DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(ProfilePage.this, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), false);
-
 
         final Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -303,38 +310,48 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
             }
         });
 
-    }
-
-    public void getVisibilityMode() {
-
-
-        userVisibilityMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch(checkedId){
-                    case R.id.user_visible:
-                        signUp.setVisibilityMode(getString(R.string.visibility_mode_visible));
-                        // do operations specific to this selection
-                        break;
-                    case R.id.user_donotdisturb:
-                        signUp.setVisibilityMode(getString(R.string.visibility_mode_donotdisturb));
-                        // do operations specific to this selection
-                        break;
-                    case R.id.user_invisible:
-                        signUp.setVisibilityMode(getString(R.string.visibility_mode_invisible));
-                        // do operations specific to this selection
-                        break;
-                }
+        visibilityModeVisible.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                signUp.setVisibilityMode(getString(R.string.visibility_mode_visible));
+                visibilityModeDoNotDisturb.setChecked(false);
+                visibilityModeInVisible.setChecked(false);
             }
         });
+
+
+        visibilityModeDoNotDisturb.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                signUp.setVisibilityMode(getString(R.string.visibility_mode_donotdisturb));
+                visibilityModeVisible.setChecked(false);
+                visibilityModeInVisible.setChecked(false);
+            }
+        });
+
+        visibilityModeInVisible.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // datePickerDialog.setVibrate(isVibrate());
+                signUp.setVisibilityMode(getString(R.string.visibility_mode_invisible));
+                visibilityModeDoNotDisturb.setChecked(false);
+                visibilityModeVisible.setChecked(false);
+            }
+        });
+
+        unableFacebookEvents();
+    }
+
+    public void unableFacebookEvents(){
+        if(signUp.getFacebookId() != null){
+            userEmail.setEnabled(false);
+            userDob.setEnabled(false);
+        }
     }
 
     public void setUserData(SignUp signUp) {
         userStatus.setText(signUp.getStatus());
         userName.setText(signUp.getUserName());
         userEmail.setText(signUp.getUserId());
-
-        Log.e(" userDob : ", " "+signUp.getDob());
 
         if(signUp.getIsFacebook().equals("true"))
             userDob.setText(DateTimeStringOperations.getInstance().getDateStringDOB(signUp.getDob()));
@@ -686,12 +703,12 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
 
         signUp.setVisibilityMiles(userVisibilityMiles.getProgress());
 
-        if (userStatus.getText().toString().isEmpty()) {
-            userStatus.setError("Status cant be empty");
-            valid = false;
-        } else {
-            userStatus.setError(null);
-        }
+//        if (userStatus.getText().toString().isEmpty()) {
+//            userStatus.setError("Status cant be empty");
+//            valid = false;
+//        } else {
+//            userStatus.setError(null);
+//        }
         if (userDob.getText().toString().isEmpty()){
 
             if(userDob.getText().toString().isEmpty()){
@@ -799,6 +816,5 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
             return true;
         }
     }
-
 
 }

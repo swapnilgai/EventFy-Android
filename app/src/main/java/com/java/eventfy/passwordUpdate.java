@@ -115,7 +115,6 @@ public class PasswordUpdate extends AppCompatActivity {
         Intent in = getIntent();
         Gson gson = new Gson();
         String json = gson.toJson(signUp);
-        Log.e("string is ", "((((: "+json);
         editor.putString(getString(R.string.userObject), json);
         editor.commit();
     }
@@ -199,7 +198,6 @@ public class PasswordUpdate extends AppCompatActivity {
 
     @Subscribe
     public void getUpdatedPassword(PasswordReset passwordReset) {
-        Log.e("in password signup", ""+signUp.getPassword());
         dismissProgressDialog();
         if(passwordReset.getViewMsg().equals(getString(R.string.verify_account_success))) {
 

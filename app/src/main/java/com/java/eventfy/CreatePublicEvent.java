@@ -373,13 +373,6 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
         options.inJustDecodeBounds = false;
         actuallyUsableBitmap = BitmapFactory.decodeFileDescriptor(
                 fileDescriptor.getFileDescriptor(), null, options);
-
-        Log.e("height ", ""+actuallyUsableBitmap.getHeight());
-
-        Log.e("width ", ""+actuallyUsableBitmap.getWidth());
-
-        Log.e("size ", ""+actuallyUsableBitmap.getByteCount());
-
         return actuallyUsableBitmap;
     }
     // Crop image end
@@ -421,7 +414,6 @@ public class CreatePublicEvent extends AppCompatActivity implements OnCommentCli
 
     @Subscribe
     public void getCreatedEventFromServer(CreateEvent createEvent) {
-
         if(createEvent.getViewMsg().equals(getString(R.string.create_event_success))){
             Toast.makeText(this, "Event created", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(CreatePublicEvent.this, EventInfoPublic.class);

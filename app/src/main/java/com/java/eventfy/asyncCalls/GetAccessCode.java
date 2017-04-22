@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.UserAccount.PasswordReset;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -34,10 +33,6 @@ public class GetAccessCode  extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... strings) {
 
         try {
-
-            Gson g = new Gson();
-            Log.e("obj :::   ", ""+g.toJson(resetPassword));
-
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 
@@ -53,7 +48,6 @@ public class GetAccessCode  extends AsyncTask<Void, Void, Void> {
 
 
         }catch (Exception e) {
-            Log.e("Exception : ", ""+e.getStackTrace());
         }
         return null;
     }

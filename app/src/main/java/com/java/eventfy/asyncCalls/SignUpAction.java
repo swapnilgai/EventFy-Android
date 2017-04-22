@@ -1,9 +1,7 @@
 package com.java.eventfy.asyncCalls;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -31,11 +29,6 @@ public class SignUpAction  extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... strings) {
 
         try {
-            Log.e("url ", "" + url);
-
-            Gson g = new Gson();
-
-            Log.e("url ", "" +g.toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -49,9 +42,8 @@ public class SignUpAction  extends AsyncTask<Void, Void, Void> {
             signUp = rateResponse.getBody();
 
 
-        }catch (Exception e)
-        {
-                Log.e("exception : ", ""+e.getStackTrace());
+        }catch (Exception e) {
+
         }
         return null;
     }

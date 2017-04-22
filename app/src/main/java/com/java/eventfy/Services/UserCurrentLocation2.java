@@ -77,8 +77,6 @@ public class UserCurrentLocation2 extends Service implements
 
         LatLng latLng = new LatLng(currentLatitude, currentLongitude);
 
-        Log.e(TAG, " -----: "+latLng);
-
         //mMap.addMarker(new MarkerOptions().position(new LatLng(currentLatitude, currentLongitude)).title("Current Location"));
 
     }
@@ -87,9 +85,7 @@ public class UserCurrentLocation2 extends Service implements
     public void onConnected(Bundle bundle) {
         Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
-        Log.e(TAG, "location -----: "+location);
         if (location == null) {
-            Log.e(TAG, "update -----: "+location);
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
         else {
@@ -115,18 +111,15 @@ public class UserCurrentLocation2 extends Service implements
              * If no resolution is available, display a dialog to the
              * user with the error.
              */
-            Log.i(TAG, "Location services connection failed with code " + connectionResult.getErrorCode());
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.e(TAG, "change -----: "+location);
         handleNewLocation(location);
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "Received start id " + startId + ": " + intent);
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;

@@ -162,7 +162,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
 
         if(checkNoData()) {
             circle = googleMapRemot.addCircle(new CircleOptions()
-                    .center(myLatLag)
+                    .center(new LatLng(location.getLatitude(), location.getLongitude()))
                     .fillColor(R.color.colorPrimaryExtraTransparent)
                     .radius(location.getDistance() * 1610));
 
@@ -262,7 +262,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
     }
 
     @Override
@@ -289,11 +288,11 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         googleMapRemot = googleMap;
     }
-
     // ***** event bus call
     @Subscribe
     public void receiveEvents(RemoteEventData remoteEventData) {
         eventLst = remoteEventData.getEventsList();
+        getRemoteUserObject();
         if(remoteEventData.getEventsList()!=null && remoteEventData.getEventsList().size()>0 && remoteEventData.getEventsList().get(0) instanceof Events) {
             if (eventLst!= null && eventLst.get(eventLst.size() - 1).getViewMessage() == null) {
                 googleMapRemot.clear();
@@ -305,6 +304,8 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
                 updateEventInfo(0);
             } else if (remoteEventData.getEventsList().get(remoteEventData.getEventsList().size() - 1).getViewMessage().equals(getString(R.string.home_no_data))) {
                 if (remoteEventData.getSignUp().getFilter().getLocation() != null && remoteEventData.getSignUp().getFilter().getLocation().getLongitude() != 0.0 && remoteEventData.getSignUp().getFilter().getLocation().getLatitude() != 0.0) {
+                    {
+                        getUserObject();
                     if (signUp != null) {
                         eventInfoLinearLayout.setVisibility(View.GONE);
                         eventSearchLinearLayout.setVisibility(View.VISIBLE);
@@ -315,7 +316,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
                             setUserOnMap(remoteEventData.getSignUp().getFilter().getLocation());
                             googleMapSetting(remoteEventData.getSignUp().getFilter().getLocation());
                         }
-                    }
+                    }}
                 }
             }
         }
@@ -347,7 +348,6 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
             }
         }
     }
-
 
     @Subscribe
     public void getWishListEvent(RemoveFromWishListEntity removeFromWishListEntity) {
@@ -409,6 +409,7 @@ public class Remot_Map extends Fragment implements OnMapReadyCallback {
         Events originalEvent = null;
         if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success))){
             int index = -1;
+            if(eventLst!=null && eventLst.size()>0)
             for (Events e : eventLst) {
                 if (e.getEventId() == editEvent.getEvents().getEventId()) {
                     index = eventLst.indexOf(e);

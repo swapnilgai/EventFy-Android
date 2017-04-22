@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,9 +56,6 @@ public class SignUpActivity extends AppCompatActivity implements OnDateSetListen
         loginLink = (TextView) findViewById(R.id.link_login);
 
         dobErrorMsg = (RobotoTextView) findViewById(R.id.link_dob_error);
-
-        if(signUp!=null)
-            signupButton.setText("Update");
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override

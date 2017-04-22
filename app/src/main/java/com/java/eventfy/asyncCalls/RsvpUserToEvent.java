@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
@@ -39,21 +38,19 @@ public class RsvpUserToEvent extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
 
+          try {
+                  RestTemplate restTemplate = new RestTemplate(true);
+                  restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
-                Gson gson = new Gson();
+                  HttpEntity<SignUp> request = new HttpEntity<>(signUp);
 
-                Log.e("add ", gson.toJson(signUp));
+                  ResponseEntity<Events> response = restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
 
-                RestTemplate restTemplate = new RestTemplate(true);
-                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+                  eventsTemp = response.getBody();
 
-                HttpEntity<SignUp> request = new HttpEntity<>(signUp);
-
-                ResponseEntity<Events> response = restTemplate.exchange(url, HttpMethod.POST, request, Events.class);
-
-                eventsTemp = response.getBody();
-
-
+          }catch (Exception e){
+                  eventsTemp = null;
+          }
                 return null;
         }
 

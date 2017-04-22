@@ -2,9 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.MyEvents;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
@@ -47,9 +45,6 @@ public class GetUserEvent  extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         try  {
-            Log.e("event is : ", " " + url);
-            Gson g = new Gson();
-            Log.e("user is : " , " : " + g.toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -65,9 +60,6 @@ public class GetUserEvent  extends AsyncTask<Void, Void, Void> {
             if(status.value() == 200)
                 eventLst = new LinkedList<Events>(Arrays.asList(event));
 
-            for(Events e: eventLst){
-                Log.e("event is : ", " " + g.toJson(e));
-            }
 
         }catch (Exception e){
             eventLst = new ArrayList<Events>();

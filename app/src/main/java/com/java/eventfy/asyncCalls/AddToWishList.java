@@ -2,9 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.AddToWishListEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
@@ -37,10 +35,6 @@ public class AddToWishList extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         try {
-
-            Gson gson = new Gson();
-
-            Log.e("add ", gson.toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());

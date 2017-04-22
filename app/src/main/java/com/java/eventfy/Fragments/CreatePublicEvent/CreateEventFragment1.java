@@ -78,7 +78,6 @@ import com.java.eventfy.utils.PlaceAutocompleteAdapter;
 import com.sleepbot.datetimepicker.time.RadialPickerLayout;
 import com.sleepbot.datetimepicker.time.TimePickerDialog;
 import com.sleepbot.datetimepicker.time.TimePickerDialog.OnTimeSetListener;
-import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -113,7 +112,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
     private EditText eventTypeEditText;
     private EditText eventCapacity;
     private CheckBox eventsVolatile;
-    private SearchableSpinner evenrCategory;
+    private Spinner evenrCategory;
     private Spinner eventVisibilityMiles;
     private Button createBtn;
     private String dateTimeFrom;
@@ -164,7 +163,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         startDate = (EditText) view.findViewById(R.id.public_event_start_date);
         endDate = (EditText) view.findViewById(R.id.public_event_end_date);
         eventCapacity = (EditText) view.findViewById(R.id.public_event_capacity);
-        evenrCategory = (SearchableSpinner) view.findViewById(R.id.public_event_category);
+        evenrCategory = (Spinner) view.findViewById(R.id.public_event_category);
         eventVisibilityMiles = (Spinner) view.findViewById(R.id.public_event_visiblity_miles);
         createBtn = (Button) view.findViewById(R.id.public_create_event);
         currentLocationBtn = (CircleButton) view.findViewById(R.id.create_event_current_location);
@@ -314,7 +313,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         });
         eventsVolatile.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-
                 dialogBoxVolatile();
             }
         });
@@ -445,9 +443,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             }
         };
 
-
-
-
         /**
          * Callback for results from a Places Geo Data API query that shows the first place result in
          * the details view on screen.
@@ -483,8 +478,6 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             }
         };
 
-
-
     public Events createEventObject() {
 
         if(signUp!=null) {
@@ -495,7 +488,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
             endDate = (EditText) view.findViewById(R.id.public_event_end_date);
 
             eventObj.setEventCapacity(eventCapacity.getText().toString());
-          //  eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
+            eventObj.setEventCategory(evenrCategory.getSelectedItem().toString());
             eventObj.setEventVisiblityMile(eventVisibilityMiles.getSelectedItem().toString());
             if(eventObj.getLocation()!=null)
             eventObj.getLocation().setDistance(Integer.parseInt(eventVisibilityMiles.getSelectedItem().toString()));
@@ -586,20 +579,15 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         eventObj.setEventImageUrl("default");
     }
     @Subscribe
-    public void createEventToServer(String eventImageurl)
-    {
+    public void createEventToServer(String eventImageurl) {
         if(eventImageurl != null && !eventImageurl.equals(getString(R.string.create_event_flag))){
-
             createEventServerCall(eventImageurl);
         }
     }
 
-
     public void createEventServerCall(String eventImageurl) {
         eventObj.setEventImageUrl(eventImageurl);
-
         eventObj.setAdmin(signUp);
-
           CreatePublicEvent createPublicEvent = new CreatePublicEvent(url, eventObj);
           createPublicEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -974,7 +962,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
                 flag = false;
              }
             else if (Integer.parseInt(eventCapacity.getText().toString()) < 0) {
-                    eventCapacity.setError("Event Capacity cant be negative");
+                    eventCapacity.setError("Event Capacity can not be negative");
                     flag = false;
                 }
             else {
@@ -1024,7 +1012,9 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         int index = -1;
         if(eventObj.getEventCategory()!=null) {
             index = getIndexOfSpinerItemCategory(getResources().getStringArray(R.array.category_arrays), eventObj.getEventCategory());
-            //evenrCategory.setSelection(index);
+
+            if(index!=-1)
+                evenrCategory.setSelection(index);
         }
 
         if(eventObj.getEventVisiblityMile()!=null) {
@@ -1051,7 +1041,7 @@ public class CreateEventFragment1 extends Fragment implements OnDateSetListener,
         int i = -1 ;
 
         for(i=0 ; i<androidStrings.length; i++)
-            if(androidStrings[i] == item)
+            if(androidStrings[i].equals(item))
                 return i;
 
         return i;

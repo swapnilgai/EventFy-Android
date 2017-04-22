@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,7 +115,6 @@ public class Invited extends Fragment implements OnLoadMoreListener {
     {
 
         String url = "https://eventfy.herokuapp.com/webapi/comments/getuserforevent";
-        Log.e("event id for get user: ", ""+event.getEventId());
        // GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, String.valueOf(event.getEventId()),getContext());
        // getUsersForEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -125,16 +123,12 @@ public class Invited extends Fragment implements OnLoadMoreListener {
     @Subscribe
     public void getUsersForEvent(List<SignUp> userListTemp)
     {
-        Log.e("item received out : ", "" + userListTemp.size());
 
         if(userListTemp.get(0) instanceof SignUp) {
             if( userList!=null && userList.size()>0 && userList.get(0) == null)
                 userList.remove(0);
-
             this.userList.addAll(userListTemp);
             this.userList.add(null);
-            Log.e("item received : ", "" + this.userList.size());
-
             displayComments();
         }
     }
@@ -190,7 +184,6 @@ public class Invited extends Fragment implements OnLoadMoreListener {
 
         if (isVisibleToUser) {
             // called here
-            Log.e("invited : ", " +++++ "+isVisibleToUser);
         }
     }
 

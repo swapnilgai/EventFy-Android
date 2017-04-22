@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,18 +33,21 @@ import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
+import com.java.eventfy.Entity.Filter.Filter;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 import com.java.eventfy.adapters.MainRecyclerAdapter;
 import com.java.eventfy.asyncCalls.GetNearbyEvent;
+import com.java.eventfy.asyncCalls.GetRemoteEvent;
 import com.java.eventfy.customLibraries.DividerItemDecoration;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,8 +57,10 @@ public class Remot extends Fragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private Filter filter;
     private RecyclerView recyclerView;
-
+    private RemoteEventData remoteEventData;
+    private GetRemoteEvent getRemoteEvent;
     private FragmentTransaction transaction_remot;
     private FragmentManager manager_remot;
     private Fragment remote_map;
@@ -91,6 +97,7 @@ public class Remot extends Fragment {
 
         createLoadingObj();
         adapter = new MainRecyclerAdapter(getContext(), getString(R.string.activity_Home));
+        adapter.setFragment(this);
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -100,7 +107,7 @@ public class Remot extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getRemotEventsServerCall();
+                getRemoteEventServerCall((int) signUp.getLocation().getDistance());
             }
         });
 
@@ -135,21 +142,13 @@ public class Remot extends Fragment {
 
         setOnClickListnerForFloatingButton();
 
-//        if(latLng==null)
-//            setDisableFloatingButton();
-//        else
-//            getRemotEventsServerCall();
-
         return view;
     }
 
     @Override
     public void onPause() {
         super.onPause();
-//        if(latLng==null)
-//            setDisableFloatingButton();
-//        else
-//            getRemotEventsServerCall();
+
     }
 
     public void bindAdapter(MainRecyclerAdapter adapter, List<Events> eventsList){
@@ -161,8 +160,7 @@ public class Remot extends Fragment {
         }
     }
 
-    public void setOnClickListnerForFloatingButton()
-    {
+    public void setOnClickListnerForFloatingButton() {
         fragment_switch_button_remot.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -205,8 +203,7 @@ public class Remot extends Fragment {
         });
     }
 
-    public void setDisableFloatingButton()
-    {
+    public void setDisableFloatingButton() {
         fragment_switch_button_remot.setVisibility(View.INVISIBLE);
         fragment_search_place_button.setVisibility(View.INVISIBLE);
     }
@@ -217,29 +214,39 @@ public class Remot extends Fragment {
         fragment_search_place_button.setVisibility(View.VISIBLE);
     }
     // ****** ASYNC CALL
-    private void getRemotEventsServerCall(){
 
-        Location location = new Location();
-        location.setLatitude(latLng.latitude);
-        location.setLongitude(latLng.longitude);
+    private void getRemoteEventServerCall(int distance){
 
-        SignUp tempSignUp = new SignUp();
-        tempSignUp.setToken(signUp.getToken());
-        tempSignUp.setLocation(location);
+        if(filter == null)
+            filter = new Filter();
 
+        Location locationSelected = new Location();
+        locationSelected.setLatitude(latLng.latitude);
+        locationSelected.setLongitude(latLng.longitude);
+        locationSelected.setDistance(distance);
 
+        filter.setTimeZone(TimeZone.getDefault().getID());
+        filter.setLocation(locationSelected);
+        signUp.setFilter(filter);
+        if(remoteEventData == null)
+            remoteEventData = new RemoteEventData();
+
+        remoteEventData.setSignUp(signUp);
+        remoteEventData.setViewMsg(getContext().getString(R.string.remote_list_requested));
         String url = getString(R.string.ip_local) + getString(R.string.remote_events);
-          getNearbyEvent = new GetNearbyEvent(url, tempSignUp, getString(R.string.remot_flag));
-          getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        EventBusService.getInstance().post(remoteEventData);
+
+        getRemoteEvent = new GetRemoteEvent(url, remoteEventData, getContext());
+        getRemoteEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
+
 
     // ***** event bus call
 
     @Subscribe
-    public void getRemotPlaceLatLang(RemoteEventData remoteEventData)
-    {
-        if(remoteEventData.getViewMsg().equals(getString(R.string.remote_list_requested)))
-        {
+    public void getRemotPlaceLatLang(RemoteEventData remoteEventData) {
+
+        if(remoteEventData.getViewMsg().equals(getString(R.string.remote_list_requested))) {
             this.latLng = new LatLng(remoteEventData.getSignUp().getFilter().getLocation().getLatitude(),remoteEventData.getSignUp().getFilter().getLocation().getLongitude());
             removeAll();
             addLoading();
@@ -248,12 +255,20 @@ public class Remot extends Fragment {
         }
         else if (remoteEventData.getViewMsg().equals(getString(R.string.remote_list_fail)) || remoteEventData.getViewMsg().equals(getString(R.string.remote_list_server_error)) ) {
             removeNoDataOrLoadingObj();
-            this.eventsList.addAll(remoteEventData.getEventsList());
-            bindAdapter(adapter, this.eventsList);
-            if (remoteEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data)) &&
-                    remoteEventData.getSignUp().getFilter().getLocation() != null && remoteEventData.getSignUp().getFilter().getLocation().getLongitude() != 0.0
-                    && remoteEventData.getSignUp().getFilter().getLocation().getLatitude() != 0.0) {
-               // fragment_switch_button.setVisibility(View.VISIBLE);
+            if (remoteEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data))) {
+                floatingActionMenu.setVisibility(View.GONE);
+
+                Toast toast =  Toast.makeText(getContext(), "No events found, please update location/ distance", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+
+                this.eventsList.addAll(remoteEventData.getEventsList());
+                bindAdapter(adapter, this.eventsList);
+                transaction_remot = manager_remot.beginTransaction();
+                transaction_remot.hide(remote_map);
+                swipeRefreshLayout.setVisibility(View.INVISIBLE);
+                transaction_remot.show(search_place);
+                transaction_remot.commit();
+                floatingActionMenu.close(true);
             }
         }
         else if(remoteEventData.getViewMsg().equals(getString(R.string.remote_list_success))){
@@ -272,6 +287,16 @@ public class Remot extends Fragment {
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");
+
+        this.signUp = gson.fromJson(json, SignUp.class);
+
+    }
+
+    public void getRemoteUserObject() {
+        SharedPreferences mPrefs = getActivity().getSharedPreferences(getString(R.string.userObjectRemote), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mPrefs.edit();
+        Gson gson = new Gson();
+        String json = mPrefs.getString(getString(R.string.userObjectRemote), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }
 
@@ -310,13 +335,6 @@ public class Remot extends Fragment {
                 break;
             }
         }
-//        if(events.getViewMessage().equals(getString(R.string.edited))) {
-//
-//            events.setViewMessage(null);
-//            eventsList.set(index, events);
-//
-//            bindAdapter(adapter, eventsList);
-//        }
     }
 
     @Subscribe
@@ -366,6 +384,7 @@ public class Remot extends Fragment {
 
     public void toastMsg(String msg){
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+
     }
 
     @Subscribe
@@ -383,8 +402,6 @@ public class Remot extends Fragment {
             }
             if (index!=-1) {
                 events.setViewMessage(null);
-                Log.e("index   :  ", ""+index);
-
                 eventsList.set(index, events);
                 bindAdapter(adapter, eventsList);
 
@@ -443,7 +460,16 @@ public class Remot extends Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    public void updateUserLocation(int visibilityMileValue) {
+        removeAll();
+        bindAdapter(adapter, eventsList);
 
+        if(signUp == null)
+            getRemoteUserObject();
+
+        signUp.setVisibilityMiles(visibilityMileValue);
+        getRemoteEventServerCall(visibilityMileValue);
+    }
 
 }
 

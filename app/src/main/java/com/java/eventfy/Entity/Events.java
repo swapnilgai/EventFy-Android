@@ -36,25 +36,17 @@ public class Events implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventAdmin;
     @JsonIgnoreProperties(ignoreUnknown = true)
-    private double eventLocationLongitude;
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private double eventLocationLatitude;
-    @JsonIgnoreProperties(ignoreUnknown = true)
     private String eventCategory;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private boolean eventVolatile;
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String decesion;
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String facebookEventId;
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     private boolean notifyMe;
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonView(DateTime.class)
     private DateTime dateTime;
@@ -182,23 +174,6 @@ public class Events implements Serializable {
         this.eventId = eventId;
     }
 
-    public double getEventLocationLatitude() {
-        return eventLocationLatitude;
-    }
-
-    public void setEventLocationLatitude(double eventLocationLatitude) {
-        this.eventLocationLatitude = eventLocationLatitude;
-    }
-
-    public double getEventLocationLongitude() {
-        return eventLocationLongitude;
-    }
-
-    public void setEventLocationLongitude(double eventLocationLongitude) {
-        this.eventLocationLongitude = eventLocationLongitude;
-    }
-
-    
     public int getEventID() {
         return eventId;
     }

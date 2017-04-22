@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -210,8 +209,6 @@ public class Comment extends Fragment {
     public void removeALl() {
         addCommentsList.removeAll(addCommentsList);
         addLoading();
-        Log.e("removeall called : ", " +++++ ");
-
     }
 
     public void addLoading() {
@@ -265,7 +262,6 @@ public class Comment extends Fragment {
 
     @UiThread
     private void refreshData(List<AddComment> addCommentsList) {
-        Log.e("refresh data called: ", " +++++ "+addCommentsList.size()+" adapter:  "+adapter);
         if (adapter != null) {
             adapter.clear();
             adapter.addAll(addCommentsList);
@@ -450,12 +446,6 @@ public class Comment extends Fragment {
     public void getAddCommentObject(AddComment addComment) {
 
         addComment.getComment().setViewMessage(addComment.getViewMsg());
-
-        Log.e("item inserted : ", ""+addComment.getViewMsg());
-        Log.e("item inserted 1 : ", ""+addComment.getComment().getViewMessage());
-        Log.e("msg 0 : ", ""+addCommentsList.get(0).getComment().getViewMessage());
-        Log.e("signup : ", ""+addComment.getComment().getUser().getImageUrl());
-
        removeNoDataOrLoadingObj();
 
         if(addCommentsList.contains(addComment))

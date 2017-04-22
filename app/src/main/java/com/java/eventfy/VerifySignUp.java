@@ -233,7 +233,8 @@ public void resendVcodeStatus(String result)
         if(verifyAccount.getViewMsg().equals(getString(R.string.verify_account_success))){
 
             this.signUp = verifyAccount.getSignUp();
-
+            this.signUp.setIsVerified("true");
+            verifyAccount.setSignUp(signUp);
             EventBusService.getInstance().unregister(this);
             toastMsg("Congratulations!, you'r account successfully updated");
             finish();

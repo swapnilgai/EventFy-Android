@@ -2,17 +2,15 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.NearbyEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 import com.java.eventfy.R;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -53,10 +51,6 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
     try  {
-            Log.e("event is : ", " " + url);
-            Gson g = new Gson();
-            Log.e("event is : ", " " + g.toJson(signUp));
-
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -69,6 +63,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
 
         if(event!=null)
             eventLst = new LinkedList<Events>(Arrays.asList(event));
+
         }catch (Exception e){
 
             eventLst = new LinkedList<Events>();
@@ -83,7 +78,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(eventLst==null){
+        if(eventLst==null || eventLst.size()<1){
             eventLst = new LinkedList<Events>();
             Events events = new Events();
             events.setViewMessage(context.getString(R.string.home_no_data));

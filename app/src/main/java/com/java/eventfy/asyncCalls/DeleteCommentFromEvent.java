@@ -2,7 +2,6 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
@@ -39,9 +38,6 @@ public class DeleteCommentFromEvent extends AsyncTask<Void, Void, Void> {
         try{
             Gson g = new Gson();
             comment = addComment.getComment();
-
-            Log.e("object to delete : "," "+g.toJson(comment));
-
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());

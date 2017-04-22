@@ -186,7 +186,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text="Street View"
+                        android:text="STREET VIEW"
                         android:textColor="#6c7880"
                         android:textSize="13sp" />
                 </LinearLayout>
@@ -197,6 +197,7 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:layout_weight="1"
+                    android:visibility="gone"
                     android:paddingRight="5dp"
                     android:layout_gravity="center"
                     >
@@ -585,10 +586,9 @@
                     <at.markushi.ui.CircleButton
                         android:id="@+id/event_invisible_btn"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="28dp"
                         app:cb_color="@color/com_facebook_button_login_silver_background_color"
                         android:src="@drawable/ic_invisible_holo"
-                        android:padding="2dp"
                         />
 
                 <TextView
@@ -616,11 +616,9 @@
             <at.markushi.ui.CircleButton
                 android:id="@+id/event_edit_btn"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="28dp"
                 android:src="@drawable/ic_edit_holo"
                 app:cb_color="@color/com_facebook_button_login_silver_background_color"
-                app:cb_pressedRingWidth="2dp"
-                android:padding="2dp"
                 />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -646,10 +644,9 @@
                     <at.markushi.ui.CircleButton
                         android:id="@+id/event_delete_btn"
                         android:layout_width="wrap_content"
-                        android:layout_height="30dp"
+                        android:layout_height="28dp"
                         android:src="@drawable/ic_delete_holo"
                         app:cb_color="@color/com_facebook_button_login_silver_background_color"
-                        android:padding="2dp"
                         />
                     <TextView
                         android:id="@+id/event_delete_text_view"

@@ -15,7 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -200,7 +199,6 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
                 && locationPrivateEvent.getLocation()!=null
                 && (locationPrivateEvent.getLocation().getLatitude() == 0.0 && locationPrivateEvent.getLocation().getLongitude() == 0.0) )
         {
-            Log.e("in lat lang 2 ", " 000000 "+eventObj.getViewMessage());
             if(userListInvited == null)
                 userListInvited = new ArrayList<SignUp>();
             else
@@ -213,7 +211,6 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
             bindAdapterForInviteNearbyAdapter(userListInvited);
         }
         else if(eventObj!=null && eventObj.getViewMessage() != null && eventObj.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))) {
-            Log.e("in lat lang 3 ", " 000000 "+eventObj.getViewMessage());
             Location location = new Location();
             location.setLatitude(locationPrivateEvent.getLocation().getLatitude());
             location.setLongitude(locationPrivateEvent.getLocation().getLongitude());
@@ -238,7 +235,6 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
     public void addUserToInviteList(SignUp signUp) {
 
         if (signUp instanceof SignUp) {
-            Log.e("user in frag2 ", " KKKKKKK  " + signUp.getViewMessage());
             if (userListInvited != null && userListInvited.size() > 0 && userListInvited.get(userListInvited.size() - 1).getViewMessage().
                     equals(getContext().getString(R.string.home_no_data))) {
                 userListInvited.remove(userListInvited.size() - 1);
@@ -263,7 +259,6 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
     @Subscribe
     public void getNearByUsers(List<SignUp> userListNearBy) {
         SignUp signUp = userListNearBy.get(userListNearBy.size() - 1);
-        Log.e("user in frag list ", " KKKKKKK  " + signUp.getViewMessage());
         if (signUp instanceof SignUp) {
             if (signUp.getViewMessage().equals(getContext().getString(R.string.home_no_data))
                     || signUp.getViewMessage().equals(getContext().getString(R.string.home_connection_error))
@@ -276,7 +271,6 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
 
             setHeightRecycleView(inviteNearbyRecyclerView, getRecycleViewSizeForinviteNearbyAdapter());
 
-            Log.e("user in frag list 1 ", " KKKKKKK  " + signUp.getViewMessage());
         }
     }
 //    public void displayComments()
@@ -348,7 +342,6 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
-        Log.e("user in create is ", "(((( "+json);
     }
 
     @Override
@@ -437,10 +430,8 @@ public class CreateEventFragment2 extends Fragment implements OnLoadMoreListener
     @Subscribe
     public void getCreatedEventFromServer(Events event)
     {
-        Log.e("view messgae : ", " * * * *  "+event.getViewMessage());
         if (event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))){
             eventObj = event;
-            Log.e("view message is ; ", "*** "+new Gson().toJson(eventObj));
             startService();
         }
         else if(event.getEventId()!=-1 && event.getViewMessage() == null && !event.getViewMessage().equals(getString(R.string.event_object_pass_to_createeventfragment2))) {

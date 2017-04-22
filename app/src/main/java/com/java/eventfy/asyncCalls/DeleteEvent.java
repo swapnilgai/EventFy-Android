@@ -1,9 +1,7 @@
 package com.java.eventfy.asyncCalls;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -31,8 +29,6 @@ public class DeleteEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
 
-        Log.e(" url ", url);
-        Log.e(" user ", new Gson().toJson(event));
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -51,7 +47,6 @@ public class DeleteEvent extends AsyncTask<Void, Void, Void> {
         // send in eventinfo activity to finish activity and nearby fragment to remove from list
         com.java.eventfy.Entity.EventSudoEntity.DeleteEvent deleteEvent = new com.java.eventfy.Entity.EventSudoEntity.DeleteEvent();
         deleteEvent.setEvents(event);
-        Log.e("view msg : ", " msg : "+deleteEvent.getEvents().getViewMessage());
        // event.setViewMessage("deleted");
         EventBusService.getInstance().post(deleteEvent);
     }

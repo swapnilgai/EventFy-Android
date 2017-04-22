@@ -2,7 +2,6 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.java.eventfy.Entity.NotificationId;
@@ -36,12 +35,8 @@ public class RegisterToGCM  extends AsyncTask<Void, Void, Void> {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
             regid = gcm.register(SENDER_ID);
-            Log.e("reg id is ", "###### : "+regid);
         } catch (IOException ex) {
-            msg = "Error :" + ex.getMessage();
-            // If there is an error, don't just keep trying to register.
-            // Require the user to click a button again, or perform
-            // exponential back-off.
+
         }
         return null;
     }
@@ -50,17 +45,13 @@ public class RegisterToGCM  extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        Log.e("reg id is ", "###### : "+regid);
-       // if(regid!=null)
-        {
-            Log.e("reg id inside ", "###### : "+regid);
-            notificationId = new NotificationId();
+        notificationId = new NotificationId();
+        if(regid!=null){
             notificationId.setRegId(regid);
-            // send to Home activity
             notificationId.setViewMessage(context.getString(R.string.notification_id_gcm_register_success));
-            EventBusService.getInstance().post(notificationId);
-
+        }else{
+            notificationId.setViewMessage(context.getString(R.string.notification_id_gcm_register_fail));
         }
-
+        EventBusService.getInstance().post(notificationId);
     }
 }

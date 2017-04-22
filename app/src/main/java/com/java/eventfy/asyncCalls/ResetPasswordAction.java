@@ -34,8 +34,7 @@ public class ResetPasswordAction extends AsyncTask<Void, Void, Void> {
 
         try {
 
-            Gson g = new Gson();
-            Log.e("obj : ", ""+g.toJson(passwordReset));
+
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());

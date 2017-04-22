@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -319,8 +318,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
             final String placeId = item.getPlaceId();
             final CharSequence primaryText = item.getPrimaryText(null);
 
-            Log.i(TAG, "Autocomplete item selected: " + primaryText);
-
             /*
              Issue a request to the Places Geo Data API to retrieve a Place object with additional
              details about the place.
@@ -329,8 +326,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
                     .getPlaceById(mGoogleApiClient, placeId);
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
 
-            Toast.makeText(getContext(), "Clicked: " + primaryText,
-                    Toast.LENGTH_SHORT).show();
+
         }
     };
 
@@ -347,7 +343,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
         public void onResult(PlaceBuffer places) {
             if (!places.getStatus().isSuccess()) {
                 // Request did not complete successfully
-                Log.e(TAG, "Place query did not complete. Error: " + places.getStatus().toString());
                 places.release();
                 return;
             }
@@ -392,9 +387,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
-        Log.e(TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
-                + connectionResult.getErrorCode());
-
         // TODO(Developer): Check error code and notify the user of error state and resolution.
         Toast.makeText(getActivity(),
                 "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
@@ -406,11 +398,6 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
     private void getRemoteEventServerCall(Location locationSelected){
 
         eventObj.getLocation().setDistance(visiblityMilesVal);
-        //com.java.eventfy.Entity.DateTime dateTime = new  com.java.eventfy.Entity.DateTime();
-
-        //        dateTime.setDateTimeFrom(DateTimeStringOperations.getInstance().convertStringToDateTime(startDate.getText().toString()));
-
-       // eventObj.setDateTime(dateTime);
 
         filter.setTimeZone(TimeZone.getDefault().getID());
         filter.setLocation(locationSelected);
@@ -540,8 +527,7 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
             @Override
             protected String  doInBackground(LatLng... latLan)
             {
-               // try {
-                    Log.e("Address fetching......", "");
+                try {
                     GeocoderRequest geocoderRequest;
                     Geocoder geocoder = new Geocoder();
                     geocoderRequest =  new GeocoderRequestBuilder().setLocation
@@ -562,20 +548,16 @@ public class Place_Autocomplete_Search extends Fragment implements  GoogleApiCli
 
                 return null;
                 }
-//                catch (Exception ex)
-//                {
-//                    Log.e("Address fetching......", " Exception ");
-//                    Log.e("Address fetching......", "  "+ex.getMessage());
-//                    return null;
-//                    // log exception or do whatever you want to do with it!
-//                }
-//                return null;
-//            }
+                catch (Exception ex)
+                {
+                    return null;
+                    // log exception or do whatever you want to do with it!
+                }
+            }
 
             @Override
             protected void onPostExecute(String addresses)
             {
-                Log.e("Address fetched......", "");
                 if (addresses!= null && addresses.length() > 0) {
 
                     eventLocationTextView.setText(addresses);

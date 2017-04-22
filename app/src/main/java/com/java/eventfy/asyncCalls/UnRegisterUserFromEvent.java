@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.RegisterEvent;
 import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
@@ -43,9 +42,7 @@ public class UnRegisterUserFromEvent extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-//        try {
-
-        Gson g = new Gson();
+        try {
 
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -58,9 +55,9 @@ public class UnRegisterUserFromEvent extends AsyncTask<Void, Void, Void> {
         ResponseEntity<Events> rateResponse = restTemplate.postForEntity(url, request, Events.class);
         eventTemp = rateResponse.getBody();
 
-        //}catch (Exception e) {
-        //   removeFromWishListEntity = new RemoveFromWishListEntity();
-        //}
+        }catch (Exception e) {
+           removeFromWishListEntity = new RemoveFromWishListEntity();
+        }
         return null;
     }
 
@@ -75,10 +72,7 @@ public class UnRegisterUserFromEvent extends AsyncTask<Void, Void, Void> {
             if(eventTemp.getViewMessage().equals(context.getString(R.string.remove_wish_list_success)))
                 events.setDecesion(eventTemp.getDecesion());
         }
-
         events.setViewMessage(eventTemp.getViewMessage());
-        Log.e("view msg in async : ", "  &&&&&   "+events.getViewMessage());
-
         RegisterEvent registerEvent = new RegisterEvent();
         registerEvent.setEvents(events);
         registerEvent.setViewMessage(events.getViewMessage());

@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -148,8 +147,6 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //Using position get Value from arraylist
-                Log.e("user marker : ", " "+userMarker.getId());
-                Log.e("clicked marker : ", " "+marker.getId());
                 if(!userMarker.getId().equals(marker.getId()) && markerList.contains(marker)){
                     updateEventInfo(markerList.indexOf(marker));
                 }
@@ -355,8 +352,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
                 updateEventInfo(0);
                 eventInfoLinearLayout.setVisibility(View.VISIBLE);
                 eventSearchLinearLayout.setVisibility(View.GONE);
-            }else if(nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data)))
-            {
+            }else if(nearbyEventData.getEventsList().get(nearbyEventData.getEventsList().size()-1).getViewMessage().equals(getString(R.string.home_no_data))) {
                 if(nearbyEventData.getLocation()!=null && nearbyEventData.getLocation().getLongitude()!= 0.0 && nearbyEventData.getLocation().getLatitude()!= 0.0){
                     getUserObject();
                     if(signUp!=null){

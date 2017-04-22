@@ -45,7 +45,6 @@ public class GetNearbyFacebookEvents  extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
 try {
-    Log.e("event is : ", " " + url);
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -56,7 +55,6 @@ try {
     Events[] event = response.getBody();
 
     eventLst = new LinkedList<Events>(Arrays.asList(event));
-    Log.e("event size fb : ", " 8888888 " + eventLst.size());
 
 }catch (Exception e){
 
@@ -74,8 +72,6 @@ try {
             events.setViewMessage(context.getString(R.string.home_no_data));
             eventLst.add(events);
         }
-
-        Log.e("event size after fb : ", " 8888888 " + eventLst.size());
 
         NearbyFacebookEventData nearbyFacebookEventData = new NearbyFacebookEventData();
         nearbyFacebookEventData.setEventsList(eventLst);

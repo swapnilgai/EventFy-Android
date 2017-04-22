@@ -44,7 +44,9 @@
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:hintTextAppearance="@color/white"
-            android:layout_marginBottom="8dp" >
+            android:layout_marginBottom="8dp"
+            android:textSize="14sp"
+            >
 
             <EditText
                 android:id="@+id/input_name"
@@ -63,7 +65,8 @@
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             app:hintTextAppearance="@color/white"
-            android:layout_marginBottom="8dp" >
+            android:layout_marginBottom="8dp"
+            android:textSize="14sp">
 
             <EditText
                 android:id="@+id/input_email"
@@ -82,7 +85,8 @@
             android:textColor="@color/white"
             app:hintTextAppearance="@color/white"
             android:textColorHint="@color/white"
-            android:layout_marginBottom="8dp" >
+            android:layout_marginBottom="8dp"
+            android:textSize="14sp">
 
             <EditText
                 android:id="@+id/input_password"
@@ -102,7 +106,8 @@
             android:textColor="@color/white"
             app:hintTextAppearance="@color/white"
             android:textColorHint="@color/white"
-            android:focusable="false">
+            android:focusable="false"
+            android:textSize="14sp">
 
             <EditText
                 android:id="@+id/input_DOB"

@@ -2,9 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
@@ -41,15 +39,7 @@ public class RemoveFromWishList extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-//        try {
-
-        Gson g = new Gson();
-        Log.e(" facebook Id ", ""+url);
-        Log.e(" facebook Id ", ""+signUp.getEvents().get(0).getFacebookEventId());
-
-        Log.e(" remove ", g.toJson(signUp));
-
-        // signUp = CleanEntityObjects.getInstance().clearSignUpObject(signUp);
+       try {
 
         RestTemplate restTemplate = new RestTemplate(true);
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -62,11 +52,9 @@ public class RemoveFromWishList extends AsyncTask<Void, Void, Void> {
         ResponseEntity<String> rateResponse = restTemplate.postForEntity(url, request, String.class);
         result = rateResponse.getBody();
 
-        Log.e("rsult :::::: ", result);
-
-        //}catch (Exception e) {
-        //   removeFromWishListEntity = new RemoveFromWishListEntity();
-        //}
+        }catch (Exception e) {
+           removeFromWishListEntity = new RemoveFromWishListEntity();
+        }
         return null;
     }
 

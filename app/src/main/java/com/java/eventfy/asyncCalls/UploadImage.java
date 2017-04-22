@@ -82,7 +82,6 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
         try {
             Map uploadResult = cloudinary.uploader().upload(imageBytes, com.cloudinary.utils.ObjectUtils.emptyMap());
             Url = (String) uploadResult.get("secure_url");
-            Log.e("url : ", ""+Url);
 
         } catch (IOException e1) {
             // TODO Auto-generated catch block

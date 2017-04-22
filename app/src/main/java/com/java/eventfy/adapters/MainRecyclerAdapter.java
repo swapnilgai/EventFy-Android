@@ -27,6 +27,7 @@ import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.Fragments.Nearby;
+import com.java.eventfy.Fragments.Remot;
 import com.java.eventfy.Home;
 import com.java.eventfy.MyEvents;
 import com.java.eventfy.R;
@@ -48,10 +49,12 @@ import static com.java.eventfy.R.string.edited;
     private final int VIEW_NOLOCATION = 99;
     private final int VIEW_DATA= 1;
     private final int VIEW_LOADING= 0;
+    private final int VIEW_CONNECTION_ERROR= -100;
     private final int VIEW_NODATA= -1;
     private Context context;
     private OnLocationEnableClickListner onLocationEnableClickListner;
     private Nearby nearby;
+    private Remot remote;
     private SignUp signUp;
     private String activityName;
 
@@ -64,12 +67,12 @@ import static com.java.eventfy.R.string.edited;
         this.onLocationEnableClickListner =  onLocationEnableClickListner;
     }
 
-
     public void setFragment(Nearby nearby) {
         this.nearby =  nearby;
     }
-
-
+    public void setFragment(Remot remote) {
+        this.remote =  remote;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -84,15 +87,16 @@ import static com.java.eventfy.R.string.edited;
         else if(viewType == VIEW_LOADING)
             v = new ProgressBarHolder(LayoutInflater.from(parent.getContext()).
                     inflate(R.layout.loading_list_items, parent, false));
-        else // TODO add no location
+        else if(viewType == VIEW_CONNECTION_ERROR)
+            v = new NetworkErrorHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.network_error,
+                    parent, false));
+
+        else
             v =new NoLocationHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.home_nolocation,
                     parent, false));
 
-
         return v;
     }
-
-
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -115,7 +119,11 @@ import static com.java.eventfy.R.string.edited;
                 @Override
                 public void onClick(View v) {
                     // Doesn't do anything, but need Click Listener to get that sweet Ripple
-                    nearby.updateUserLocation(((NoDataHolder)holder).visibilityMiles.getProgress());
+
+                    if(nearby != null)
+                        nearby.updateUserLocation(((NoDataHolder)holder).visibilityMiles.getProgress());
+                    else
+                        remote.updateUserLocation(((NoDataHolder)holder).visibilityMiles.getProgress());
                 }
             });
 
@@ -131,6 +139,9 @@ import static com.java.eventfy.R.string.edited;
 
                 }
             });
+        }
+        else if (holder instanceof NetworkErrorHolder){
+
         }
         else {
                 final Events event = getItem(position);
@@ -171,10 +182,6 @@ import static com.java.eventfy.R.string.edited;
                // ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeString(event.getDateTime().getDateTimeFrom(), event.getDateTime().getTimeZone()));
 
             ((ResultHolder)holder).eventLocation.setText(DateTimeStringOperations.getInstance().getDateTimeStringForFb(event.getDateTime().getDateTimeFrom()));
-                // calculate distance from current location
-                double milesDistance = getDistanvce(event.getEventLocationLatitude(), event.getEventLocationLongitude());
-               // ((ResultHolder)holder).eventMileAway.setText(String.valueOf(milesDistance));
-
                 if(event.getEventAwayDuration()!= null)
                     ((ResultHolder)holder).eventMileAwayDuration.setText(event.getEventAwayDuration());
                 else
@@ -258,11 +265,10 @@ import static com.java.eventfy.R.string.edited;
         }
     }
 
-    public double getDistanvce(double lat, double log) {
-
-        // TODO implement logic to find distance between two points
-        return 0;
-
+    public class NetworkErrorHolder extends RecyclerView.ViewHolder {
+        public NetworkErrorHolder(View itemView) {
+            super(itemView);
+        }
     }
 
     @Override
@@ -282,6 +288,8 @@ import static com.java.eventfy.R.string.edited;
                 return VIEW_NODATA;
             else if(eventTemp.getViewMessage().equals(context.getString(R.string.home_loading)))
                 return VIEW_LOADING;
+            else if(eventTemp.getViewMessage().equals(context.getString(R.string.home_connection_error)))
+                return VIEW_CONNECTION_ERROR;
         }
         return VIEW_LOADING;
     }
@@ -292,7 +300,6 @@ import static com.java.eventfy.R.string.edited;
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
         //String json = null;
-        //TODO uncomment
         String json = mPrefs.getString(context.getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }

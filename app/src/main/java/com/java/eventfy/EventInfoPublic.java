@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,7 +53,7 @@ public class EventInfoPublic extends AppCompatActivity {
     private Toolbar toolbar;
     private Events event;
     private ImageView eventImage;
-    private FloatingActionButton rsvpForEventBtn;
+//    private FloatingActionButton rsvpForEventBtn;
     private SignUp signUp;
     private ProgressDialog progressDialog;
     private EditText commentTextEditText;
@@ -91,7 +90,6 @@ public class EventInfoPublic extends AppCompatActivity {
         }
         else {
            // EventBusService.getInstance().register(this);
-
             this.signUp = getUserObject();
 
             eventImage = (ImageView) findViewById(R.id.event_image);
@@ -100,7 +98,7 @@ public class EventInfoPublic extends AppCompatActivity {
             selectImageFromDevice = (CircleButton) findViewById(R.id.btnSelectImageFromDevice);
             commentBoxLinearLayout = (LinearLayout) findViewById(R.id.comment_box_linear_layout);
 
-            rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
+//            rsvpForEventBtn = (FloatingActionButton) findViewById(R.id.rsvp_for_event);
 
             if (event.getEventImageUrl()==null || event.getEventImageUrl().equals("default"))
                 eventImage.setImageResource(R.drawable.logo);
@@ -137,7 +135,7 @@ public class EventInfoPublic extends AppCompatActivity {
                     if(!commentTextEditText.getText().toString().isEmpty())
                          commentFragment.onClickCommentSend(commentTextEditText.getText().toString());
                     else
-                        commentTextEditText.setError("Comment cant be empty");
+                        commentTextEditText.setError("Comment can't be empty");
                 }
             });
 
@@ -148,8 +146,6 @@ public class EventInfoPublic extends AppCompatActivity {
                     commentFragment.onSelectImage();
                 }
             });
-
-
         }
     }
 
@@ -185,7 +181,7 @@ public class EventInfoPublic extends AppCompatActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 super.onTabUnselected(tab);
-                //   tab.getIcon().setAlpha(127);
+                   tab.getIcon().setAlpha(127);
             }
         });
 
@@ -356,12 +352,12 @@ public class EventInfoPublic extends AppCompatActivity {
         EventBusService.getInstance().register(this);
     }
 
-    public void makeAlarmButtonVisible(){
-        rsvpForEventBtn.setVisibility(View.VISIBLE);
-    }
-    public void makeAlarmButtonInVisible(){
-        rsvpForEventBtn.setVisibility(View.GONE);
-    }
+//    public void makeAlarmButtonVisible(){
+//        rsvpForEventBtn.setVisibility(View.VISIBLE);
+//    }
+//    public void makeAlarmButtonInVisible(){
+//        rsvpForEventBtn.setVisibility(View.GONE);
+//    }
 
 }
 

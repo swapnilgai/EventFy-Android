@@ -2,9 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
@@ -46,7 +44,6 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
 
         try {
 
-            Log.e("Comment list is ", ""+new Gson().toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -68,7 +65,6 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
 
             comments.setViewMessage(context.getString(R.string.home_connection_error));
 
-            Log.e("Comment list is excp ", ""+commentList.size());
             commentList.add(comments);
         }
     return null;
@@ -84,11 +80,6 @@ public class GetCommentsForEvent extends AsyncTask<Void, Void, Void> {
             commentList.add(comments);
         }
 
-        for (Comments c : commentList) {
-            Gson g = new Gson();
-
-            Log.e("", "comment is : "+g.toJson(c));
-        }
         EventBusService.getInstance().post(commentList);
     }
 }

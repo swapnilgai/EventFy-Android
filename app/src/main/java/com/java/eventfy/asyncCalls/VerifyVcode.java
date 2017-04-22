@@ -61,12 +61,7 @@ public class VerifyVcode extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(result.equals(context.getString(R.string.verify_account_fail)) || result.equals(context.getString(R.string.verify_account_server_error))) {
-            signUp.setViewMessage(result);
-        }else{
-            signUp.setToken(result);
-            signUp.setViewMessage(context.getString(R.string.verify_account_fail));
-        }
-            EventBusService.getInstance().post(signUp);
+        signUp.setViewMessage(result);
+        EventBusService.getInstance().post(signUp);
     }
 }

@@ -19,7 +19,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -125,24 +124,10 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             addLoading();
         }
 
-        fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
-        fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
-        manager = getActivity().getSupportFragmentManager();
-        transaction = manager.beginTransaction();
-        view.setId(Integer.parseInt(context_id));
-
-        nearby_map = new Nearby_Map();
-        transaction.add(Integer.parseInt(context_id), nearby_map, "nearby_map");
-        transaction.hide(nearby_map);
-        transaction.commit();
-
-
-
         if(!EventBusService.getInstance().isRegistered(this))
             EventBusService.getInstance().register(this);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_nearby);
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
 
         adapter = new MainRecyclerAdapter(getContext(), getString(R.string.activity_Home));
         adapter.setOnLocationEnableClickListner(this);
@@ -154,14 +139,28 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         bindAdapter(adapter, eventsList);
 
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_nearby);
+
+        manager = getActivity().getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        view.setId(Integer.parseInt(context_id));
+
+        nearby_map = new Nearby_Map();
+        transaction.add(Integer.parseInt(context_id), nearby_map, "nearby_map");
+        transaction.hide(nearby_map);
+        transaction.commit();
+
         swipeRefreshLayout.setRefreshing(false);
         swipeRefreshLayout.setEnabled(false);
+        fragment_switch_button  = (FloatingActionButton) view.findViewById(R.id.fragment_switch_button_nearby);
+        fragment_switch_button.setImageResource(R.drawable.ic_near_me_white_24dp);
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
                // swipeRefreshLayout.setEnabled(false);
+                removeNoDataOrLoadingObj();
                 initServices();
                 bindAdapter(adapter, eventsList);
             }
@@ -172,7 +171,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
             @Override
             public void onClick(View v) {
-
                 if(nearby_map.isHidden()) {
                     transaction = manager.beginTransaction();
                     transaction.show(nearby_map);
@@ -290,14 +288,15 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        Log.e("permission : ", " : "+requestCode);
         switch (requestCode) {
             case 1: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getLocationAndInitServices();
                 } else {
+                    removeAll();
                     presentNoLocationView();
+                    bindAdapter(adapter, eventsList);
                 }
                 return;
             }
@@ -306,7 +305,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     showSettingDialog();
                 } else {
+                    removeAll();
                     presentNoLocationView();
+                    bindAdapter(adapter, eventsList);
                 }
             }
         }
@@ -322,16 +323,28 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
 
     private void getLocationAndInitServices(){
-
         gps = new GPSTracker(getActivity(), locationNearby);
-        if(!checkLocationIsOnIsConnected()) {
+        if(checkLocationIsOnIsConnected()) {
+
+            if(checkNoDataOrLoadingCondition(eventsList))
+            {
+                removeAll();
+                addLoading();
+                bindAdapter(adapter, eventsList);
+            }
+
            if(signUp!=null && signUp.getLocation()!=null && signUp.getLocation().getLongitude()!=0 && signUp.getLocation().getLongitude() !=0)
+           {
                getNearbEventServerCall();
+           }
             else {
-               presentNoLocationView();
+                    removeAll();
+                    addLoading();
+                    bindAdapter(adapter, eventsList);
            }
 
         }else{
+            removeNoDataOrLoadingObj();
             if(!checkNoDataOrLoadingCondition(eventsList))
                 addNoData();
         }
@@ -449,6 +462,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     public void receiveEvents(NearbyEventData nearbyEventData) {
         this.nearbyEventData = nearbyEventData;
 
+
         if (nearbyEventData.getEventsList() != null && nearbyEventData.getEventsList().size() > 0 && nearbyEventData.getEventsList().get(0) instanceof Events) {
             swipeRefreshLayout.setRefreshing(false);
             swipeRefreshLayout.setEnabled(true);
@@ -457,7 +471,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                     || nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_loading))
                     || nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_connection_error)))) {
                 removeNoDataOrLoadingObj();
+
                 this.eventsList.addAll(nearbyEventData.getEventsList());
+
                 bindAdapter(adapter, this.eventsList);
                 if (nearbyEventData.getEventsList().get(0).getViewMessage().equals(getString(R.string.home_no_data)) &&
                         nearbyEventData.getLocation() != null && nearbyEventData.getLocation().getLongitude() != 0.0 && nearbyEventData.getLocation().getLatitude() != 0.0) {
@@ -477,7 +493,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         if(eventLst!=null && eventLst.size()>0)
         if(eventLst.get(0).getViewMessage()!=null && (eventLst.get(0).getViewMessage().equals(getString(R.string.home_no_data))
                 || eventLst.get(0).getViewMessage().equals(getString(R.string.home_loading))
-                || eventLst.get(0).getViewMessage().equals(getString(R.string.home_connection_error))))
+                || eventLst.get(0).getViewMessage().equals(getString(R.string.home_connection_error))
+                || eventLst.get(0).getViewMessage().equals(getString(R.string.home_no_location))))
             return true;
 
         return false;
@@ -573,8 +590,17 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     // ****** ASYNC CALL
     private void getNearbEventServerCall(){
-
         latLng = new LatLng(signUp.getLocation().getLatitude(), signUp.getLocation().getLongitude());
+
+        if(eventsList.size()<=0){
+            addLoading();
+            bindAdapter(adapter, eventsList);
+        }
+        else if(checkNoDataOrLoadingCondition(eventsList)) {
+            removeNoDataOrLoadingObj();
+            addLoading();
+            bindAdapter(adapter, eventsList);
+        }
 
         SignUp tempSignUp = new SignUp();
         tempSignUp.setLocation(signUp.getLocation());
@@ -585,7 +611,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         getNearbyEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         tempSignUp = null;
         System.gc();
-
     }
 
     @Override
@@ -694,14 +719,15 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             if (eventsList.get(0).getViewMessage() != null)
                 if (eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_location)) ||
                         eventsList.get(0).getViewMessage().equals(getString(R.string.home_no_data)) ||
-                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
+                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)) ||
+                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_connection_error)))
                     eventsList.remove(0);
 
             if (eventsList.size() > 1 && eventsList.get(1).getViewMessage() != null)
                 if (eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_location)) ||
                         eventsList.get(1).getViewMessage().equals(getString(R.string.home_no_data)) ||
-                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)))
-
+                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_loading)) ||
+                        eventsList.get(0).getViewMessage().equals(getString(R.string.home_connection_error)))
                     eventsList.remove(1);
         }
     }
@@ -763,8 +789,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             }
             if (index!=-1) {
                 events.setViewMessage(null);
-                Log.e("index   :  ", ""+index);
-
                 eventsList.set(index, events);
                 bindAdapter(adapter, eventsList);
 

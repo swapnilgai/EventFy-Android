@@ -13,15 +13,15 @@
     <string name="navigation_drawer_closed">The navigation drawer is closed</string>
 
     <!-- Web servises url -->
-    <!--<string name="ip_local">http://192.168.0.6:8080/EventFy</string>-->
-    <!--<string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>-->
+    <string name="ip_local">http://192.168.0.6:8080/EventFy</string>
+    <string name="ip_localhost">http://192.168.0.6:8080/EventFy</string>
 
     <!--<string name="ip_local">http://10.67.70.107:8080/EventFy</string>-->
     <!--<string name="ip_localhost">http://10.67.70.107:8080/EventFy</string>-->
 
     <!---->
-    <string name="ip_local">https://eventefy.herokuapp.com</string>
-    <string name="ip_localhost">https://eventefy.herokuapp.com</string>
+    <!--<string name="ip_local">https://eventefy.herokuapp.com</string>-->
+    <!--<string name="ip_localhost">https://eventefy.herokuapp.com</string>-->
 
     <string name="login">/webapi/login/checkuser</string>
     <string name="signup_checkuseridvalid">/webapi/signup/checkuseridvalid</string>
@@ -71,25 +71,20 @@
     <string name="home_no_data">noData</string>
     <string name="home_loading">Loading</string>
     <string name="home_data">data</string>
-    <string name="home_connection_error">data</string>
+    <string name="home_connection_error">home_connection_error</string>
     <string name="invite_add_user">inviteAddUser</string>
     <string name="invite_remove_user">inviteRemoveUser</string>
     <string name="update_event_success">update_success</string>
     <string name="update_event_fail">update_fail</string>
-
     <string name="undo">undo</string>
     <string name="edited">Edited</string>
-
     <string name="Undefined">Undefined</string>
-
-
     <string name="invisible_event">Event will no longer visible to new or unregister users</string>
-
+    <string name="visible_event">Event will be visible to all users around</string>
     <string name="invisible_event_btn">INVISIBLE</string>
     <string name="check_in_button">Check In</string>
     <string name="read_more">Read More</string>
     <string name="visible_event_btn">VISIBLE</string>
-
     <string name="event_attending">event_attending</string>
     <string name="event_not_attending">event_not_attending</string>
     <string name="event_admin">event_admin</string>
@@ -168,7 +163,7 @@
     <string name="pick_image_intent_text">Please pick image</string>
     <string name="autocomplete_hint">Enter place name or address</string>
     <string name="volatile_event">Volatile</string>
-    <string name="event_for_eventinfo">Event_Object</string>
+    <string name="event_for_eventinfo">event_for_eventinfo</string>
     <string name="create_event_category">Event_Category</string>
     <string name="create_event_category_public">Event_Category_Public</string>
     <string name="create_event_category_private">Event_Category_Private</string>
@@ -267,6 +262,7 @@
     <string name="wish_list_update_server_error">wish_list_update_server_error</string>
 
     <string name="notification_id_gcm_register_success">notification_id_gcm_register_success</string>
+    <string name="notification_id_gcm_register_fail">notification_id_gcm_register_fail</string>
     <string name="notification_id_server_register_success">notification_id_server_register_success</string>
     <string name="notification_id_server_register_fail">notification_id_server_register_fail</string>
     <string name="notification_id_server_register_server_error">notification_id_server_register_server_error</string>
@@ -282,6 +278,8 @@
     <string name="facebook_event_link">https://www.facebook.com/events/</string>
     <string name="facebook_venue_link">https://www.facebook.com/</string>
     <string name="web_view_link">web_view_link</string>
+
+    <string name="eventefy_homepage">http://www.eventefy.com</string>
 
 
     <string name="player_error">Error initializing YouTube player: %s</string>

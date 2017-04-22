@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +79,6 @@ public class Notification extends Fragment {
         //recyclerViewNotification.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(view.getContext(), R.drawable.listitem_divider)));
         notificationList = getSavedNotifications();
         createLoadingObj();
-        Log.e("notification list ", "**** "+notificationList.size());
 
         removeNoData();
         if(notificationList==null) {
@@ -88,7 +86,6 @@ public class Notification extends Fragment {
             setverCallToGetNotification();
         }
         else if(notificationList!=null && notificationList.size()<=0){
-            Log.e("notification list ", "**** "+notificationList.size());
             addLoading();
             setverCallToGetNotification();
         }
@@ -203,6 +200,5 @@ public class Notification extends Fragment {
         Gson gson = new Gson();
         String json = mPrefs.getString(getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
-        Log.e("home nearby ", "***** "+json);
     }
 }

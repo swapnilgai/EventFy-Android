@@ -45,7 +45,6 @@ import com.java.eventfy.Entity.EventSudoEntity.RemoveFromWishListEntity;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.Location;
 import com.java.eventfy.Entity.SignUp;
-import com.java.eventfy.EventInfoPublic;
 import com.java.eventfy.R;
 import com.java.eventfy.Services.AlarmReceiver;
 import com.java.eventfy.StreetView;
@@ -178,11 +177,11 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 if(addToWishListBtn.getText().equals(getString(R.string.add_event_to_wish_list_btn_text))) {
                     addToWishListBtn.setText(getString(R.string.remove_event_to_wish_list_btn_text));
-                    ((EventInfoPublic)getActivity()).makeAlarmButtonVisible();
+                   // ((EventInfoPublic)getActivity()).makeAlarmButtonVisible();
                     event.setNotifyMe(true);
                 }else{
                     addToWishListBtn.setText(getString(R.string.add_event_to_wish_list_btn_text));
-                    ((EventInfoPublic)getActivity()).makeAlarmButtonInVisible();
+                   // ((EventInfoPublic)getActivity()).makeAlarmButtonInVisible();
                     event.setNotifyMe(false);
                 }
             }
@@ -633,7 +632,6 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
 
         if (isVisibleToUser) {
             // called here
-            Log.e("About Facebook : ", " +++++ "+isVisibleToUser);
         }
     }
 

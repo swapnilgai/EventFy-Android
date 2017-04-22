@@ -85,8 +85,6 @@ public class GPSTracker extends Service implements LocationListener {
 		try {
 			locationManager = (LocationManager) mContext
 					.getSystemService(LOCATION_SERVICE);
-
-			Log.e("in ccreated", " ------: "+locationManager);
 			// getting GPS status
 			isGPSEnabled = locationManager
 					.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -104,12 +102,10 @@ public class GPSTracker extends Service implements LocationListener {
 							LocationManager.NETWORK_PROVIDER,
 							MIN_TIME_BW_UPDATES,
 							MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-					Log.d("Network", "Network");
 					if (locationManager != null) {
 						location = locationManager
 								.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 						if (location != null) {
-							Log.d("Network", "Network ; "+location);
 							latitude = location.getLatitude();
 							longitude = location.getLongitude();
 							broacastLocationObject();
@@ -127,18 +123,15 @@ public class GPSTracker extends Service implements LocationListener {
 								LocationManager.GPS_PROVIDER,
 								MIN_TIME_BW_UPDATES,
 								MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-						Log.d("GPS Enabled", " ------: ");
 						if (locationManager != null) {
 							location = locationManager
 									.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 							if (location != null) {
-								Log.e("update: ", " ------: " + location);
 								latitude = location.getLatitude();
 								longitude = location.getLongitude();
 								broacastLocationObject();
 							}
 							else {
-								Log.e("update: ", " ------: " + location);
 								locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 								//locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
 							}
@@ -148,10 +141,8 @@ public class GPSTracker extends Service implements LocationListener {
 			}
 
 		} catch (Exception e) {
-			Log.e("in exception", " ------: "+locationManager);
 			e.printStackTrace();
 		}
-		Log.e("location return: ", " ------: " + location);
 		return location;
 	}
 	
@@ -234,8 +225,7 @@ public class GPSTracker extends Service implements LocationListener {
 
 		if(this.location == null) {
 			this.location = location;
-			Log.e("location inside : ", " ------: " + location);
-			Log.e("location changed: ", " ------: " + location);
+
 			broacastLocationObject();
 		}
 
@@ -245,7 +235,6 @@ public class GPSTracker extends Service implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		Log.e(" provider disable : ", " ------: " + location);
 	}
 
 	@Override
@@ -265,15 +254,11 @@ public class GPSTracker extends Service implements LocationListener {
 
 		myLatLan = new LatLng(getLatitude(), getLongitude());
 
-		Log.e("lat lang : "," ------: "+myLatLan);
-
 		return  myLatLan;
 	}
 
 
 	public void broacastLocationObject() {
-
-		Log.e("broadcast : "," ------: "+location);
 
 		if(locationNearby !=null) {
 				locationNearby.setLocation(location);

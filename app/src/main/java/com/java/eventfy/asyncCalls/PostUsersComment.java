@@ -2,9 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
 import com.java.eventfy.Entity.Comments;
 import com.java.eventfy.EventBus.EventBusService;
@@ -35,11 +33,7 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-
-
-            Gson g = new Gson();
-
-           // Log.e("comment object is : ", "obj : "+g.toJson(addComment.getComment()));
+        try {
 
             addComment.getComment().setViewMessage(null);
 
@@ -51,9 +45,9 @@ public class PostUsersComment extends AsyncTask<Void, Void, Void> {
             ResponseEntity<Comments> response = restTemplate.exchange(url, HttpMethod.POST, request, Comments.class);
 
             comment = response.getBody();
-            Log.e("added comment is : ", "obj : "+new Gson().toJson(comment));
-
-
+        }catch (Exception e){
+            comment = null;
+        }
         return null;
     }
 

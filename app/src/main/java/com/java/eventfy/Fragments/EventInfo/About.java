@@ -97,6 +97,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     private CircleButton eventInvisibleBtn;
     private LinearLayout eventInvisibleLinearLayout;
     private RobotoTextView eventAwayDistance;
+    private RobotoTextView eventCategory;
     private RobotoTextView eventAwayDuration;
     private RobotoTextView eventTimeFromNow;
     private LinearLayout videoLinearLayout;
@@ -148,6 +149,7 @@ public class About extends Fragment implements OnMapReadyCallback {
         eventDeleteBtn = (CircleButton) view.findViewById(R.id.event_delete_btn);
         videoLinearLayout = (LinearLayout) view.findViewById(R.id.video_linar_layout);
         eventDeleteTextView = (TextView) view.findViewById(R.id.event_delete_text_view);
+        eventCategory = (RobotoTextView) view.findViewById(R.id.event_category);
 
         mapValuesFromEventObject();
 
@@ -190,12 +192,35 @@ public class About extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
         eventInvisibleLinearLayout.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                dialogBoxToMakeEventInvisible(getString(R.string.invisible_event), event);
+                if(eventInvisibleTextVew.getText().equals(getString(R.string.visible_event_btn)))
+                    dialogBoxToMakeEventInvisible(getString(R.string.invisible_event), event);
+                else
+                    dialogBoxToMakeEventInvisible(getString(R.string.visible_event), event);
+            }
+        });
+
+        eventInvisibleBtn.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(eventInvisibleTextVew.getText().equals(getString(R.string.visible_event_btn)))
+                    dialogBoxToMakeEventInvisible(getString(R.string.invisible_event), event);
+                else
+                    dialogBoxToMakeEventInvisible(getString(R.string.visible_event), event);
+            }
+        });
+        eventInvisibleTextVew.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(eventInvisibleTextVew.getText().equals(getString(R.string.visible_event_btn)))
+                    dialogBoxToMakeEventInvisible(getString(R.string.invisible_event), event);
+                else
+                    dialogBoxToMakeEventInvisible(getString(R.string.visible_event), event);
             }
         });
 
@@ -221,7 +246,6 @@ public class About extends Fragment implements OnMapReadyCallback {
             }
         });
 
-
         navigateAdminProfileLinearLayout.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -231,7 +255,6 @@ public class About extends Fragment implements OnMapReadyCallback {
                 context.startActivity(intent);
             }
         });
-
 
         videoLinearLayout.setOnClickListener(new OnClickListener() {
 
@@ -267,7 +290,6 @@ public class About extends Fragment implements OnMapReadyCallback {
                  //   ((EventInfoPublic)getActivity()).makeAlarmButtonInVisible();
                  //   event.setNotifyMe(false);
                 }
-
             }
         });
 
@@ -287,9 +309,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         String url = getString(R.string.ip_local)+getString(R.string.rspv_user_to_event);
         ArrayList<Events> eventListTemp = new ArrayList<Events>();
         eventListTemp.add(event);
-       // Filter filter = new Filter();
-       // filter.setEvent(event);
-        //signUp.setFilter(filter);
         signUp.setEvents(eventListTemp);
         RsvpUserToEvent rsvpUserToEvent = new RsvpUserToEvent(url, signUp, getApplicationContext());
         rsvpUserToEvent.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -314,7 +333,7 @@ public class About extends Fragment implements OnMapReadyCallback {
 
         eventAwayDuration.setText(event.getEventAwayDuration());
 
-        eventCapacity.setText(event.getEventCapacity()+ " Seats");
+        eventCapacity.setText(event.getEventCapacity()+ " SEATS");
         Picasso.with(getContext())
                 .load(event.getAdmin().getImageUrl())
                 .resize(50, 50)
@@ -322,6 +341,8 @@ public class About extends Fragment implements OnMapReadyCallback {
                 .into(adminImage);
 
         eventDescription.setText(event.getEventDescription());
+
+        eventCategory.setText(event.getEventCategory());
 
         eventLocation.setText(event.getLocation().getName());
 
@@ -332,7 +353,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         if(event.getEventIsVisible()){
             eventInvisibleTextVew.setText(getString(R.string.visible_event_btn));
             eventInvisibleBtn.setImageResource(R.drawable.ic_event_invisible);
-            eventInvisibleLinearLayout.setBackgroundResource(R.color.com_facebook_button_background_color_disabled);
         }
         else
             eventInvisibleTextVew.setText(getString(R.string.invisible_event_btn));
@@ -647,7 +667,7 @@ public class About extends Fragment implements OnMapReadyCallback {
     public void getUserCurrentLocation(EditEvent editEvent) {
 
         dismissProgressDialog();
-        if(editEvent.getViewMsg()==null) {
+        if(editEvent.getViewMsg().equals(getString(R.string.edit_event_success))) {
             //Success
             event =  editEvent.getEvents();
             mapValuesFromEventObject();
@@ -680,8 +700,6 @@ public class About extends Fragment implements OnMapReadyCallback {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser) {
-            // called here
-            Log.e("About : ", " +++++ "+isVisibleToUser);
         }
     }
 

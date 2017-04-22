@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.java.eventfy.Entity.Events;
@@ -39,8 +38,6 @@ public class EventInfoPrivate extends AppCompatActivity {
 
         Intent intent = getIntent();
         event = (Events) intent.getSerializableExtra(getString(R.string.event_for_eventinfo));
-
-        Log.e(" in evenifo  ", "00000000 "+event.getEventId());
 
         eventImage = (ImageView) findViewById(R.id.event_image);
 

@@ -21,7 +21,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,7 +87,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         getUserObject();
 
         userLoccation = new Location();
-        if(getNotificationId() == null || getNotificationId().length()<10) {
+        if(!signUp.getIsRegistered()) {
             registerDeviceForNotification();
         }
 
@@ -337,6 +336,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         } else if (id == R.id.nav_item_about) {
             // Handle the About action
+            Intent intent = new Intent(this, WebViewActivity.class);
+            intent.putExtra(getString(R.string.web_view_link), getString(R.string.eventefy_homepage));
+            startActivity(intent);
 
         } else if (id == R.id.nav_item_myacc) {
             // Handle the MyAccount action
@@ -391,9 +393,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Subscribe
     public void getNotificationDetail(NotificationId notificationId)
     {
-        Log.e(" notification id  :   ", " "+notificationId.getRegId());
-        Log.e(" notification view msg  :   ", " "+notificationId.getViewMessage());
-
         if(notificationId.getViewMessage().equals(getString(R.string.notification_id_gcm_register_success))){
             String url = getString(R.string.ip_local)+getString(R.string.register_notification_detail);
             getUserObject();
@@ -469,7 +468,6 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             String json = gson.toJson(signUp);
             editor.putString(getString(R.string.userObject), json);
             editor.commit();
-            Log.e("user location ", " LLLLLLL "+json);
     }
     }
 

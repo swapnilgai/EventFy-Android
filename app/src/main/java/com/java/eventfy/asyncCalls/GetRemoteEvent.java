@@ -2,9 +2,7 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.RemoteEventData;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.Entity.SignUp;
@@ -33,6 +31,7 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
     private String flag;
     private Context context;
     private RemoteEventData remoteEventData;
+    private int statusCode;
 
 
     public GetRemoteEvent(String url, RemoteEventData remoteEventData, Context context){
@@ -45,9 +44,6 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
         try {
-            Log.e("event is : ", " " + url);
-            Gson g = new Gson();
-            Log.e("event is : ", " " + g.toJson(remoteEventData.getSignUp()));
 
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
@@ -58,14 +54,22 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
 
             HttpStatus status = response.getStatusCode();
 
-            Log.e("Response code :  R " , "  Response code : "+status.value());
+            statusCode = status.value();
 
-            Events[] event = response.getBody();
+            if(statusCode == 204){
+                eventLst = new LinkedList<Events>();
+                Events events = new Events();
+                events.setViewMessage(context.getString(R.string.home_no_data));
+                eventLst.add(events);
+                remoteEventData.setViewMsg(context.getString(R.string.remote_list_fail));
+            }else {
+                Events[] event = response.getBody();
+                eventLst = new LinkedList<Events>(Arrays.asList(event));
+            }
 
-            eventLst = new LinkedList<Events>(Arrays.asList(event));
         }catch (Exception e)
         {
-            remoteEventData.getSignUp().setViewMessage(context.getString(R.string.remote_list_fail));
+            remoteEventData.setViewMsg(context.getString(R.string.remote_list_fail));
         }
 
         return null;
@@ -75,7 +79,7 @@ public class GetRemoteEvent  extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
 
-        if(eventLst!=null && eventLst.size()>0){
+        if(eventLst!=null && eventLst.size()>0 && statusCode!=204){
             remoteEventData.setViewMsg(context.getString(R.string.remote_list_success));
         }
 

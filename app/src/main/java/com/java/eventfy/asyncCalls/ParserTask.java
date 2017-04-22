@@ -1,7 +1,6 @@
 package com.java.eventfy.asyncCalls;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.java.eventfy.Entity.Away;
 import com.java.eventfy.Entity.Events;
@@ -33,8 +32,6 @@ public class  ParserTask extends AsyncTask<Void, Void, Void> {
         try {
             jObject = new JSONObject(jsonString);
             DirectionsJSONParser parser = DirectionsJSONParser.getInstance();
-
-            Log.e("parcing ", " MMMMMMM : "+jObject);
             // Starts parsing data
             awayObj = parser.parse(jObject);
         } catch (Exception e) {

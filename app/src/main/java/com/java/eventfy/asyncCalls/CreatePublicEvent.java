@@ -1,9 +1,7 @@
 package com.java.eventfy.asyncCalls;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.EventSudoEntity.CreateEvent;
 import com.java.eventfy.Entity.Events;
 import com.java.eventfy.EventBus.EventBusService;
@@ -23,9 +21,6 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
     private String url;
     private Events event;
 
-   // private String flag;
-
-
     public CreatePublicEvent(String url, Events event){
         this.url = url;
         this.event = event;
@@ -33,8 +28,6 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            Log.e(" url ", url);
-            Log.e(" event Obj before:  ", new Gson().toJson(event));
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 
@@ -56,7 +49,6 @@ public class CreatePublicEvent extends AsyncTask<Void, Void, Void> {
         createEvent.setViewMsg(event.getViewMessage());
         event.setViewMessage(null);
         createEvent.setEvents(event);
-        Log.e(" event after creation:  ", new Gson().toJson(event));
         EventBusService.getInstance().post(createEvent);
     }
 }

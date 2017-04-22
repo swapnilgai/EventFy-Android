@@ -70,8 +70,6 @@ public class UserCurrentLocation1 extends Service implements LocationListener {
             // getting GPS status
             //isGPSEnabled = locationManager
             //.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-            Log.e("in ccreated", " ------: "+locationManager);
             // getting network status
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -79,13 +77,11 @@ public class UserCurrentLocation1 extends Service implements LocationListener {
             isGPSEnabled = locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-            Log.e("GPS enable ", " ------: "+isGPSEnabled);
 
             if (!isGPSEnabled && !isNetworkEnabled) {
                 // no network provider is enabled
              //   showSettingsAlert();
 //                myLatLan = new LatLng(0.0, 0.0);
-                Log.e("in not enable ", " ------: "+locationManager);
 
             } else {
                 this.canGetLocation = true;
@@ -116,7 +112,6 @@ public class UserCurrentLocation1 extends Service implements LocationListener {
                                     LocationManager.GPS_PROVIDER,
                                     MIN_TIME_BW_UPDATES,
                                     MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                            Log.e("GPS Enabled", "GPS Enabled");
                             if (locationManager != null) {
                                 location = locationManager
                                         .getLastKnownLocation(LocationManager.GPS_PROVIDER);
@@ -128,11 +123,9 @@ public class UserCurrentLocation1 extends Service implements LocationListener {
 
                                 }
                                 else {
-                                    Log.e("location 2: ", " ------: " + location);
                                     LocationListener myLocationListener= new LocationListener() {
                                         @Override
                                         public void onLocationChanged(Location location) {
-                                            Log.e("dj"," ------: "+location.getLatitude()+" & "+location.getLongitude());
                                         }
 
                                         @Override
@@ -159,11 +152,9 @@ public class UserCurrentLocation1 extends Service implements LocationListener {
             }
 
         } catch (Exception e) {
-            Log.e("in exception", " ------: "+locationManager);
             e.printStackTrace();
         }
 
-        Log.e("location return: ", " ------: " + location);
         return location;
     }
 
@@ -206,8 +197,6 @@ public class UserCurrentLocation1 extends Service implements LocationListener {
     public LatLng getLatLang() {
 
         myLatLan = new LatLng(getLatitude(), getLongitude());
-
-        Log.e("lat lang : "," ------: "+myLatLan);
 
         return  myLatLan;
     }
@@ -260,7 +249,6 @@ public class UserCurrentLocation1 extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
 
-        Log.e(TAG, "in  location change : "+location);
     }
 
     @Override

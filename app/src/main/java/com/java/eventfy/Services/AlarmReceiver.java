@@ -39,8 +39,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         String obj = intent.getStringExtra(context.getString(R.string.alarm_event));
 
       Events events =   new Gson().fromJson(obj, Events.class);
-
-        Log.e("received event : ", " : "+events);
         // Create intent to open ReminderEditActivity on notification click
         Intent editIntent= null;
 
@@ -82,15 +80,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
         Calendar c = Calendar.getInstance();
         long currentTime = c.getTimeInMillis();
         long diffTime = calendar.getTimeInMillis() - currentTime;
-
-        Log.e("time diff", " : "+diffTime);
-        Log.e("cal time ", " : "+calendar.getTime());
-        Log.e("cur time ", " : "+c.getTime());
-        Log.e("events", " : "+event.getFacebookEventId());
-
-        // Start alarm using notification time
-
-
         mAlarmManager.set(AlarmManager.RTC_WAKEUP,
                 SystemClock.elapsedRealtime() + diffTime,
                 mPendingIntent);

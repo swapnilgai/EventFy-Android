@@ -98,10 +98,6 @@ public class ImageFullScreenMode extends AppCompatActivity {
     }
 
     public void setImageDataObject() {
-        Log.e("out condition 1  : ", ""+imageViewObj.getBitmapByteArray());
-        Log.e("out condition 2  : ", ""+imageViewObj.getUserName());
-        Log.e("out condition 3  : ", ""+imageViewObj.getUserImageUrl());
-
 
         if(imageViewObj.getBitmapByteArray()==null && imageViewObj.getImageUrl()!=null && !imageViewObj.getImageUrl().equals("default") )
         {
@@ -122,15 +118,12 @@ public class ImageFullScreenMode extends AppCompatActivity {
             imageView.setImageResource(R.drawable.logo);
         }
         else if(imageViewObj.getBitmapByteArray() == null && imageViewObj.getUserName()==null){
-            Log.e("in condition :  : ", ""+imageViewObj.getUserName());
 
             imageView.setImageResource(R.drawable.logo);
         }
         else {
             imageView.setImageResource(R.drawable.circular_user_image);
         }
-
-        Log.e("image view  obj : ", ""+imageViewObj.getTextMessage());
 
         if(imageViewObj.getTextMessage()!=null)
             textView.setText(imageViewObj.getTextMessage());

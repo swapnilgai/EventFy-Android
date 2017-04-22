@@ -144,9 +144,7 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     public void getUsersForEvent(List<SignUp> userList) {
 
         if(userList.get(0) instanceof SignUp) {
-            Log.e("item received frag : ", " 0000 " + userList.size());
                 this.userList.addAll(userList);
-            Log.e("size in frag : ", " 0000 " + this.userList.size());
                 displayUsers();
             }
         else {
@@ -198,7 +196,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
                 signUpTemp.setViewMessage(context.getString(R.string.home_no_data));
                 userList.add(signUpTemp);
             }
-            Log.e("size is ", "rsvp : "+userList.size());
                 bindAdapter(userList);
 
     }
@@ -215,7 +212,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
 //                userList.remove(userList.size() - 1);
 //                adapter.notifyItemRemoved(userList.size());
-                Log.e("size in display: ", " 0000 " + userList.size());
                 if(userList!= null
                         && userList.get(userList.size()-1).getViewMessage() != null
                         && userList.get(userList.size()-1).getViewMessage().equals(context.getString(R.string.home_loading) )) {
@@ -249,7 +245,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
     @UiThread
     private void refreshData(List<SignUp> userList){
-        Log.e("in refresh adapter ", " 0000 "+userList.size());
         if (adapter != null){
             adapter.clear();
             adapter.addAll(userList);
@@ -267,7 +262,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         signUp.setViewMessage(getString(R.string.home_loading));
         userList.add(signUp);
         bindAdapter(userList);
-        Log.e("in add loading ", " 0000 ");
     }
 
     private SignUp getUserObject() {
@@ -279,8 +273,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
         if(json!=null && json.length()<100)
             json = null;
-
-        Log.e("user in attending is : ", " attending user : "+json);
 
         return  gson.fromJson(json, SignUp.class);
     }

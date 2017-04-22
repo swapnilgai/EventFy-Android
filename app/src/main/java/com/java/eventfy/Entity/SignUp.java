@@ -38,6 +38,16 @@ public class SignUp implements Serializable {
     @JsonIgnoreProperties(ignoreUnknown = true)
     private int  visibilityMiles;
 
+    public boolean getIsRegistered() {
+        return isRegistered;
+    }
+    public void setIsRegistered(boolean isRegistered) {
+        this.isRegistered = isRegistered;
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private boolean isRegistered;
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     private String viewMessage;
 

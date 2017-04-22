@@ -28,5 +28,16 @@ public class CleanEntityObjects {
         return signUp;
     }
 
+    public SignUp clearSignUpObjectForRequest(SignUp signUp){
+
+        signUp.setPassword(null);
+        signUp.setVerificationCode(null);
+        signUp.setComments(null);
+        signUp.setEvents(null);
+        signUp.setNotificationDetails(null);
+        signUp.setLocation(null);
+
+        return signUp;
+    }
 
 }

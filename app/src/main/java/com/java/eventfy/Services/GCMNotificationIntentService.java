@@ -120,7 +120,6 @@ public class GCMNotificationIntentService extends GcmListenerService {
         Gson gson = new Gson();
         NotificationDetail notificationDetail = gson.fromJson(msg, NotificationDetail.class);
 
-        Log.e("notification msg : ", " ----- - - -- : "+msg);
         saveSharedPreferencesLogList(notificationDetail);
 
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(),

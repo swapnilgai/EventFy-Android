@@ -31,7 +31,6 @@
             app:cardCornerRadius="2dp"
             android:elevation="10dp"
             android:layout_alignParentTop="true"
-            android:visibility="gone"
             >
 
             <LinearLayout
@@ -76,8 +75,9 @@
                         android:id="@+id/map_view_event_info_event_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
                         android:maxLines="2"
+                        android:ellipsize="end"
+                        android:singleLine="false"
                         android:text="Event Location duabshdfb asd basbdhabb"
                         android:textColor="@color/cardview_dark_background"
                         android:textSize="13sp"

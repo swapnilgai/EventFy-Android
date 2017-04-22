@@ -1,10 +1,8 @@
 package com.java.eventfy.asyncCalls;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.EventBus.EventBusService;
 
@@ -32,9 +30,6 @@ public class ResendVcode extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... strings) {
 
         try {
-            Log.e("url: ", ""+url);
-            Gson gson = new Gson();
-            Log.e("gson: ", ""+gson.toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
@@ -51,7 +46,6 @@ public class ResendVcode extends AsyncTask<Void, Void, Void> {
 
 
         }catch (Exception e) {
-            Log.e("Exception : ", ""+e.getStackTrace());
         }
         return null;
     }
