@@ -819,12 +819,36 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
                     == PackageManager.PERMISSION_GRANTED) {
                 return true;
             } else {
-                requestPermissions(new String[]{permission.CAMERA}, 1);
+                requestPermissions(new String[]{permission.CAMERA}, 2);
                 return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
             return true;
+        }
+    }
+
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                    if(isCamPermissionGranted()){
+                        signUp.setImageUrl(null);
+
+                        Intent chooseImageIntent = ImagePicker.getPickImageIntent(getApplicationContext());
+                        startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+                    }
+                return;
+            }
+            case 2: {
+                if(isStoragePermissionGranted() && isCamPermissionGranted()){
+                    signUp.setImageUrl(null);
+
+                    Intent chooseImageIntent = ImagePicker.getPickImageIntent(getApplicationContext());
+                    startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+                }
+
+            }
         }
     }
 

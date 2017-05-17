@@ -12,13 +12,12 @@
     <color name="colorActiveGreen">#00db28</color>
     <color name="colorDoNotDisturbYellow">#ffaa00</color>
     <color name="colorSkyBlue">#e2f6ff</color>
-    <color name="colorErrorRed">#ffffff</color>
+    <color name="colorErrorRed">#C23F38</color>
     <color name="colorAccentOld">#c8e8ff</color>
     <color name="transparent_white">#7fffffff</color>
     <color name="white">#ffffff</color>
     <color name="map_transperant">#D3F9F9F9</color>
     <color name="primary_material_light_1">#80deea</color>
     <color name="primary_text_material_dark">@android:color/black</color>
-
 
 </resources>

@@ -13,8 +13,8 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
         android:paddingTop="20dp"
         android:layout_gravity="center">
 
@@ -25,8 +25,8 @@
             android:paddingTop="10dp"
             android:paddingBottom="20dp"
             android:text="Create Account"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled"
+            android:textColor="@color/com_facebook_button_background_color_disabled"
             android:textSize="24sp" />
 
         <!-- Name Label -->
@@ -41,11 +41,12 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:hintTextAppearance="@color/white"
             android:layout_marginBottom="8dp"
-            android:textSize="14sp"
+            android:textSize="20sp"
+
+            android:textColorHint="@color/com_facebook_button_background_color_disabled"
+            android:textColor="@color/com_facebook_button_background_color_disabled"
+            app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
             >
 
             <EditText
@@ -53,8 +54,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name_label"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textCursorDrawable="@color/com_facebook_button_background_color_disabled"
+                android:paddingLeft="8dp"
+                android:textColorHint="@color/com_facebook_button_background_color_disabled"
+                android:textColor="@color/com_facebook_button_background_color_disabled"
+                app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
                 android:inputType="textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
@@ -62,19 +66,22 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            app:hintTextAppearance="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled"
+            android:textColor="@color/com_facebook_button_background_color_disabled"
+            app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
             android:layout_marginBottom="8dp"
-            android:textSize="14sp">
+            android:textSize="20sp">
 
             <EditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/email_phone_number"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:paddingLeft="8dp"
+                android:textCursorDrawable="@color/com_facebook_button_background_color_disabled"
+                android:textColorHint="@color/com_facebook_button_background_color_disabled"
+                android:textColor="@color/com_facebook_button_background_color_disabled"
+                app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
                 android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 
@@ -82,19 +89,22 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            app:hintTextAppearance="@color/white"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled"
+            android:textColor="@color/com_facebook_button_background_color_disabled"
+            app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
             android:layout_marginBottom="8dp"
-            android:textSize="14sp">
+            android:textSize="20sp">
 
             <EditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_label"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:paddingLeft="8dp"
+                android:textCursorDrawable="@color/com_facebook_button_background_color_disabled"
+                android:textColorHint="@color/com_facebook_button_background_color_disabled"
+                android:textColor="@color/com_facebook_button_background_color_disabled"
+                app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
@@ -103,11 +113,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
-            android:textColor="@color/white"
-            app:hintTextAppearance="@color/white"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled"
+            android:textColor="@color/com_facebook_button_background_color_disabled"
+            app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
             android:focusable="false"
-            android:textSize="14sp">
+            android:textSize="20sp">
 
             <EditText
                 android:id="@+id/input_DOB"
@@ -115,9 +125,12 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="false"
+                android:textCursorDrawable="@color/com_facebook_button_background_color_disabled"
                 android:hint="@string/date_of_birth"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:paddingLeft="8dp"
+                android:textColorHint="@color/com_facebook_button_background_color_disabled"
+                android:textColor="@color/com_facebook_button_background_color_disabled"
+                app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
                 android:inputType="textCapWords|date" />
         </android.support.design.widget.TextInputLayout>
 
@@ -140,8 +153,8 @@
             android:background="@color/colorPrimaryDark"
             android:textColor="@android:color/white"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginStart="24dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="24dp"
             android:text="@string/create_account" />
 
@@ -153,8 +166,9 @@
             android:paddingTop="16dp"
             android:paddingBottom="20dp"
             android:text="@string/already_a_member"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColorHint="@color/com_facebook_button_background_color_disabled"
+            android:textColor="@color/com_facebook_button_background_color_disabled"
+            app:hintTextAppearance="@color/com_facebook_button_background_color_disabled"
             android:textSize="16sp" />
 
     </LinearLayout>

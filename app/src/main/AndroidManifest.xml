@@ -113,9 +113,7 @@
                   android:screenOrientation="portrait"/>
         <!-- Meta data block end -->
 
-
         <!-- Service data block start -->
-
         <receiver
             android:name=".Services.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND">

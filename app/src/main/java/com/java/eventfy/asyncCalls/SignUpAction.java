@@ -33,7 +33,7 @@ public class SignUpAction  extends AsyncTask<Void, Void, Void> {
         try {
 
             Log.e("url : ", url);
-            Log.e("", new Gson().toJson(signUp));
+            Log.e(" : ", new Gson().toJson(signUp));
 
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
