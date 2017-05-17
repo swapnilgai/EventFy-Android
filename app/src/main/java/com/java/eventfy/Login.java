@@ -1,12 +1,15 @@
 package com.java.eventfy;
 
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -16,7 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.devspark.robototextview.widget.RobotoTextView;
 import com.facebook.CallbackManager;
 import com.facebook.CallbackManager.Factory;
@@ -72,7 +74,7 @@ public class Login extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        FacebookSdk.sdkInitialize(this);
 
         setContentView(R.layout.activity_login);
 
@@ -139,6 +141,9 @@ public class Login extends AppCompatActivity  {
                 loginAction();
             }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityManager.TaskDescription taskDescription = new ActivityManager.TaskDescription(String.valueOf(ContextCompat.getColor(this, R.color.colorPrimaryDark)));
+        }
     }
 
     private void loginAction() {
@@ -204,7 +209,6 @@ public class Login extends AppCompatActivity  {
                                                                   //  String profilePicUrl = object.getJSONObject("picture").getJSONObject("data").getString("url");
                                                                     String Address = object.getJSONObject("location").getString("name");
                                                                     LatLng latLng = getLocationFromAddress(Address);
-
 
                                                                     signUp = new SignUp();
                                                                     String profilePicUrl = "https://graph.facebook.com/"+object.getString("id")+"/picture?type=large";
@@ -334,7 +338,7 @@ public class Login extends AppCompatActivity  {
             startActivity(intent);
         }
         else if(signUp!=null && signUp.getViewMessage().equals(getString(R.string.login_fail))){
-            Toast.makeText(Login.this, "Invalid Username/ Password", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Invalid Username/ Password", Toast.LENGTH_LONG).show();
             invalidUsernamePasswordMsg.setVisibility(View.VISIBLE);
         }
         else{

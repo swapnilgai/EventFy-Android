@@ -51,6 +51,7 @@ public class GetNearbyEvent extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
 
     try  {
+
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 

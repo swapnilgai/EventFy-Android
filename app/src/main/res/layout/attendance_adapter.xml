@@ -2,8 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linear_layout_attendance"
-    android:orientation="horizontal"
-    android:background="#d3d3d3"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -23,7 +22,7 @@
         android:id="@+id/eventinfo_user_image"
         android:padding="5dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/img_placeholder"
+        android:background="@drawable/user_image"
         android:layout_gravity="center_vertical"
         android:layout_width="60dp"
         android:layout_height="60dp" />
@@ -95,7 +94,14 @@
             app:cb_color="@color/colorPrimary"
             app:cb_pressedRingWidth="5dip" />
 
+
         </LinearLayout>
 
 </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/date_picker_view_animator" />
 </LinearLayout>

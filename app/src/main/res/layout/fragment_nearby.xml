@@ -29,8 +29,7 @@
      android:layout_margin="25dp"
      android:visibility="gone"
      android:id="@+id/fragment_switch_button_nearby"
-     app:layout_behavior="com.java.eventfy.utils.ScrollingFABBehavior"
-     android:background="@drawable/abc_action_bar_item_background_material"/>
+     />
 
 </FrameLayout>
 

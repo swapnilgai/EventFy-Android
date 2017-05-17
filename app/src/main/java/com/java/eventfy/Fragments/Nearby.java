@@ -86,6 +86,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
     private Events currentEventToDelete;
     private Events eventLoadingObj;
     private Events eventNoDataObj;
+    private Events eventNoLocationObj;
     private GPSTracker gps;
     private LocationNearby locationNearby = new LocationNearby();
     private NearbyFacebookEventData nearbyFacebookEventData;
@@ -117,6 +118,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
         createLoadingObj();
         createNoDataObj();
+        createNoLocationObj();
 
         if(eventsList == null) {
             eventsList = new LinkedList<Events>();
@@ -224,7 +226,7 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
                         // All location settings are satisfied. The client can initialize location
                         // requests here.
                       //  updateGPSStatus("GPS is Enabled in your device");
-                       getLocationAndInitServices();
+                        getLocationAndInitServicesOnGpsOn();
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         // Location settings are not satisfied. But could be fixed by showing the user
@@ -315,6 +317,9 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
     public boolean checkLocationIsOnIsConnected(){
 
+        if(gps==null)
+            gps = new GPSTracker(getActivity(), locationNearby);
+
         if(gps.canGetLocation())
             return true;
 
@@ -323,7 +328,8 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
 
 
     private void getLocationAndInitServices(){
-        gps = new GPSTracker(getActivity(), locationNearby);
+       if(gps==null)
+            gps = new GPSTracker(getActivity(), locationNearby);
         if(checkLocationIsOnIsConnected()) {
 
             if(checkNoDataOrLoadingCondition(eventsList))
@@ -344,10 +350,41 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
            }
 
         }else{
-            removeNoDataOrLoadingObj();
-            if(!checkNoDataOrLoadingCondition(eventsList))
-                addNoData();
+            getUserObject();
+            if(signUp.getLocation()==null){
+                removeNoDataOrLoadingObj();
+                if(!checkNoDataOrLoadingCondition(eventsList))
+                    addNoLocation();
+            } else{
+                getNearbEventServerCall();
+            }
         }
+        bindAdapter(adapter, eventsList);
+    }
+
+    private void getLocationAndInitServicesOnGpsOn(){
+        if(gps==null)
+            gps = new GPSTracker(getActivity(), locationNearby);
+
+
+            if(checkNoDataOrLoadingCondition(eventsList))
+            {
+                removeAll();
+                addLoading();
+                bindAdapter(adapter, eventsList);
+            }
+
+            if(signUp!=null && signUp.getLocation()!=null && signUp.getLocation().getLongitude()!=0 && signUp.getLocation().getLongitude() !=0)
+            {
+                getNearbEventServerCall();
+            }
+            else {
+                removeAll();
+                addLoading();
+                bindAdapter(adapter, eventsList);
+            }
+
+
         bindAdapter(adapter, eventsList);
     }
 
@@ -676,12 +713,22 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
         eventNoDataObj = new Events();
         eventNoDataObj.setViewMessage(getString(R.string.home_no_data));
     }
+
+    public void createNoLocationObj() {
+        eventNoLocationObj = new Events();
+        eventNoLocationObj.setViewMessage(getString(R.string.home_no_location));
+    }
+
     public void addLoading() {
         eventsList.add(eventLoadingObj);
     }
 
     public void addNoData() {
         eventsList.add(eventNoDataObj);
+    }
+
+    public void addNoLocation() {
+        eventsList.add(eventNoLocationObj);
     }
 
     @Override
@@ -700,7 +747,6 @@ public class Nearby extends Fragment implements OnLocationEnableClickListner{
             }else{
                 if(!checkLocationIsOnIsConnected())
                     showSettingDialog();
-
             }
         }
     }

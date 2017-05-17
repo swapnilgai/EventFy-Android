@@ -78,7 +78,6 @@ public class Attendance_adapter extends ArrayRecyclerAdapter<SignUp, RecyclerVie
 public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
     ViewHolder v;
-    Log.e("in create view type", " 0000 "+viewType);
 
     if(viewType == VIEW_DATA)
         v = new ResultHolder(LayoutInflater.from(parent.getContext()).
@@ -87,7 +86,6 @@ public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType
     else if(viewType == VIEW_LOADING) {
         v = new ProgressBarHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.loading_list_items, parent, false));
-        Log.e("view create in: ", " 0000 "+v);
     }
     else if(viewType == VIEW_NODATA)
         v = new NoDataHolder(LayoutInflater.from(parent.getContext()).
@@ -96,7 +94,6 @@ public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType
         v = new NetworkErrorHolder(LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.network_error, parent, false));
 
-    Log.e("view create out: ", " 0000 "+v);
 
     return v;
 }
@@ -122,7 +119,12 @@ public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         ((ResultHolder)holder).eventinfo_user_name.setText(signUp.getUserName());
         //TODO add status table in RDB
-        ((ResultHolder)holder).eventinfo_user_status.setText(signUp.getUserId());
+        if(signUp.getStatus() == null)
+            ((ResultHolder)holder).eventinfo_user_status.setText("no status");
+        else if(signUp.getStatus().length()<0)
+            ((ResultHolder)holder).eventinfo_user_status.setText("no status");
+        else
+            ((ResultHolder)holder).eventinfo_user_status.setText(signUp.getStatus());
 
         ((ResultHolder)holder).addOrRemoveUser.setVisibility(View.INVISIBLE);
 

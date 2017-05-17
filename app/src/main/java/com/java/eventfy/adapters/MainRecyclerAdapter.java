@@ -299,7 +299,6 @@ import static com.java.eventfy.R.string.edited;
         SharedPreferences mPrefs = context.getSharedPreferences(context.getString(R.string.userObject), MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
         Gson gson = new Gson();
-        //String json = null;
         String json = mPrefs.getString(context.getString(R.string.userObject), "");
         this.signUp = gson.fromJson(json, SignUp.class);
     }

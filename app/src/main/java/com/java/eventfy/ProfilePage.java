@@ -463,7 +463,6 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
     public void getUserObject(UpdateAccount updateAccount) {
         SignUp signUp = updateAccount.getSignUp();
         dismissProgressDialog();
-        Log.e("profile update view ", " "+updateAccount.getViewMsg());
         if(updateAccount.getViewMsg().equals(getString(R.string.user_account_update_success))) {
             if(!signUp.getIsFacebook().equals("true") && signUp.getIsVerified().equals("false")){
                 verifyUserAccount.setImageResource(R.drawable.not_verified);
@@ -494,6 +493,8 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
             updateUserDetail = new UpdateUserDetail(signUp, urlForUpdateUserData, getApplicationContext());
             updateUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
+
+
     }
 
     public void startProgressDialog() {
@@ -686,7 +687,17 @@ public class ProfilePage extends AppCompatActivity implements OnDateSetListener 
     @Override
     protected void onPause() {
         super.onPause();
+
        // EventBusService.getInstance().unregister(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(eventImageBM!=null){
+            eventImageBM.recycle();
+            eventImageBM = null;
+        }
     }
 
     public boolean validate() {

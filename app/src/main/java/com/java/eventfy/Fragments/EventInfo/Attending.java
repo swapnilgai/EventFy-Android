@@ -57,7 +57,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         view = inflater.inflate(R.layout.fragment_attendance, container, false);
 
         if(!EventBusService.getInstance().isRegistered(this))
@@ -89,10 +88,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         addLoading();
-
-        getUsersForEvent();
-
-        Log.e("in create ", " 0000 "+adapter);
 
         // Initialize SwipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -133,6 +128,8 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
     public void getUsersForEvent()
     {
+        signUp = getUserObject();
+        Log.e("user object token : ", "  :  "+signUp.getToken());
         signUp.setEventAdmin(event);
         String url = getString(R.string.ip_local)+getString(R.string.get_user_for_event);
         GetUsersForEvent getUsersForEvent = new GetUsersForEvent(url, signUp, context);
@@ -210,8 +207,6 @@ public class Attending extends Fragment implements OnLoadMoreListener {
             @Override
             public void run() {
 
-//                userList.remove(userList.size() - 1);
-//                adapter.notifyItemRemoved(userList.size());
                 if(userList!= null
                         && userList.get(userList.size()-1).getViewMessage() != null
                         && userList.get(userList.size()-1).getViewMessage().equals(context.getString(R.string.home_loading) )) {
@@ -271,10 +266,16 @@ public class Attending extends Fragment implements OnLoadMoreListener {
         //TODO uncomment
         String json = mPrefs.getString(getString(R.string.userObject), "");
 
+        Log.e("user object : ", "  :  "+json);
         if(json!=null && json.length()<100)
             json = null;
 
         return  gson.fromJson(json, SignUp.class);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -283,13 +284,10 @@ public class Attending extends Fragment implements OnLoadMoreListener {
 
         if (isVisibleToUser) {
             // called here
-            Log.e("Attending : ", " +++++ "+isVisibleToUser);
+            if(userList.size()<=1 ){
+                getUsersForEvent();
+            }
         }
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
 }

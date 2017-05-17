@@ -335,7 +335,7 @@ public class Nearby_Map extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
 
-        if(eventLst!=null && eventLst.get(eventLst.size()-1).getViewMessage().equals(getString(R.string.home_no_data)) && userCurrentLocation!=null){
+        if(eventLst!=null && eventLst.size()>0  && eventLst.get(eventLst.size()-1).getViewMessage().equals(getString(R.string.home_no_data)) && userCurrentLocation!=null){
             setUserOnMap(userCurrentLocation);
             googleMapSetting(userCurrentLocation);
         }

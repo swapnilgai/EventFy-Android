@@ -46,6 +46,7 @@ public class GetUserEvent  extends AsyncTask<Void, Void, Void> {
 
         try  {
 
+
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 

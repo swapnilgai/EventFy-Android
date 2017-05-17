@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.cloudinary.Cloudinary;
 import com.java.eventfy.Entity.CommentSudoEntity.AddComment;
@@ -93,6 +92,7 @@ public class UploadImage  extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
+
         if(addComment!=null && Url!=null)
         {
             addComment.getComment().setIsImage("true");

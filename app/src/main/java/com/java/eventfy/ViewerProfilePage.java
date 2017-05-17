@@ -116,7 +116,7 @@ public class ViewerProfilePage extends AppCompatActivity {
 
                         @Override
                         public void onError() {
-                            userProfilePic.setImageResource(R.drawable.user_image);
+
                         }
                     });
 

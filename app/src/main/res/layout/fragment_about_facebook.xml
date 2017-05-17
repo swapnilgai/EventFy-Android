@@ -178,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Street View"
+                        android:text="STREET VIEW"
                         android:textColor="#6c7880"
                         android:textSize="11sp" />
                 </LinearLayout>

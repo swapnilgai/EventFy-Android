@@ -181,7 +181,7 @@ public class EventInfoPublic extends AppCompatActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 super.onTabUnselected(tab);
-                   tab.getIcon().setAlpha(127);
+                 //  tab.getIcon().setAlpha(127);
             }
         });
 

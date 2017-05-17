@@ -15,7 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -437,8 +436,15 @@ public class About_Facebook extends Fragment implements OnMapReadyCallback {
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 150);
         CameraUpdate cu1 = CameraUpdateFactory.newCameraPosition(cameraPosition);
 
-        googleMap.animateCamera(cu1);
-        googleMap.moveCamera(cu);
+        try {
+            googleMap.animateCamera(cu1);
+            googleMap.moveCamera(cu);
+        }catch (Exception e){
+            cu = CameraUpdateFactory.newLatLngBounds(bounds, 20);
+            googleMap.animateCamera(cu1);
+            googleMap.moveCamera(cu);
+        }
+
 
     }
 
