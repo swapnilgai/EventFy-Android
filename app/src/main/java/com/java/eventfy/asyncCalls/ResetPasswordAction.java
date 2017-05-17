@@ -33,9 +33,6 @@ public class ResetPasswordAction extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... strings) {
 
         try {
-
-
-
             RestTemplate restTemplate = new RestTemplate(true);
             restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 

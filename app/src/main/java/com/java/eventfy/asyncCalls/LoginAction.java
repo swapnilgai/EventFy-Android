@@ -2,10 +2,8 @@ package com.java.eventfy.asyncCalls;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.java.eventfy.Entity.SignUp;
 import com.java.eventfy.Entity.User;
 import com.java.eventfy.EventBus.EventBusService;
@@ -43,9 +41,6 @@ public class LoginAction extends AsyncTask<Void, Void, Void>  {
         try{
         RestTemplate restTemplate = new RestTemplate(true);
 //        ((SimpleClientHttpRequestFactory)restTemplate.getRequestFactory()).setConnectTimeout(100000);
-
-            Log.e("url : ", url);
-            Log.e("", new Gson().toJson(login));
 
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
 

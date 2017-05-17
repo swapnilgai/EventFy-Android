@@ -65,7 +65,6 @@ public class RsvpUserToEvent extends AsyncTask<Void, Void, Void> {
                 }
 
                 events.setViewMessage(eventsTemp.getViewMessage());
-                Log.e("view msg in async : ", "  &&&&&   "+events.getViewMessage());
 
                 RegisterEvent registerEvent = new RegisterEvent();
                 registerEvent.setEvents(events);
